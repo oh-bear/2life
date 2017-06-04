@@ -1,0 +1,3 @@
+rootProject.name = 'twolife'
+
+include ':app'
