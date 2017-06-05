@@ -87,16 +87,23 @@ export default class RegisterPage extends Component {
       user_password:this.state.user_password.trim(),
       user_name:this.state.user_name.trim(),
       code:this.state.code.trim(),
-      timestamp:new Date().getTime();
+      timestamp:new Date().getTime()
     }).then((response)=>{
       switch(response.status) {
         case 0:
+          Alert.alert("小提示","注册成功！");
           this.props.navigator.push({
             component:LoginPage,
           });
           break
+        case 1003:
+          Alert.alert("小提示","验证码错误！");
+          break
+        case 1004:
+          Alert.alert("小提示","该手机号已被注册！");
+          break
         default:
-          Alert.alert("小提示","用户名或密码错误！");
+          Alert.alert("小提示","注册失败！");
           break
       }
     }).catch((error)=>{

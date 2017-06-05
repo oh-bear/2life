@@ -89,8 +89,8 @@ export default class LoginPage extends Component {
         </View>
         <View style={styles.form}>
             <TextInput 
-                placeholder={"请输入您的手机号"}
-                placeholderTextColor={"white"}
+              placeholder={"请输入您的手机号"}
+              placeholderTextColor={"white"}
               style={styles.textinput}
               onChangeText={(text)=>{
                 this.setState({user_account:text})
@@ -99,9 +99,9 @@ export default class LoginPage extends Component {
             <TextInput 
               placeholder={"请输入密码"}
               placeholderTextColor={"white"}
-                style={styles.textinput}
-                password={true}
-                onChangeText={(text)=>{
+              style={styles.textinput}
+              password={true}
+              onChangeText={(text)=>{
                 this.setState({user_password:text})
               }}
                 />

@@ -3,9 +3,21 @@ import {
   Text,
   View,
   StyleSheet,
-  Image
+  Image,
+  TouchableOpacity,
+  Dimensions,
+  Navigator
 } from 'react-native';
 import {Agenda} from 'react-native-calendars';
+import ItemPage from './ItemPage';
+import CommonNav from '../common/CommonNav';
+import NavigationBar from "../common/NavigationBar";
+import TextPingFang from "../common/TextPingFang";
+import {HOST} from '../util/config';
+
+const WIDTH = Dimensions.get("window").width;
+const INNERWIDTH = WIDTH - 16;
+const HEIGHT = Dimensions.get("window").height;
 
 export default class AgendaScreen extends Component {
   constructor(props) {
@@ -17,6 +29,10 @@ export default class AgendaScreen extends Component {
 
   render() {
     return (
+        <View style={styles.container}>
+        <NavigationBar 
+          title={"日记"}
+        />
         <Agenda
           items={this.state.items}
           loadItemsForMonth={this.loadItems.bind(this)}
@@ -24,8 +40,12 @@ export default class AgendaScreen extends Component {
           renderItem={this.renderItem.bind(this)}
           renderEmptyDate={this.renderEmptyDate.bind(this)}
           rowHasChanged={this.rowHasChanged.bind(this)}
+          theme={{
+            backgroundColor: "rgb(242,246,250)"
+          }}
           //renderDay={(day, item) => (<Text>{day ? day.day: 'item'}</Text>)}
         />
+        </View>
     );
   }
 
@@ -40,7 +60,7 @@ export default class AgendaScreen extends Component {
           for (let j = 0; j < numItems; j++) {
             this.state.items[strTime].push({
               name: 'Item for ' + strTime,
-              height: Math.max(50, Math.floor(Math.random() * 150))
+              height: 70
             });
           }
         }
@@ -55,15 +75,27 @@ export default class AgendaScreen extends Component {
     // console.log(`Load Items for ${day.year}-${day.month}`);
   }
 
+  onJump(page) {
+    console.log(page)
+    this.props.navigator.push({
+      component:page
+    })
+  }
+
   renderItem(item) {
     return (
-      <View style={[styles.item, {height: item.height}]}><Text>{item.name}</Text></View>
+      <TouchableOpacity
+        onPress={()=>{
+          this.onJump(ItemPage)
+        }}>
+        <View style={[styles.item, {height: item.height}]}><TextPingFang>{item.name}</TextPingFang></View>
+      </TouchableOpacity>
     );
   }
 
   renderEmptyDate() {
     return (
-      <View style={styles.emptyDate}><Text>This is empty date!</Text></View>
+      <View style={styles.emptyDate}><TextPingFang>今天没有写日记哦~</TextPingFang></View>
     );
   }
 
@@ -78,6 +110,10 @@ export default class AgendaScreen extends Component {
 }
 
 const styles = StyleSheet.create({
+  container:{
+    height:HEIGHT,
+    backgroundColor:"rgb(242,246,250)"
+  },
   item: {
     backgroundColor: 'white',
     flex: 1,

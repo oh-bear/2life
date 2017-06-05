@@ -8,7 +8,6 @@ import {
 import TabNavigator from 'react-native-tab-navigator';
 import BottomTabs from '../common/BottomTabs';
 import AgendaScreen from "./AgendaScreen";
-import CalendarsList from "./CalendarsList";
 import ProfileScreen from "./ProfileScreen";
 
 export default class HomeScreen extends Component {
@@ -19,10 +18,10 @@ export default class HomeScreen extends Component {
   render() {
     return	<BottomTabs 
     	page1 = {
-    		<AgendaScreen />
+    		<AgendaScreen navigator={this.props.navigator}/>
     	}
     	page2 = {
-    		<ProfileScreen />
+    		<ProfileScreen navigator={this.props.navigator}/>
     	}
     />
   }
