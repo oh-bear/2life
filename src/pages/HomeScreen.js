@@ -18,10 +18,16 @@ export default class HomeScreen extends Component {
   render() {
     return	<BottomTabs 
     	page1 = {
-    		<AgendaScreen navigator={this.props.navigator}/>
+    		<AgendaScreen 
+          user={this.props.user}
+          partner={this.props.partner}
+          navigator={this.props.navigator}/>
     	}
     	page2 = {
-    		<ProfileScreen navigator={this.props.navigator}/>
+    		<ProfileScreen 
+          user={this.props.user}
+          partner={this.props.partner}
+          navigator={this.props.navigator}/>
     	}
     />
   }

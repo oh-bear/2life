@@ -14,6 +14,8 @@ import CreateNotePage from './CreateNotePage';
 import SettingPage from './SettingPage';
 import FeedBackPage from './FeedBackPage';
 import ConnectPage from './ConnectPage';
+import PartnerPage from './PartnerPage';
+import LoginPage from './LoginPage';
 import {HOST} from '../util/config';
 
 const WIDTH = Dimensions.get("window").width
@@ -24,19 +26,54 @@ export default class ProfileScreen extends Component {
   static defaultProps = {}
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      user: this.props.user,
+      partner: this.props.partner
+    };
   }
   onAboutUs() {
     this.props.navigator.push({
       component:TextPingFang
     })
   }
-  onJump(page,params){
+  onJump(page,params) {
     this.props.navigator.push({
       component:page,
       params:params
     })
   }
+  logout() {
+    this.props.navigator.push({
+      component: LoginPage,
+    })
+  }
+  componentDidMount() {
+    console.log('props.user:' + this.props.user)
+    console.log('props.partner:' + this.props.partner)
+    // AsyncStorage.getItem("user_info", (error, result)=>{
+    //   var userData = JSON.parse(result);
+    //   if(!error) {
+    //     this.state.user.user_name = userData.user_name;
+    //     this.state.user.uid = userData.uid;
+    //     this.state.user.user_id = userData.user_id;
+    //     this.state.user.user_sex = userData.user_sex;
+    //     AsyncStorage.getItem("partner_info", (error, partner)=>{
+    //       var partnerData = JSON.parse(partner);
+    //       if(!error) {
+    //         this.state.partner.user_name = partnerData.user_name;
+    //         this.state.partner.uid = partnerData.uid;
+    //         this.state.partner.user_id = partnerData.user_id;
+    //         this.state.partner.user_sex = partnerData.user_sex;
+    //       } else {
+    //         console.log(error);
+    //       }
+    //     })
+    //   } else {
+    //     console.log(error);
+    //   }
+    // })
+  }
+
   render() {
     let booklist = require("../../res/images/icon_booklist.png");
     let history = require("../../res/images/icon_history.png");
@@ -47,23 +84,31 @@ export default class ProfileScreen extends Component {
     let texts = ["创建日记","匹配","设置","意见反馈"];
     let male_pic = require("../../res/images/avatar.png");
     let fm_pic = require("../../res/images/avatar2.png");
+    let LinkImage, PartnerView = null;
+    if (this.state.user.user_other_id !== -1) {
+      LinkImage = 
+          <Image style={styles.link} source={require("../../res/images/link1.png")}/>
+      PartnerView = 
+          <View style={styles.avatar_content}>
+            <Image style={styles.avatar_round} source={require("../../res/images/avatar_round.png")}>
+              <Image source={this.state.partner.user_sex==1?fm_pic:male_pic}/>
+            </Image>
+            <TextPingFang style={styles.avatar_font}>{this.state.partner.user_name}</TextPingFang>
+          </View>
+    }
+
     return <View style={styles.container}>
       <View style={styles.info_container}>
         <Image style={styles.avatar} source={require("../../res/images/avatar_bg.png")}>
           <View style={styles.avatar_container}>
             <View style={styles.avatar_content}>
               <Image style={styles.avatar_round} source={require("../../res/images/avatar_round.png")}>
-                <Image source={male_pic}/>
+                <Image source={this.state.user.user_sex==1?fm_pic:male_pic}/>
               </Image>
-              <TextPingFang style={styles.avatar_font}>Airing</TextPingFang>
+              <TextPingFang style={styles.avatar_font}>{this.state.user.user_name}</TextPingFang>
             </View>
-            <Image style={styles.link} source={require("../../res/images/link1.png")}/>
-            <View style={styles.avatar_content}>
-              <Image style={styles.avatar_round} source={require("../../res/images/avatar_round.png")}>
-                <Image source={male_pic}/>
-              </Image>
-              <TextPingFang style={styles.avatar_font}>Airing</TextPingFang>
-            </View>
+            {LinkImage}
+            {PartnerView}
           </View>
         </Image>
       </View>
@@ -83,13 +128,27 @@ export default class ProfileScreen extends Component {
                             });
                             break;
                             case "匹配":
-                              this.onJump(ConnectPage,{
-                                title:"匹配"
-                              })
+                              if (this.state.user.user_other_id == -1) {
+                                this.onJump(ConnectPage,{
+                                  title:"匹配",
+                                  user: this.state.user
+                                })
+                              } else {
+                                this.onJump(PartnerPage,{
+                                  title:"匹配",
+                                  partner: this.state.partner,
+                                  user: this.state.user
+                                })
+                              }
                               break;
                             case "设置":
                               this.onJump(SettingPage,{
-                                title:"设置"
+                                title:"设置",
+                                user: this.state.user,
+                                onCallBack: (data)=>{
+                                  this.state.user.user_name = data.user_name;
+                                  this.state.user.user_sex = data.user_sex;
+                                }
                               })
                               break;
                             case "意见反馈":
@@ -101,13 +160,24 @@ export default class ProfileScreen extends Component {
                       }
                     }
                   style={styles.item}>
-                         <Image source={images[i]}/>
-                     <TextPingFang style={styles.item_font}>{d}</TextPingFang>
+                    <Image source={images[i]}/>
+                    <TextPingFang style={styles.item_font}>{d}</TextPingFang>
                 <Image style={styles.item_arrow} source={require("../../res/images/right_arrow.png")}/>
             </TouchableOpacity>
             })
           }
       </View>
+      <TouchableOpacity 
+          style={styles.online_delete}
+          onPress={()=>{
+            this.logout()
+          }}
+          >
+          <Text 
+            style={styles.online_font}>
+            退出登录
+          </Text>
+        </TouchableOpacity>
     </View>
   }
 }
@@ -174,5 +244,19 @@ const styles = StyleSheet.create({
   link: {
     marginLeft: 20,
     marginRight: 20,
-  }
+  },
+  online_delete: {
+    position: "absolute",
+    bottom: HEIGHT * 0.105,
+    backgroundColor: "#FF3542",
+    alignItems: "center",
+    justifyContent: "center",
+    width: 150 / 375 * WIDTH,
+    height: 44 / 667 * HEIGHT,
+    borderRadius: 22 / 667 * HEIGHT
+  },
+  online_font: {
+    fontSize: 14,
+    color: 'white'
+  },
 })

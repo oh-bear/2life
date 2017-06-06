@@ -22,7 +22,8 @@ import {HOST} from '../util/config';
 const WIDTH = Dimensions.get("window").width;
 const INNERWIDTH = WIDTH - 16;
 const HEIGHT = Dimensions.get("window").height;
-const URL = HOST + "users/login";
+const URL1 = HOST + "users/login";
+const URL2 = HOST + "users/user";
 
 export default class LoginPage extends Component {
   static defaultProps = {}
@@ -34,39 +35,55 @@ export default class LoginPage extends Component {
     };
   }
   onSubmit() {
-    if(!this.state.user_account.trim()) {
+    if (!this.state.user_account.trim()) {
       Alert.alert("小提示","请输入账号哦~");
       return ;
     }
-    if(!this.state.user_password.trim()) {
+    if (!this.state.user_password.trim()) {
       Alert.alert("小提示","请输入密码哦~");
       return ;
     }
-    HttpUtils.post(URL,{
-      user_account:this.state.user_account.trim(),
-      user_password:this.state.user_password.trim()
+    HttpUtils.post(URL1, {
+      user_account: this.state.user_account.trim(),
+      user_password: this.state.user_password.trim()
     }).then((response)=>{
       switch(response.status) {
         case 0:
-          AsyncStorage.setItem("user_info",JSON.stringify(response.data),(error)=>{
-            if(error) {
-              console.log(error);
-            } else {
-              AsyncStorage.getItem("notes_data",(error,result)=>{
-                if(error) {
-                  console.log(error);
-                } else {
-                  let user = response.data;
+          AsyncStorage.setItem("user_info", JSON.stringify(response.data),(error)=>{
+            if (!error) {  
+              console.log('response.data.user_other_id:' + response.data.user_other_id)
+              let user = response.data;
+              let partner = null;
+              if (response.data.user_other_id !== -1) {
+                HttpUtils.post(URL2, {
+                  user_id: response.data.user_other_id
+                }).then((res)=>{
+                  let partner = res.data;    
+                  AsyncStorage.setItem("partner_info", JSON.stringify(res.data), (error)=>{
+                    console.log(error);
+                  })
                   this.props.navigator.push({
-                    component:HomeScreen,
-                    params:{
-                      user:user,
-                      notes_data:JSON.parse(result),
-                      timestamp:response.data.timestamp
+                    component: HomeScreen,
+                    params: {
+                      user: user,
+                      partner: partner,
+                      timestamp: response.data.timestamp
                     }
-                  });
-                }
-              })
+                  })
+                })
+              } else {
+                this.props.navigator.push({
+                    component: HomeScreen,
+                    params: {
+                      user: user,
+                      partner: partner,
+                      timestamp: response.data.timestamp
+                    }
+                  })
+              }
+              
+            } else {
+              console.log(error);
             }
           });
           break
@@ -82,7 +99,7 @@ export default class LoginPage extends Component {
     return (
       <View style={styles.container}>
       <Image style={styles.bg} source={require("../../res/images/welcome_bg.png")}>
-        <Image style={styles.logo} source={require("../../res/images/welcome_logo.png")}/>
+        <Image style={styles.logo} source={require("../../res/images/loginlogo1.png")}/>
         <View style={styles.text}>
           <TextPingFang style={styles.title}>双生</TextPingFang>
             <TextPingFang style={styles.e_title}>今夕何夕 见此良人</TextPingFang>

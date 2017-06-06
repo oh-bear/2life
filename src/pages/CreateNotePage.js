@@ -16,18 +16,18 @@ const WIDTH = Dimensions.get("window").width;
 const HEIGHT = Dimensions.get("window").height;
 const INNERWIDTH =  WIDTH - 16;
 
-const URL = HOST + "/notes/create";
+const URL = HOST + "notes/save";
 
 export default class FeedBackPage extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      contact:"",
+      title:"",
       content:""
     }
   }
   onPost() {
-    if(!this.state.contact.trim()) {
+    if(!this.state.title.trim()) {
       Alert.alert("小提示","请输入日记的标题哦~");
       return ;
     }
@@ -36,16 +36,23 @@ export default class FeedBackPage extends Component {
       return ;
     }
     HttpUtils.post(URL,{
-      token:this.props.user.token,
-      content:this.state.content,
-      contact:this.state.contact,
-      uid:this.props.user.uid,
-      timestamp:this.props.timestamp
+      // token: this.props.user.token,
+      // uid: this.props.user.uid,
+      // timestamp: this.props.timestamp,
+      token: '1',
+      uid: 9,
+      timestamp: 123,
+      note_title: this.state.title,
+      note_content: this.state.content,
+      note_date: new Date().getTime()
     }).then((response)=>{
-      if(response.msg==="请求成功") {
+      if(response.status== 0) {
+        Alert.alert("小提示", '创建成功：）');
         this.props.navigator.pop();
       }
-    })
+    }).catch((error)=>{
+        Alert.alert("小提示", '网络故障:(');
+    }) 
   }
   render() {
     return <View style={styles.container}>
@@ -61,8 +68,9 @@ export default class FeedBackPage extends Component {
         placeholder={"请输入日记标题"}
         placeholderTextColor={"#999999"}
         style={styles.textInput_title}
+        maxLength={10}
         onChangeText={(text)=>{
-           this.setState({contact:text})
+           this.setState({title:text})
         }}
         />
       <TextInput
@@ -74,7 +82,6 @@ export default class FeedBackPage extends Component {
            this.setState({content:text})
         }}
         />
-        
     </View>
   }
 }

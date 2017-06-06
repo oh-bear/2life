@@ -26,16 +26,14 @@ export default class CommonNav extends Component {
 		    	titleStyle={
 		    	 	this.props.titleStyle
 		    	 }
-		    	 leftButton={
-		    	 		<TouchableOpacity 
+		    	leftButton={
+	    	 		<TouchableOpacity 
 		    	 		onPress={
-		    	 		()=>{
-		    	 			this.props.navigator.pop()
+			    	 		()=>{
+			    	 			this.props.navigator.pop()
+			    	 		}
 		    	 		}
-
-		    	 	}
-		    	 	style={styles.container}
-		    	 >	
+		    	 		style={styles.container}>	
 		    	 	<Image
 		    	    source={require("../../res/images/BackArrow.png")}/>
 		    	

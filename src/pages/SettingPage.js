@@ -14,51 +14,77 @@ import CommonNav from '../common/CommonNav';
 import RightButtonNav from '../common/RightButtonNav';
 import TextPingFang from '../common/TextPingFang';
 import {HOST} from '../util/config';
+import HttpUtils from '../util/HttpUtils';
 
 const WIDTH = Dimensions.get("window").width;
 const INNERWIDTH = WIDTH - 16;
 const HEIGHT = Dimensions.get("window").height;
+const URL = HOST + 'users/update'
 
 export default class SettingPage extends Component {
   static defaultProps = {}
   constructor(props) {
     super(props);
     this.state = {
-      name: 'Airing',
-      sex: '男'
+      user_sex: this.props.user.user_sex,
+      user_name: this.props.user.user_name
     };
   }
   onPost() {
-
+    HttpUtils.post(URL, {
+      uid: this.props.user.uid,
+      timestamp: this.props.user.timestamp,
+      token: this.props.user.token,
+      user_name: this.state.user_name,
+      user_sex: this.state.user_sex
+    }).then((res)=> {
+      if (res.status == 0) {
+        Alert.alert('小提醒', '个人信息更改成功！');
+        let data = {
+          user_name: this.state.user_name,
+          user_sex: this.state.user_sex
+        }
+        this.props.onCallBack(data);
+        this.props.navigator.pop();
+      }      
+    }).catch((error)=> {
+      console.log(error);
+    })
   }
   changeName() {
     AlertIOS.prompt('请输入新的昵称','',[
       {text:'取消'},
       {text:'确定'}],
-      (name)=>{this.setState({name: name})});
+      (name)=>{this.setState({user_name: name})});
   }
   changeSex() {
     Alert.alert('是否更改性别？','',[
       {text:'取消', onPress:this.userCanceled},
       {text:'确定', onPress:(sex)=>{
-        this.state.sex == '女'? this.setState({sex: '男'}):this.setState({sex: '女'})
+        this.state.user_sex == 1? this.setState({user_sex: 0}):this.setState({user_sex: 1})
       }}])
   }
   render() {
     return (
       <View style={styles.container}>
-        <Image style={styles.bg} source={require("../../res/images/about_bg.png")}>
+        <Image 
+          style={styles.bg} 
+          source={this.state.user_sex==0?require("../../res/images/about_bg.png"):require("../../res/images/about_bg1.png")}>
           <RightButtonNav 
-            title={"设置"} 
+            title={"设置"}
             navigator={this.props.navigator} 
             rightOnPress={()=>{
               this.onPost();
             }}
           />
-          <Image style={styles.avatar_round} source={require("../../res/images/avatar_round.png")}>
-            <Image style={styles.avatar} source={require("../../res/images/avatar.png")} />
+          <Image 
+            style={styles.avatar_round} 
+            source={require("../../res/images/avatar_round.png")}>
+            <Image 
+              style={styles.avatar} 
+              source={this.state.user_sex==0?require("../../res/images/avatar.png"):require("../../res/images/avatar2.png")} />
           </Image>
-          <TextPingFang style={styles.avatar_font}>071515</TextPingFang>
+          <TextPingFang style={styles.avatar_font}>{this.props.user.user_code}</TextPingFang>
         </Image>
         <TouchableOpacity 
           style={styles.online_name}
@@ -67,7 +93,7 @@ export default class SettingPage extends Component {
           }}>
           <Text 
             style={styles.online_font}>
-            {this.state.name}
+            {this.state.user_name}
           </Text>
         </TouchableOpacity>
         <TouchableOpacity 
@@ -77,7 +103,7 @@ export default class SettingPage extends Component {
           }}>
           <Text 
             style={styles.online_font}>
-            {this.state.sex}
+            {this.state.user_sex==0?'男':'女'}
           </Text>
         </TouchableOpacity>
       </View>
@@ -102,36 +128,38 @@ const styles = StyleSheet.create({
   avatar_round: {
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop:48
+    marginTop: 48
   },
   avatar: {
   },
-  avatar_font:{
+  avatar_font: {
     color:"#666666",
     fontSize:17,
     backgroundColor:"rgba(0,0,0,0)",
     marginTop:15,
     fontWeight:"600"
   },
-  online_name:{
+  online_name: {
     marginTop: 52,
-    backgroundColor:"white",
-    alignItems:"center",
-    justifyContent:"center",
-    width:150/375*WIDTH,
-    height:44/667*HEIGHT,
-    borderRadius:22/667*HEIGHT
+    backgroundColor: "white",
+    alignItems: "center",
+    justifyContent: "center",
+    width: 150 / 375 * WIDTH,
+    height: 44 / 667 * HEIGHT,
+    borderRadius: 22 / 667 * HEIGHT
   },
   online_sex:{
-    marginTop:20,
-    backgroundColor:"white",
-    alignItems:"center",
-    justifyContent:"center",
-    width:150/375*WIDTH,
-    height:44/667*HEIGHT,
-    borderRadius:22/667*HEIGHT
+    marginTop: 20,
+    backgroundColor: "white",
+    alignItems: "center",
+    justifyContent: "center",
+    width: 150 / 375 * WIDTH,
+    height: 44 / 667 * HEIGHT,
+    borderRadius: 22 / 667 * HEIGHT
   },
   online_font: {
-    fontSize:14
+    fontSize: 14,
+    fontWeight: "600",
+    color: "#666666",
   }
 });

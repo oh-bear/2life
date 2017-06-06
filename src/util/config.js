@@ -1,3 +1,3 @@
-const HOST = 'http://127.0.0.1:3002/';
+const HOST = 'https://mie-mie.tech/';
 
 exports.HOST = HOST;

@@ -7,14 +7,19 @@ import {
   Navigator,
   Dimensions,
   TouchableOpacity,
-  AlertIOS
+  AlertIOS,
+  Alert
 } from 'react-native';
 import CommonNav from '../common/CommonNav';
 import TextPingFang from '../common/TextPingFang';
 import {HOST} from '../util/config';
+import HttpUtils from '../util/HttpUtils';
+import LoginPage from './LoginPage';
 
-const WIDTH = Dimensions.get("window").width
-const HEIGHT = Dimensions.get("window").height
+const WIDTH = Dimensions.get("window").width;
+const HEIGHT = Dimensions.get("window").height;
+const URL1 = HOST + 'users/connect';
+const URL2 = HOST + 'users/connect_by_id';
 
 export default class ConnectPage extends Component {
   static defaultProps = {}
@@ -23,13 +28,42 @@ export default class ConnectPage extends Component {
     this.state = {};
   }
   connectByRandom() {
-
+    HttpUtils.post(URL1, {
+      uid: this.props.user.uid,
+      token: this.props.user.token,
+      timestamp: this.props.user.timestamp,
+      sex: this.props.user.user_sex
+    }).then((res)=>{
+      if (res.status == 0) {
+        Alert.alert('小提醒', '匹配成功啦！重新登录之后就可以看见TA啦~');
+        this.props.navigator.push({
+          component: LoginPage,
+        })
+      }
+    }).catch((error)=> {
+      console.log(error);
+    })
   }
   connectById() {
     AlertIOS.prompt('请输入另一半的ID号','',[
       {text:'取消'},
       {text:'确定'}],
-      (id)=>{this.setState({id: id})});
+      (code)=>{
+        HttpUtils.post(URL2, {
+          uid: this.props.user.uid,
+          token: this.props.user.token,
+          timestamp: this.props.user.timestamp,
+          sex: this.props.user.user_sex,
+          code: code
+        }).then((res)=>{
+          Alert.alert('小提醒', '匹配成功啦！重新登录之后就可以看见TA啦~');
+          this.props.navigator.push({
+            component: LoginPage,
+          })
+        }).catch((error)=> {
+          console.log(error);
+        })
+      });
   }
   render() {
     return (
@@ -49,7 +83,7 @@ export default class ConnectPage extends Component {
             随机匹配
           </Text>
         </TouchableOpacity>
-        <TouchableOpacity 
+        {/*<TouchableOpacity 
           style={styles.online_register}
           onPress={()=>{
             this.connectById();
@@ -58,7 +92,7 @@ export default class ConnectPage extends Component {
             style={styles.online_font}>
             定点匹配
           </Text>
-        </TouchableOpacity>
+        </TouchableOpacity>*/}
       </View>
     );
   }

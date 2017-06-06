@@ -128,7 +128,7 @@ export default class RegisterPage extends Component {
               	}}
               />
             <TextInput 
-                placeholder={"请输入验证码"}
+                placeholder={"请先获取验证码再输入哦"}
                 placeholderTextColor={"white"}
               	style={styles.textinput}
               	onChangeText={(text)=>{
@@ -153,7 +153,6 @@ export default class RegisterPage extends Component {
               	}}
               />
             <Text style={styles.remind}>很高兴 遇见你 ：）</Text>
-
           </View>
         <TouchableOpacity 
           style={styles.online_code}

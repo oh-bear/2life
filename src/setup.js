@@ -17,7 +17,7 @@ function setup() {
     }
     render() {
       return <Navigator
-          initialRoute = {{component:HomeScreen}}
+          initialRoute = {{component: LoginPage}}
           renderScene = {(route, navigator)=>{
             let Component = route.component
             return <Component navigator={navigator} {...route.params}/>
