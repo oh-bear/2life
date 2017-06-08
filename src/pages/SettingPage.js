@@ -19,7 +19,8 @@ import HttpUtils from '../util/HttpUtils';
 const WIDTH = Dimensions.get("window").width;
 const INNERWIDTH = WIDTH - 16;
 const HEIGHT = Dimensions.get("window").height;
-const URL = HOST + 'users/update'
+const URL1 = HOST + 'users/update';
+const URL2 = HOST + 'users/close_connect';
 
 export default class SettingPage extends Component {
   static defaultProps = {}
@@ -27,22 +28,25 @@ export default class SettingPage extends Component {
     super(props);
     this.state = {
       user_sex: this.props.user.user_sex,
-      user_name: this.props.user.user_name
+      user_name: this.props.user.user_name,
+      user_state: this.props.user.user_other_id
     };
   }
   onPost() {
-    HttpUtils.post(URL, {
+    HttpUtils.post(URL1, {
       uid: this.props.user.uid,
       timestamp: this.props.user.timestamp,
       token: this.props.user.token,
       user_name: this.state.user_name,
-      user_sex: this.state.user_sex
+      user_sex: this.state.user_sex,
+      user_other_id: this.user_state
     }).then((res)=> {
       if (res.status == 0) {
         Alert.alert('小提醒', '个人信息更改成功！');
         let data = {
           user_name: this.state.user_name,
-          user_sex: this.state.user_sex
+          user_sex: this.state.user_sex,
+          user_other_id: this.state.user_state
         }
         this.props.onCallBack(data);
         this.props.navigator.pop();
@@ -62,6 +66,42 @@ export default class SettingPage extends Component {
       {text:'取消', onPress:this.userCanceled},
       {text:'确定', onPress:(sex)=>{
         this.state.user_sex == 1? this.setState({user_sex: 0}):this.setState({user_sex: 1})
+      }}])
+  }
+  changeConnectState() {
+    Alert.alert('是否关闭匹配功能？如果关闭，任何人都将无法再匹配到您，并会断绝现有契约。','',[
+      {text:'取消', onPress:this.userCanceled},
+      {text:'确定', onPress:(user_state)=>{
+        if(this.state.user_state !== -404) {
+          HttpUtils.post(URL2, {
+            uid: this.props.user.uid,
+            token: this.props.user.token,
+            timestamp: this.props.user.timestamp,
+            user_other_id: this.state.user_state
+          }).then((res)=>{
+            if (res.status == 0) {
+              this.setState({user_state: -404});
+              Alert.alert('小提醒', '您已成功关闭了匹配功能');
+              let data = {
+                user_name: this.state.user_name,
+                user_sex: this.state.user_sex,
+                user_other_id: this.state.user_state
+              }
+              this.props.onCallBack(data);
+            } else {
+              Alert.alert('小提醒', '网络故障QAQ');
+            }
+          })
+        } else {
+          Alert.alert('小提醒', '您已成功开启了匹配功能，快去寻找另一半吧！');
+          this.setState({user_state: -1})
+          let data = {
+            user_name: this.state.user_name,
+            user_sex: this.state.user_sex,
+            user_other_id: this.state.user_state
+          }
+          this.props.onCallBack(data);
+        }
       }}])
   }
   render() {
@@ -104,6 +144,16 @@ export default class SettingPage extends Component {
           <Text 
             style={styles.online_font}>
             {this.state.user_sex==0?'男':'女'}
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity 
+          style={styles.online_state}
+          onPress={()=>{
+            this.changeConnectState();
+          }}>
+          <Text 
+            style={styles.online_font}>
+            {this.state.user_state==-404?'拒绝任何匹配':'开放匹配'}
           </Text>
         </TouchableOpacity>
       </View>
@@ -149,6 +199,15 @@ const styles = StyleSheet.create({
     borderRadius: 22 / 667 * HEIGHT
   },
   online_sex:{
+    marginTop: 20,
+    backgroundColor: "white",
+    alignItems: "center",
+    justifyContent: "center",
+    width: 150 / 375 * WIDTH,
+    height: 44 / 667 * HEIGHT,
+    borderRadius: 22 / 667 * HEIGHT
+  },
+  online_state:{
     marginTop: 20,
     backgroundColor: "white",
     alignItems: "center",

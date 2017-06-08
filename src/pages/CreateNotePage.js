@@ -36,12 +36,9 @@ export default class FeedBackPage extends Component {
       return ;
     }
     HttpUtils.post(URL,{
-      // token: this.props.user.token,
-      // uid: this.props.user.uid,
-      // timestamp: this.props.timestamp,
-      token: '1',
-      uid: 9,
-      timestamp: 123,
+      token: this.props.user.token,
+      uid: this.props.user.uid,
+      timestamp: this.props.timestamp,
       note_title: this.state.title,
       note_content: this.state.content,
       note_date: new Date().getTime()

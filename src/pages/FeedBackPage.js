@@ -16,7 +16,7 @@ const WIDTH = Dimensions.get("window").width;
 const HEIGHT = Dimensions.get("window").height;
 const INNERWIDTH =  WIDTH - 16;
 
-const URL = HOST + "/users/feedback";
+const URL = HOST + "users/feedback";
 
 export default class FeedBackPage extends Component {
   constructor(props) {
@@ -36,13 +36,14 @@ export default class FeedBackPage extends Component {
       return ;
     }
     HttpUtils.post(URL,{
-      token:this.props.user.token,
-      content:this.state.content,
-      contact:this.state.contact,
-      uid:this.props.user.uid,
-      timestamp:this.props.timestamp
+      token: this.props.user.token,
+      content: this.state.content,
+      contact: this.state.contact,
+      uid: this.props.user.uid,
+      timestamp: this.props.timestamp
     }).then((response)=>{
       if(response.msg==="请求成功") {
+        Alert.alert("小提示","谢谢您的反馈，我们会尽快回复的！");
         this.props.navigator.pop();
       }
     })

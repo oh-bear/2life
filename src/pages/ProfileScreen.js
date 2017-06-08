@@ -7,7 +7,8 @@ import {
   TouchableOpacity,
   Image,
   Dimensions,
-  AsyncStorage
+  AsyncStorage,
+  Alert
 } from 'react-native';
 import TextPingFang from "../common/TextPingFang";
 import CreateNotePage from './CreateNotePage';
@@ -50,28 +51,8 @@ export default class ProfileScreen extends Component {
   componentDidMount() {
     console.log('props.user:' + this.props.user)
     console.log('props.partner:' + this.props.partner)
-    // AsyncStorage.getItem("user_info", (error, result)=>{
-    //   var userData = JSON.parse(result);
-    //   if(!error) {
-    //     this.state.user.user_name = userData.user_name;
-    //     this.state.user.uid = userData.uid;
-    //     this.state.user.user_id = userData.user_id;
-    //     this.state.user.user_sex = userData.user_sex;
-    //     AsyncStorage.getItem("partner_info", (error, partner)=>{
-    //       var partnerData = JSON.parse(partner);
-    //       if(!error) {
-    //         this.state.partner.user_name = partnerData.user_name;
-    //         this.state.partner.uid = partnerData.uid;
-    //         this.state.partner.user_id = partnerData.user_id;
-    //         this.state.partner.user_sex = partnerData.user_sex;
-    //       } else {
-    //         console.log(error);
-    //       }
-    //     })
-    //   } else {
-    //     console.log(error);
-    //   }
-    // })
+    console.log('state.user.user_other_id:' + this.state.user.user_other_id)
+    console.log('state.partner:' + this.state.partner)
   }
 
   render() {
@@ -85,7 +66,7 @@ export default class ProfileScreen extends Component {
     let male_pic = require("../../res/images/avatar.png");
     let fm_pic = require("../../res/images/avatar2.png");
     let LinkImage, PartnerView = null;
-    if (this.state.user.user_other_id !== -1) {
+    if (this.state.user.user_other_id !== -1 && this.state.user.user_other_id !== -404) {
       LinkImage = 
           <Image style={styles.link} source={require("../../res/images/link1.png")}/>
       PartnerView = 
@@ -125,35 +106,48 @@ export default class ProfileScreen extends Component {
                           case "创建日记":
                             this.onJump(CreateNotePage,{
                               title:"创建日记",
+                              user: this.state.user
                             });
                             break;
                             case "匹配":
                               if (this.state.user.user_other_id == -1) {
                                 this.onJump(ConnectPage,{
-                                  title:"匹配",
-                                  user: this.state.user
+                                  title: "匹配",
+                                  user: this.state.user,
+                                  onCallBack: (data)=>{
+                                    this.state.user.user_other_id = data.user_other_id;
+                                    this.state.partner = data.partner;
+                                  }
                                 })
-                              } else {
+                              } else if (this.state.user.user_other_id !== -1 && this.state.user.user_other_id !== -404) {
                                 this.onJump(PartnerPage,{
-                                  title:"匹配",
+                                  title: "TA",
                                   partner: this.state.partner,
-                                  user: this.state.user
+                                  user: this.state.user,
+                                  onCallBack: (data)=>{
+                                    this.state.user.user_other_id = data.user_other_id;
+                                    this.state.partner = data.partner;
+                                  }
                                 })
+                              } else if (this.state.user.user_other_id == -404) {
+                                Alert.alert('小提醒', '您已关闭匹配功能，无法进行匹配！')
                               }
                               break;
                             case "设置":
                               this.onJump(SettingPage,{
-                                title:"设置",
+                                title: "设置",
                                 user: this.state.user,
                                 onCallBack: (data)=>{
                                   this.state.user.user_name = data.user_name;
                                   this.state.user.user_sex = data.user_sex;
+                                  this.state.user.user_other_id = data.user_other_id;
                                 }
                               })
                               break;
                             case "意见反馈":
                               this.onJump(FeedBackPage,{
-                                title:"意见反馈"
+                                title:"意见反馈",
+                                user: this.state.user,
                               })
                               break
                         }

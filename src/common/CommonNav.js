@@ -14,7 +14,7 @@ export default class CommonNav extends Component {
 		super(props);
 	}
 	static defaultProps = {
-		title:"图书详情",
+		title:"详情",
 		rightButton: <View></View>
 	}
 	render() {

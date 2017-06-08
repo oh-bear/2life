@@ -54,7 +54,7 @@ export default class LoginPage extends Component {
               console.log('response.data.user_other_id:' + response.data.user_other_id)
               let user = response.data;
               let partner = null;
-              if (response.data.user_other_id !== -1) {
+              if (response.data.user_other_id !== -1 && response.data.user_other_id !== -404) {
                 HttpUtils.post(URL2, {
                   user_id: response.data.user_other_id
                 }).then((res)=>{
@@ -99,7 +99,7 @@ export default class LoginPage extends Component {
     return (
       <View style={styles.container}>
       <Image style={styles.bg} source={require("../../res/images/welcome_bg.png")}>
-        <Image style={styles.logo} source={require("../../res/images/loginlogo1.png")}/>
+        <Image style={styles.logo} source={require("../../res/images/ilo.png")}/>
         <View style={styles.text}>
           <TextPingFang style={styles.title}>双生</TextPingFang>
             <TextPingFang style={styles.e_title}>今夕何夕 见此良人</TextPingFang>
@@ -167,6 +167,7 @@ const styles = StyleSheet.create({
   },
   logo: {
     marginTop:60*HEIGHT/667,
+    height: HEIGHT/667 * 67,
   },
   text: {
     alignItems:"center",

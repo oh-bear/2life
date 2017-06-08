@@ -35,10 +35,15 @@ export default class ConnectPage extends Component {
       sex: this.props.user.user_sex
     }).then((res)=>{
       if (res.status == 0) {
-        Alert.alert('小提醒', '匹配成功啦！重新登录之后就可以看见TA啦~');
-        this.props.navigator.push({
-          component: LoginPage,
-        })
+        Alert.alert('小提醒', '匹配成功啦！');
+        let data = {
+          user_other_id: res.data.id,
+          partner: res.data
+        }
+        this.props.onCallBack(data);
+        this.props.navigator.pop();
+      } else {
+        Alert.alert('小提醒', 'QAQ，系统中已经没有异性供匹配了~快拉点你的小伙伴加入吧！');
       }
     }).catch((error)=> {
       console.log(error);
@@ -56,10 +61,17 @@ export default class ConnectPage extends Component {
           sex: this.props.user.user_sex,
           code: code
         }).then((res)=>{
-          Alert.alert('小提醒', '匹配成功啦！重新登录之后就可以看见TA啦~');
-          this.props.navigator.push({
-            component: LoginPage,
-          })
+          if(res.status == 0){
+            Alert.alert('小提醒', '匹配成功啦！');
+            let data = {
+              user_other_id: res.data.id,
+              partner: res.data
+            }
+            this.props.onCallBack(data);
+            this.props.navigator.pop();
+          } else {
+             Alert.alert('小提醒', 'QAQ，您要匹配的小伙伴不存在或者已被别人匹配过了！');           
+          }
         }).catch((error)=> {
           console.log(error);
         })
@@ -68,8 +80,11 @@ export default class ConnectPage extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <CommonNav title={this.props.title} 
-          navigator={this.props.navigator} navStyle={styles.opacity0} navBarStyle={styles.opacity0}/>
+        <CommonNav 
+          title={this.props.title} 
+          navigator={this.props.navigator} 
+          navStyle={styles.opacity0} 
+          navBarStyle={styles.opacity0}/>
         <Image style={styles.title_image} source={require('../../res/images/bad.png')} />
         <Text style={styles.title}>"Oh - Uh"</Text>
         <TextPingFang style={styles.e_title}>快点匹配自己的另一半吧~</TextPingFang>
@@ -83,7 +98,7 @@ export default class ConnectPage extends Component {
             随机匹配
           </Text>
         </TouchableOpacity>
-        {/*<TouchableOpacity 
+        <TouchableOpacity 
           style={styles.online_register}
           onPress={()=>{
             this.connectById();
@@ -92,7 +107,7 @@ export default class ConnectPage extends Component {
             style={styles.online_font}>
             定点匹配
           </Text>
-        </TouchableOpacity>*/}
+        </TouchableOpacity>
       </View>
     );
   }

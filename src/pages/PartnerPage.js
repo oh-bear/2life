@@ -41,10 +41,13 @@ export default class Partner extends Component {
           user_id: this.props.user.user_other_id
         }).then((res)=> {
           if (res.status == 0) {
-            Alert.alert('小提醒', '断绝成功，重新登录将再也不可见 TA');
-            this.props.navigator.push({
-              component: LoginPage,
-            })
+            Alert.alert('小提醒', '你们已经成功断绝了关系QAQ');
+            let data = {
+              user_other_id: -1,
+              partner: null
+            }
+            this.props.onCallBack(data);
+            this.props.navigator.pop();
           }
         }).catch((error)=> {
           console.log(error);
