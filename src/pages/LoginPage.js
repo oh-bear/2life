@@ -167,23 +167,23 @@ const styles = StyleSheet.create({
   },
   logo: {
     marginTop:60*HEIGHT/667,
-    height: HEIGHT/667 * 67,
+    height: HEIGHT/667 * 68.5,
   },
   text: {
     alignItems:"center",
   },
   title:{
-    backgroundColor:"rgba(0,0,0,0)",
-    color:"white",
-    fontSize:20,
-    fontWeight:"600",
-    height:33/667*HEIGHT,
-    marginTop:HEIGHT*0.0419
+    backgroundColor: "rgba(0,0,0,0)",
+    color: "white",
+    fontSize: 20,
+    fontWeight: "600",
+    height: 33/667*HEIGHT,
+    marginTop: HEIGHT*0.0419
   },
   e_title: {
     backgroundColor:"rgba(0,0,0,0)",
-    fontSize:12,
-    color:"white"
+    fontSize: 12,
+    color: "white"
   },
   form:{
     marginTop:HEIGHT*0.0479,
