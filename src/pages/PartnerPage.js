@@ -7,7 +7,6 @@ import {
   Navigator,
   Dimensions,
   TouchableOpacity,
-  AlertIOS,
   Alert
 } from 'react-native';
 import CommonNav from '../common/CommonNav';

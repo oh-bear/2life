@@ -62,6 +62,7 @@ export default class FeedBackPage extends Component {
 					this.props.navigator
 				}/>
       <TextInput
+        underlineColorAndroid='transparent'
         placeholder={"请输入日记标题"}
         placeholderTextColor={"#999999"}
         style={styles.textInput_title}
@@ -71,6 +72,7 @@ export default class FeedBackPage extends Component {
         }}
         />
       <TextInput
+        underlineColorAndroid='transparent'
         placeholder={"描述一下你今天的心情吧～"}
         placeholderTextColor={"#999999"}
         multiline={true}

@@ -15,6 +15,7 @@ import TextPingFang from '../common/TextPingFang';
 import {HOST} from '../util/config';
 import HttpUtils from '../util/HttpUtils';
 import LoginPage from './LoginPage';
+import Platform from 'Platform';
 
 const WIDTH = Dimensions.get("window").width;
 const HEIGHT = Dimensions.get("window").height;
@@ -50,7 +51,8 @@ export default class ConnectPage extends Component {
     })
   }
   connectById() {
-    AlertIOS.prompt('请输入另一半的ID号','',[
+    if(Platform.OS === 'ios'){
+      AlertIOS.prompt('请输入另一半的ID号','',[
       {text:'取消'},
       {text:'确定'}],
       (code)=>{
@@ -76,6 +78,10 @@ export default class ConnectPage extends Component {
           console.log(error);
         })
       });
+    } else {
+      Alert.alert('小提醒', '对不起，安卓用户暂时不支持定向匹配。。');
+    }
+    
   }
   render() {
     return (

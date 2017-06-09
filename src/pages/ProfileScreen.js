@@ -207,7 +207,6 @@ const styles = StyleSheet.create({
     fontWeight:"500",
     color:"#666666",
     marginLeft:16,
-    width:56
   },
   item_arrow: {
     position:"absolute",

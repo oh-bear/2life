@@ -61,6 +61,7 @@ export default class FeedBackPage extends Component {
           }
           />
       <TextInput
+        underlineColorAndroid='transparent'
         placeholder={"请输入您的邮箱或者电话"}
         placeholderTextColor={"#999999"}
         style={styles.textInput_title}
@@ -69,6 +70,7 @@ export default class FeedBackPage extends Component {
         }}
         />
       <TextInput
+        underlineColorAndroid='transparent'
         placeholder={"描述一下你的体验或者建议吧～"}
         placeholderTextColor={"#999999"}
         multiline={true}

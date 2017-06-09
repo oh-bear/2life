@@ -105,7 +105,8 @@ export default class LoginPage extends Component {
             <TextPingFang style={styles.e_title}>今夕何夕 见此良人</TextPingFang>
         </View>
         <View style={styles.form}>
-            <TextInput 
+            <TextInput
+              underlineColorAndroid='transparent' 
               placeholder={"请输入您的手机号"}
               placeholderTextColor={"white"}
               style={styles.textinput}
@@ -114,6 +115,7 @@ export default class LoginPage extends Component {
               }}
               />
             <TextInput 
+              underlineColorAndroid='transparent'
               placeholder={"请输入密码"}
               placeholderTextColor={"white"}
               style={styles.textinput}

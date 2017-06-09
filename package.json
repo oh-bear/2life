@@ -12,6 +12,7 @@
     "react-native-action-button": "^2.6.9",
     "react-native-calendars": "*",
     "react-native-navigation": "latest",
+    "react-native-splash-screen": "^2.1.0",
     "react-native-tab-navigator": "^0.3.3",
     "react-native-vector-icons": "^4.2.0"
   },
