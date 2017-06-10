@@ -153,6 +153,7 @@ export default class LoginPage extends Component {
               placeholder={"请输入您的手机号"}
               placeholderTextColor={"white"}
               style={styles.textinput}
+              keyboardType='numeric'
               onChangeText={(text)=>{
                 this.setState({user_account:text})
               }}
