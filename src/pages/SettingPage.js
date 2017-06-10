@@ -65,9 +65,9 @@ export default class SettingPage extends Component {
   changeName() {
     if(Platform.OS === 'ios'){
       AlertIOS.prompt('请输入新的昵称','',[
-        {text:'取消'},
-        {text:'确定'}],
-        (name)=>{this.setState({user_name: name})});
+        {text:'取消', onPress:this.userCanceled},
+        {text:'确定', onPress:(name)=>{this.setState({user_name: name})}}
+      ]);
     } else {
       Alert.alert('小提醒', '对不起，安卓用户暂时不支持更改昵称。。');
     }
