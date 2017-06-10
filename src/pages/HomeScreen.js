@@ -13,7 +13,10 @@ import ProfileScreen from "./ProfileScreen";
 export default class HomeScreen extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      homeCount: 0,
+      profileCount: 0
+    };
   }
   render() {
     return	<BottomTabs 
@@ -21,7 +24,8 @@ export default class HomeScreen extends Component {
     		<AgendaScreen 
           user={this.props.user}
           partner={this.props.partner}
-          navigator={this.props.navigator}/>
+          navigator={this.props.navigator}
+          count={this.state.homeCount}/>
     	}
     	page2 = {
     		<ProfileScreen 

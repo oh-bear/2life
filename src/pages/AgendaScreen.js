@@ -7,7 +7,8 @@ import {
   TouchableOpacity,
   Dimensions,
   Navigator,
-  AsyncStorage
+  AsyncStorage,
+  DeviceEventEmitter
 } from 'react-native';
 import {Agenda} from 'react-native-calendars';
 import ItemPage from './ItemPage';
@@ -27,14 +28,16 @@ export default class AgendaScreen extends Component {
     super(props);
     this.state = {
       items: {},
-      show: 1,
+      show: false,
       user: this.props.user
     };
   }
 
   render() {
+    var nowtimestamp = new Date().getTime();
+    var nowtime = this.timeToString(nowtimestamp);
     return (
-        <View style={styles.container}>
+      <View style={styles.container}>
         <NavigationBar 
           title={"日记"}
           leftButton={
@@ -46,14 +49,14 @@ export default class AgendaScreen extends Component {
                 this.state.items = {};
                 this.loadData(this.state.user.uid, this.state.user.user_other_id);
               }}>
-            <Image source={require('../../res/images/update_icon.png')}/>
+              <Image source={require('../../res/images/update_icon.png')}/>
             </TouchableOpacity>
           }
         />
         <Agenda
           items={this.state.items}
           loadItemsForMonth={this.loadItems.bind(this)}
-          selected={'2017-06-06'}
+          selected={nowtime}
           renderItem={this.renderItem.bind(this)}
           renderEmptyDate={this.renderEmptyDate.bind(this)}
           rowHasChanged={this.rowHasChanged.bind(this)}
@@ -62,16 +65,28 @@ export default class AgendaScreen extends Component {
           }}
           //renderDay={(day, item) => (<Text>{day ? day.day: 'item'}</Text>)}
         />
-        </View>
+      </View>
     );
   }
 
-  componentDidMount() {
+  componentWillMount() {
     this.loadData(this.state.user.uid, this.state.user.user_other_id);
+    this.subscription = DeviceEventEmitter.addListener('homepageDidChange',() => {
+      console.log('通知');
+      this.state.items = {};
+      this.loadData(this.state.user.uid, this.state.user.user_other_id);
+      this.setState({
+        show: !this.state.show
+      })
+    })
   }
 
+  componentWillUnmount() {
+    this.subscription.remove();
+  }   
+
   loadData(uid, user_id) {
-    for (let i = 0; i < 365; i++) {
+    for (let i = -365; i < 365; i++) {
       const time = 1496707200000 + i * 24 * 60 * 60 * 1000;
       const strTime = this.timeToString(time);
       if (!this.state.items[strTime]) {
@@ -79,11 +94,11 @@ export default class AgendaScreen extends Component {
       }
     }
     HttpUtils.post(URL, {
-            uid: uid,
-            token: '1',
-            timestamp: 123,
-            user_id: user_id,
-            sex: this.state.user.user_sex
+        uid: uid,
+        token: this.state.user.token,
+        timestamp: this.state.user.timestamp,
+        user_id: user_id,
+        sex: this.state.user.user_sex
       }).then((res)=>{
         console.log(res);
         res.data.map((note)=>{
@@ -98,14 +113,20 @@ export default class AgendaScreen extends Component {
               title: note.note_title,
               content: note.note_content,
               hight: 70,
-              male: note.male
+              male: note.male,
+              note_id: note.note_id,
+              note_time: note.note_date,
+              me: note.me
             })
           } else {
             this.state.items[note_date].push({
               title: note.note_title,
               content: note.note_content,
               hight: 70,
-              male: note.male
+              male: note.male,
+              note_id: note.note_id,
+              note_time: note.note_date,
+              me: note.me
             })
           }
         })
@@ -158,16 +179,23 @@ export default class AgendaScreen extends Component {
     return (
       <TouchableOpacity
         onPress={()=>{
-          this.onJump(ItemPage, {title: item.title, content: item.content})
+          this.onJump(ItemPage, {
+            note_id: item.note_id, 
+            note_time: item.note_time, 
+            me: item.me,
+            title: item.title, 
+            content: item.content,
+            user: this.state.user
+          })
         }}>
-          <View style={[item.male=='male'?styles.item_male:styles.item_female, {height: item.height}]}>
-            <TextPingFang style={item.male=='male'?styles.font_male_title:styles.font_female_title}>
+        <View style={[item.male=='male'?styles.item_male:styles.item_female, {height: item.height}]}>
+          <TextPingFang style={item.male=='male'?styles.font_male_title:styles.font_female_title}>
             {item.title}
-            </TextPingFang>
-            <TextPingFang style={item.male=='male'?styles.font_male:styles.font_female}>
+          </TextPingFang>
+          <TextPingFang style={item.male=='male'?styles.font_male:styles.font_female}>
             {item.content}
-            </TextPingFang>
-          </View>
+          </TextPingFang>
+        </View>
       </TouchableOpacity>
     );
   }

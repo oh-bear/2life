@@ -7,7 +7,9 @@ import {
   Navigator,
   Dimensions,
   TouchableOpacity,
-  Alert
+  Alert,
+  DeviceEventEmitter,
+  AsyncStorage
 } from 'react-native';
 import CommonNav from '../common/CommonNav';
 import LoginPage from './LoginPage';
@@ -45,8 +47,19 @@ export default class Partner extends Component {
               user_other_id: -1,
               partner: null
             }
-            this.props.onCallBack(data);
-            this.props.navigator.pop();
+            AsyncStorage.removeItem('partner_info', (error)=>{
+              if (!error) {
+                AsyncStorage.getItem('user_info', (error, result)=>{
+                  var user = JSON.parse(result);
+                  user.user_other_id = -1;
+                  AsyncStorage.setItem('user_info', JSON.stringify(user), (error)=>{
+                    DeviceEventEmitter.emit('homepageDidChange', 'update');
+                    this.props.onCallBack(data);
+                    this.props.navigator.pop();
+                  })
+                })
+              }
+            })
           }
         }).catch((error)=> {
           console.log(error);

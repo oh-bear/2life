@@ -24,6 +24,7 @@ const INNERWIDTH = WIDTH - 16;
 const HEIGHT = Dimensions.get("window").height;
 const URL1 = HOST + "users/login";
 const URL2 = HOST + "users/user";
+const URL3 = HOST + "users/check";
 
 export default class LoginPage extends Component {
   static defaultProps = {}
@@ -31,8 +32,50 @@ export default class LoginPage extends Component {
     super(props);
     this.state = {
       user_account:"",
-      user_password:""
+      user_password:"",
+      user:{},
+      partner:{}
     };
+  }
+  componentWillMount() {
+    AsyncStorage.getItem('user_info', (error, result) => {
+      if (!error) {
+        if (result !== '' && result !== null) {
+          console.log('查询到的内容是：' + result);
+          this.state.user = JSON.parse(result);
+          AsyncStorage.getItem('partner_info', (error, result) => {
+            this.state.partner = JSON.parse(result)
+            if (!error) {
+              // if (result !== '' && result !== null) {
+                HttpUtils.post(URL3, {
+                  token: this.state.user.token,
+                  uid: this.state.user.uid,
+                  timestamp: this.state.user.timestamp,
+                }).then((res)=>{
+                  console.log(res)
+                  if(res.status == 0) {
+                    console.log('User already login')
+                    this.props.navigator.push({
+                      component: HomeScreen,
+                      params: {
+                        user: this.state.user,
+                        partner: this.state.partner,
+                      }
+                    })
+                  }
+                })
+              // } else {
+              //   console.log('该用户尚未匹配');
+              // }
+            }
+          }) 
+        } else {
+          console.log('未找到指定保存的内容！');
+        }
+      } else {
+        console.log('查询数据失败');
+      }
+    })
   }
   onSubmit() {
     if (!this.state.user_account.trim()) {

@@ -8,13 +8,15 @@ import {
   Dimensions,
   TouchableOpacity,
   AlertIOS,
-  Alert
+  Alert,
+  AsyncStorage
 } from 'react-native';
 import CommonNav from '../common/CommonNav';
 import RightButtonNav from '../common/RightButtonNav';
 import TextPingFang from '../common/TextPingFang';
 import {HOST} from '../util/config';
 import HttpUtils from '../util/HttpUtils';
+import Platform from 'Platform';
 
 const WIDTH = Dimensions.get("window").width;
 const INNERWIDTH = WIDTH - 16;
@@ -48,18 +50,27 @@ export default class SettingPage extends Component {
           user_sex: this.state.user_sex,
           user_other_id: this.state.user_state
         }
-        this.props.onCallBack(data);
-        this.props.navigator.pop();
+        AsyncStorage.setItem('user_info', JSON.stringify(res.data), (error, result)=>{
+          if (!error) {
+            console.log(JSON.stringify(res.data));
+            this.props.onCallBack(data);
+            this.props.navigator.pop();
+          }
+        })
       }      
     }).catch((error)=> {
       console.log(error);
     })
   }
   changeName() {
-    AlertIOS.prompt('请输入新的昵称','',[
-      {text:'取消'},
-      {text:'确定'}],
-      (name)=>{this.setState({user_name: name})});
+    if(Platform.OS === 'ios'){
+      AlertIOS.prompt('请输入新的昵称','',[
+        {text:'取消'},
+        {text:'确定'}],
+        (name)=>{this.setState({user_name: name})});
+    } else {
+      Alert.alert('小提醒', '对不起，安卓用户暂时不支持更改昵称。。');
+    }
   }
   changeSex() {
     Alert.alert('是否更改性别？','',[

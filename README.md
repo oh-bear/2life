@@ -1,6 +1,6 @@
 # 双生：遇见另一半的美好：）
 
-* Apple Store 下载地址：[https://itunes.apple.com/cn/app/%E5%8F%8C%E7%94%9F/id1245100877?l=en&mt=8](https://itunes.apple.com/cn/app/%E5%8F%8C%E7%94%9F/id1245100877?l=en&mt=8)
+* App Store 下载地址：[https://itunes.apple.com/cn/app/%E5%8F%8C%E7%94%9F/id1245100877?l=en&mt=8](https://itunes.apple.com/cn/app/%E5%8F%8C%E7%94%9F/id1245100877?l=en&mt=8)
 
 * 前端 GitHub 地址：[https://github.com/airingursb/two-life](https://github.com/airingursb/two-life)
 
@@ -76,5 +76,12 @@
 4. 增加了关闭匹配
 5. 更换了登录页的logo
 
+### 1.2
+1. 增加了验证码请求校验
+2. 实现日记自动刷新
+3. 日记默认定位到今天
+4. 登录态维护
+5. 实现删除日记功能
+6. 显示日记写作时间
 
 

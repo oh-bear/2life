@@ -6,7 +6,8 @@ import {
   StyleSheet,
   Dimensions,
   AsyncStorage,
-  Alert
+  Alert,
+  DeviceEventEmitter
 } from "react-native";
 import RightButtonNav from "../common/RightButtonNav";
 import HttpUtils from "../util/HttpUtils";
@@ -45,6 +46,7 @@ export default class FeedBackPage extends Component {
     }).then((response)=>{
       if(response.status== 0) {
         Alert.alert("小提示", '创建成功：）');
+        DeviceEventEmitter.emit('homepageDidChange', 'update');
         this.props.navigator.pop();
       }
     }).catch((error)=>{

@@ -28,7 +28,6 @@ const styles = StyleSheet.create({
 	}
 });
 
-
 export default class BottomTabs extends Component {
 	static defaultProps = {
 	   page1: (<View style={styles.page1}></View>),
@@ -48,15 +47,15 @@ export default class BottomTabs extends Component {
             selected={this.state.selectedTab === 'home'}
             title="首页"
             renderIcon={() => <Image style={styles.image} source={require("../../res/images/home.png")} />}
-            renderSelectedIcon={() => <Image  source={require("../../res/images/home1.png")} />}
+            renderSelectedIcon={() => <Image source={require("../../res/images/home1.png")} />}
             onPress={() => this.setState({ selectedTab: 'home' })}>
-        	{this.props.page1}
+        		{this.props.page1}
 	        </TabNavigator.Item>
 	        <TabNavigator.Item
 	        	selected={this.state.selectedTab === 'profile'}
 	        	title="我的"
 	        	renderIcon={() => <Image style={styles.image} source={require("../../res/images/profile.png")} />}
-	        	renderSelectedIcon={() => <Image  source={require("../../res/images/profile1.png")} />}
+	        	renderSelectedIcon={() => <Image source={require("../../res/images/profile1.png")} />}
 	        	onPress={() => this.setState({ selectedTab: 'profile' })}>
 	        	{this.props.page2}
 	        </TabNavigator.Item>

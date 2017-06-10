@@ -57,6 +57,9 @@ export default class RegisterPage extends Component {
         case 0:
           this.state.lasttime = new Date().getTime();
           break
+        case 5000:
+          Alert.alert("小提示","请等待十分钟才可以获取哦~");
+          break
         default:
           Alert.alert("小提示","获取验证码失败！");
           break
@@ -148,14 +151,14 @@ export default class RegisterPage extends Component {
               }}
             />
             <TextInput
-                underlineColorAndroid='transparent' 
-                placeholder={"请输入您的昵称"}
-                placeholderTextColor={"white"}
-              	style={styles.textinput}
-              	onChangeText={(text)=>{
-                	this.setState({user_name:text})
-              	}}
-              />
+              underlineColorAndroid='transparent' 
+              placeholder={"请输入您的昵称"}
+              placeholderTextColor={"white"}
+            	style={styles.textinput}
+            	onChangeText={(text)=>{
+              	this.setState({user_name:text})
+            	}}
+            />
             <Text style={styles.remind}>很高兴 遇见你 ：）</Text>
           </View>
         <TouchableOpacity 

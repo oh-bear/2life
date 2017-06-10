@@ -8,7 +8,9 @@ import {
   Dimensions,
   TouchableOpacity,
   AlertIOS,
-  Alert
+  Alert,
+  DeviceEventEmitter,
+  AsyncStorage
 } from 'react-native';
 import CommonNav from '../common/CommonNav';
 import TextPingFang from '../common/TextPingFang';
@@ -41,8 +43,19 @@ export default class ConnectPage extends Component {
           user_other_id: res.data.id,
           partner: res.data
         }
-        this.props.onCallBack(data);
-        this.props.navigator.pop();
+        AsyncStorage.setItem('partner_info', res.data, (error)=>{
+          if (!error) {
+            AsyncStorage.getItem('user_info', (error, result)=>{
+              var user = JSON.parse(result);
+              user.user_other_id = res.data.id;
+              AsyncStorage.setItem('user_info', JSON.stringify(user), (error)=>{
+                DeviceEventEmitter.emit('homepageDidChange', 'update');
+                this.props.onCallBack(data);
+                this.props.navigator.pop();
+              })
+            })
+          }
+        })
       } else {
         Alert.alert('小提醒', 'QAQ，系统中已经没有异性供匹配了~快拉点你的小伙伴加入吧！');
       }
@@ -69,8 +82,19 @@ export default class ConnectPage extends Component {
               user_other_id: res.data.id,
               partner: res.data
             }
-            this.props.onCallBack(data);
-            this.props.navigator.pop();
+            AsyncStorage.setItem('partner_info', res.data, (error)=>{
+              if (!error) {
+                AsyncStorage.getItem('user_info', (error, result)=>{
+                  var user = JSON.parse(result);
+                  user.user_other_id = res.data.id;
+                  AsyncStorage.setItem('user_info', JSON.stringify(user), (error)=>{
+                    DeviceEventEmitter.emit('homepageDidChange', 'update');
+                    this.props.onCallBack(data);
+                    this.props.navigator.pop();
+                  })
+                })
+              }
+            })
           } else {
              Alert.alert('小提醒', 'QAQ，您要匹配的小伙伴不存在或者已被别人匹配过了！');           
           }

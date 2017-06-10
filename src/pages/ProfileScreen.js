@@ -44,8 +44,13 @@ export default class ProfileScreen extends Component {
     })
   }
   logout() {
-    this.props.navigator.push({
-      component: LoginPage,
+    AsyncStorage.clear((error) =>{
+      if (!error) {
+        Alert.alert('小提醒', '您已成功退出登录~');
+        this.props.navigator.push({
+          component: LoginPage,
+        })
+      }
     })
   }
   componentDidMount() {
