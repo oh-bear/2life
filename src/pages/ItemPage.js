@@ -29,7 +29,7 @@ export default class ItemPage extends Component {
     var month = now.getMonth() + 1;     
     var date = now.getDate();   
     var hour = now.getHours();     
-    var minute = now.getMinutes();     
+    var minute = time.getMinutes()< 10 ? '0' + time.getMinutes() : time.getMinutes();     
     var second = now.getSeconds();     
     return month+"月"+date+"日 "+hour+"点"+minute+"分";     
   }     

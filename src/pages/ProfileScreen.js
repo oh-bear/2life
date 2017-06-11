@@ -33,15 +33,10 @@ export default class ProfileScreen extends Component {
       partner: this.props.partner
     };
   }
-  onAboutUs() {
-    this.props.navigator.push({
-      component:TextPingFang
-    })
-  }
   onJump(page,params) {
     this.props.navigator.push({
-      component:page,
-      params:params
+      component: page,
+      params: params
     })
   }
   logout() {
@@ -63,13 +58,12 @@ export default class ProfileScreen extends Component {
 
   render() {
     let booklist = require("../../res/images/icon_booklist.png");
-    let notifications = require("../../res/images/icon_booklist.png");
     let history = require("../../res/images/icon_history.png");
     let setting = require("../../res/images/icon_setting.png");
     let feedback = require("../../res/images/icon_feedback.png");
     let aboutus = require("../../res/images/icon_aboutus.png");
-    let images = [booklist,aboutus,notifications,setting,feedback,images];
-    let texts = ["创建日记","匹配","通知","设置","意见反馈"];
+    let images = [booklist,aboutus,,setting,feedback,images];
+    let texts = ["创建日记","匹配",,"设置","意见反馈"];
     let male_pic = require("../../res/images/avatar.png");
     let fm_pic = require("../../res/images/avatar2.png");
     let LinkImage, PartnerView = null;
@@ -140,17 +134,6 @@ export default class ProfileScreen extends Component {
                                 Alert.alert('小提醒', '您已关闭匹配功能，无法进行匹配！')
                               }
                               break;
-                              case "通知":
-                                this.onJump(NotificationsPage,{
-                                  title: "通知",
-                                  user: this.state.user,
-                                  onCallBack: (data)=>{
-                                    this.state.user.user_name = data.user_name;
-                                    this.state.user.user_sex = data.user_sex;
-                                    this.state.user.user_other_id = data.user_other_id;
-                                  }
-                                })
-                                break;
                             case "设置":
                               this.onJump(SettingPage,{
                                 title: "设置",
