@@ -13,6 +13,7 @@ import {
 import TextPingFang from "../common/TextPingFang";
 import CreateNotePage from './CreateNotePage';
 import SettingPage from './SettingPage';
+import NotificationsPage from './NotificationsPage';
 import FeedBackPage from './FeedBackPage';
 import ConnectPage from './ConnectPage';
 import PartnerPage from './PartnerPage';
@@ -62,19 +63,20 @@ export default class ProfileScreen extends Component {
 
   render() {
     let booklist = require("../../res/images/icon_booklist.png");
+    let notifications = require("../../res/images/icon_booklist.png");
     let history = require("../../res/images/icon_history.png");
     let setting = require("../../res/images/icon_setting.png");
     let feedback = require("../../res/images/icon_feedback.png");
     let aboutus = require("../../res/images/icon_aboutus.png");
-    let images = [booklist,aboutus,setting,feedback,images];
-    let texts = ["创建日记","匹配","设置","意见反馈"];
+    let images = [booklist,aboutus,notifications,setting,feedback,images];
+    let texts = ["创建日记","匹配","通知","设置","意见反馈"];
     let male_pic = require("../../res/images/avatar.png");
     let fm_pic = require("../../res/images/avatar2.png");
     let LinkImage, PartnerView = null;
     if (this.state.user.user_other_id !== -1 && this.state.user.user_other_id !== -404) {
-      LinkImage = 
+      LinkImage =
           <Image style={styles.link} source={require("../../res/images/link1.png")}/>
-      PartnerView = 
+      PartnerView =
           <View style={styles.avatar_content}>
             <Image style={styles.avatar_round} source={require("../../res/images/avatar_round.png")}>
               <Image source={this.state.partner.user_sex==1?fm_pic:male_pic}/>
@@ -101,8 +103,8 @@ export default class ProfileScreen extends Component {
       <View style={styles.items1}>
           {
             texts.map((d,i)=>{
-              if(i>=4) return 
-              return <TouchableOpacity 
+              if(i>=5) return
+              return <TouchableOpacity
                     key={i}
                     onPress={
                       ()=>{
@@ -138,6 +140,17 @@ export default class ProfileScreen extends Component {
                                 Alert.alert('小提醒', '您已关闭匹配功能，无法进行匹配！')
                               }
                               break;
+                              case "通知":
+                                this.onJump(NotificationsPage,{
+                                  title: "通知",
+                                  user: this.state.user,
+                                  onCallBack: (data)=>{
+                                    this.state.user.user_name = data.user_name;
+                                    this.state.user.user_sex = data.user_sex;
+                                    this.state.user.user_other_id = data.user_other_id;
+                                  }
+                                })
+                                break;
                             case "设置":
                               this.onJump(SettingPage,{
                                 title: "设置",
@@ -166,13 +179,13 @@ export default class ProfileScreen extends Component {
             })
           }
       </View>
-      <TouchableOpacity 
+      <TouchableOpacity
           style={styles.online_delete}
           onPress={()=>{
             this.logout()
           }}
           >
-          <Text 
+          <Text
             style={styles.online_font}>
             退出登录
           </Text>
