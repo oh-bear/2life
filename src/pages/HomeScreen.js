@@ -9,6 +9,7 @@ import TabNavigator from 'react-native-tab-navigator';
 import BottomTabs from '../common/BottomTabs';
 import AgendaScreen from "./AgendaScreen";
 import ProfileScreen from "./ProfileScreen";
+import NotificationsPage from "./NotificationsPage";
 
 export default class HomeScreen extends Component {
   constructor(props) {
@@ -27,7 +28,13 @@ export default class HomeScreen extends Component {
           navigator={this.props.navigator}
           count={this.state.homeCount}/>
     	}
-    	page2 = {
+      page2 = {
+        <NotificationsPage 
+          user={this.props.user}
+          partner={this.props.partner}
+          navigator={this.props.navigator}/>
+      }
+    	page3 = {
     		<ProfileScreen 
           user={this.props.user}
           partner={this.props.partner}

@@ -127,6 +127,7 @@ export default class RegisterPage extends Component {
                 placeholder={"请输入您的手机号"}
                 placeholderTextColor={"white"}
               	style={styles.textinput}
+                keyboardType='numeric'
               	onChangeText={(text)=>{
                 	this.setState({user_account:text})
               	}}
@@ -135,6 +136,7 @@ export default class RegisterPage extends Component {
                 underlineColorAndroid='transparent' 
                 placeholder={"请先获取验证码再输入哦"}
                 placeholderTextColor={"white"}
+                keyboardType='numeric'
               	style={styles.textinput}
               	onChangeText={(text)=>{
                 	this.setState({code:text})

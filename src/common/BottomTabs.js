@@ -52,12 +52,21 @@ export default class BottomTabs extends Component {
         		{this.props.page1}
 	        </TabNavigator.Item>
 	        <TabNavigator.Item
+	        	selected={this.state.selectedTab === 'notification'}
+	        	title="活动"
+	        	// badgeText="1"
+	        	renderIcon={() => <Image style={styles.image} source={require("../../res/images/message.png")} />}
+	        	renderSelectedIcon={() => <Image source={require("../../res/images/message1.png")} />}
+	        	onPress={() => this.setState({ selectedTab: 'notification' })}>
+	        	{this.props.page2}
+	        </TabNavigator.Item>
+	        <TabNavigator.Item
 	        	selected={this.state.selectedTab === 'profile'}
 	        	title="我的"
 	        	renderIcon={() => <Image style={styles.image} source={require("../../res/images/profile.png")} />}
 	        	renderSelectedIcon={() => <Image source={require("../../res/images/profile1.png")} />}
 	        	onPress={() => this.setState({ selectedTab: 'profile' })}>
-	        	{this.props.page2}
+	        	{this.props.page3}
 	        </TabNavigator.Item>
 			</TabNavigator>
 		</View>);
