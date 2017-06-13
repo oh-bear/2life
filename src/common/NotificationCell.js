@@ -101,7 +101,7 @@ var styles = StyleSheet.create({
     flexDirection:'column',
     marginLeft:12,
     marginRight:12,
-    alignItems: "center"
+    alignItems: "center",
   },
   timeStampContainer: {
     margin: 10,
@@ -124,7 +124,8 @@ var styles = StyleSheet.create({
     shadowColor: "#AEAFAC",
     shadowOffset: {width: 0, height: 4},
     shadowRadius: 2,
-    shadowOpacity: 0.5
+    shadowOpacity: 0.5,
+    width: WIDTH * 0.91
   },
   title: {
     fontSize: 17,
@@ -134,7 +135,8 @@ var styles = StyleSheet.create({
   image: {
     width: 320 / 375 * WIDTH,
     height: 170 / 667 * HEIGHT,
-    margin: 5
+    marginTop: 10,
+    marginLeft: (WIDTH * 0.91 - (320 / 375 * WIDTH)) / 2
   },
   content: {
     fontSize: 14,

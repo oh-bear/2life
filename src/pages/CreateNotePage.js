@@ -12,6 +12,7 @@ import {
 import RightButtonNav from "../common/RightButtonNav";
 import HttpUtils from "../util/HttpUtils";
 import {HOST} from '../util/config';
+import AlertBox from '../common/AlertBox';
 
 const WIDTH = Dimensions.get("window").width;
 const HEIGHT = Dimensions.get("window").height;
@@ -24,8 +25,12 @@ export default class FeedBackPage extends Component {
     super(props);
     this.state = {
       title:"",
-      content:""
+      content:"",
+      isDialogVisible: false
     }
+  }
+  showDialog(){
+    this.setState({isDialogVisible:true});
   }
   onPost() {
     if(!this.state.title.trim()) {
@@ -45,9 +50,7 @@ export default class FeedBackPage extends Component {
       note_date: new Date().getTime()
     }).then((response)=>{
       if(response.status== 0) {
-        Alert.alert("小提示", '创建成功：）');
-        DeviceEventEmitter.emit('homepageDidChange', 'update');
-        this.props.navigator.pop();
+        this.showDialog()
       }
     }).catch((error)=>{
         Alert.alert("小提示", '网络故障:(');
@@ -63,6 +66,15 @@ export default class FeedBackPage extends Component {
 				navigator={
 					this.props.navigator
 				}/>
+      <AlertBox
+        _dialogVisible={this.state.isDialogVisible}
+        _dialogRightBtnAction={()=>{this.hideDialog()}}
+        _dialogContent={'日记创建成功'}
+        _dialogLeftBtnAction={()=>{
+          DeviceEventEmitter.emit('homepageDidChange', 'update');
+          this.props.navigator.pop();
+        }}
+        />
       <TextInput
         underlineColorAndroid='transparent'
         placeholder={"请输入日记标题"}

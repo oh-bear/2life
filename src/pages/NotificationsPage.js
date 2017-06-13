@@ -49,19 +49,23 @@ export default class NotificationsPage extends Component {
 
   fetchData() {
     // var notifications = [
-    // { title:"新城市开放啦！",
-    //   content:"网格布局实验， 网格布局能够满足绝大多数的日常开发需求，所以只要满足网格布局的spec，那么就可以证明react的flex布局能够满足正常开发需求。",
-    //   type:0,
-    //   time:1497151997694,
-    //   url:"https://github.com/airingursb"
-    // },
     // { title:"圆桌谈，让你把话说完",
     //   content:"css 里边经常会做的事情是去讲一个文本或者图片水平垂直居中，如果使用过css 的flexbox当然知道使用alignItems 和 justifyContent . 那用react-native也来做一下实验。",
     //   type:1,
     //   image:"https://airing.ursb.me/image/twolife/walker.png",
     //   time:1497151997694,
     //   url:"https://github.com"
-    // }];
+    // },
+    // { title:"新城市开放啦！",
+    //   content:"网格布局实验， 网格布局能够满足绝大多数的日常开发足正常开发需求。",
+    //   type:0,
+    //   time:1497151997694,
+    //   url:"https://github.com/airingursb"
+    // },];
+    // this.setState({
+    //   dataSource: this.state.dataSource.cloneWithRows(notifications),
+    //   loaded: true,
+    // });
 
     HttpUtils.post(URL, {
       uid: this.state.user.id,

@@ -11,6 +11,7 @@ import {
 import RightButtonNav from "../common/RightButtonNav";
 import HttpUtils from "../util/HttpUtils";
 import {HOST} from '../util/config';
+import AlertBox from '../common/AlertBox';
 
 const WIDTH = Dimensions.get("window").width;
 const HEIGHT = Dimensions.get("window").height;
@@ -23,8 +24,15 @@ export default class FeedBackPage extends Component {
     super(props);
     this.state = {
       contact:"",
-      content:""
+      content:"",
+      isDialogVisible: false,
     }
+  }
+  showDialog(){
+    this.setState({isDialogVisible:true});
+  }
+  hideDialog(){
+    this.setState({isDialogVisible:false});
   }
   onPost() {
     if(!this.state.contact.trim()) {
@@ -43,8 +51,7 @@ export default class FeedBackPage extends Component {
       timestamp: this.props.timestamp
     }).then((response)=>{
       if(response.msg==="请求成功") {
-        Alert.alert("小提示","谢谢您的反馈，我们会尽快回复的！");
-        this.props.navigator.pop();
+        this.showDialog();
       }
     })
   }
@@ -53,13 +60,21 @@ export default class FeedBackPage extends Component {
       <RightButtonNav
         title={"意见反馈"}
         rightOnPress={()=>{
-              this.onPost();
-            }
+            this.onPost();
           }
-          navigator={
-            this.props.navigator
-          }
-          />
+        }
+        navigator={
+          this.props.navigator
+        }
+        />
+      <AlertBox
+        _dialogVisible={this.state.isDialogVisible}
+        _dialogRightBtnAction={()=>{this.hideDialog()}}
+        _dialogContent={'谢谢您的反馈，我们会尽快回复的！'}
+        _dialogLeftBtnAction={()=>{
+          this.props.navigator.pop();
+        }}
+        />
       <TextInput
         underlineColorAndroid='transparent'
         placeholder={"请输入您的邮箱或者电话"}
