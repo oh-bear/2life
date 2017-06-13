@@ -17,6 +17,7 @@ import TextPingFang from '../common/TextPingFang';
 import {HOST} from '../util/config';
 import HttpUtils from '../util/HttpUtils';
 import Platform from 'Platform';
+import AlertBox from '../common/AlertBox';
 
 const WIDTH = Dimensions.get("window").width;
 const INNERWIDTH = WIDTH - 16;
@@ -31,7 +32,9 @@ export default class SettingPage extends Component {
     this.state = {
       user_sex: this.props.user.user_sex,
       user_name: this.props.user.user_name,
-      user_state: this.props.user.user_other_id
+      user_state: this.props.user.user_other_id,
+      isDialogVisible: false,
+      data: {}
     };
   }
   onPost() {
@@ -44,17 +47,12 @@ export default class SettingPage extends Component {
       user_other_id: this.user_state
     }).then((res)=> {
       if (res.status == 0) {
-        Alert.alert('小提醒', '个人信息更改成功！');
-        let data = {
-          user_name: this.state.user_name,
-          user_sex: this.state.user_sex,
-          user_other_id: this.state.user_state
-        }
-        AsyncStorage.setItem('user_info', JSON.stringify(res.data), (error, result)=>{
-          if (!error) {
-            console.log(JSON.stringify(res.data));
-            this.props.onCallBack(data);
-            this.props.navigator.pop();
+        this.showDialog()
+        this.setState({
+          data: {
+            user_name: this.state.user_name,
+            user_sex: this.state.user_sex,
+            user_other_id: this.state.user_state
           }
         })
       }      
@@ -71,6 +69,14 @@ export default class SettingPage extends Component {
     } else {
       Alert.alert('小提醒', '对不起，安卓用户暂时不支持更改昵称。。');
     }
+  }
+
+  showDialog(){
+    this.setState({isDialogVisible:true});
+  }
+
+  hideDialog(){
+    this.setState({isDialogVisible:false});
   }
   changeSex() {
     Alert.alert('是否更改性别？','',[
@@ -118,6 +124,20 @@ export default class SettingPage extends Component {
   render() {
     return (
       <View style={styles.container}>
+        <AlertBox
+          _dialogVisible={this.state.isDialogVisible}
+          _dialogLeftBtnAction={()=> {
+            AsyncStorage.setItem('user_info', JSON.stringify(this.state.data), (error, result)=>{
+              if (!error) {
+                console.log(JSON.stringify(this.state.data));
+                this.props.onCallBack(this.state.data);
+                this.props.navigator.pop();
+              }
+            })
+          }}
+          _dialogRightBtnAction={()=>{this.hideDialog()}}
+          _dialogContent={'个人信息更改成功'}
+          />
         <Image 
           style={styles.bg} 
           source={this.state.user_sex==0?require("../../res/images/about_bg.png"):require("../../res/images/about_bg1.png")}>

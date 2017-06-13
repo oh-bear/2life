@@ -18,6 +18,7 @@ import {HOST} from '../util/config';
 import HttpUtils from '../util/HttpUtils';
 import LoginPage from './LoginPage';
 import Platform from 'Platform';
+import AlertBox from '../common/AlertBox';
 
 const WIDTH = Dimensions.get("window").width;
 const HEIGHT = Dimensions.get("window").height;
@@ -28,7 +29,13 @@ export default class ConnectPage extends Component {
   static defaultProps = {}
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      data: {},
+      isDialogVisible: false
+    };
+  }
+  showDialog(){
+    this.setState({isDialogVisible:true});
   }
   connectByRandom() {
     HttpUtils.post(URL1, {
@@ -38,24 +45,13 @@ export default class ConnectPage extends Component {
       sex: this.props.user.user_sex
     }).then((res)=>{
       if (res.status == 0) {
-        Alert.alert('小提醒', '匹配成功啦！');
-        let data = {
-          user_other_id: res.data.id,
-          partner: res.data
-        }
-        AsyncStorage.setItem('partner_info', res.data, (error)=>{
-          if (!error) {
-            AsyncStorage.getItem('user_info', (error, result)=>{
-              var user = JSON.parse(result);
-              user.user_other_id = res.data.id;
-              AsyncStorage.setItem('user_info', JSON.stringify(user), (error)=>{
-                DeviceEventEmitter.emit('homepageDidChange', 'update');
-                this.props.onCallBack(data);
-                this.props.navigator.pop();
-              })
-            })
+        this.setState({
+          data: {
+            user_other_id: res.data.id,
+            partner: res.data
           }
         })
+        this.showDialog();
       } else {
         Alert.alert('小提醒', 'QAQ，系统中已经没有异性供匹配了~快拉点你的小伙伴加入吧！');
       }
@@ -78,23 +74,13 @@ export default class ConnectPage extends Component {
         }).then((res)=>{
           if(res.status == 0){
             Alert.alert('小提醒', '匹配成功啦！');
-            let data = {
-              user_other_id: res.data.id,
-              partner: res.data
-            }
-            AsyncStorage.setItem('partner_info', res.data, (error)=>{
-              if (!error) {
-                AsyncStorage.getItem('user_info', (error, result)=>{
-                  var user = JSON.parse(result);
-                  user.user_other_id = res.data.id;
-                  AsyncStorage.setItem('user_info', JSON.stringify(user), (error)=>{
-                    DeviceEventEmitter.emit('homepageDidChange', 'update');
-                    this.props.onCallBack(data);
-                    this.props.navigator.pop();
-                  })
-                })
+            this.setState({
+              data: {
+                user_other_id: res.data.id,
+                partner: res.data
               }
             })
+            this.showDialog();
           } else {
              Alert.alert('小提醒', 'QAQ，您要匹配的小伙伴不存在或者已被别人匹配过了！');           
           }
@@ -115,6 +101,27 @@ export default class ConnectPage extends Component {
           navigator={this.props.navigator} 
           navStyle={styles.opacity0} 
           navBarStyle={styles.opacity0}/>
+        <AlertBox
+          _dialogVisible={this.state.isDialogVisible}
+          _dialogLeftBtnAction={()=> {this.hideDialog()}}
+          _dialogRightBtnAction={()=>{this.hideDialog()}}
+          _dialogContent={'匹配成功啦'}
+          _dialogLeftBtnAction={()=>{
+            AsyncStorage.setItem('partner_info', JSON.stringify(this.state.data), (error)=>{
+              if (!error) {
+                AsyncStorage.getItem('user_info', (error, result)=>{
+                  var user = JSON.parse(result);
+                  user.user_other_id = this.state.data.id;
+                  AsyncStorage.setItem('user_info', JSON.stringify(user), (error)=>{
+                    DeviceEventEmitter.emit('homepageDidChange', 'update');
+                    this.props.onCallBack(this.state.data);
+                    this.props.navigator.pop();
+                  })
+                })
+              }
+            })
+          }}
+          />
         <Image style={styles.title_image} source={require('../../res/images/bad.png')} />
         <Text style={styles.title}>"Oh - Uh"</Text>
         <TextPingFang style={styles.e_title}>快点匹配自己的另一半吧~</TextPingFang>

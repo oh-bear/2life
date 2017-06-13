@@ -1,11 +1,16 @@
 # 双生：遇见另一半的美好：）
 
+> 写下此时的心情匹配和你一样的TA吧~
+
+双生app是一款与众不同的写日记软件，很多朋友写日记坚持不下去是因为太枯燥乏味，没有兴趣感，而这款软件可以在你写日记的同时匹配更多同类型心情的日记主人，让你们一起分享彼此的心情，共建友谊。欢迎下载体验。
+
+* 产品主页：[https://two-life.github.io](https://two-life.github.io)
+
 * App Store 下载地址：[https://itunes.apple.com/cn/app/%E5%8F%8C%E7%94%9F/id1245100877?l=en&mt=8](https://itunes.apple.com/cn/app/%E5%8F%8C%E7%94%9F/id1245100877?l=en&mt=8)
 
 * 前端 GitHub 地址：[https://github.com/airingursb/two-life](https://github.com/airingursb/two-life)
 
 * 后端 GitHub 地址：[https://github.com/airingursb/two-life-express](https://github.com/airingursb/two-life-express)
-
 
 ## Screenshots
 
@@ -63,20 +68,29 @@
 > 联系邮箱：airing@ursb.me
 
 
+## Contributing
+
+* Fork it!
+* Create your feature branch: `git checkout -b my-new-feature`
+* Commit your changes: `git commit -am 'Add some feature'`
+* Push to the branch: `git push origin my-new-feature`
+* Submit a pull request
+
 ## 更新日志
 
-### 1.0 
-1. 书写并保存纯文字的日记
-2. 随机匹配 TA 的日记
+### 1.4 / 2017-06-13
+1. 修复日记详情页崩溃bug（感觉我一直在生产bug...）
+2. 优化纯文字通知的显示
+3. 通知按时间逆序显示
+4. 制作了一个炒鸡可爱的弹出框，用于各类success提醒
+5. 修复随机匹配闪退bug
 
-### 1.1
-1. 添加了匹配失败的提醒
-2. 优化了匹配流程：现在匹配成功之后再也不需要重新登录了！
-3. 实现了定向匹配
-4. 增加了关闭匹配
-5. 更换了登录页的logo
+### 1.3 / 2017-06-12
+1. 实现通知模块
+2. 优化登录和注册界面的输入框：感谢 @DingLin 的PR
+3. 修复修改昵称出现的bug：感谢 @DingLin 的PR
 
-### 1.2
+### 1.2 / 2017-06-10 
 1. 增加了验证码请求校验
 2. 实现日记自动刷新
 3. 日记默认定位到今天
@@ -84,8 +98,17 @@
 5. 实现删除日记功能
 6. 显示日记写作时间
 
-### 1.3
-1. 实现通知模块
-2. 优化登录和注册界面的输入框：感谢 @DingLin 的PR
-3. 修复修改昵称出现的bug：感谢 @DingLin 的PR
+### 1.1 / 2017-06-08 
+1. 添加了匹配失败的提醒
+2. 优化了匹配流程：现在匹配成功之后再也不需要重新登录了！
+3. 实现了定向匹配：可以邀请自己的另一半来用哦
+4. 增加了关闭匹配：可以作为私密日记本
+5. 更换了登录页的logo
+
+### 1.0 / 2017-06-06 
+1. 书写并保存纯文字的日记
+2. 随机匹配 TA 的日记
+
+## Contributors
+* @DingLin
 
