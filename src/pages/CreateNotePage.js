@@ -7,8 +7,11 @@ import {
   Dimensions,
   AsyncStorage,
   Alert,
-  DeviceEventEmitter
+  DeviceEventEmitter,
+  TouchableOpacity,
+  Image
 } from "react-native";
+import ImagePicker from 'react-native-image-picker';
 import RightButtonNav from "../common/RightButtonNav";
 import HttpUtils from "../util/HttpUtils";
 import {HOST} from '../util/config';
@@ -26,7 +29,8 @@ export default class FeedBackPage extends Component {
     this.state = {
       title:"",
       content:"",
-      isDialogVisible: false
+      isDialogVisible: false,
+      avatarSource: ''
     }
   }
   showDialog(){
@@ -57,6 +61,15 @@ export default class FeedBackPage extends Component {
     }) 
   }
   render() {
+    var options = {
+      title: 'Select Avatar',
+      customButtons: [
+      ],
+      storageOptions: {
+        skipBackup: true,
+        path: 'images'
+      }
+    };
     return <View style={styles.container}>
       <RightButtonNav
         title={"创建日记"}
@@ -75,6 +88,35 @@ export default class FeedBackPage extends Component {
           this.props.navigator.pop();
         }}
         />
+      <Image source={this.state.avatarSource} style={styles.uploadAvatar} />
+      <TouchableOpacity
+        onPress={()=>{
+          ImagePicker.showImagePicker(options, (response) => {
+            console.log('Response = ', response);
+
+            if (response.didCancel) {
+              console.log('User cancelled image picker');
+            }
+            else if (response.error) {
+              console.log('ImagePicker Error: ', response.error);
+            }
+            else if (response.customButton) {
+              console.log('User tapped custom button: ', response.customButton);
+            }
+            else {
+              let source = { uri: response.uri };
+
+              // You can also display the image using data:
+              // let source = { uri: 'data:image/jpeg;base64,' + response.data };
+
+              this.setState({
+                avatarSource: source
+              });
+            }
+          });
+        }}>
+        <Text>上传图片</Text>
+      </TouchableOpacity>
       <TextInput
         underlineColorAndroid='transparent'
         placeholder={"请输入日记标题"}
@@ -95,6 +137,7 @@ export default class FeedBackPage extends Component {
            this.setState({content:text})
         }}
         />
+
     </View>
   }
 }
@@ -119,5 +162,9 @@ const styles = StyleSheet.create({
   },
   textInput_content: {
     height:0.7*HEIGHT
+  },
+  uploadAvatar: {
+    width: 60,
+    height: 60
   }
 })
