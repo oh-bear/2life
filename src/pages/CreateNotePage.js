@@ -57,58 +57,66 @@ export default class CreateNotePage extends Component {
       note_date: new Date().getTime()
     }).then((response)=>{
       if(response.status== 0) {
-        this.showDialog()
+        this.state.fileList.map((d,i)=>{
+          file = d;
+          this.uploadFile(file, ()=>{
+            console.log('uploadFile success= ', i);
+            //不知道RN如何实现NSOperation group
+            if (i+1 == this.state.fileList.length) {
+              this.showDialog()
+            }
+          });
+        })
+
       }
     }).catch((error)=>{
         Alert.alert("小提示", '网络故障:(');
     })
   }
 
-  // onPost_Token(file) {
-  //   if(!file.name) {
-  //     Alert.alert("小提示","图片没有名称哦~");
-  //     return ;
-  //   }
-  //   if(!file.uri) {
-  //     Alert.alert("小提示","图片没有内容哦~");
-  //     return ;
-  //   }
-  //   HttpUtils.post(URL_TOKEN,{
-  //     token: this.props.user.token,
-  //     uid: this.props.user.uid,
-  //     timestamp: this.props.timestamp,
-  //     filename: file.name//"image/twolife/" + this.state.file.name,
-  //   }).then((response)=>{
-  //     if(response.status== 0) {
-  //       file.token = response.qiniu_token;
-  //
-  //       this.startUpload(file);
-  //     }
-  //   }).catch((error)=>{
-  //       Alert.alert("小提示", '网络故障:(');
-  //   })
-  // }
-  //
-  // startUpload(file){
-  //   var formData = new FormData();
-  //   formData.append('file', {uri: file.uri, type:'application/octet-stream', name: file.name});
-  //   formData.append('key', file.name);
-  //   formData.append('token', file.token);
-  //
-  //   return fetch(QINIU_UPHOST, {
-  //     method: 'post',
-  //     headers: {
-  //       'Accept': 'application/json',
-  //       'Content-Type': 'application/octet-stream'
-  //     },
-  //     body: formData
-  //     }).then((response) => {
-  //       Alert.alert("小提示", '文件上传成功');
-  //
-  //   }).catch((error) => {
-  //     Alert.alert("小提示", '网络故障:(');
-  //   });
-  // }
+  uploadFile(file, complete) {
+    if(!file.name) {
+      Alert.alert("小提示","图片没有名称哦~");
+      return ;
+    }
+    if(!file.uri) {
+      Alert.alert("小提示","图片没有内容哦~");
+      return ;
+    }
+    HttpUtils.post(URL_TOKEN,{
+      token: this.props.user.token,
+      uid: this.props.user.uid,
+      timestamp: this.props.timestamp,
+      filename: file.name//"image/twolife/" + this.state.file.name,
+    }).then((response)=>{
+      if(response.status== 0) {
+        file.token = response.qiniu_token;
+
+        var formData = new FormData();
+        formData.append('file', {uri: file.uri, type:'application/octet-stream', name: file.name});
+        formData.append('key', file.name);
+        formData.append('token', file.token);
+
+        return fetch(QINIU_UPHOST, {
+          method: 'post',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/octet-stream'
+          },
+          body: formData
+          }).then((response) => {
+            complete();
+        }).catch((error) => {
+          Alert.alert("小提示", '网络故障:(');
+        });
+
+      }
+    }).catch((error)=>{
+        Alert.alert("小提示", '网络故障:(');
+    })
+
+  }
+
 
   render() {
     var options = {
@@ -224,7 +232,7 @@ const styles = StyleSheet.create({
     borderRadius:8,
   },
   textInput_content: {
-    height:0.5*HEIGHT
+    height:0.3*HEIGHT
   },
   imageConteainer: {
     flexDirection: 'row',
