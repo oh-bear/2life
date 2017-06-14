@@ -8,8 +8,10 @@ import {
   Dimensions,
   TextInput,
   Alert,
-  AsyncStorage
+  AsyncStorage,
+  TouchableWithoutFeedback
 } from 'react-native';
+import dismissKeyboard from 'dismissKeyboard';
 import * as Animatable from 'react-native-animatable';
 import { createAnimatableComponent, View, Text } from 'react-native-animatable';
 
@@ -116,6 +118,7 @@ export default class RegisterPage extends Component {
   }
   render() {
     return (
+      <TouchableWithoutFeedback onPress={dismissKeyboard}>
       <View style={styles.container} animation="fadeIn">
       <Image style={styles.bg} source={require("../../res/images/welcome_bg.png")}>
         <View style={styles.text}>
@@ -204,6 +207,7 @@ export default class RegisterPage extends Component {
         </TouchableOpacity>
       </Image>
       </View>
+      </TouchableWithoutFeedback>
     );
   }
 }
