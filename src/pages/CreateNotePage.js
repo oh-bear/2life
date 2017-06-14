@@ -9,12 +9,13 @@ import {
   Alert,
   DeviceEventEmitter,
   TouchableOpacity,
-  Image
+  Image,
+  ActivityIndicator
 } from "react-native";
 import ImagePicker from 'react-native-image-picker';
 import RightButtonNav from "../common/RightButtonNav";
 import HttpUtils from "../util/HttpUtils";
-import {HOST} from '../util/config';
+import {HOST, QINIU_UPHOST} from '../util/config';
 import AlertBox from '../common/AlertBox';
 
 const WIDTH = Dimensions.get("window").width;
@@ -22,15 +23,18 @@ const HEIGHT = Dimensions.get("window").height;
 const INNERWIDTH =  WIDTH - 16;
 
 const URL = HOST + "notes/save";
+const URL_TOKEN = HOST + "util/qiniu_token";//qiniu_token
 
-export default class FeedBackPage extends Component {
+export default class CreateNotePage extends Component {
   constructor(props) {
     super(props);
     this.state = {
       title:"",
       content:"",
       isDialogVisible: false,
-      avatarSource: ''
+      file:{},
+      qiniu_token:"",
+      animating:false//HUD
     }
   }
   showDialog(){
@@ -58,8 +62,59 @@ export default class FeedBackPage extends Component {
       }
     }).catch((error)=>{
         Alert.alert("小提示", '网络故障:(');
-    }) 
+    })
   }
+
+  onPost_Token() {
+    if(!this.state.file.name) {
+      Alert.alert("小提示","图片没有名称哦~");
+      return ;
+    }
+    if(!this.state.file.uri) {
+      Alert.alert("小提示","图片没有内容哦~");
+      return ;
+    }
+
+    HttpUtils.post(URL_TOKEN,{
+      token: this.props.user.token,
+      uid: this.props.user.uid,
+      timestamp: this.props.timestamp,
+      filename: this.state.file.name//"image/twolife/" + this.state.file.name,
+    }).then((response)=>{
+      if(response.status== 0) {
+        this.state.qiniu_token = response.qiniu_token;
+        this.startUpload();
+      }
+    }).catch((error)=>{
+        Alert.alert("小提示", '网络故障:(');
+    })
+  }
+
+  startUpload(){
+    this.setState({animating: true});//打开HUD
+    var file = this.state.file;
+
+    var formData = new FormData();
+    formData.append('file', {uri: file.uri, type:'application/octet-stream', name: file.name});
+    formData.append('key', file.name);
+    formData.append('token', this.state.qiniu_token);
+
+    return fetch(QINIU_UPHOST, {
+      method: 'post',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/octet-stream'
+      },
+      body: formData
+      }).then((response) => {
+        this.setState({animating: false});//关闭HUD
+
+    }).catch((error) => {
+      Alert.alert("小提示", '网络故障:(');
+      this.setState({animating: false});//关闭HUD
+    });
+  }
+
   render() {
     var options = {
       title: 'Select Avatar',
@@ -88,7 +143,6 @@ export default class FeedBackPage extends Component {
           this.props.navigator.pop();
         }}
         />
-      <Image source={this.state.avatarSource} style={styles.uploadAvatar} />
       <TouchableOpacity
         onPress={()=>{
           ImagePicker.showImagePicker(options, (response) => {
@@ -104,18 +158,20 @@ export default class FeedBackPage extends Component {
               console.log('User tapped custom button: ', response.customButton);
             }
             else {
-              let source = { uri: response.uri };
+              let file = { uri: response.uri, name:response.fileName};
 
-              // You can also display the image using data:
-              // let source = { uri: 'data:image/jpeg;base64,' + response.data };
-
-              this.setState({
-                avatarSource: source
-              });
+              this.state.file = file;
+              this.onPost_Token();
             }
           });
         }}>
         <Text>上传图片</Text>
+        <ActivityIndicator
+          animating={this.state.animating}
+          style={styles.center}
+          size="small"
+          hidesWhenStopped={true}
+        />
       </TouchableOpacity>
       <TextInput
         underlineColorAndroid='transparent'
@@ -143,7 +199,7 @@ export default class FeedBackPage extends Component {
 }
 
 const styles = StyleSheet.create({
-  container:{ 
+  container:{
     backgroundColor:"rgb(242,246,250)",
     width: WIDTH,
     height: HEIGHT
@@ -163,8 +219,8 @@ const styles = StyleSheet.create({
   textInput_content: {
     height:0.7*HEIGHT
   },
-  uploadAvatar: {
-    width: 60,
-    height: 60
-  }
+  center: {
+  top: 0,
+  justifyContent: 'center',
+}
 })
