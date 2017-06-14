@@ -31,11 +31,11 @@ export default class NotificationCell extends Component {
   }
 
   formatDate(time) {
-    var month = (time.getMonth() + 1 < 10)? ('0' + (time.getMonth() + 1)) : time.getMonth() + 1;     
-    var date = time.getDate() < 10 ? '0' + time.getDate() : time.getDate();   
-    var hour = time.getHours() < 10 ? '0' + time.getHours() : time.getHours();     
-    var minute = time.getMinutes()< 10 ? '0' + time.getMinutes() : time.getMinutes();     
-    return month+"-"+date+" "+hour+":"+minute;    
+    var month = (time.getMonth() + 1 < 10)? ('0' + (time.getMonth() + 1)) : time.getMonth() + 1;
+    var date = time.getDate() < 10 ? '0' + time.getDate() : time.getDate();
+    var hour = time.getHours() < 10 ? '0' + time.getHours() : time.getHours();
+    var minute = time.getMinutes()< 10 ? '0' + time.getMinutes() : time.getMinutes();
+    return month+"-"+date+" "+hour+":"+minute;
   }
 
   onJump(page,params) {
@@ -50,13 +50,14 @@ export default class NotificationCell extends Component {
     var time = this.formatDate(d);
     let CoverImage = null;
     if (this.state.type == 1) {
-      CoverImage = <Image 
-        style={styles.image} 
-        source={{uri:this.state.image}} 
+      CoverImage = <Image
+        style={styles.image}
+        source={{uri:this.state.image}}
         indicator={Progress.Circle}
         />
     }
-    const cell = (
+
+    return (
       <View style={styles.container}>
 
         <View style={styles.timeStampContainer}>
@@ -86,18 +87,12 @@ export default class NotificationCell extends Component {
           <View style={styles.detailConteainer}>
               <TextPingFang style={styles.detailTitle}>
                 查看详情
-              </TextPingFang>  
+              </TextPingFang>
             <Image style={styles.detailIcon} source={require('../../res/images/right1.png')} />
           </View>
           </TouchableOpacity>
         </View>
       </View>
-    );
-
-    return (
-      <TouchableOpacity>
-        {cell}
-      </TouchableOpacity>
     );
   }
 }
