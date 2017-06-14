@@ -34,7 +34,8 @@ export default class CreateNotePage extends Component {
       isDialogVisible: false,
       file:{},
       qiniu_token:"",
-      animating:false//HUD
+      animating:false,//HUD
+      filename:''
     }
   }
   showDialog(){
@@ -96,7 +97,7 @@ export default class CreateNotePage extends Component {
 
     var formData = new FormData();
     formData.append('file', {uri: file.uri, type:'application/octet-stream', name: file.name});
-    formData.append('key', file.name);
+    formData.append('key', this.state.filename);
     formData.append('token', this.state.qiniu_token);
 
     return fetch(QINIU_UPHOST, {
@@ -158,9 +159,10 @@ export default class CreateNotePage extends Component {
               console.log('User tapped custom button: ', response.customButton);
             }
             else {
-              let file = { uri: response.uri, name:response.fileName};
+              let file = {uri: response.uri, name: response.fileName};
 
               this.state.file = file;
+              this.state.filename = 'image/twolife/' + this.props.user.uid + '/' + file.name;
               this.onPost_Token();
             }
           });

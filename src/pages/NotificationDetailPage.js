@@ -9,7 +9,8 @@ import {
   TouchableOpacity,
   WebView
 } from 'react-native';
-import CommonNav from '../common/CommonNav'
+import CommonNav from '../common/CommonNav';
+
 
 const WIDTH = Dimensions.get("window").width
 const HEIGHT = Dimensions.get("window").height

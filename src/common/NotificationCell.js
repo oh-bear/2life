@@ -3,11 +3,13 @@ import {
   StyleSheet,
   Text,
   View,
-  Image,
   Navigator,
   Dimensions,
   TouchableOpacity
 } from 'react-native';
+import Image from 'react-native-image-progress';
+import * as Progress from 'react-native-progress';
+
 import TextPingFang from './TextPingFang';
 import NotificationDetailPage from '../pages/NotificationDetailPage';
 
@@ -48,7 +50,11 @@ export default class NotificationCell extends Component {
     var time = this.formatDate(d);
     let CoverImage = null;
     if (this.state.type == 1) {
-      CoverImage = <Image style={styles.image} source={{uri:this.state.image}} />
+      CoverImage = <Image 
+        style={styles.image} 
+        source={{uri:this.state.image}} 
+        indicator={Progress.Circle}
+        />
     }
     const cell = (
       <View style={styles.container}>
