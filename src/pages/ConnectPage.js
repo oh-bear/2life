@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 import {
   StyleSheet,
-  Text,
-  View,
   Image,
   Navigator,
   Dimensions,
@@ -12,6 +10,8 @@ import {
   DeviceEventEmitter,
   AsyncStorage
 } from 'react-native';
+import { createAnimatableComponent, View, Text } from 'react-native-animatable';
+
 import CommonNav from '../common/CommonNav';
 import TextPingFang from '../common/TextPingFang';
 import {HOST} from '../util/config';
@@ -126,24 +126,26 @@ export default class ConnectPage extends Component {
         <Text style={styles.title}>"Oh - Uh"</Text>
         <TextPingFang style={styles.e_title}>快点匹配自己的另一半吧~</TextPingFang>
         <TouchableOpacity
-          style={styles.online_login}
-          onPress={()=>{
-            this.connectByRandom();
-          }}>
-          <Text
-            style={styles.online_font}>
-            随机匹配
-          </Text>
+            onPress={()=>{
+              this.connectByRandom();
+            }}>
+          <View style={styles.online_login} delay={100} animation="bounceInRight">
+            <Text
+              style={styles.online_font}>
+              随机匹配
+            </Text>
+          </View>
         </TouchableOpacity>
         <TouchableOpacity 
-          style={styles.online_register}
-          onPress={()=>{
-            this.connectById();
-          }}>
-          <Text 
-            style={styles.online_font}>
-            定点匹配
-          </Text>
+            onPress={()=>{
+              this.connectById();
+            }}>
+          <View style={styles.online_register} delay={150} animation="bounceInRight">          
+            <Text 
+              style={styles.online_font}>
+              定点匹配
+            </Text>
+          </View>
         </TouchableOpacity>
       </View>
     );

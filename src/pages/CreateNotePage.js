@@ -1,7 +1,5 @@
 import React, {Component} from "react";
 import {
-  View,
-  Text,
   TextInput,
   StyleSheet,
   Dimensions,
@@ -10,9 +8,11 @@ import {
   DeviceEventEmitter,
   TouchableOpacity,
   Image,
-  ActivityIndicator
+  ActivityIndicator,
 } from "react-native";
 import ImagePicker from 'react-native-image-picker';
+import { createAnimatableComponent, View, Text } from 'react-native-animatable';
+
 import RightButtonNav from "../common/RightButtonNav";
 import HttpUtils from "../util/HttpUtils";
 import {HOST, QINIU_UPHOST} from '../util/config';
@@ -144,7 +144,7 @@ export default class CreateNotePage extends Component {
           this.props.navigator.pop();
         }}
         />
-      <TouchableOpacity
+      {/*<TouchableOpacity
         onPress={()=>{
           ImagePicker.showImagePicker(options, (response) => {
             console.log('Response = ', response);
@@ -174,7 +174,7 @@ export default class CreateNotePage extends Component {
           size="small"
           hidesWhenStopped={true}
         />
-      </TouchableOpacity>
+      </TouchableOpacity>*/}
       <TextInput
         underlineColorAndroid='transparent'
         placeholder={"请输入日记标题"}

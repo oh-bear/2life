@@ -1,13 +1,13 @@
 import React, {Component} from "react";
 import {
-  View,
-  Text,
   TextInput,
   StyleSheet,
   Dimensions,
   AsyncStorage,
   Alert
 } from "react-native";
+import { createAnimatableComponent, View, Text } from 'react-native-animatable';
+
 import RightButtonNav from "../common/RightButtonNav";
 import HttpUtils from "../util/HttpUtils";
 import {HOST} from '../util/config';

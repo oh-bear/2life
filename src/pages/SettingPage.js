@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 import {
   StyleSheet,
-  Text,
-  View,
   Image,
   Navigator,
   Dimensions,
@@ -11,6 +9,8 @@ import {
   Alert,
   AsyncStorage
 } from 'react-native';
+import { createAnimatableComponent, View, Text } from 'react-native-animatable';
+
 import CommonNav from '../common/CommonNav';
 import RightButtonNav from '../common/RightButtonNav';
 import TextPingFang from '../common/TextPingFang';
@@ -158,34 +158,37 @@ export default class SettingPage extends Component {
           <TextPingFang style={styles.avatar_font}>{this.props.user.user_code}</TextPingFang>
         </Image>
         <TouchableOpacity 
-          style={styles.online_name}
-          onPress={()=>{
-            this.changeName();
-          }}>
-          <Text 
-            style={styles.online_font}>
-            {this.state.user_name}
-          </Text>
+            onPress={()=>{
+              this.changeName();
+            }}>
+          <View style={styles.online_name} delay={100} animation="bounceInRight">
+            <Text 
+              style={styles.online_font}>
+              {this.state.user_name}
+            </Text>
+          </View>
         </TouchableOpacity>
         <TouchableOpacity 
-          style={styles.online_sex}
-          onPress={()=>{
-            this.changeSex();
-          }}>
-          <Text 
-            style={styles.online_font}>
-            {this.state.user_sex==0?'男':'女'}
-          </Text>
+            onPress={()=>{
+              this.changeSex();
+            }}>
+          <View style={styles.online_sex} delay={150} animation="bounceInRight">
+            <Text 
+              style={styles.online_font}>
+              {this.state.user_sex==0?'男':'女'}
+            </Text>
+          </View>
         </TouchableOpacity>
         <TouchableOpacity 
-          style={styles.online_state}
-          onPress={()=>{
-            this.changeConnectState();
-          }}>
-          <Text 
-            style={styles.online_font}>
-            {this.state.user_state==-404?'拒绝任何匹配':'开放匹配'}
-          </Text>
+            onPress={()=>{
+              this.changeConnectState();
+            }}>
+          <View style={styles.online_state} delay={200} animation="bounceInRight">
+            <Text 
+              style={styles.online_font}>
+              {this.state.user_state==-404?'拒绝任何匹配':'开放匹配'}
+            </Text>         
+          </View>
         </TouchableOpacity>
       </View>
     );

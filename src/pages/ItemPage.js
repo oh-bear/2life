@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 import {
   StyleSheet,
-  Text,
-  View,
   Image,
   Navigator,
   Dimensions,
@@ -10,6 +8,8 @@ import {
   Alert,
   DeviceEventEmitter
 } from 'react-native';
+import { createAnimatableComponent, View, Text } from 'react-native-animatable';
+
 import CommonNav from "../common/CommonNav";
 import {HOST} from '../util/config';
 import TextPingFang from '../common/TextPingFang';

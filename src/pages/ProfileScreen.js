@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 import {
-  View,
   StyleSheet,
-  Text,
   Navigator,
   TouchableOpacity,
   Image,
@@ -10,6 +8,8 @@ import {
   AsyncStorage,
   Alert
 } from 'react-native';
+import { createAnimatableComponent, View, Text } from 'react-native-animatable';
+
 import TextPingFang from "../common/TextPingFang";
 import CreateNotePage from './CreateNotePage';
 import SettingPage from './SettingPage';
@@ -79,7 +79,7 @@ export default class ProfileScreen extends Component {
           </View>
     }
 
-    return <View style={styles.container}>
+    return <View style={styles.container} animation="fadeIn">
       <View style={styles.info_container}>
         <Image style={styles.avatar} source={require("../../res/images/avatar_bg.png")}>
           <View style={styles.avatar_container}>
@@ -98,7 +98,8 @@ export default class ProfileScreen extends Component {
           {
             texts.map((d,i)=>{
               if(i>=5) return
-              return <TouchableOpacity
+              return <View delay={100 + i * 50} animation="bounceInRight">
+                  <TouchableOpacity
                     key={i}
                     onPress={
                       ()=>{
@@ -159,20 +160,21 @@ export default class ProfileScreen extends Component {
                     <TextPingFang style={styles.item_font}>{d}</TextPingFang>
                 <Image style={styles.item_arrow} source={require("../../res/images/right_arrow.png")}/>
             </TouchableOpacity>
+            </View>
             })
           }
       </View>
-      <TouchableOpacity
-          style={styles.online_delete}
-          onPress={()=>{
-            this.logout()
-          }}
-          >
-          <Text
-            style={styles.online_font}>
-            退出登录
-          </Text>
-        </TouchableOpacity>
+      <TouchableOpacity style={styles.online_delete} 
+        onPress={()=>{
+          this.logout()
+        }}>
+        <View animation="zoomIn" delay={100}>       
+            <Text
+              style={styles.online_font}>
+              退出登录
+            </Text>
+        </View>
+      </TouchableOpacity>
     </View>
   }
 }

@@ -6,6 +6,7 @@ import {
   Navigator
 } from "react-native";
 import LoginPage from "./pages/LoginPage";
+import WelcomePage from "./pages/WelcomePage";
 import HomeScreen from './pages/HomeScreen';
 
 function setup() {
@@ -15,14 +16,28 @@ function setup() {
       let Component = route.component;
       return <Component {...route.params} navigator={navigator}/>;
     }
+    configureScene = (route, routeStack) => {
+      let configure = Navigator.SceneConfigs.PushFromRight;
+      switch (route.name){
+        case 'EditView':
+          configure = Navigator.SceneConfigs.FloatFromBottom;
+        default:
+          configure =  Navigator.SceneConfigs.PushFromRight;
+      };
+      return {
+        ...configure,
+        gestures:{}
+      };
+    }
     render() {
       return <Navigator
-          initialRoute = {{component: LoginPage}}
+          initialRoute = {{component: WelcomePage}}
           renderScene = {(route, navigator)=>{
             let Component = route.component
             return <Component navigator={navigator} {...route.params}/>
           }}
-          />
+          configureScene={this.configureScene}
+        />
     }
   }
   

@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 import {
-  View,
   StyleSheet,
-  Text,
   Navigator,
   TouchableOpacity,
   Image,
@@ -12,6 +10,9 @@ import {
   Alert,
   AsyncStorage
 } from 'react-native';
+import * as Animatable from 'react-native-animatable';
+import { createAnimatableComponent, View, Text } from 'react-native-animatable';
+
 import NavigationBar from '../common/NavigationBar';
 import TextPingFang from "../common/TextPingFang";
 import TimerButton from '../common/TimerButton';
@@ -115,13 +116,13 @@ export default class RegisterPage extends Component {
   }
   render() {
     return (
-      <View style={styles.container}>
+      <View style={styles.container} animation="fadeIn">
       <Image style={styles.bg} source={require("../../res/images/welcome_bg.png")}>
         <View style={styles.text}>
           <TextPingFang style={styles.title}>双生</TextPingFang>
           <TextPingFang style={styles.e_title}>今夕何夕 见此良人</TextPingFang>
         </View>
-        <View style={styles.form}>
+        <View style={styles.form} animation="zoomIn" delay={100}>
             <TextInput
                 underlineColorAndroid='transparent' 
                 placeholder={"请输入您的手机号"}
@@ -168,20 +169,24 @@ export default class RegisterPage extends Component {
           onPress={()=>{
             this.getCode();
           }}>
+        <View animation="zoomIn" delay={100}>
           <Text 
             style={styles.online_font}>
             获取验证码
           </Text>
-        </TouchableOpacity>
+        </View>
+        </TouchableOpacity> 
         <TouchableOpacity 
-          style={styles.online_login}
+          style={styles.online_login} 
           onPress={()=>{
             this.onSubmit();
           }}>
+        <View animation="zoomIn" delay={100}>       
           <Text 
             style={styles.online_font}>
             注册
-          </Text>
+          </Text>        
+        </View>
         </TouchableOpacity>
         <TouchableOpacity 
           style={styles.online_register}
@@ -190,10 +195,12 @@ export default class RegisterPage extends Component {
               component: LoginPage
             })
           }}>
+        <View animation="zoomIn" delay={100}>        
           <Text 
             style={styles.online_font}>
             返回
-          </Text>
+          </Text>        
+        </View>
         </TouchableOpacity>
       </Image>
       </View>

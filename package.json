@@ -13,6 +13,7 @@
     "react": "16.0.0-alpha.6",
     "react-native": "0.43.2",
     "react-native-action-button": "^2.6.9",
+    "react-native-animatable": "^1.2.2",
     "react-native-calendars": "1.2.21",
     "react-native-image-picker": "^0.26.3",
     "react-native-image-progress": "^0.6.0",

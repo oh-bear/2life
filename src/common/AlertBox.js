@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
 import {
     Modal,
-    Text,
     TouchableHighlight,
-    View ,
     StyleSheet,
     BackAndroid,
     Image
 } from 'react-native';
+import { createAnimatableComponent, View, Text } from 'react-native-animatable';
+
 import TextPingFang from './TextPingFang';
 
 let Dimensions = require('Dimensions');
@@ -56,14 +56,13 @@ export default class AlertBox extends Component {
                 {this.props._dialogContent}
               </Text>
             </View>
-            <View style={styles.dialogUpBtnView}>
+            <View style={styles.dialogUpBtnView} animation="rubberBand">
               <TouchableHighlight style={styles.dialogBtnViewItem} onPress={this.props._dialogLeftBtnAction}>
                 <Text style={styles.rightButton}>
                   {this.props._dialogRightBtnTitle}
                 </Text>
               </TouchableHighlight>
              </View>
-            
           </View>
         </View>
       </Modal>

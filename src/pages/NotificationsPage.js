@@ -13,6 +13,8 @@ import {
   ListView,
   ActivityIndicatorIOS
 } from 'react-native';
+import * as Animatable from 'react-native-animatable';
+import { createAnimatableComponent} from 'react-native-animatable';
 
 import NavigationBar from '../common/NavigationBar';
 import TextPingFang from '../common/TextPingFang';
@@ -24,6 +26,8 @@ import {HOST} from '../util/config';
 const WIDTH = Dimensions.get("window").width;
 const INNERWIDTH = WIDTH - 16;
 const HEIGHT = Dimensions.get("window").height;
+
+const AnimatableListView = createAnimatableComponent(ListView);
 
 const URL = HOST + 'users/show_notification';
 
@@ -91,9 +95,13 @@ export default class NotificationsPage extends Component {
             title={"通知"}
             navigator={this.props.navigator}
           />
-          <ListView
+          <AnimatableListView
+            duration={1000}
+            animation="bounceInUp"
+            delay={50}
             dataSource={this.state.dataSource}
             renderRow={this.renderNotificationsList}
+            removeClippedSubviews={false}
             style={styles.listView}
           />
         </View>

@@ -1,16 +1,18 @@
 import React, { Component } from 'react';
 import {
-  Text,
-  View,
   StyleSheet,
   Image,
   TouchableOpacity,
   Dimensions,
   Navigator,
   AsyncStorage,
-  DeviceEventEmitter
+  DeviceEventEmitter,
+  TouchableWithoutFeedback
 } from 'react-native';
 import {Agenda} from 'react-native-calendars';
+import * as Animatable from 'react-native-animatable';
+import { createAnimatableComponent, View, Text } from 'react-native-animatable';
+
 import ItemPage from './ItemPage';
 import CommonNav from '../common/CommonNav';
 import NavigationBar from "../common/NavigationBar";
@@ -37,7 +39,7 @@ export default class AgendaScreen extends Component {
     var nowtimestamp = new Date().getTime();
     var nowtime = this.timeToString(nowtimestamp);
     return (
-      <View style={styles.container}>
+      <View style={styles.container} animation="fadeIn">
         <NavigationBar 
           title={"日记"}
           leftButton={
@@ -186,9 +188,12 @@ export default class AgendaScreen extends Component {
             title: item.title, 
             content: item.content,
             user: this.state.user
-          })
+          });
         }}>
-        <View style={[item.male=='male'?styles.item_male:styles.item_female, {height: item.height}]}>
+        <View 
+          animation="bounceInRight"
+          delay={100}
+          style={[item.male=='male'?styles.item_male:styles.item_female, {height: item.height}]}>
           <TextPingFang style={item.male=='male'?styles.font_male_title:styles.font_female_title}>
             {item.title}
           </TextPingFang>

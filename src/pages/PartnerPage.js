@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 import {
   StyleSheet,
-  Text,
-  View,
   Image,
   Navigator,
   Dimensions,
@@ -11,6 +9,8 @@ import {
   DeviceEventEmitter,
   AsyncStorage
 } from 'react-native';
+import { createAnimatableComponent, View, Text } from 'react-native-animatable';
+
 import CommonNav from '../common/CommonNav';
 import LoginPage from './LoginPage';
 import TextPingFang from '../common/TextPingFang';
@@ -83,24 +83,24 @@ export default class Partner extends Component {
           </Image>
           <TextPingFang style={styles.avatar_font}>{this.props.partner.user_code}</TextPingFang>
         </Image>
+        <View style={styles.online_name} delay={100} animation="bounceInRight">
+          <TouchableOpacity>
+            <Text 
+              style={styles.online_font}>
+              {this.props.partner.user_name}
+            </Text>
+          </TouchableOpacity>
+        </View>
         <TouchableOpacity 
-          style={styles.online_name}
-          >
-          <Text 
-            style={styles.online_font}>
-            {this.props.partner.user_name}
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity 
-          style={styles.online_delete}
-          onPress={()=>{
-            this.disconnect()
-          }}
-          >
-          <Text 
-            style={styles.online_font2}>
-            解除契约
-          </Text>
+            onPress={()=>{
+              this.disconnect()
+            }}>
+          <View style={styles.online_delete} delay={150} animation="bounceInRight">
+            <Text 
+              style={styles.online_font2}>
+              解除契约
+            </Text>  
+          </View>
         </TouchableOpacity>
       </View>
     );
