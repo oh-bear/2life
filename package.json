@@ -21,7 +21,8 @@
     "react-native-progress": "^3.2.1",
     "react-native-splash-screen": "^2.1.0",
     "react-native-tab-navigator": "^0.3.3",
-    "react-native-vector-icons": "^4.2.0"
+    "react-native-vector-icons": "^4.2.0",
+    "react-native-image-resizer": "latest"
   },
   "devDependencies": {
     "babel-jest": "20.0.0",
