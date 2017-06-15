@@ -32,10 +32,8 @@ export default class CreateNotePage extends Component {
       title:"",
       content:"",
       isDialogVisible: false,
-      file:{},
-      qiniu_token:"",
       animating:false,//HUD
-      filename:''
+      fileList:[],//[file1:{uri:*,name:*,token:*},file2:{uri:*,name:*,token:*}]
     }
   }
   showDialog(){
@@ -59,66 +57,70 @@ export default class CreateNotePage extends Component {
       note_date: new Date().getTime()
     }).then((response)=>{
       if(response.status== 0) {
-        this.showDialog()
+        this.state.fileList.map((d,i)=>{
+          file = d;
+          this.uploadFile(file, ()=>{
+            console.log('uploadFile success= ', i);
+            //不知道RN如何实现NSOperation group
+            if (i+1 == this.state.fileList.length) {
+              this.showDialog()
+            }
+          });
+        })
+
       }
     }).catch((error)=>{
         Alert.alert("小提示", '网络故障:(');
     })
   }
 
-  onPost_Token() {
-    if(!this.state.file.name) {
+  uploadFile(file, complete) {
+    if(!file.name) {
       Alert.alert("小提示","图片没有名称哦~");
       return ;
     }
-    if(!this.state.file.uri) {
+    if(!file.uri) {
       Alert.alert("小提示","图片没有内容哦~");
       return ;
     }
-
     HttpUtils.post(URL_TOKEN,{
       token: this.props.user.token,
       uid: this.props.user.uid,
       timestamp: this.props.timestamp,
-      filename: this.state.file.name//"image/twolife/" + this.state.file.name,
+      filename: file.name//"image/twolife/" + this.state.file.name,
     }).then((response)=>{
       if(response.status== 0) {
-        this.state.qiniu_token = response.qiniu_token;
-        this.startUpload();
+        file.token = response.qiniu_token;
+
+        var formData = new FormData();
+        formData.append('file', {uri: file.uri, type:'application/octet-stream', name: file.name});
+        formData.append('key', file.name);
+        formData.append('token', file.token);
+
+        return fetch(QINIU_UPHOST, {
+          method: 'post',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/octet-stream'
+          },
+          body: formData
+          }).then((response) => {
+            complete();
+        }).catch((error) => {
+          Alert.alert("小提示", '网络故障:(');
+        });
+
       }
     }).catch((error)=>{
         Alert.alert("小提示", '网络故障:(');
     })
+
   }
 
-  startUpload(){
-    this.setState({animating: true});//打开HUD
-    var file = this.state.file;
-
-    var formData = new FormData();
-    formData.append('file', {uri: file.uri, type:'application/octet-stream', name: file.name});
-    formData.append('key', this.state.filename);
-    formData.append('token', this.state.qiniu_token);
-
-    return fetch(QINIU_UPHOST, {
-      method: 'post',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/octet-stream'
-      },
-      body: formData
-      }).then((response) => {
-        this.setState({animating: false});//关闭HUD
-
-    }).catch((error) => {
-      Alert.alert("小提示", '网络故障:(');
-      this.setState({animating: false});//关闭HUD
-    });
-  }
 
   render() {
     var options = {
-      title: 'Select Avatar',
+      title: 'Select File',
       customButtons: [
       ],
       storageOptions: {
@@ -144,37 +146,6 @@ export default class CreateNotePage extends Component {
           this.props.navigator.pop();
         }}
         />
-      {/*<TouchableOpacity
-        onPress={()=>{
-          ImagePicker.showImagePicker(options, (response) => {
-            console.log('Response = ', response);
-
-            if (response.didCancel) {
-              console.log('User cancelled image picker');
-            }
-            else if (response.error) {
-              console.log('ImagePicker Error: ', response.error);
-            }
-            else if (response.customButton) {
-              console.log('User tapped custom button: ', response.customButton);
-            }
-            else {
-              let file = {uri: response.uri, name: response.fileName};
-
-              this.state.file = file;
-              this.state.filename = 'image/twolife/' + this.props.user.uid + '/' + file.name;
-              this.onPost_Token();
-            }
-          });
-        }}>
-        <Text>上传图片</Text>
-        <ActivityIndicator
-          animating={this.state.animating}
-          style={styles.center}
-          size="small"
-          hidesWhenStopped={true}
-        />
-      </TouchableOpacity>*/}
       <TextInput
         underlineColorAndroid='transparent'
         placeholder={"请输入日记标题"}
@@ -193,9 +164,51 @@ export default class CreateNotePage extends Component {
         style={[styles.textInput_title,styles.textInput_content]}
         onChangeText={(text)=>{
            this.setState({content:text})
-        }}
-        />
+        }}/>
 
+        <View style={styles.imageConteainer}>
+            {
+              this.state.fileList.map((d,i)=>{
+                file = d;
+
+                return <View delay={100 + i * 50} animation="bounceInRight">
+                    <TouchableOpacity
+                      onPress={
+                        ()=>{
+
+                        }
+                      }>
+                      <Image style={styles.addImage} source={{uri:file.uri}}/>
+              </TouchableOpacity>
+              </View>
+              })
+            }
+            <TouchableOpacity
+              onPress={()=>{
+                ImagePicker.showImagePicker(options, (response) => {
+                  console.log('Response = ', response);
+
+                  if (response.didCancel) {
+                    console.log('User cancelled image picker');
+                  }
+                  else if (response.error) {
+                    console.log('ImagePicker Error: ', response.error);
+                  }
+                  else if (response.customButton) {
+                    console.log('User tapped custom button: ', response.customButton);
+                  }
+                  else {
+                    let file = {uri: response.uri, name: 'image/twolife/' + this.props.user.uid + '/' + response.fileName};
+                    this.state.fileList.push(file);
+                    this.setState({
+                      fileList: this.state.fileList
+                    })
+                  }
+                });
+              }}>
+              <Image style={styles.addImage} source={require('../../res/images/icon_add.png')}></Image>
+            </TouchableOpacity>
+        </View>
     </View>
   }
 }
@@ -219,7 +232,15 @@ const styles = StyleSheet.create({
     borderRadius:8,
   },
   textInput_content: {
-    height:0.7*HEIGHT
+    height:0.3*HEIGHT
+  },
+  imageConteainer: {
+    flexDirection: 'row',
+  },
+  addImage: {
+    width:48,
+    height:48,
+    margin:10
   },
   center: {
   top: 0,
