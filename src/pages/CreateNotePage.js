@@ -11,6 +11,8 @@ import {
   ActivityIndicator,
 } from "react-native";
 import ImagePicker from 'react-native-image-picker';
+import ImageResizer from 'react-native-image-resizer';
+
 import { createAnimatableComponent, View, Text } from 'react-native-animatable';
 
 import RightButtonNav from "../common/RightButtonNav";
@@ -59,19 +61,41 @@ export default class CreateNotePage extends Component {
       if(response.status== 0) {
         this.state.fileList.map((d,i)=>{
           file = d;
-          this.uploadFile(file, ()=>{
-            console.log('uploadFile success= ', i);
-            //不知道RN如何实现NSOperation group
-            if (i+1 == this.state.fileList.length) {
-              this.showDialog()
-            }
-          });
+          this.resizeFile(file, ()=>{
+            this.uploadFile(file, ()=>{
+              console.log('uploadFile success= ', i);
+              //不知道RN如何实现NSOperation group
+              if (i+1 == this.state.fileList.length) {
+                this.showDialog()
+              }
+            });
+          })
         })
 
       }
     }).catch((error)=>{
         Alert.alert("小提示", '网络故障:(');
     })
+  }
+
+  resizeFile(file, complete) {
+    if(!file.name) {
+      Alert.alert("小提示","图片没有名称哦~");
+      return ;
+    }
+    if(!file.uri) {
+      Alert.alert("小提示","图片没有内容哦~");
+      return ;
+    }
+
+    ImageResizer.createResizedImage(file.uri, 800, 600, 'JPEG', 80)
+    .then((resizedImageUri) => {
+      file.resizedUri = resizedImageUri;
+      complete(file);
+    }).catch((err) => {
+      Alert.alert("小提示","压缩图片失败哦~");
+      return ;
+    });
   }
 
   uploadFile(file, complete) {
@@ -83,6 +107,7 @@ export default class CreateNotePage extends Component {
       Alert.alert("小提示","图片没有内容哦~");
       return ;
     }
+
     HttpUtils.post(URL_TOKEN,{
       token: this.props.user.token,
       uid: this.props.user.uid,
@@ -93,7 +118,7 @@ export default class CreateNotePage extends Component {
         file.token = response.qiniu_token;
 
         var formData = new FormData();
-        formData.append('file', {uri: file.uri, type:'application/octet-stream', name: file.name});
+        formData.append('file', {uri: file.resizedUri, type:'application/octet-stream', name: file.name});
         formData.append('key', file.name);
         formData.append('token', file.token);
 
@@ -114,9 +139,7 @@ export default class CreateNotePage extends Component {
     }).catch((error)=>{
         Alert.alert("小提示", '网络故障:(');
     })
-
   }
-
 
   render() {
     var options = {

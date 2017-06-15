@@ -46,6 +46,7 @@
 		BB555ED8DAC941D684496D9E /* libRNImagePicker.a in Frameworks */ = {isa = PBXBuildFile; fileRef = FE2B1BF901624642909105E4 /* libRNImagePicker.a */; };
 		CB159AA6CAAF4B7A9043B6CB /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = F43F645880B84D799810CA69 /* libz.tbd */; };
 		D0FFAB592C7B4092ABF47615 /* Entypo.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 788194994A804BCEBFFF6CF0 /* Entypo.ttf */; };
+		D60D4FB31EF2814200EECC20 /* libRCTImageResizer.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D60D4F9A1EF280B500EECC20 /* libRCTImageResizer.a */; };
 		E56EF1EBBCDB4FDF97F00598 /* libRNVectorIcons.a in Frameworks */ = {isa = PBXBuildFile; fileRef = AE0DC6D4AFB24C7AB8C9F034 /* libRNVectorIcons.a */; };
 		E677AB462BA94DF7888044CE /* MaterialCommunityIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = C6B2BD8D1EEF4CD3BFF8AE36 /* MaterialCommunityIcons.ttf */; };
 		E7B461792323424888BC32D4 /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AE80185BF5F6467B89B06858 /* CFNetwork.framework */; };
@@ -269,6 +270,13 @@
 			remoteGlobalIDString = 3D7682761D8E76B80014119E;
 			remoteInfo = SplashScreen;
 		};
+		D60D4F991EF280B500EECC20 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D60D4F8E1EF280B500EECC20 /* RCTImageResizer.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 5D72D2E81C16249000E22EC1;
+			remoteInfo = RCTImageResizer;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
@@ -322,6 +330,7 @@
 		C6B2BD8D1EEF4CD3BFF8AE36 /* MaterialCommunityIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = MaterialCommunityIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/MaterialCommunityIcons.ttf"; sourceTree = "<group>"; };
 		C91E900A3D94418381F68BF1 /* Security.framework */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		D54BAE62E35D4BBDB2655095 /* libReactNativeNavigation.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libReactNativeNavigation.a; sourceTree = "<group>"; };
+		D60D4F8E1EF280B500EECC20 /* RCTImageResizer.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTImageResizer.xcodeproj; path = "../node_modules/react-native-image-resizer/ios/RCTImageResizer.xcodeproj"; sourceTree = "<group>"; };
 		EB85D2CEDB3F48BEAB0B4520 /* Octicons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Octicons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Octicons.ttf"; sourceTree = "<group>"; };
 		F43F645880B84D799810CA69 /* libz.tbd */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
 		FE2B1BF901624642909105E4 /* libRNImagePicker.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNImagePicker.a; sourceTree = "<group>"; };
@@ -359,6 +368,7 @@
 				BB555ED8DAC941D684496D9E /* libRNImagePicker.a in Frameworks */,
 				A3D2DDC9BDE14D21B765931D /* libReactNativeNavigation.a in Frameworks */,
 				5AD325505F42478AAA0AC307 /* libSplashScreen.a in Frameworks */,
+				D60D4FB31EF2814200EECC20 /* libRCTImageResizer.a in Frameworks */,
 				E56EF1EBBCDB4FDF97F00598 /* libRNVectorIcons.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -529,6 +539,7 @@
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
+				D60D4F8E1EF280B500EECC20 /* RCTImageResizer.xcodeproj */,
 				5E91572D1DD0AC6500FF2AA8 /* RCTAnimation.xcodeproj */,
 				146833FF1AC3E56700842450 /* React.xcodeproj */,
 				00C302A71ABCB8CE00DB3ED1 /* RCTActionSheet.xcodeproj */,
@@ -628,6 +639,14 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		D60D4F8F1EF280B500EECC20 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				D60D4F9A1EF280B500EECC20 /* libRCTImageResizer.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -659,7 +678,7 @@
 				ORGANIZATIONNAME = Facebook;
 				TargetAttributes = {
 					13B07F861A680F5B00A75B9A = {
-						DevelopmentTeam = CX8NZ6G6FX;
+						DevelopmentTeam = 4893TRV462;
 					};
 				};
 			};
@@ -694,6 +713,10 @@
 				{
 					ProductGroup = 00C302BC1ABCB91800DB3ED1 /* Products */;
 					ProjectRef = 00C302BB1ABCB91800DB3ED1 /* RCTImage.xcodeproj */;
+				},
+				{
+					ProductGroup = D60D4F8F1EF280B500EECC20 /* Products */;
+					ProjectRef = D60D4F8E1EF280B500EECC20 /* RCTImageResizer.xcodeproj */;
 				},
 				{
 					ProductGroup = 9DD2BF171EEEF08D000D68C8 /* Products */;
@@ -969,6 +992,13 @@
 			remoteRef = 9DD2BF451EEEF08D000D68C8 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
+		D60D4F9A1EF280B500EECC20 /* libRCTImageResizer.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libRCTImageResizer.a;
+			remoteRef = D60D4F991EF280B500EECC20 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 /* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
@@ -1041,7 +1071,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = NO;
-				DEVELOPMENT_TEAM = CX8NZ6G6FX;
+				DEVELOPMENT_TEAM = 4893TRV462;
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/../node_modules/jpush-react-native/ios/RCTJPushModule/RCTJPushModule",
@@ -1065,7 +1095,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = me.ursb.twolife;
+				PRODUCT_BUNDLE_IDENTIFIER = com.XM.WPUSH;
 				PRODUCT_NAME = twolife;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
@@ -1076,7 +1106,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = CX8NZ6G6FX;
+				DEVELOPMENT_TEAM = 4893TRV462;
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/../node_modules/jpush-react-native/ios/RCTJPushModule/RCTJPushModule",
@@ -1100,7 +1130,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = me.ursb.twolife;
+				PRODUCT_BUNDLE_IDENTIFIER = com.XM.WPUSH;
 				PRODUCT_NAME = twolife;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
