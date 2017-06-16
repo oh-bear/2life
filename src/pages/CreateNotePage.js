@@ -88,7 +88,7 @@ export default class CreateNotePage extends Component {
       return ;
     }
 
-    ImageResizer.createResizedImage(file.uri, 800, 600, 'JPEG', 80)
+    ImageResizer.createResizedImage(file.uri, file.width, file.height, 'JPEG', 80)
     .then((resizedImageUri) => {
       file.resizedUri = resizedImageUri;
       complete(file);
@@ -221,7 +221,7 @@ export default class CreateNotePage extends Component {
                     console.log('User tapped custom button: ', response.customButton);
                   }
                   else {
-                    let file = {uri: response.uri, name: 'image/twolife/' + this.props.user.uid + '/' + response.fileName};
+                    let file = {uri: response.uri, height:response.height, width:response.width, name: 'image/twolife/' + this.props.user.uid + '/' + response.fileName};
                     this.state.fileList.push(file);
                     this.setState({
                       fileList: this.state.fileList
