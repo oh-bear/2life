@@ -9,9 +9,12 @@ import {
   TouchableOpacity,
   Image,
   ActivityIndicator,
+  Modal
 } from "react-native";
 import ImagePicker from 'react-native-image-picker';
 import ImageResizer from 'react-native-image-resizer';
+import ImageViewer from 'react-native-image-zoom-viewer';
+
 
 import { createAnimatableComponent, View, Text } from 'react-native-animatable';
 
@@ -34,6 +37,8 @@ export default class CreateNotePage extends Component {
       title:"",
       content:"",
       isDialogVisible: false,
+      isImageViewerVisible: false,
+      ImageViewerIndex:0,
       animating:false,//HUD
       fileList:[],//[file1:{uri:*,name:*,token:*},file2:{uri:*,name:*,token:*}]
     }
@@ -41,6 +46,11 @@ export default class CreateNotePage extends Component {
   showDialog(){
     this.setState({isDialogVisible:true});
   }
+
+  showImageViewer(){
+    this.setState({isImageViewerVisible:true});
+  }
+
   onPost() {
     if(!this.state.title.trim()) {
       Alert.alert("小提示","请输入日记的标题哦~");
@@ -151,7 +161,17 @@ export default class CreateNotePage extends Component {
         path: 'images'
       }
     };
+
+    var images = [];
+    this.state.fileList.map((d,i)=>{
+      file = d;
+      images.push({url:file.uri});
+    })
+
     return <View style={styles.container}>
+      <Modal animationType={"fade"} transparent={true} visible={this.state.isImageViewerVisible}>
+        <ImageViewer imageUrls={images} index={this.state.ImageViewerIndex} onClick={()=>{ this.setState({isImageViewerVisible:false}) }}/>
+      </Modal>
       <RightButtonNav
         title={"创建日记"}
         rightOnPress={()=>{
@@ -188,7 +208,6 @@ export default class CreateNotePage extends Component {
         onChangeText={(text)=>{
            this.setState({content:text})
         }}/>
-
         <View style={styles.imageConteainer}>
             {
               this.state.fileList.map((d,i)=>{
@@ -198,7 +217,8 @@ export default class CreateNotePage extends Component {
                     <TouchableOpacity
                       onPress={
                         ()=>{
-
+                          this.state.ImageViewerIndex = i;
+                          this.showImageViewer();
                         }
                       }>
                       <Image style={styles.addImage} source={{uri:file.uri}}/>
@@ -206,6 +226,7 @@ export default class CreateNotePage extends Component {
               </View>
               })
             }
+
             <TouchableOpacity
               onPress={()=>{
                 ImagePicker.showImagePicker(options, (response) => {
