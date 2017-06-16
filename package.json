@@ -18,6 +18,7 @@
     "react-native-image-picker": "^0.26.3",
     "react-native-image-progress": "^0.6.0",
     "react-native-image-resizer": "latest",
+    "react-native-image-zoom-viewer": "latest",
     "react-native-navigation": "latest",
     "react-native-progress": "^3.2.1",
     "react-native-push-notification": "^3.0.0",
