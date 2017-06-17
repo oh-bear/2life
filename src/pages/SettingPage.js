@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import {
   StyleSheet,
-  Image,
   Navigator,
   Dimensions,
   TouchableOpacity,
@@ -23,6 +22,9 @@ import ImageCropPicker from 'react-native-image-crop-picker';
 import ImagePicker from 'react-native-image-picker';
 import ImageResizer from 'react-native-image-resizer';
 
+import Image from 'react-native-image-progress';
+import * as Progress from 'react-native-progress';
+
 const WIDTH = Dimensions.get("window").width;
 const INNERWIDTH = WIDTH - 16;
 const HEIGHT = Dimensions.get("window").height;
@@ -40,7 +42,7 @@ export default class SettingPage extends Component {
       user_state: this.props.user.user_other_id,
       isDialogVisible: false,
       data: {},
-      file:{}
+      file:{},
     };
   }
   onPost() {
@@ -53,31 +55,14 @@ export default class SettingPage extends Component {
       user_other_id: this.user_state
     }).then((res)=> {
       if (res.status == 0) {
-
-        if (this.state.file.uri) {
-          this.resizeFile(this.state.file, ()=>{
-            this.uploadFile(this.state.file, ()=>{
-              console.log('uploadFile success');
-              this.showDialog()
-              this.setState({
-                data: {
-                  user_name: this.state.user_name,
-                  user_sex: this.state.user_sex,
-                  user_other_id: this.state.user_state
-                }
-              })
-            });
-          })
-        } else {
-          this.showDialog()
-          this.setState({
-            data: {
-              user_name: this.state.user_name,
-              user_sex: this.state.user_sex,
-              user_other_id: this.state.user_state
-            }
-          })
-        }
+        this.showDialog()
+        this.setState({
+          data: {
+            user_name: this.state.user_name,
+            user_sex: this.state.user_sex,
+            user_other_id: this.state.user_state
+          }
+        })
       }
     }).catch((error)=> {
       console.log(error);
@@ -222,9 +207,9 @@ export default class SettingPage extends Component {
 
     var avatar = null;
     if (this.state.file.uri) {
-      avatar = <Image style={styles.avatar} source={{uri:this.state.file.uri}}/>
+      avatar = <Image style={styles.avatar} source={{uri:this.state.file.uri}} indicator={Progress.Circle} indicatorProps={{indeterminate:true, progress:0.5}}/>
     } else {
-      avatar = <Image style={styles.avatar} source={this.state.user_sex==0?require("../../res/images/avatar.png"):require("../../res/images/avatar2.png")}/>
+      avatar = <Image style={styles.avatar} source={this.state.user_sex==0?require("../../res/images/avatar.png"):require("../../res/images/avatar2.png")} indicator={Progress.Circle}/>
     }
 
     return (
@@ -258,15 +243,24 @@ export default class SettingPage extends Component {
                 }).then(response => {
                   console.log(response)
                   let file = {
-                    uri: response.path, 
-                    height:response.height, 
-                    width:response.width, 
+                    uri: response.path,
+                    height:response.height,
+                    width:response.width,
                     name: 'image/twolife/' + this.props.user.uid + '/' + response.path.substr(response.path.length-12)
                   };
                   console.log(file)
                   this.setState({
                     file: file
                   })
+
+                  if (this.state.file.uri) {
+                    this.resizeFile(this.state.file, ()=>{
+                      this.uploadFile(this.state.file, ()=>{
+                        console.log('uploadFile success');
+                        })
+                      });
+                  }
+
                 });
               }}>
               <Image
