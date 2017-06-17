@@ -14,16 +14,19 @@ import { createAnimatableComponent, View, Text } from 'react-native-animatable';
 import CommonNav from '../common/CommonNav';
 import RightButtonNav from '../common/RightButtonNav';
 import TextPingFang from '../common/TextPingFang';
-import {HOST} from '../util/config';
+import {HOST, QINIU_UPHOST} from '../util/config';
 import HttpUtils from '../util/HttpUtils';
 import Platform from 'Platform';
 import AlertBox from '../common/AlertBox';
+import ImagePicker from 'react-native-image-picker';
+import ImageResizer from 'react-native-image-resizer';
 
 const WIDTH = Dimensions.get("window").width;
 const INNERWIDTH = WIDTH - 16;
 const HEIGHT = Dimensions.get("window").height;
 const URL1 = HOST + 'users/update';
 const URL2 = HOST + 'users/close_connect';
+const URL_TOKEN = HOST + "util/qiniu_token";//qiniu_token
 
 export default class SettingPage extends Component {
   static defaultProps = {}
@@ -34,7 +37,8 @@ export default class SettingPage extends Component {
       user_name: this.props.user.user_name,
       user_state: this.props.user.user_other_id,
       isDialogVisible: false,
-      data: {}
+      data: {},
+      file:{}
     };
   }
   onPost() {
@@ -47,19 +51,89 @@ export default class SettingPage extends Component {
       user_other_id: this.user_state
     }).then((res)=> {
       if (res.status == 0) {
-        this.showDialog()
-        this.setState({
-          data: {
-            user_name: this.state.user_name,
-            user_sex: this.state.user_sex,
-            user_other_id: this.state.user_state
-          }
+        this.resizeFile(this.state.file, ()=>{
+          this.uploadFile(this.state.file, ()=>{
+            console.log('uploadFile success');
+            this.showDialog()
+            this.setState({
+              data: {
+                user_name: this.state.user_name,
+                user_sex: this.state.user_sex,
+                user_other_id: this.state.user_state
+              }
+            })
+          });
         })
-      }      
+      }
     }).catch((error)=> {
       console.log(error);
     })
   }
+
+  resizeFile(file, complete) {
+    if(!file.name) {
+      Alert.alert("小提示","图片没有名称哦~");
+      return ;
+    }
+    if(!file.uri) {
+      Alert.alert("小提示","图片没有内容哦~");
+      return ;
+    }
+
+    ImageResizer.createResizedImage(file.uri, file.width, file.height, 'JPEG', 80)
+    .then((resizedImageUri) => {
+      file.resizedUri = resizedImageUri;
+      complete(file);
+    }).catch((err) => {
+      Alert.alert("小提示","压缩图片失败哦~");
+      return ;
+    });
+  }
+
+  uploadFile(file, complete) {
+    if(!file.name) {
+      Alert.alert("小提示","图片没有名称哦~");
+      return ;
+    }
+    if(!file.uri) {
+      Alert.alert("小提示","图片没有内容哦~");
+      return ;
+    }
+
+    HttpUtils.post(URL_TOKEN,{
+      token: this.props.user.token,
+      uid: this.props.user.uid,
+      timestamp: this.props.timestamp,
+      filename: file.name//"image/twolife/" + this.state.file.name,
+    }).then((response)=>{
+      if(response.status== 0) {
+        file.token = response.qiniu_token;
+
+        var formData = new FormData();
+        formData.append('file', {uri: file.resizedUri, type:'application/octet-stream', name: file.name});
+        formData.append('key', file.name);
+        formData.append('token', file.token);
+
+        return fetch(QINIU_UPHOST, {
+          method: 'post',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/octet-stream'
+          },
+          body: formData
+          }).then((response) => {
+            complete();
+        }).catch((error) => {
+          Alert.alert("小提示", '网络故障:(');
+        });
+
+      }
+    }).catch((error)=>{
+        Alert.alert("小提示", '网络故障:(');
+    })
+  }
+
+
   changeName() {
     if(Platform.OS === 'ios'){
       AlertIOS.prompt('请输入新的昵称','',[
@@ -122,6 +196,23 @@ export default class SettingPage extends Component {
       }}])
   }
   render() {
+    var options = {
+      title: 'Select File',
+      customButtons: [
+      ],
+      storageOptions: {
+        skipBackup: true,
+        path: 'images'
+      }
+    };
+
+    var avatar = null;
+    if (this.state.file.uri) {
+      avatar = <Image style={styles.avatar} source={{uri:this.state.file.uri}}/>
+    } else {
+      avatar = <Image style={styles.avatar} source={this.state.user_sex==0?require("../../res/images/avatar.png"):require("../../res/images/avatar2.png")}/>
+    }
+
     return (
       <View style={styles.container}>
         <AlertBox
@@ -138,56 +229,79 @@ export default class SettingPage extends Component {
           _dialogRightBtnAction={()=>{this.hideDialog()}}
           _dialogContent={'个人信息更改成功'}
           />
-        <Image 
-          style={styles.bg} 
+        <Image
+          style={styles.bg}
           source={this.state.user_sex==0?require("../../res/images/about_bg.png"):require("../../res/images/about_bg1.png")}>
-          <RightButtonNav 
+          <RightButtonNav
             title={"设置"}
-            navigator={this.props.navigator} 
+            navigator={this.props.navigator}
             rightOnPress={()=>{
               this.onPost();
             }}
           />
-          <Image 
-            style={styles.avatar_round} 
-            source={require("../../res/images/avatar_round.png")}>
-            <Image 
-              style={styles.avatar} 
-              source={this.state.user_sex==0?require("../../res/images/avatar.png"):require("../../res/images/avatar2.png")} />
-          </Image>
+
+          <TouchableOpacity
+              onPress={()=>{
+                ImagePicker.showImagePicker(options, (response) => {
+                  console.log('Response = ', response);
+
+                  if (response.didCancel) {
+                    console.log('User cancelled image picker');
+                  }
+                  else if (response.error) {
+                    console.log('ImagePicker Error: ', response.error);
+                  }
+                  else if (response.customButton) {
+                    console.log('User tapped custom button: ', response.customButton);
+                  }
+                  else {
+                    let file = {uri: response.uri, height:response.height, width:response.width, name: 'image/twolife/' + this.props.user.uid + '/' + response.fileName};
+                    this.setState({
+                      file: file
+                    })
+                  }
+                });
+              }}>
+              <Image
+                style={styles.avatar_round}
+                source={require("../../res/images/avatar_round.png")}>
+                {avatar}
+              </Image>
+          </TouchableOpacity>
+
           <TextPingFang style={styles.avatar_font}>{this.props.user.user_code}</TextPingFang>
         </Image>
-        <TouchableOpacity 
+        <TouchableOpacity
             onPress={()=>{
               this.changeName();
             }}>
           <View style={styles.online_name} delay={100} animation="bounceInRight">
-            <Text 
+            <Text
               style={styles.online_font}>
               {this.state.user_name}
             </Text>
           </View>
         </TouchableOpacity>
-        <TouchableOpacity 
+        <TouchableOpacity
             onPress={()=>{
               this.changeSex();
             }}>
           <View style={styles.online_sex} delay={150} animation="bounceInRight">
-            <Text 
+            <Text
               style={styles.online_font}>
               {this.state.user_sex==0?'男':'女'}
             </Text>
           </View>
         </TouchableOpacity>
-        <TouchableOpacity 
+        <TouchableOpacity
             onPress={()=>{
               this.changeConnectState();
             }}>
           <View style={styles.online_state} delay={200} animation="bounceInRight">
-            <Text 
+            <Text
               style={styles.online_font}>
               {this.state.user_state==-404?'拒绝任何匹配':'开放匹配'}
-            </Text>         
+            </Text>
           </View>
         </TouchableOpacity>
       </View>
@@ -215,6 +329,9 @@ const styles = StyleSheet.create({
     marginTop: 48
   },
   avatar: {
+    //头像布局需要调整
+    width:40,
+    height:40
   },
   avatar_font: {
     color:"#666666",
