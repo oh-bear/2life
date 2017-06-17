@@ -15,7 +15,6 @@ import ImagePicker from 'react-native-image-picker';
 import ImageResizer from 'react-native-image-resizer';
 import ImageViewer from 'react-native-image-zoom-viewer';
 
-
 import { createAnimatableComponent, View, Text } from 'react-native-animatable';
 
 import RightButtonNav from "../common/RightButtonNav";
@@ -98,7 +97,7 @@ export default class CreateNotePage extends Component {
       return ;
     }
 
-    ImageResizer.createResizedImage(file.uri, file.width, file.height, 'JPEG', 80)
+  ImageResizer.createResizedImage(file.uri, file.width, file.height, 'JPEG', 80)
     .then((resizedImageUri) => {
       file.resizedUri = resizedImageUri;
       complete(file);

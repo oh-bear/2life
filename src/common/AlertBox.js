@@ -4,15 +4,15 @@ import {
     TouchableHighlight,
     StyleSheet,
     BackAndroid,
-    Image
+    Image,
+    Dimensions
 } from 'react-native';
 import { createAnimatableComponent, View, Text } from 'react-native-animatable';
 
 import TextPingFang from './TextPingFang';
 
-let Dimensions = require('Dimensions');
-let WIDTH = Dimensions.get('window').width;//宽
-let HEIGHT = Dimensions.get('window').height;//高
+const WIDTH = Dimensions.get('window').width;//宽
+const HEIGHT = Dimensions.get('window').height;//高
 
 export default class AlertBox extends Component {
 

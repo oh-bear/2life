@@ -15,6 +15,7 @@
     "react-native-action-button": "^2.6.9",
     "react-native-animatable": "^1.2.2",
     "react-native-calendars": "1.2.21",
+    "react-native-image-crop-picker": "^0.13.1",
     "react-native-image-picker": "^0.26.3",
     "react-native-image-progress": "^0.6.0",
     "react-native-image-resizer": "latest",
@@ -22,8 +23,8 @@
     "react-native-navigation": "latest",
     "react-native-progress": "^3.2.1",
     "react-native-push-notification": "^3.0.0",
+    "react-native-snap-carousel": "^2.3.0",
     "react-native-splash-screen": "^2.1.0",
-    "react-native-swiper": "^1.5.4",
     "react-native-tab-navigator": "^0.3.3",
     "react-native-vector-icons": "^4.2.0"
   },

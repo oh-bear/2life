@@ -1,13 +1,16 @@
 import React, { Component } from 'react';
 import {
   StyleSheet,
-  Text,
-  View,
   Image,
   Navigator,
   Dimensions,
-  TouchableOpacity
+  TouchableOpacity,
+  Modal
 } from 'react-native';
+import Carousel from 'react-native-snap-carousel';
+import ImageViewer from 'react-native-image-zoom-viewer';
+import { createAnimatableComponent, View, Text } from 'react-native-animatable';
+
 import TextPingFang from '../common/TextPingFang';
 
 const WIDTH = Dimensions.get("window").width
@@ -17,28 +20,60 @@ export default class DairyPage extends Component {
   static defaultProps = {}
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      isImageViewerVisible: false,
+      ImageViewerIndex:0,
+    };
   }
+
+  showImageViewer(){
+    this.setState({isImageViewerVisible:true});
+  }
+
   render() {
     return (
       <View style={styles.container}>
+        <Modal animationType={"fade"} transparent={true} visible={this.state.isImageViewerVisible}>
+          <ImageViewer index={this.state.ImageViewerIndex} onClick={()=>{ this.setState({isImageViewerVisible:false}) }}/>
+        </Modal>
         <View style={styles.card}>
         	<View style={styles.menuContainer}>
-        	<Image style={styles.menu} source={require('../../res/images/menu.png')}></Image>
-        	<TextPingFang style={styles.date}>06-06-2017</TextPingFang>
+          <TouchableOpacity
+            onPress={()=> {
+              this.props.navigator.pop();
+            }}>
+        	  <Image style={styles.menu} source={require('../../res/images/menu.png')}></Image>
+        	</TouchableOpacity>
+          <TextPingFang style={styles.date}>06-06-2017</TextPingFang>
         	<TextPingFang style={styles.time}>23:15</TextPingFang>
         	</View>
         	<View style={styles.avatarContainer}>
         		<Image style={styles.avatar} source={require('../../res/images/avatar3.png')}></Image>
-        		<TextPingFang style={styles.username}>Traveler</TextPingFang>
+        		<TextPingFang style={styles.username}>{this.props.user.user_name}</TextPingFang>
         	</View>
         	<View style={styles.swiperContainer}>
+            <Carousel
+              sliderWidth={269 / 375 * WIDTH}
+              itemWidth={220 / 375 * WIDTH}
+              firstItem={0}
+              inactiveSlideScale={0.94}
+              inactiveSlideOpacity={0.6}
+              enableMomentum={false}
+              containerCustomStyle={styles.slider}
+              contentContainerCustomStyle={styles.sliderContainer}
+              showsHorizontalScrollIndicator={false}
+              snapOnAndroid={true}
+              removeClippedSubviews={false}
+            >
         		<Image style={styles.image} source={require('../../res/images/demo.png')}></Image>
-        	</View>
+            <Image style={styles.image} source={require('../../res/images/demo.png')}></Image>
+            <Image style={styles.image} source={require('../../res/images/demo.png')}></Image>
+            </Carousel> 
+          </View>
         	<View style={styles.contentContainer}>
-        		<TextPingFang style={styles.title}>今天是个好天气</TextPingFang>
+        		<TextPingFang style={styles.title}>{this.props.title}</TextPingFang>
         		<TextPingFang style={styles.place}>广东省广州市大学城外环西路230号</TextPingFang>
-        		<TextPingFang style={styles.content}>Now, if you are interested in being the best player, getting really good money and knowing some tricks and advices of what to do in a live tournament games, here is the best place to learn them.</TextPingFang>
+        		<TextPingFang style={styles.content}>{this.props.content}</TextPingFang>
         	</View>
         </View>
       </View>
@@ -102,7 +137,8 @@ const styles = StyleSheet.create({
   },
   swiperContainer: {
   	marginLeft: 67 / 375 * WIDTH,
-  	marginTop: 20 / 667 * HEIGHT
+  	marginTop: 20 / 667 * HEIGHT,
+    width: 269 / 375 * WIDTH
   },
   image: {
   	width: 220 / 375 * WIDTH,
@@ -129,5 +165,12 @@ const styles = StyleSheet.create({
   	fontSize: 12,
   	lineHeight: 17,
   	color: '#3D3D3D'
+  },
+  slider: {
+    margin: 0,
+    width: 220 / 375 * WIDTH,
+    height: 108 / 667 * HEIGHT
+  },  
+  sliderContainer: {
   }
 });

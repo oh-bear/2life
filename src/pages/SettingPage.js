@@ -18,6 +18,8 @@ import {HOST, QINIU_UPHOST} from '../util/config';
 import HttpUtils from '../util/HttpUtils';
 import Platform from 'Platform';
 import AlertBox from '../common/AlertBox';
+
+import ImageCropPicker from 'react-native-image-crop-picker';
 import ImagePicker from 'react-native-image-picker';
 import ImageResizer from 'react-native-image-resizer';
 
@@ -76,7 +78,6 @@ export default class SettingPage extends Component {
             }
           })
         }
-
       }
     }).catch((error)=> {
       console.log(error);
@@ -93,7 +94,7 @@ export default class SettingPage extends Component {
       return ;
     }
 
-    ImageResizer.createResizedImage(file.uri, file.width, file.height, 'JPEG', 80)
+  ImageResizer.createResizedImage(file.uri, file.width, file.height, 'JPEG', 80)
     .then((resizedImageUri) => {
       file.resizedUri = resizedImageUri;
       complete(file);
@@ -255,24 +256,22 @@ export default class SettingPage extends Component {
 
           <TouchableOpacity
               onPress={()=>{
-                ImagePicker.showImagePicker(options, (response) => {
-                  console.log('Response = ', response);
-
-                  if (response.didCancel) {
-                    console.log('User cancelled image picker');
-                  }
-                  else if (response.error) {
-                    console.log('ImagePicker Error: ', response.error);
-                  }
-                  else if (response.customButton) {
-                    console.log('User tapped custom button: ', response.customButton);
-                  }
-                  else {
-                    let file = {uri: response.uri, height:response.height, width:response.width, name: 'image/twolife/' + this.props.user.uid + '/' + response.fileName};
-                    this.setState({
-                      file: file
-                    })
-                  }
+                ImageCropPicker.openPicker({
+                  width: 400,
+                  height: 400,
+                  cropping: true
+                }).then(response => {
+                  console.log(response)
+                  let file = {
+                    uri: response.path, 
+                    height:response.height, 
+                    width:response.width, 
+                    name: 'image/twolife/' + this.props.user.uid + '/' + response.path.substr(response.path.length-12)
+                  };
+                  console.log(file)
+                  this.setState({
+                    file: file
+                  })
                 });
               }}>
               <Image

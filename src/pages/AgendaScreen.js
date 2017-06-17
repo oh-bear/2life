@@ -14,6 +14,7 @@ import * as Animatable from 'react-native-animatable';
 import { createAnimatableComponent, View, Text } from 'react-native-animatable';
 
 import ItemPage from './ItemPage';
+import DairyPage from './DairyPage';
 import CommonNav from '../common/CommonNav';
 import NavigationBar from "../common/NavigationBar";
 import TextPingFang from "../common/TextPingFang";
@@ -181,7 +182,7 @@ export default class AgendaScreen extends Component {
     return (
       <TouchableOpacity
         onPress={()=>{
-          this.onJump(ItemPage, {
+          this.onJump(DairyPage, {
             note_id: item.note_id, 
             note_time: item.note_time, 
             me: item.me,
