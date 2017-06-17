@@ -232,13 +232,8 @@ export default class SettingPage extends Component {
         <AlertBox
           _dialogVisible={this.state.isDialogVisible}
           _dialogLeftBtnAction={()=> {
-            AsyncStorage.setItem('user_info', JSON.stringify(this.state.data), (error, result)=>{
-              if (!error) {
-                console.log(JSON.stringify(this.state.data));
-                this.props.onCallBack(this.state.data);
-                this.props.navigator.pop();
-              }
-            })
+            this.props.onCallBack(this.state.data);
+            this.props.navigator.pop();
           }}
           _dialogRightBtnAction={()=>{this.hideDialog()}}
           _dialogContent={'个人信息更改成功'}

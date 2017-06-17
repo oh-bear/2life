@@ -31,10 +31,25 @@ export default class DairyPage extends Component {
   }
 
   render() {
+    const images = [{
+      url: 'https://airing.ursb.me/image/twolife/demo.png',
+    }, {
+      url: 'https://airing.ursb.me/image/twolife/demo.png',
+    }, {
+      url: 'https://airing.ursb.me/image/twolife/demo.png',
+    }]
     return (
       <View style={styles.container}>
-        <Modal animationType={"fade"} transparent={true} visible={this.state.isImageViewerVisible}>
-          <ImageViewer index={this.state.ImageViewerIndex} onClick={()=>{ this.setState({isImageViewerVisible:false}) }}/>
+        <Modal 
+          animationType={"fade"} 
+          transparent={true} 
+          visible={this.state.isImageViewerVisible}>
+          <ImageViewer 
+            imageUrls={images} 
+            index={this.state.ImageViewerIndex} 
+            onClick={()=>{ 
+              this.setState({isImageViewerVisible:false}) 
+            }}/>
         </Modal>
         <View style={styles.card}>
         	<View style={styles.menuContainer}>
