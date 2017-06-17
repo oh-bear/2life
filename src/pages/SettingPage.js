@@ -51,19 +51,32 @@ export default class SettingPage extends Component {
       user_other_id: this.user_state
     }).then((res)=> {
       if (res.status == 0) {
-        this.resizeFile(this.state.file, ()=>{
-          this.uploadFile(this.state.file, ()=>{
-            console.log('uploadFile success');
-            this.showDialog()
-            this.setState({
-              data: {
-                user_name: this.state.user_name,
-                user_sex: this.state.user_sex,
-                user_other_id: this.state.user_state
-              }
-            })
-          });
-        })
+
+        if (this.state.file.uri) {
+          this.resizeFile(this.state.file, ()=>{
+            this.uploadFile(this.state.file, ()=>{
+              console.log('uploadFile success');
+              this.showDialog()
+              this.setState({
+                data: {
+                  user_name: this.state.user_name,
+                  user_sex: this.state.user_sex,
+                  user_other_id: this.state.user_state
+                }
+              })
+            });
+          })
+        } else {
+          this.showDialog()
+          this.setState({
+            data: {
+              user_name: this.state.user_name,
+              user_sex: this.state.user_sex,
+              user_other_id: this.state.user_state
+            }
+          })
+        }
+
       }
     }).catch((error)=> {
       console.log(error);
