@@ -213,7 +213,7 @@ export default class CreateNotePage extends Component {
               this.state.fileList.map((d,i)=>{
                 file = d;
 
-                return <View delay={100 + i * 50} animation="bounceInRight">
+                return <View animation="bounceInRight">
                     <TouchableOpacity
                       onPress={
                         ()=>{
@@ -284,7 +284,7 @@ const styles = StyleSheet.create({
   addImage: {
     width:48,
     height:48,
-    margin:10
+    margin:5
   },
   center: {
   top: 0,
