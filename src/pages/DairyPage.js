@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import {
   StyleSheet,
-  Image,
   Navigator,
   Dimensions,
   TouchableOpacity,
@@ -10,6 +9,8 @@ import {
 import Carousel from 'react-native-snap-carousel';
 import ImageViewer from 'react-native-image-zoom-viewer';
 import { createAnimatableComponent, View, Text } from 'react-native-animatable';
+import Image from 'react-native-image-progress';
+import * as Progress from 'react-native-progress';
 
 import TextPingFang from '../common/TextPingFang';
 
@@ -23,21 +24,26 @@ export default class DairyPage extends Component {
     this.state = {
       isImageViewerVisible: false,
       ImageViewerIndex:0,
+      note_images: [
+        'https://airing.ursb.me/image/twolife/demo.png',
+        'https://airing.ursb.me/image/twolife/demo.png',
+        'https://airing.ursb.me/image/twolife/demo.png'
+      ],
     };
   }
 
-  showImageViewer(){
+  showImageViewer() {
     this.setState({isImageViewerVisible:true});
   }
 
   render() {
-    const images = [{
-      url: 'https://airing.ursb.me/image/twolife/demo.png',
-    }, {
-      url: 'https://airing.ursb.me/image/twolife/demo.png',
-    }, {
-      url: 'https://airing.ursb.me/image/twolife/demo.png',
-    }]
+    var images = [];
+    var note_images = this.state.note_images
+
+    note_images.map(item=>{
+      images.push({url: item})
+    })
+
     return (
       <View style={styles.container}>
         <Modal 
@@ -52,21 +58,21 @@ export default class DairyPage extends Component {
             }}/>
         </Modal>
         <View style={styles.card}>
-        	<View style={styles.menuContainer}>
+          <View style={styles.menuContainer}>
           <TouchableOpacity
             onPress={()=> {
               this.props.navigator.pop();
             }}>
-        	  <Image style={styles.menu} source={require('../../res/images/menu.png')}></Image>
-        	</TouchableOpacity>
+            <Image style={styles.menu} source={require('../../res/images/menu.png')}></Image>
+          </TouchableOpacity>
           <TextPingFang style={styles.date}>06-06-2017</TextPingFang>
-        	<TextPingFang style={styles.time}>23:15</TextPingFang>
-        	</View>
-        	<View style={styles.avatarContainer}>
-        		<Image style={styles.avatar} source={require('../../res/images/avatar3.png')}></Image>
-        		<TextPingFang style={styles.username}>{this.props.user.user_name}</TextPingFang>
-        	</View>
-        	<View style={styles.swiperContainer}>
+          <TextPingFang style={styles.time}>23:15</TextPingFang>
+          </View>
+          <View style={styles.avatarContainer}>
+            <Image style={styles.avatar} source={require('../../res/images/avatar3.png')}></Image>
+            <TextPingFang style={styles.username}>{this.props.user.user_name}</TextPingFang>
+          </View>
+          <View style={styles.swiperContainer}>
             <Carousel
               sliderWidth={269 / 375 * WIDTH}
               itemWidth={220 / 375 * WIDTH}
@@ -80,16 +86,31 @@ export default class DairyPage extends Component {
               snapOnAndroid={true}
               removeClippedSubviews={false}
             >
-        		<Image style={styles.image} source={require('../../res/images/demo.png')}></Image>
-            <Image style={styles.image} source={require('../../res/images/demo.png')}></Image>
-            <Image style={styles.image} source={require('../../res/images/demo.png')}></Image>
+            {
+              note_images.map((d, i) => {
+                console.log(d)
+                return (
+                  <TouchableOpacity
+                    onPress={()=>{
+                      this.state.ImageViewerIndex = i;
+                      this.showImageViewer();
+                    }}>
+                    <Image 
+                      style={styles.image} 
+                      source={{uri: d}}
+                      indicator={Progress.Circle}>
+                    </Image>
+                  </TouchableOpacity>
+                )
+              })
+            }
             </Carousel> 
           </View>
-        	<View style={styles.contentContainer}>
-        		<TextPingFang style={styles.title}>{this.props.title}</TextPingFang>
-        		<TextPingFang style={styles.place}>广东省广州市大学城外环西路230号</TextPingFang>
-        		<TextPingFang style={styles.content}>{this.props.content}</TextPingFang>
-        	</View>
+          <View style={styles.contentContainer}>
+            <TextPingFang style={styles.title}>{this.props.title}</TextPingFang>
+            <TextPingFang style={styles.place}>广东省广州市大学城外环西路230号</TextPingFang>
+            <TextPingFang style={styles.content}>{this.props.content}</TextPingFang>
+          </View>
         </View>
       </View>
     );
@@ -102,7 +123,7 @@ const styles = StyleSheet.create({
     backgroundColor: "rgb(242,246,250)"
   },
   card: {
-  	backgroundColor:"white",
+    backgroundColor:"white",
     flexDirection:'column',
     marginTop: (HEIGHT - 567 / 667 * HEIGHT) / 2,
     marginLeft: (WIDTH - 336 / 375 * WIDTH) / 2,
@@ -115,71 +136,71 @@ const styles = StyleSheet.create({
     height: 567 / 667 * HEIGHT
   },
   menuContainer: {
-  	flexDirection: 'row',
-  	marginLeft: 31 / 375 * WIDTH,
-  	marginTop: 33 / 667 * HEIGHT
+    flexDirection: 'row',
+    marginLeft: 31 / 375 * WIDTH,
+    marginTop: 33 / 667 * HEIGHT
   },
   menu: {
-  	width: 18,
-  	height: 16,
+    width: 18,
+    height: 16,
   },
   date: {
-  	marginLeft: 21 / 375 * WIDTH,
-  	fontSize: 12,
-  	lineHeight: 17,
-  	color: 'black'
+    marginLeft: 21 / 375 * WIDTH,
+    fontSize: 12,
+    lineHeight: 17,
+    color: 'black'
   },
   time: {
-  	marginLeft: 12 / 375 * WIDTH,
-  	fontSize: 12,
-  	lineHeight: 17,
-  	color: '#989898'
+    marginLeft: 12 / 375 * WIDTH,
+    fontSize: 12,
+    lineHeight: 17,
+    color: '#989898'
   },
   avatarContainer: {
-  	flexDirection: 'row',
-  	marginLeft: 70 / 375 * WIDTH,
-  	marginTop: 19 / 667 * HEIGHT
+    flexDirection: 'row',
+    marginLeft: 70 / 375 * WIDTH,
+    marginTop: 19 / 667 * HEIGHT
   },
   avatar: {
-  	width: 20 / 375 * WIDTH,
+    width: 20 / 375 * WIDTH,
     height: 20 / 667 * HEIGHT
   },
   username: {
-  	marginLeft: 6 / 375 * WIDTH,
-  	fontSize: 12,
-  	lineHeight: 20,
-  	color: 'black'
+    marginLeft: 6 / 375 * WIDTH,
+    fontSize: 12,
+    lineHeight: 20,
+    color: 'black'
   },
   swiperContainer: {
-  	marginLeft: 67 / 375 * WIDTH,
-  	marginTop: 20 / 667 * HEIGHT,
+    marginLeft: 67 / 375 * WIDTH,
+    marginTop: 20 / 667 * HEIGHT,
     width: 269 / 375 * WIDTH
   },
   image: {
-  	width: 220 / 375 * WIDTH,
+    width: 220 / 375 * WIDTH,
     height: 108 / 667 * HEIGHT
   },
   contentContainer: {
-  	marginLeft: 67 / 375 * WIDTH,
-  	marginRight: 20 / 375 * WIDTH,
-  	marginTop: 21 / 667 * HEIGHT
+    marginLeft: 67 / 375 * WIDTH,
+    marginRight: 20 / 375 * WIDTH,
+    marginTop: 21 / 667 * HEIGHT
   },
   title: {
-  	fontSize: 17,
-  	lineHeight: 22,
-  	color: '#030303'
+    fontSize: 17,
+    lineHeight: 22,
+    color: '#030303'
   },
   place: {
-  	marginTop: 21 / 667 * HEIGHT,
-  	fontSize: 12,
-  	lineHeight: 17,
-  	color: '#9B9B9B'
+    marginTop: 21 / 667 * HEIGHT,
+    fontSize: 12,
+    lineHeight: 17,
+    color: '#9B9B9B'
   },
   content: {
-		marginTop: 21 / 667 * HEIGHT,
-  	fontSize: 12,
-  	lineHeight: 17,
-  	color: '#3D3D3D'
+    marginTop: 21 / 667 * HEIGHT,
+    fontSize: 12,
+    lineHeight: 17,
+    color: '#3D3D3D'
   },
   slider: {
     margin: 0,

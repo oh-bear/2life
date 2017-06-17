@@ -35,6 +35,12 @@ export default class CreateNotePage extends Component {
     this.state = {
       title:"",
       content:"",
+      city: '',
+      district: '',
+      township: '',
+      longitude: 0,
+      latitude: 0,
+      formatted_address: '地球上的某个角落',
       isDialogVisible: false,
       isImageViewerVisible: false,
       ImageViewerIndex:0,
@@ -42,6 +48,52 @@ export default class CreateNotePage extends Component {
       fileList:[],//[file1:{uri:*,name:*,token:*},file2:{uri:*,name:*,token:*}]
     }
   }
+
+  componentDidMount() {
+     navigator.geolocation.watchPosition(
+        (position) => {
+            let longitude = JSON.stringify(position.coords.longitude);//精度
+            let latitude = JSON.stringify(position.coords.latitude);//纬度
+            console.log(longitude+latitude);
+            this.setState({
+              longitude: longitude,
+              latitude: latitude
+            })
+            this.fetchData(longitude, latitude);
+        },
+        (error) =>{
+            console.log(error);
+        },
+        {enableHighAccuracy: true, timeout: 5000, maximumAge: 1000}
+    );
+  }
+
+  fetchData=(longitude,latitude)=>{
+    fetch('http://restapi.amap.com/v3/geocode/regeo?key=9d6935d546e2b3ec1ee3b872c1ee9bbe&location='+longitude+','+latitude+'')
+        .then((response)=>response.json())
+        .then((responseBody)=>{
+            console.log(responseBody);
+            console.log(responseBody.regeocode.formatted_address);
+            let formatted_address = responseBody.regeocode.formatted_address
+            let city = responseBody.regeocode.addressComponent.province;
+            let district = responseBody.regeocode.addressComponent.district;
+            let township = responseBody.regeocode.addressComponent.township;
+
+            if(responseBody.status ==1){
+                this.setState({
+                    city:city,
+                    district:district,
+                    township:township,
+                    location:formatted_address
+                })
+            }else {
+                console.log('定位失败');
+            }
+        }).catch((error)=>{
+        console.log(error);
+    })
+  };
+
   showDialog(){
     this.setState({isDialogVisible:true});
   }
@@ -65,7 +117,10 @@ export default class CreateNotePage extends Component {
       timestamp: this.props.timestamp,
       note_title: this.state.title,
       note_content: this.state.content,
-      note_date: new Date().getTime()
+      note_date: new Date().getTime(),
+      note_location: this.state.location,
+      note_longitude: this.state.longitude,
+      note_latitude: this.state.latitude,
     }).then((response)=>{
       if(response.status== 0) {
         this.state.fileList.map((d,i)=>{
@@ -286,7 +341,7 @@ const styles = StyleSheet.create({
     margin:5
   },
   center: {
-  top: 0,
-  justifyContent: 'center',
-}
+    top: 0,
+    justifyContent: 'center',
+  }
 })
