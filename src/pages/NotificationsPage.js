@@ -11,8 +11,7 @@ import {
   Alert,
   AsyncStorage,
   ListView,
-  ActivityIndicatorIOS,
-  PushNotificationIOS
+  ActivityIndicatorIOS
 } from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import { createAnimatableComponent} from 'react-native-animatable';
@@ -50,57 +49,10 @@ export default class NotificationsPage extends Component {
     (this: any).renderNotificationsList = this.renderNotificationsList.bind(this);
   }
 
-  componentWillMount() {
-    // Add listener for local notifications
-    PushNotificationIOS.addEventListener('localNotification', this._onLocalNotification);
-  }
-
-  componentWillUnmount() {
-    // Remove listener for local notifications
-    PushNotificationIOS.removeEventListener('localNotification', this._onLocalNotification);
-  }
 
   componentDidMount() {
-    this._checkPermissions();
     this.fetchData();
   }
-
-  _sendLocalNotification() {
-    var notification = {"fireDate":new Date().getTime()+10000, "alertBody":"要在通知提示中显示的消息。", userInfo:{"extraInfo":"提供一个可选的object，可以在其中提供额外的数据。"},applicationIconBadgeNumber:1};
-    PushNotificationIOS.scheduleLocalNotification(notification);
-
-    // require('RCTDeviceEventEmitter').emit('localNotificationReceived', {
-    //   aps: {
-    //     alert: 'Sample local notification',
-    //     badge: '+1',
-    //     sound: 'default',
-    //     category: 'REACT_NATIVE'
-    //   },
-    // });
-  }
-
-  _onLocalNotification(notification){
-    AlertIOS.alert(
-      'Local Notification Received',
-      'Alert message: ' + notification.getMessage(),
-      [{
-        text: 'Dismiss',
-        onPress: null,
-      }]
-    );
-  }
-
-  _checkPermissions() {
-    PushNotificationIOS.checkPermissions((permissions) => {
-      console.log('', permissions);
-
-      if (!permissions.alert) {
-        this._requestPermissions();
-      }
-
-    });
-  }
-
 
   fetchData() {
     HttpUtils.post(URL, {
@@ -124,19 +76,6 @@ export default class NotificationsPage extends Component {
             title={"通知"}
             navigator={this.props.navigator}
           />
-
-          {/* <NavigationBar
-            title={"通知"}
-            rightButton={
-              <TouchableOpacity
-                onPress={()=>{
-                  this._sendLocalNotification();
-                }}>
-                <Text>发送</Text>
-              </TouchableOpacity>
-            }
-          /> */}
-
           <AnimatableListView
             duration={1000}
             animation="bounceInUp"

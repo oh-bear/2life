@@ -7,7 +7,8 @@ import {
   Navigator,
   Dimensions,
   TouchableOpacity,
-  AsyncStorage
+  AsyncStorage,
+  PushNotificationIOS
 } from 'react-native';
 import HomeScreen from './HomeScreen';
 import LoginPage from './LoginPage';
@@ -24,6 +25,35 @@ export default class WelcomePage extends Component {
     super(props);
     this.state = {};
   }
+
+  _checkPermissions() {
+    PushNotificationIOS.checkPermissions((permissions) => {
+      if (!permissions.alert) {
+        PushNotificationIOS.requestPermissions();
+      }
+    });
+  }
+
+  _sendLocalNotification() {
+    AsyncStorage.setItem('notifi_registered', 'true', (error)=>{
+      var notification = {fireDate:new Date(1970,1,1,20,0,0).getTime(), alertBody:"今天你遇到了什么？记得来双生里记录一下哦~", userInfo:{},applicationIconBadgeNumber:1,repeatInterval:"day"};
+      PushNotificationIOS.scheduleLocalNotification(notification);
+    })
+  }
+
+  componentDidMount() {
+    this._checkPermissions();
+    AsyncStorage.getItem('notifi_registered', (error, result) => {
+      if (!error) {
+        if (result === '' || result === null || result !=='true') {
+          this._sendLocalNotification();
+        }
+      } else {
+        console.log('查询数据失败');
+      }
+    })
+  }
+
   componentWillMount() {
   	AsyncStorage.getItem('user_info', (error, result) => {
       if (!error) {
@@ -51,7 +81,7 @@ export default class WelcomePage extends Component {
                   }
                 })
             	}
-          }) 
+          })
         } else {
         	this.props.navigator.push({component:LoginPage});
         }
