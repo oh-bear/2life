@@ -11,7 +11,8 @@ import {
   Alert,
   AsyncStorage,
   ListView,
-  ActivityIndicatorIOS
+  ActivityIndicatorIOS,
+  PushNotificationIOS
 } from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import { createAnimatableComponent} from 'react-native-animatable';
@@ -21,6 +22,8 @@ import TextPingFang from '../common/TextPingFang';
 import HttpUtils from '../util/HttpUtils';
 import Platform from 'Platform';
 import NotificationCell from '../common/NotificationCell';
+import RightButtonNav from '../common/RightButtonNav';
+
 import {HOST} from '../util/config';
 
 const WIDTH = Dimensions.get("window").width;
@@ -47,30 +50,59 @@ export default class NotificationsPage extends Component {
     (this: any).renderNotificationsList = this.renderNotificationsList.bind(this);
   }
 
+  componentWillMount() {
+    // Add listener for local notifications
+    PushNotificationIOS.addEventListener('localNotification', this._onLocalNotification);
+  }
+
+  componentWillUnmount() {
+    // Remove listener for local notifications
+    PushNotificationIOS.removeEventListener('localNotification', this._onLocalNotification);
+  }
+
   componentDidMount() {
+    this._checkPermissions();
     this.fetchData();
   }
 
-  fetchData() {
-    // var notifications = [
-    // { title:"圆桌谈，让你把话说完",
-    //   content:"css 里边经常会做的事情是去讲一个文本或者图片水平垂直居中，如果使用过css 的flexbox当然知道使用alignItems 和 justifyContent . 那用react-native也来做一下实验。",
-    //   type:1,
-    //   image:"https://airing.ursb.me/image/twolife/walker.png",
-    //   time:1497151997694,
-    //   url:"https://github.com"
-    // },
-    // { title:"新城市开放啦！",
-    //   content:"网格布局实验， 网格布局能够满足绝大多数的日常开发足正常开发需求。",
-    //   type:0,
-    //   time:1497151997694,
-    //   url:"https://github.com/airingursb"
-    // },];
-    // this.setState({
-    //   dataSource: this.state.dataSource.cloneWithRows(notifications),
-    //   loaded: true,
-    // });
+  _sendLocalNotification() {
+    var notification = {"fireDate":new Date().getTime()+10000, "alertBody":"要在通知提示中显示的消息。", userInfo:{"extraInfo":"提供一个可选的object，可以在其中提供额外的数据。"},applicationIconBadgeNumber:1};
+    PushNotificationIOS.scheduleLocalNotification(notification);
 
+    // require('RCTDeviceEventEmitter').emit('localNotificationReceived', {
+    //   aps: {
+    //     alert: 'Sample local notification',
+    //     badge: '+1',
+    //     sound: 'default',
+    //     category: 'REACT_NATIVE'
+    //   },
+    // });
+  }
+
+  _onLocalNotification(notification){
+    AlertIOS.alert(
+      'Local Notification Received',
+      'Alert message: ' + notification.getMessage(),
+      [{
+        text: 'Dismiss',
+        onPress: null,
+      }]
+    );
+  }
+
+  _checkPermissions() {
+    PushNotificationIOS.checkPermissions((permissions) => {
+      console.log('', permissions);
+
+      if (!permissions.alert) {
+        this._requestPermissions();
+      }
+
+    });
+  }
+
+
+  fetchData() {
     HttpUtils.post(URL, {
       uid: this.state.user.id,
       token: this.state.user.token,
@@ -86,15 +118,25 @@ export default class NotificationsPage extends Component {
   }
 
   render() {
-      // if (!this.state.loaded) {
-      //   return this.renderLoadingView();
-      // }
       return (
         <View style={styles.container}>
           <NavigationBar
             title={"通知"}
             navigator={this.props.navigator}
           />
+
+          {/* <NavigationBar
+            title={"通知"}
+            rightButton={
+              <TouchableOpacity
+                onPress={()=>{
+                  this._sendLocalNotification();
+                }}>
+                <Text>发送</Text>
+              </TouchableOpacity>
+            }
+          /> */}
+
           <AnimatableListView
             duration={1000}
             animation="bounceInUp"
