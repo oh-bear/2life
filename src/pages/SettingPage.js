@@ -47,16 +47,18 @@ export default class SettingPage extends Component {
     };
   }
   onPost() {
-    this.setState({
-      user_face: 'https://airing.ursb.me/' + this.state.file.name
-    })
+    if (this.state.file !== null) {
+      this.setState({
+        user_face: 'https://airing.ursb.me/' + this.state.file.name
+      })
+    }
     HttpUtils.post(URL1, {
       uid: this.props.user.uid,
       timestamp: this.props.user.timestamp,
       token: this.props.user.token,
       user_name: this.state.user_name,
       user_sex: this.state.user_sex,
-      user_face: 'https://airing.ursb.me/' + this.state.file.name,
+      user_face: this.state.user_face,
       user_other_id: this.user_state
     }).then((res)=> {
       if (res.status == 0) {
