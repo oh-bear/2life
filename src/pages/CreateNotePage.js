@@ -46,6 +46,7 @@ export default class CreateNotePage extends Component {
       ImageViewerIndex:0,
       animating:false,//HUD
       fileList:[],//[file1:{uri:*,name:*,token:*},file2:{uri:*,name:*,token:*}]
+      note_images:[]
     }
   }
 
@@ -111,6 +112,17 @@ export default class CreateNotePage extends Component {
       Alert.alert("小提示","请输入日记的内容哦~");
       return ;
     }
+
+    var note_images = [];
+
+    this.state.fileList.map((d, i)=>{
+      note_images.push('https://airing.ursb.me/' + d.name)
+    })
+
+    if (note_images[0] == undefined) {
+      note_images.push('https://airing.ursb.me/image/twolife/demo.png');
+    }
+
     HttpUtils.post(URL,{
       token: this.props.user.token,
       uid: this.props.user.uid,
@@ -121,20 +133,25 @@ export default class CreateNotePage extends Component {
       note_location: this.state.location,
       note_longitude: this.state.longitude,
       note_latitude: this.state.latitude,
+      note_images: note_images.toString()
     }).then((response)=>{
-      if(response.status== 0) {
-        this.state.fileList.map((d,i)=>{
-          file = d;
-          this.resizeFile(file, ()=>{
-            this.uploadFile(file, ()=>{
-              console.log('uploadFile success= ', i);
-              //不知道RN如何实现NSOperation group
-              if (i+1 == this.state.fileList.length) {
-                this.showDialog()
-              }
-            });
+      if(response.status == 0) {
+        if (this.state.fileList[0] !== undefined) {
+          this.state.fileList.map((d,i)=>{
+            file = d;
+            this.resizeFile(file, ()=>{
+              this.uploadFile(file, ()=>{
+                console.log('uploadFile success= ', i);
+                //不知道RN如何实现NSOperation group
+                if (i+1 == this.state.fileList.length) {
+                  this.showDialog()
+                }
+              });
+            })
           })
-        })
+        } else {
+          this.showDialog()
+        }
 
       }
     }).catch((error)=>{
@@ -276,7 +293,7 @@ export default class CreateNotePage extends Component {
                         }
                       }>
                       <Image style={styles.addImage} source={{uri:file.uri}}/>
-              </TouchableOpacity>
+                    </TouchableOpacity>
               </View>
               })
             }
@@ -304,7 +321,7 @@ export default class CreateNotePage extends Component {
                   }
                 });
               }}>
-              <Image style={styles.addImage} source={require('../../res/images/icon_add.png')}></Image>
+              <Image style={styles.addImage} source={require('../../res/images/upload1.png')}></Image>
             </TouchableOpacity>
         </View>
     </View>
@@ -338,7 +355,7 @@ const styles = StyleSheet.create({
   addImage: {
     width:48,
     height:48,
-    margin:5
+    margin:8
   },
   center: {
     top: 0,

@@ -78,6 +78,8 @@ export default class WelcomePage extends Component {
                         partner: this.state.partner,
                       }
                     })
+                  } else {
+                    this.props.navigator.push({component:LoginPage});
                   }
                 })
             	}
@@ -87,6 +89,7 @@ export default class WelcomePage extends Component {
         }
       } else {
         console.log('查询数据失败');
+        this.props.navigator.push({component:LoginPage});
       }
     })
   }

@@ -32,7 +32,8 @@ export default class AgendaScreen extends Component {
     this.state = {
       items: {},
       show: false,
-      user: this.props.user
+      user: this.props.user,
+      partner: this.props.partner
     };
   }
 
@@ -119,7 +120,9 @@ export default class AgendaScreen extends Component {
               male: note.male,
               note_id: note.note_id,
               note_time: note.note_date,
-              me: note.me
+              me: note.me,
+              location: note.note_location,
+              images: note.note_images
             })
           } else {
             this.state.items[note_date].push({
@@ -129,7 +132,9 @@ export default class AgendaScreen extends Component {
               male: note.male,
               note_id: note.note_id,
               note_time: note.note_date,
-              me: note.me
+              me: note.me,
+              location: note.note_location,
+              images: note.note_images
             })
           }
         })
@@ -188,7 +193,10 @@ export default class AgendaScreen extends Component {
             me: item.me,
             title: item.title, 
             content: item.content,
-            user: this.state.user
+            user: this.state.user,
+            partner: this.state.partner,
+            note_images: item.images,
+            note_location: item.location
           });
         }}>
         <View 

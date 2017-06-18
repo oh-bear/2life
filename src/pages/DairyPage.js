@@ -4,7 +4,9 @@ import {
   Navigator,
   Dimensions,
   TouchableOpacity,
-  Modal
+  Modal,
+  DeviceEventEmitter,
+  Alert
 } from 'react-native';
 import Carousel from 'react-native-snap-carousel';
 import ImageViewer from 'react-native-image-zoom-viewer';
@@ -13,9 +15,12 @@ import Image from 'react-native-image-progress';
 import * as Progress from 'react-native-progress';
 
 import TextPingFang from '../common/TextPingFang';
+import {HOST} from '../util/config';
+import HttpUtils from '../util/HttpUtils';
 
 const WIDTH = Dimensions.get("window").width
 const HEIGHT = Dimensions.get("window").height
+const URL = HOST + 'notes/delete';
 
 export default class DairyPage extends Component {
   static defaultProps = {}
@@ -29,7 +34,21 @@ export default class DairyPage extends Component {
         'https://airing.ursb.me/image/twolife/demo.png',
         'https://airing.ursb.me/image/twolife/demo.png'
       ],
+      note_location: '来自地球上的某个角落'
     };
+  }
+
+  formatDate(now) {     
+    var year = now.getYear() - 100 + 2000;     
+    var month = (now.getMonth() + 1)  < 10 ? '0' + (now.getMonth() + 1) : (now.getMonth() + 1);     
+    var date = now.getDate() < 10 ? '0' + now.getDate() : now.getDate();      
+    return month+"-"+date+"-"+year;     
+  }
+
+  formatTime(now) {     
+    var hour = now.getHours();     
+    var minute = now.getMinutes() < 10 ? '0' + now.getMinutes() : now.getMinutes();     
+    return hour+":"+minute;     
   }
 
   showImageViewer() {
@@ -37,12 +56,62 @@ export default class DairyPage extends Component {
   }
 
   render() {
+
+    var d = new Date(this.props.note_time)
+    var date = this.formatDate(d);
+    var time = this.formatTime(d);
+
     var images = [];
-    var note_images = this.state.note_images
+    var note_images = '';
+    if (this.props.note_images !== null) {
+      note_images = this.props.note_images.split(',');
+    } else {
+      note_images = this.state.note_images;
+    }
+    if (this.props.note_location !== 'undefined' && this.props.note_location !== null) {
+      this.state.note_location = this.props.note_location;
+    }
 
     note_images.map(item=>{
       images.push({url: item})
     })
+
+    let AvatarContainer,DeleteButton = null;
+    if (this.props.me == 'yes') {
+      AvatarContainer = <View style={styles.avatarContainer}>
+      <Image style={styles.avatar} source={{uri:this.props.user.user_face}}></Image>
+      <TextPingFang style={styles.username}>{this.props.user.user_name}</TextPingFang>
+      </View>
+
+      DeleteButton = <View>
+        <TouchableOpacity
+            onPress={()=> {
+              Alert.alert('是否删除日记？','',[
+                {text:'取消', onPress:this.userCanceled},
+                {text:'确定', onPress:(user_state)=>{
+                  HttpUtils.post(URL, {
+                    uid: this.props.user.uid,
+                    token: this.props.user.token,
+                    timestamp: this.props.user.timestamp,
+                    note_id: this.props.note_id
+                  }).then((res)=>{
+                    if (res.status == 0) {
+                      Alert.alert('小提醒', '删除成功！');
+                      DeviceEventEmitter.emit('homepageDidChange', 'update');
+                      this.props.navigator.pop();
+                    }
+                  })
+                }}])
+            }}>
+            <Image style={styles.delete} source={require('../../res/images/icondelete1.png')}/>
+          </TouchableOpacity>
+        </View>
+    } else {
+      AvatarContainer = <View style={styles.avatarContainer}>
+      <Image style={styles.avatar} source={{uri:this.props.partner.user_face}}></Image>
+      <TextPingFang style={styles.username}>{this.props.partner.user_name}</TextPingFang>
+      </View>
+    }
 
     return (
       <View style={styles.container}>
@@ -65,13 +134,15 @@ export default class DairyPage extends Component {
             }}>
             <Image style={styles.menu} source={require('../../res/images/menu.png')}></Image>
           </TouchableOpacity>
-          <TextPingFang style={styles.date}>06-06-2017</TextPingFang>
-          <TextPingFang style={styles.time}>23:15</TextPingFang>
+          <TextPingFang style={styles.date}>{date}</TextPingFang>
+          <TextPingFang style={styles.time}>{time}</TextPingFang>
+          {
+            DeleteButton
+          }
           </View>
-          <View style={styles.avatarContainer}>
-            <Image style={styles.avatar} source={require('../../res/images/avatar3.png')}></Image>
-            <TextPingFang style={styles.username}>{this.props.user.user_name}</TextPingFang>
-          </View>
+          {
+            AvatarContainer
+          }
           <View style={styles.swiperContainer}>
             <Carousel
               sliderWidth={269 / 375 * WIDTH}
@@ -108,7 +179,7 @@ export default class DairyPage extends Component {
           </View>
           <View style={styles.contentContainer}>
             <TextPingFang style={styles.title}>{this.props.title}</TextPingFang>
-            <TextPingFang style={styles.place}>广东省广州市大学城外环西路230号</TextPingFang>
+            <TextPingFang style={styles.place}>{this.state.note_location}</TextPingFang>
             <TextPingFang style={styles.content}>{this.props.content}</TextPingFang>
           </View>
         </View>
@@ -163,7 +234,8 @@ const styles = StyleSheet.create({
   },
   avatar: {
     width: 20 / 375 * WIDTH,
-    height: 20 / 667 * HEIGHT
+    height: 20 / 667 * HEIGHT,
+    borderRadius: 4 / 667 * HEIGHT,
   },
   username: {
     marginLeft: 6 / 375 * WIDTH,
@@ -178,7 +250,8 @@ const styles = StyleSheet.create({
   },
   image: {
     width: 220 / 375 * WIDTH,
-    height: 108 / 667 * HEIGHT
+    height: 108 / 667 * HEIGHT,
+    borderRadius: 7 / 667 * HEIGHT,
   },
   contentContainer: {
     marginLeft: 67 / 375 * WIDTH,
@@ -208,5 +281,11 @@ const styles = StyleSheet.create({
     height: 108 / 667 * HEIGHT
   },  
   sliderContainer: {
+  },
+  delete: {
+    width: 8 / 375 * WIDTH,
+    height: 8 / 667 * HEIGHT,
+    marginLeft: 10 / 375 * WIDTH,
+    marginTop: 5 / 667 * HEIGHT
   }
 });

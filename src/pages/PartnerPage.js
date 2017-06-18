@@ -79,7 +79,7 @@ export default class Partner extends Component {
             navigator={this.props.navigator} 
           />
           <Image style={styles.avatar_round} source={require("../../res/images/avatar_round.png")}>
-            <Image style={styles.avatar} source={this.props.partner.user_sex==1?female_pic:male_pic} />
+            <Image style={styles.avatar} source={{uri: this.props.partner.user_face}} />
           </Image>
           <TextPingFang style={styles.avatar_font}>{this.props.partner.user_code}</TextPingFang>
         </Image>
@@ -127,6 +127,9 @@ const styles = StyleSheet.create({
     marginTop: 48
   },
   avatar: {
+    width: 55 / 375 * WIDTH,
+    height: 55 / 667 * HEIGHT,
+    borderRadius: 27.5 / 667 * HEIGHT
   },
   avatar_font: {
     color: "#666666",

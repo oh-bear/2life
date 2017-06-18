@@ -43,15 +43,20 @@ export default class SettingPage extends Component {
       isDialogVisible: false,
       data: {},
       file:{},
+      user_face: this.props.user.user_face
     };
   }
   onPost() {
+    this.setState({
+      user_face: 'https://airing.ursb.me/' + this.state.file.name
+    })
     HttpUtils.post(URL1, {
       uid: this.props.user.uid,
       timestamp: this.props.user.timestamp,
       token: this.props.user.token,
       user_name: this.state.user_name,
       user_sex: this.state.user_sex,
+      user_face: 'https://airing.ursb.me/' + this.state.file.name,
       user_other_id: this.user_state
     }).then((res)=> {
       if (res.status == 0) {
@@ -60,7 +65,8 @@ export default class SettingPage extends Component {
           data: {
             user_name: this.state.user_name,
             user_sex: this.state.user_sex,
-            user_other_id: this.state.user_state
+            user_other_id: this.state.user_state,
+            user_face: this.state.user_face
           }
         })
       }
@@ -209,7 +215,7 @@ export default class SettingPage extends Component {
     if (this.state.file.uri) {
       avatar = <Image style={styles.avatar} source={{uri:this.state.file.uri}} indicator={Progress.Circle} indicatorProps={{indeterminate:true, progress:0.5}}/>
     } else {
-      avatar = <Image style={styles.avatar} source={this.state.user_sex==0?require("../../res/images/avatar.png"):require("../../res/images/avatar2.png")} indicator={Progress.Circle}/>
+      avatar = <Image style={styles.avatar} source={{uri:this.props.user.user_face}} indicator={Progress.Circle}/>
     }
 
     return (
@@ -330,9 +336,9 @@ const styles = StyleSheet.create({
     marginTop: 48
   },
   avatar: {
-    //头像布局需要调整
-    width:40,
-    height:40
+    width: 55 / 375 * WIDTH,
+    height: 55 / 667 * HEIGHT,
+    borderRadius: 27.5 / 667 * HEIGHT
   },
   avatar_font: {
     color:"#666666",

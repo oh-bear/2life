@@ -6,7 +6,7 @@ import {
   Dimensions,
   TouchableOpacity,
   Alert,
-  DeviceEventEmitter
+  DeviceEventEmitter,
 } from 'react-native';
 import { createAnimatableComponent, View, Text } from 'react-native-animatable';
 
@@ -51,7 +51,6 @@ export default class ItemPage extends Component {
                 note_id: this.props.note_id
               }).then((res)=>{
                 if (res.status == 0) {
-                  Alert.alert('小提醒', '删除成功！');
                   DeviceEventEmitter.emit('homepageDidChange', 'update');
                   this.props.navigator.pop();
                 }

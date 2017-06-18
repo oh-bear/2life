@@ -3,12 +3,14 @@ import {
   StyleSheet,
   Navigator,
   TouchableOpacity,
-  Image,
   Dimensions,
   AsyncStorage,
   Alert
 } from 'react-native';
 import { createAnimatableComponent, View, Text } from 'react-native-animatable';
+
+import Image from 'react-native-image-progress';
+import * as Progress from 'react-native-progress';
 
 import TextPingFang from "../common/TextPingFang";
 import CreateNotePage from './CreateNotePage';
@@ -57,6 +59,7 @@ export default class ProfileScreen extends Component {
   }
 
   render() {
+    console.log(this.state.user.user_face)
     let booklist = require("../../res/images/icon_booklist.png");
     let history = require("../../res/images/icon_history.png");
     let setting = require("../../res/images/icon_setting.png");
@@ -73,7 +76,7 @@ export default class ProfileScreen extends Component {
       PartnerView =
           <View style={styles.avatar_content}>
             <Image style={styles.avatar_round} source={require("../../res/images/avatar_round.png")}>
-              <Image source={this.state.partner.user_sex==1?fm_pic:male_pic}/>
+              <Image indicator={Progress.Circle} style={styles.avatar_face} source={{uri:this.state.partner.user_face}}/>
             </Image>
             <TextPingFang style={styles.avatar_font}>{this.state.partner.user_name}</TextPingFang>
           </View>
@@ -85,7 +88,7 @@ export default class ProfileScreen extends Component {
           <View style={styles.avatar_container}>
             <View style={styles.avatar_content}>
               <Image style={styles.avatar_round} source={require("../../res/images/avatar_round.png")}>
-                <Image source={this.state.user.user_sex==1?fm_pic:male_pic}/>
+                <Image indicator={Progress.Circle} style={styles.avatar_face} source={{uri:this.state.user.user_face}}/>
               </Image>
               <TextPingFang style={styles.avatar_font}>{this.state.user.user_name}</TextPingFang>
             </View>
@@ -143,6 +146,7 @@ export default class ProfileScreen extends Component {
                                   this.state.user.user_name = data.user_name;
                                   this.state.user.user_sex = data.user_sex;
                                   this.state.user.user_other_id = data.user_other_id;
+                                  this.state.user.user_face = data.user_face;
                                 }
                               })
                               break;
@@ -255,4 +259,9 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: 'white'
   },
+  avatar_face: {
+    width: 55 / 375 * WIDTH,
+    height: 55 / 667 * HEIGHT,
+    borderRadius: 27.5 / 667 * HEIGHT
+  }
 })
