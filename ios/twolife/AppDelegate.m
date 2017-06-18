@@ -55,6 +55,9 @@
 {
   [RCTPushNotificationManager didReceiveLocalNotification:notification];
 }
+- (void)applicationDidBecomeActive:(UIApplication *)application {
+  [[UIApplication sharedApplication] setApplicationIconBadgeNumber: 0];
+}
 
 
 @end
