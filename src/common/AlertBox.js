@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import {
-  Modal,
-  TouchableHighlight,
-  StyleSheet,
-  BackAndroid,
-  Image,
-  Dimensions
+    Modal,
+    TouchableHighlight,
+    StyleSheet,
+    BackAndroid,
+    Image,
+    Dimensions
 } from 'react-native';
 import { createAnimatableComponent, View, Text } from 'react-native-animatable';
 
@@ -57,7 +57,7 @@ export default class AlertBox extends Component {
               </Text>
             </View>
             <View style={styles.dialogUpBtnView} animation="rubberBand">
-              <TouchableHighlight style={styles.dialogBtnViewItem} onPress={this.props._dialogRightBtnAction}>
+              <TouchableHighlight style={styles.dialogBtnViewItem} onPress={this.props._dialogLeftBtnAction}>
                 <Text style={styles.rightButton}>
                   {this.props._dialogRightBtnTitle}
                 </Text>

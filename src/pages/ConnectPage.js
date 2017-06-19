@@ -103,8 +103,10 @@ export default class ConnectPage extends Component {
           navBarStyle={styles.opacity0}/>
         <AlertBox
           _dialogVisible={this.state.isDialogVisible}
+          _dialogLeftBtnAction={()=> {this.hideDialog()}}
+          _dialogRightBtnAction={()=>{this.hideDialog()}}
           _dialogContent={'匹配成功啦'}
-          _dialogRightBtnAction={()=>{
+          _dialogLeftBtnAction={()=>{
             AsyncStorage.setItem('partner_info', JSON.stringify(this.state.data), (error)=>{
               if (!error) {
                 AsyncStorage.getItem('user_info', (error, result)=>{

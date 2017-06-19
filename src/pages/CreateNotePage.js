@@ -46,52 +46,53 @@ export default class CreateNotePage extends Component {
       ImageViewerIndex:0,
       animating:false,//HUD
       fileList:[],//[file1:{uri:*,name:*,token:*},file2:{uri:*,name:*,token:*}]
-      note_images:[]
+      note_images:[],
+      uploading:false
     }
   }
 
   componentDidMount() {
-    navigator.geolocation.watchPosition(
-      (position) => {
-        let longitude = JSON.stringify(position.coords.longitude);//精度
-        let latitude = JSON.stringify(position.coords.latitude);//纬度
-        console.log(longitude+latitude);
-        this.setState({
-          longitude: longitude,
-          latitude: latitude
-        })
-        this.fetchData(longitude, latitude);
-      },
-      (error) =>{
-        console.log(error);
-      },
-      {enableHighAccuracy: true, timeout: 5000, maximumAge: 1000}
+     navigator.geolocation.watchPosition(
+        (position) => {
+            let longitude = JSON.stringify(position.coords.longitude);//精度
+            let latitude = JSON.stringify(position.coords.latitude);//纬度
+            console.log(longitude+latitude);
+            this.setState({
+              longitude: longitude,
+              latitude: latitude
+            })
+            this.fetchData(longitude, latitude);
+        },
+        (error) =>{
+            console.log(error);
+        },
+        {enableHighAccuracy: true, timeout: 5000, maximumAge: 1000}
     );
   }
 
   fetchData=(longitude,latitude)=>{
     fetch('http://restapi.amap.com/v3/geocode/regeo?key=9d6935d546e2b3ec1ee3b872c1ee9bbe&location='+longitude+','+latitude+'')
-      .then((response)=>response.json())
-      .then((responseBody)=>{
-        console.log(responseBody);
-        console.log(responseBody.regeocode.formatted_address);
-        let formatted_address = responseBody.regeocode.formatted_address
-        let city = responseBody.regeocode.addressComponent.province;
-        let district = responseBody.regeocode.addressComponent.district;
-        let township = responseBody.regeocode.addressComponent.township;
+        .then((response)=>response.json())
+        .then((responseBody)=>{
+            console.log(responseBody);
+            console.log(responseBody.regeocode.formatted_address);
+            let formatted_address = responseBody.regeocode.formatted_address
+            let city = responseBody.regeocode.addressComponent.province;
+            let district = responseBody.regeocode.addressComponent.district;
+            let township = responseBody.regeocode.addressComponent.township;
 
-        if(responseBody.status ==1){
-          this.setState({
-            city:city,
-            district:district,
-            township:township,
-            location:formatted_address
-          })
-        }else {
-          console.log('定位失败');
-        }
-      }).catch((error)=>{
-      console.log(error);
+            if(responseBody.status ==1){
+                this.setState({
+                    city:city,
+                    district:district,
+                    township:township,
+                    location:formatted_address
+                })
+            }else {
+                console.log('定位失败');
+            }
+        }).catch((error)=>{
+        console.log(error);
     })
   };
 
@@ -113,6 +114,9 @@ export default class CreateNotePage extends Component {
       return ;
     }
 
+
+    this.setState({uploading:true});
+
     var note_images = [];
 
     this.state.fileList.map((d, i)=>{
@@ -120,7 +124,7 @@ export default class CreateNotePage extends Component {
     })
 
     if (note_images[0] == undefined) {
-      note_images.push('https://airing.ursb.me/image/twolife/demo.png-yasuo.jpg');
+      note_images.push('https://airing.ursb.me/image/twolife/demo.png');
     }
 
     HttpUtils.post(URL,{
@@ -144,12 +148,14 @@ export default class CreateNotePage extends Component {
                 console.log('uploadFile success= ', i);
                 //不知道RN如何实现NSOperation group
                 if (i+1 == this.state.fileList.length) {
+                  this.setState({uploading:false});
                   this.showDialog()
                 }
               });
             })
           })
         } else {
+          this.setState({uploading:false});
           this.showDialog()
         }
 
@@ -211,10 +217,12 @@ export default class CreateNotePage extends Component {
           },
           body: formData
           }).then((response) => {
+            console.log('response= ', response);
             complete();
         }).catch((error) => {
           Alert.alert("小提示", '网络故障:(');
         });
+
       }
     }).catch((error)=>{
         Alert.alert("小提示", '网络故障:(');
@@ -223,7 +231,7 @@ export default class CreateNotePage extends Component {
 
   render() {
     var options = {
-      title: '选择图片',
+      title: 'Select File',
       customButtons: [
       ],
       storageOptions: {
@@ -252,11 +260,18 @@ export default class CreateNotePage extends Component {
 				}/>
       <AlertBox
         _dialogVisible={this.state.isDialogVisible}
+        _dialogRightBtnAction={()=>{this.hideDialog()}}
         _dialogContent={'日记创建成功'}
-        _dialogRightBtnAction={()=>{
+        _dialogLeftBtnAction={()=>{
           DeviceEventEmitter.emit('homepageDidChange', 'update');
           this.props.navigator.pop();
         }}
+        />
+        <ActivityIndicator
+          animating={this.state.uploading}
+          style={styles.center}
+          size="large"
+          hidesWhenStopped={true}
         />
       <TextInput
         underlineColorAndroid='transparent'
@@ -300,6 +315,7 @@ export default class CreateNotePage extends Component {
               onPress={()=>{
                 ImagePicker.showImagePicker(options, (response) => {
                   console.log('Response = ', response);
+
                   if (response.didCancel) {
                     console.log('User cancelled image picker');
                   }
@@ -310,7 +326,7 @@ export default class CreateNotePage extends Component {
                     console.log('User tapped custom button: ', response.customButton);
                   }
                   else {
-                    let file = {uri: response.uri, height:response.height, width:response.width, name: 'image/twolife/' + this.props.user.uid + '/' + response.fileName + '-yasuo.jpg'};
+                    let file = {uri: response.uri, height:response.height, width:response.width, name: 'image/twolife/' + this.props.user.uid + '/' + response.fileName};
                     this.state.fileList.push(file);
                     this.setState({
                       fileList: this.state.fileList
@@ -355,7 +371,10 @@ const styles = StyleSheet.create({
     margin:8
   },
   center: {
-    top: 0,
+    top: 100,
+    left:WIDTH/2,
+    zIndex:2,
+    position:'absolute',
     justifyContent: 'center',
   }
 })
