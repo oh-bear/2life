@@ -6,7 +6,10 @@ import {
   TouchableOpacity,
   AlertIOS,
   Alert,
-  AsyncStorage
+  AsyncStorage,
+  Modal,
+  TextInput,
+  TouchableHighlight
 } from 'react-native';
 import { createAnimatableComponent, View, Text } from 'react-native-animatable';
 
@@ -17,6 +20,7 @@ import {HOST, QINIU_UPHOST} from '../util/config';
 import HttpUtils from '../util/HttpUtils';
 import Platform from 'Platform';
 import AlertBox from '../common/AlertBox';
+import InputBox from '../common/InputBox';
 
 import ImageCropPicker from 'react-native-image-crop-picker';
 import ImagePicker from 'react-native-image-picker';
@@ -41,25 +45,34 @@ export default class SettingPage extends Component {
       user_name: this.props.user.user_name,
       user_state: this.props.user.user_other_id,
       isDialogVisible: false,
+      isInputVisible: false,
       data: {},
       file:{},
+      upload: 0,
       user_face: this.props.user.user_face
     };
   }
+
+  showInput(){
+    this.setState({isInputVisible:true});
+  }
+  hideInput(){
+    this.setState({isInputVisible:false});
+  }
+
   onPost() {
-    if (this.state.file !== null) {
-      this.setState({
-        user_face: 'https://airing.ursb.me/' + this.state.file.name
-      })
+    var user_face = this.state.user_face
+    if (this.state.upload !== 0) {
+      user_face = 'https://airing.ursb.me/' + this.state.file.name + '-avatar.jpg'
     }
+    console.log('user_face:' + user_face)
     HttpUtils.post(URL1, {
       uid: this.props.user.uid,
       timestamp: this.props.user.timestamp,
       token: this.props.user.token,
       user_name: this.state.user_name,
       user_sex: this.state.user_sex,
-      user_face: this.state.user_face,
-      user_other_id: this.user_state
+      user_face: user_face,
     }).then((res)=> {
       if (res.status == 0) {
         this.showDialog()
@@ -68,7 +81,7 @@ export default class SettingPage extends Component {
             user_name: this.state.user_name,
             user_sex: this.state.user_sex,
             user_other_id: this.state.user_state,
-            user_face: this.state.user_face
+            user_face: user_face
           }
         })
       }
@@ -87,14 +100,14 @@ export default class SettingPage extends Component {
       return ;
     }
 
-  ImageResizer.createResizedImage(file.uri, file.width, file.height, 'JPEG', 80)
-    .then((resizedImageUri) => {
-      file.resizedUri = resizedImageUri;
-      complete(file);
-    }).catch((err) => {
-      Alert.alert("小提示","压缩图片失败哦~");
-      return ;
-    });
+    ImageResizer.createResizedImage(file.uri, file.width, file.height, 'JPEG', 80)
+      .then((resizedImageUri) => {
+        file.resizedUri = resizedImageUri;
+        complete(file);
+      }).catch((err) => {
+        Alert.alert("小提示","压缩图片失败哦~");
+        return ;
+      });
   }
 
   uploadFile(file, complete) {
@@ -129,17 +142,16 @@ export default class SettingPage extends Component {
           },
           body: formData
           }).then((response) => {
+            this.state.upload = 1;
             complete();
         }).catch((error) => {
           Alert.alert("小提示", '网络故障:(');
         });
-
       }
     }).catch((error)=>{
         Alert.alert("小提示", '网络故障:(');
     })
   }
-
 
   changeName() {
     if(Platform.OS === 'ios'){
@@ -147,6 +159,7 @@ export default class SettingPage extends Component {
         {text:'取消', onPress:this.userCanceled},
         {text:'确定', onPress:(name)=>{this.setState({user_name: name})}}
       ]);
+      // this.showInput()
     } else {
       Alert.alert('小提醒', '对不起，安卓用户暂时不支持更改昵称。。');
     }
@@ -159,6 +172,7 @@ export default class SettingPage extends Component {
   hideDialog(){
     this.setState({isDialogVisible:false});
   }
+
   changeSex() {
     Alert.alert('是否更改性别？','',[
       {text:'取消', onPress:this.userCanceled},
@@ -204,7 +218,7 @@ export default class SettingPage extends Component {
   }
   render() {
     var options = {
-      title: 'Select File',
+      title: '选择头像',
       customButtons: [
       ],
       storageOptions: {
@@ -224,13 +238,13 @@ export default class SettingPage extends Component {
       <View style={styles.container}>
         <AlertBox
           _dialogVisible={this.state.isDialogVisible}
-          _dialogLeftBtnAction={()=> {
+          _dialogRightBtnAction={()=> {
             this.props.onCallBack(this.state.data);
             this.props.navigator.pop();
           }}
-          _dialogRightBtnAction={()=>{this.hideDialog()}}
           _dialogContent={'个人信息更改成功'}
           />
+        
         <Image
           style={styles.bg}
           source={this.state.user_sex==0?require("../../res/images/about_bg.png"):require("../../res/images/about_bg1.png")}>
@@ -264,7 +278,7 @@ export default class SettingPage extends Component {
                   if (this.state.file.uri) {
                     this.resizeFile(this.state.file, ()=>{
                       this.uploadFile(this.state.file, ()=>{
-                        console.log('uploadFile success');
+                          console.log('uploadFile success');
                         })
                       });
                   }

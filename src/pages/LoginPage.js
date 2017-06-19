@@ -93,6 +93,7 @@ export default class LoginPage extends Component {
       user_account: this.state.user_account.trim(),
       user_password: this.state.user_password.trim()
     }).then((response)=>{
+      console.log('login success ! user:' + JSON.stringify(response.data))
       switch(response.status) {
         case 0:
           AsyncStorage.setItem("user_info", JSON.stringify(response.data),(error)=>{

@@ -30,9 +30,9 @@ export default class DairyPage extends Component {
       isImageViewerVisible: false,
       ImageViewerIndex:0,
       note_images: [
-        'https://airing.ursb.me/image/twolife/demo.png',
-        'https://airing.ursb.me/image/twolife/demo.png',
-        'https://airing.ursb.me/image/twolife/demo.png'
+        'https://airing.ursb.me/image/twolife/demo.png-yasuo.jpg',
+        'https://airing.ursb.me/image/twolife/demo.png-yasuo.jpg',
+        'https://airing.ursb.me/image/twolife/demo.png-yasuo.jpg'
       ],
       note_location: '来自地球上的某个角落'
     };
@@ -46,7 +46,7 @@ export default class DairyPage extends Component {
   }
 
   formatTime(now) {     
-    var hour = now.getHours();     
+    var hour = now.getHours() < 10 ? '0' + now.getHours() : now.getHours();     
     var minute = now.getMinutes() < 10 ? '0' + now.getMinutes() : now.getMinutes();     
     return hour+":"+minute;     
   }
