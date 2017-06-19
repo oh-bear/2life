@@ -46,7 +46,8 @@ export default class CreateNotePage extends Component {
       ImageViewerIndex:0,
       animating:false,//HUD
       fileList:[],//[file1:{uri:*,name:*,token:*},file2:{uri:*,name:*,token:*}]
-      note_images:[]
+      note_images:[],
+      uploading:false
     }
   }
 
@@ -113,6 +114,9 @@ export default class CreateNotePage extends Component {
       return ;
     }
 
+
+    this.setState({uploading:true});
+
     var note_images = [];
 
     this.state.fileList.map((d, i)=>{
@@ -144,12 +148,14 @@ export default class CreateNotePage extends Component {
                 console.log('uploadFile success= ', i);
                 //不知道RN如何实现NSOperation group
                 if (i+1 == this.state.fileList.length) {
+                  this.setState({uploading:false});
                   this.showDialog()
                 }
               });
             })
           })
         } else {
+          this.setState({uploading:false});
           this.showDialog()
         }
 
@@ -211,6 +217,7 @@ export default class CreateNotePage extends Component {
           },
           body: formData
           }).then((response) => {
+            console.log('response= ', response);
             complete();
         }).catch((error) => {
           Alert.alert("小提示", '网络故障:(');
@@ -259,6 +266,12 @@ export default class CreateNotePage extends Component {
           DeviceEventEmitter.emit('homepageDidChange', 'update');
           this.props.navigator.pop();
         }}
+        />
+        <ActivityIndicator
+          animating={this.state.uploading}
+          style={styles.center}
+          size="large"
+          hidesWhenStopped={true}
         />
       <TextInput
         underlineColorAndroid='transparent'
@@ -358,7 +371,10 @@ const styles = StyleSheet.create({
     margin:8
   },
   center: {
-    top: 0,
+    top: 100,
+    left:WIDTH/2,
+    zIndex:2,
+    position:'absolute',
     justifyContent: 'center',
   }
 })
