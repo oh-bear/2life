@@ -4,9 +4,7 @@ import {
   Image,
   Navigator,
   Dimensions,
-  TouchableHighlight,
-  Modal,
-  TextInput
+  TouchableOpacity
 } from 'react-native';
 import { createAnimatableComponent, View, Text } from 'react-native-animatable';
 
@@ -50,35 +48,20 @@ export default class InputBox extends Component {
         <View style={styles.bg}>
           <View style={styles.dialog}>
           	<View style={styles.dialogImageView}>
-          		<Image style={styles.dialogImage} source={require('../../res/images/inputbox1.png')}></Image>
+          		<Image style={styles.dialogImage} source={require('../../res/images/alertbox1.png')}></Image>
           	</View>
             <View style={styles.dialogContentView}>
-              <TextInput 
-                underlineColorAndroid='transparent'
-                placeholder={this.props._dialogContent}
-                placeholderTextColor={"#999999"}
-                maxLength={15}
-                style={styles.dialogContent}
-                onChangeText={(text)=>{
-                   this.setState({title:text})
-                }}
-                >
-              </TextInput>
+              <Text style={styles.dialogContent}>
+                {this.props._dialogContent}
+              </Text>
             </View>
             <View style={styles.dialogUpBtnView} animation="rubberBand">
-              <TouchableHighlight style={styles.dialogBtnViewItem} onPress={this.props._dialogRightBtnAction}>
+              <TouchableHighlight style={styles.dialogBtnViewItem} onPress={this.props._dialogLeftBtnAction}>
                 <Text style={styles.rightButton}>
                   {this.props._dialogRightBtnTitle}
                 </Text>
               </TouchableHighlight>
-            </View>
-            <View style={styles.dialogDownBtnView} animation="rubberBand">
-              <TouchableHighlight style={styles.dialogBtnViewItem} onPress={this.props._dialogLeftBtnAction}>
-                <Text style={styles.leftButton}>
-                  {this.props._dialogLeftBtnTitle}
-                </Text>
-              </TouchableHighlight>
-            </View>
+             </View>
           </View>
         </View>
       </Modal>
@@ -137,8 +120,6 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: 14,
     color: '#4A4A4A',
-    backgroundColor:"white",
-    height:48,
   },
   dialogUpBtnView: {
   	marginTop: 10 / 667 * HEIGHT,
