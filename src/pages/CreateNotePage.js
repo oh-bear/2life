@@ -40,7 +40,7 @@ export default class CreateNotePage extends Component {
       township: '',
       longitude: 0,
       latitude: 0,
-      formatted_address: '地球上的某个角落',
+      location: '地球上的某个角落',
       isDialogVisible: false,
       isImageViewerVisible: false,
       ImageViewerIndex:0,
@@ -138,21 +138,21 @@ export default class CreateNotePage extends Component {
       if(response.status == 0) {
         if (this.state.fileList[0] !== undefined) {
           this.state.fileList.map((d,i)=>{
-            file = d;
-            this.resizeFile(file, ()=>{
-              this.uploadFile(file, ()=>{
-                console.log('uploadFile success= ', i);
-                //不知道RN如何实现NSOperation group
-                if (i+1 == this.state.fileList.length) {
-                  this.showDialog()
-                }
-              });
-            })
+            console.log('this.state.fileList.map((d,i)=>')
+            console.log(d)
+            this.uploadFile(d, ()=>{
+              console.log('uploadFile=>')
+              console.log(d)
+              console.log('uploadFile success= ', i);
+              //不知道RN如何实现NSOperation group
+              if (i+1 == this.state.fileList.length) {
+                this.showDialog()
+              }
+            });
           })
         } else {
           this.showDialog()
         }
-
       }
     }).catch((error)=>{
         Alert.alert("小提示", '网络故障:(');
@@ -169,14 +169,14 @@ export default class CreateNotePage extends Component {
       return ;
     }
 
-  ImageResizer.createResizedImage(file.uri, file.width, file.height, 'JPEG', 80)
-    .then((resizedImageUri) => {
-      file.resizedUri = resizedImageUri;
-      complete(file);
-    }).catch((err) => {
-      Alert.alert("小提示","压缩图片失败哦~");
-      return ;
-    });
+    ImageResizer.createResizedImage(file.uri, file.width, file.height, 'JPEG', 50)
+      .then((resizedImageUri) => {
+        file.resizedUri = resizedImageUri;
+        complete(file);
+      }).catch((err) => {
+        Alert.alert("小提示","压缩图片失败哦~");
+        return ;
+      });
   }
 
   uploadFile(file, complete) {
@@ -193,7 +193,7 @@ export default class CreateNotePage extends Component {
       token: this.props.user.token,
       uid: this.props.user.uid,
       timestamp: this.props.timestamp,
-      filename: file.name//"image/twolife/" + this.state.file.name,
+      filename: file.name
     }).then((response)=>{
       if(response.status== 0) {
         file.token = response.qiniu_token;
@@ -311,9 +311,14 @@ export default class CreateNotePage extends Component {
                   }
                   else {
                     let file = {uri: response.uri, height:response.height, width:response.width, name: 'image/twolife/' + this.props.user.uid + '/' + response.fileName + '-yasuo.jpg'};
-                    this.state.fileList.push(file);
-                    this.setState({
-                      fileList: this.state.fileList
+                    this.resizeFile(file, ()=>{
+                      console.log('resizeFile=>')
+                      console.log(file)
+                      this.state.fileList.push(file);
+                      this.setState({
+                        fileList: this.state.fileList
+                      })
+                      console.log(this.state.fileList)
                     })
                   }
                 });
