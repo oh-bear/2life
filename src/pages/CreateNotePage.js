@@ -46,7 +46,8 @@ export default class CreateNotePage extends Component {
       ImageViewerIndex:0,
       animating:false,//HUD
       fileList:[],//[file1:{uri:*,name:*,token:*},file2:{uri:*,name:*,token:*}]
-      note_images:[]
+      note_images:[],
+      uploading:false
     }
   }
 
@@ -123,6 +124,7 @@ export default class CreateNotePage extends Component {
       note_images.push('https://airing.ursb.me/image/twolife/demo.png-yasuo.jpg');
     }
 
+    this.setState({uploading:true});
     HttpUtils.post(URL,{
       token: this.props.user.token,
       uid: this.props.user.uid,
@@ -146,11 +148,13 @@ export default class CreateNotePage extends Component {
               console.log('uploadFile success= ', i);
               //不知道RN如何实现NSOperation group
               if (i+1 == this.state.fileList.length) {
+                this.setState({uploading:false});
                 this.showDialog()
               }
             });
           })
         } else {
+          this.setState({uploading:false});
           this.showDialog()
         }
       }
@@ -258,6 +262,14 @@ export default class CreateNotePage extends Component {
           this.props.navigator.pop();
         }}
         />
+
+        <ActivityIndicator
+          style={styles.center}
+          animating={this.state.uploading}
+          color="gray"
+          size="large"
+        />
+
       <TextInput
         underlineColorAndroid='transparent'
         placeholder={"请输入日记标题"}
@@ -360,7 +372,10 @@ const styles = StyleSheet.create({
     margin:8
   },
   center: {
-    top: 0,
+    zIndex:1,
+    position: 'absolute',
+    top: 100,
+    left:WIDTH/2-18,
     justifyContent: 'center',
   }
 })
