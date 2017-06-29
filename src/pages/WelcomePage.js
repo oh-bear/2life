@@ -63,26 +63,31 @@ export default class WelcomePage extends Component {
           AsyncStorage.getItem('partner_info', (error, result) => {
             this.state.partner = JSON.parse(result)
             if (!error) {
-                HttpUtils.post(URL, {
-                  token: this.state.user.token,
-                  uid: this.state.user.uid,
-                  timestamp: this.state.user.timestamp,
-                }).then((res)=>{
-                  console.log(res)
-                  if(res.status == 0) {
-                    console.log('User already login')
-                    this.props.navigator.push({
-                      component: HomeScreen,
-                      params: {
-                        user: this.state.user,
-                        partner: this.state.partner,
-                      }
-                    })
-                  } else {
-                    this.props.navigator.push({component:LoginPage});
-                  }
-                })
-            	}
+              HttpUtils.post(URL, {
+                token: this.state.user.token,
+                uid: this.state.user.uid,
+                timestamp: this.state.user.timestamp,
+              }).then((res)=>{
+                console.log(res)
+                if(res.status == 0) {
+                  console.log('User already login')
+                  this.props.navigator.push({
+                    component: HomeScreen,
+                    params: {
+                      user: this.state.user,
+                      partner: this.state.partner,
+                    }
+                  })
+                } else {
+                  this.props.navigator.push({component:LoginPage});
+                }
+              }).then(result => {
+                resolve(result);
+              }).catch(error => {
+                reject(error);
+                this.props.navigator.push({component:LoginPage});
+              });
+          	}
           })
         } else {
         	this.props.navigator.push({component:LoginPage});
