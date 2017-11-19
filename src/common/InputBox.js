@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react'
 import {
   StyleSheet,
   Image,
@@ -7,18 +7,18 @@ import {
   TouchableHighlight,
   Modal,
   TextInput
-} from 'react-native';
-import { createAnimatableComponent, View, Text } from 'react-native-animatable';
+} from 'react-native'
+import {createAnimatableComponent, View, Text} from 'react-native-animatable'
 
-import TextPingFang from './TextPingFang';
+import TextPingFang from './TextPingFang'
 
-const WIDTH = Dimensions.get("window").width
-const HEIGHT = Dimensions.get("window").height
+const WIDTH = Dimensions.get('window').width
+const HEIGHT = Dimensions.get('window').height
 
 export default class InputBox extends Component {
 
   constructor(props) {
-    super(props);		
+    super(props)
   }
 
   static propTypes = {
@@ -40,39 +40,39 @@ export default class InputBox extends Component {
   }
 
   render() {
-      // onPress事件直接与父组件传递进来的属性挂接
     return (
       <Modal
         visible={this.props._dialogVisible}
         transparent={true}
-        onRequestClose={() => {}} //如果是Android设备 必须有此方法
-        >
+        onRequestClose={() => {
+        }} //如果是Android设备 必须有此方法
+      >
         <View style={styles.bg}>
           <View style={styles.dialog}>
-          	<View style={styles.dialogImageView}>
-          		<Image style={styles.dialogImage} source={require('../../res/images/inputbox1.png')}></Image>
-          	</View>
+            <View style={styles.dialogImageView}>
+              <Image style={styles.dialogImage} source={require('../../res/images/inputbox1.png')}/>
+            </View>
             <View style={styles.dialogContentView}>
-              <TextInput 
+              <TextInput
                 underlineColorAndroid='transparent'
                 placeholder={this.props._dialogContent}
-                placeholderTextColor={"#999999"}
+                placeholderTextColor={'#999999'}
                 maxLength={15}
                 style={styles.dialogContent}
-                onChangeText={(text)=>{
-                   this.setState({title:text})
+                onChangeText={(text) => {
+                  this.setState({title: text})
                 }}
-                >
+              >
               </TextInput>
             </View>
-            <View style={styles.dialogUpBtnView} animation="rubberBand">
+            <View style={styles.dialogUpBtnView} animation='rubberBand'>
               <TouchableHighlight style={styles.dialogBtnViewItem} onPress={this.props._dialogRightBtnAction}>
                 <Text style={styles.rightButton}>
                   {this.props._dialogRightBtnTitle}
                 </Text>
               </TouchableHighlight>
             </View>
-            <View style={styles.dialogDownBtnView} animation="rubberBand">
+            <View style={styles.dialogDownBtnView} animation='rubberBand'>
               <TouchableHighlight style={styles.dialogBtnViewItem} onPress={this.props._dialogLeftBtnAction}>
                 <Text style={styles.leftButton}>
                   {this.props._dialogLeftBtnTitle}
@@ -82,7 +82,7 @@ export default class InputBox extends Component {
           </View>
         </View>
       </Modal>
-    );
+    )
   }
 }
 
@@ -95,23 +95,23 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   dialog: {
-    width: 324 / 375 * WIDTH ,
+    width: 324 / 375 * WIDTH,
     height: 402 / 667 * HEIGHT,
     backgroundColor: 'white',
     borderRadius: 10,
-    shadowColor: "#7C7C7C",
+    shadowColor: '#7C7C7C',
     shadowOffset: {width: 0, height: 2},
     shadowRadius: 4,
     shadowOpacity: 0.8,
-    alignItems: "center",
+    alignItems: 'center',
   },
   dialogImageView: {
-  	width: 324 / 375 * WIDTH,
-  	height: 246 / 667 * HEIGHT,
+    width: 324 / 375 * WIDTH,
+    height: 246 / 667 * HEIGHT,
   },
   dialogImage: {
-  	width: 324 / 375 * WIDTH,
-  	height: 246 / 667 * HEIGHT,
+    width: 324 / 375 * WIDTH,
+    height: 246 / 667 * HEIGHT,
   },
   dialogTitleView: {
     width: WIDTH * 0.8,
@@ -137,16 +137,16 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: 14,
     color: '#4A4A4A',
-    backgroundColor:"white",
-    height:48,
+    backgroundColor: 'white',
+    height: 48,
   },
   dialogUpBtnView: {
-  	marginTop: 10 / 667 * HEIGHT,
+    marginTop: 10 / 667 * HEIGHT,
     width: 132 / 375 * WIDTH,
     height: 32 / 667 * HEIGHT,
   },
   dialogDownBtnView: {
-  	marginTop: 10 / 667 * HEIGHT,
+    marginTop: 10 / 667 * HEIGHT,
     width: 132 / 375 * WIDTH,
     height: 32 / 667 * HEIGHT,
   },
@@ -156,7 +156,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#A1C5F2',
     borderRadius: 5,
-    shadowColor: "#616060",
+    shadowColor: '#616060',
     shadowOffset: {width: 0, height: 2},
     shadowRadius: 4,
     shadowOpacity: 0.5,
@@ -172,7 +172,7 @@ const styles = StyleSheet.create({
     borderBottomRightRadius: 8,
   },
   line: {
-    backgroundColor:"#F5F5F5",
-    height:1.5,
+    backgroundColor: '#F5F5F5',
+    height: 1.5,
   },
-});
+})

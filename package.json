@@ -29,10 +29,17 @@
     "react-native-vector-icons": "^4.2.0"
   },
   "devDependencies": {
-    "babel-jest": "20.0.0",
-    "babel-preset-react-native": "1.9.1",
-    "jest": "20.0.0",
-    "react-test-renderer": "16.0.0-alpha.6"
+    "babel-eslint": "^8.0.2",
+    "babel-jest": "21.2.0",
+    "babel-plugin-import": "^1.4.0",
+    "babel-preset-react-native": "4.0.0",
+    "eslint": "^4.10.0",
+    "eslint-plugin-react": "^7.4.0",
+    "eslint-plugin-react-native": "^3.1.0",
+    "jest": "21.2.1",
+    "react-test-renderer": "16.0.0-beta.5",
+    "redux-devtools-extension": "^2.13.2",
+    "remote-redux-devtools": "^0.5.12"
   },
   "jest": {
     "preset": "react-native"

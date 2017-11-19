@@ -1,14 +1,8 @@
-import React, {Component} from "React";
+import React, {Component} from 'React'
 import {
-  View,
-  StyleSheet,
-  Text,
   Navigator
-} from "react-native";
-import LoginPage from "./pages/LoginPage";
-import WelcomePage from "./pages/WelcomePage";
-import DairyPage from "./pages/DairyPage";
-import HomeScreen from './pages/HomeScreen';
+} from 'react-native'
+import WelcomePage from './pages/WelcomePage'
 
 function setup() {
 
@@ -16,35 +10,38 @@ function setup() {
   class Root extends Component {
 
     renderScene(route, navigator) {
-      let Component = route.component;
-      return <Component {...route.params} navigator={navigator}/>;
+      let Component = route.component
+      return <Component {...route.params} navigator={navigator}/>
     }
+
     configureScene = (route, routeStack) => {
-      let configure = Navigator.SceneConfigs.PushFromRight;
-      switch (route.name){
-        case 'EditView':
-          configure = Navigator.SceneConfigs.FloatFromBottom;
-        default:
-          configure =  Navigator.SceneConfigs.PushFromRight;
-      };
+      let configure = Navigator.SceneConfigs.PushFromRight
+      switch (route.name) {
+      case 'EditView':
+        configure = Navigator.SceneConfigs.FloatFromBottom
+        break
+      default:
+        configure = Navigator.SceneConfigs.PushFromRight
+      }
       return {
         ...configure,
-        gestures:{}
-      };
+        gestures: {}
+      }
     }
+
     render() {
       return <Navigator
-          initialRoute = {{component: WelcomePage}}
-          renderScene = {(route, navigator)=>{
-            let Component = route.component
-            return <Component navigator={navigator} {...route.params}/>
-          }}
-          configureScene={this.configureScene}
-        />
+        initialRoute={{component: WelcomePage}}
+        renderScene={(route, navigator) => {
+          let Component = route.component
+          return <Component navigator={navigator} {...route.params}/>
+        }}
+        configureScene={this.configureScene}
+      />
     }
   }
-  
+
   return <Root/>
 }
 
-module.exports = setup;
+module.exports = setup

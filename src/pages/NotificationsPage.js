@@ -1,41 +1,30 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react'
 import {
   StyleSheet,
   Text,
   View,
-  Image,
-  Navigator,
   Dimensions,
-  TouchableOpacity,
-  AlertIOS,
-  Alert,
-  AsyncStorage,
   ListView,
   ActivityIndicatorIOS
-} from 'react-native';
-import * as Animatable from 'react-native-animatable';
-import { createAnimatableComponent} from 'react-native-animatable';
+} from 'react-native'
+import {createAnimatableComponent} from 'react-native-animatable'
 
-import NavigationBar from '../common/NavigationBar';
-import TextPingFang from '../common/TextPingFang';
-import HttpUtils from '../util/HttpUtils';
-import Platform from 'Platform';
-import NotificationCell from '../common/NotificationCell';
-import RightButtonNav from '../common/RightButtonNav';
+import NavigationBar from '../common/NavigationBar'
+import HttpUtils from '../util/HttpUtils'
+import NotificationCell from '../common/NotificationCell'
 
-import {HOST} from '../util/config';
+import {HOST} from '../util/config'
 
-const WIDTH = Dimensions.get("window").width;
-const INNERWIDTH = WIDTH - 16;
-const HEIGHT = Dimensions.get("window").height;
+const WIDTH = Dimensions.get('window').width
+const HEIGHT = Dimensions.get('window').height
 
-const AnimatableListView = createAnimatableComponent(ListView);
+const AnimatableListView = createAnimatableComponent(ListView)
 
-const URL = HOST + 'users/show_notification';
+const URL = HOST + 'users/show_notification'
 
 export default class NotificationsPage extends Component {
   constructor(props) {
-    super(props);
+    super(props)
 
     this.state = {
       loaded: false,
@@ -44,14 +33,14 @@ export default class NotificationsPage extends Component {
       }),
       user: this.props.user,
       partner: this.props.partner
-    };
+    }
 
-    (this: any).renderNotificationsList = this.renderNotificationsList.bind(this);
+    this.renderNotificationsList = this.renderNotificationsList.bind(this)
   }
 
 
   componentDidMount() {
-    this.fetchData();
+    this.fetchData()
   }
 
   fetchData() {
@@ -59,34 +48,34 @@ export default class NotificationsPage extends Component {
       uid: this.state.user.id,
       token: this.state.user.token,
       timestamp: this.state.user.timestamp
-    }).then((res)=>{
-      if (res.status == 0) {
+    }).then((res) => {
+      if (res.status === 0) {
         this.setState({
           dataSource: this.state.dataSource.cloneWithRows(res.data),
           loaded: true,
-        });
+        })
       }
     })
   }
 
   render() {
-      return (
-        <View style={styles.container}>
-          <NavigationBar
-            title={"通知"}
-            navigator={this.props.navigator}
-          />
-          <AnimatableListView
-            duration={1000}
-            animation="bounceInUp"
-            delay={50}
-            dataSource={this.state.dataSource}
-            renderRow={this.renderNotificationsList}
-            removeClippedSubviews={false}
-            style={styles.listView}
-          />
-        </View>
-      );
+    return (
+      <View style={styles.container}>
+        <NavigationBar
+          title={'通知'}
+          navigator={this.props.navigator}
+        />
+        <AnimatableListView
+          duration={1000}
+          animation='bounceInUp'
+          delay={50}
+          dataSource={this.state.dataSource}
+          renderRow={this.renderNotificationsList}
+          removeClippedSubviews={false}
+          style={styles.listView}
+        />
+      </View>
+    )
   }
 
   renderNotificationsList(notification) {
@@ -95,7 +84,7 @@ export default class NotificationsPage extends Component {
         notification={notification}
         navigator={this.props.navigator}
       />
-    );
+    )
   }
 
   renderLoadingView() {
@@ -105,7 +94,7 @@ export default class NotificationsPage extends Component {
           Loading notifications...
         </Text>
       </View>
-    );
+    )
   }
 }
 
@@ -114,7 +103,7 @@ const styles = StyleSheet.create({
     height: HEIGHT - 50 / 667 * HEIGHT,
     width: WIDTH,
     alignItems: 'center',
-    backgroundColor: "#F3F4F6",
+    backgroundColor: '#F3F4F6',
   },
   loading: {
     flex: 1,
@@ -122,8 +111,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center'
   },
   listView: {
-    flex:1,
+    flex: 1,
     width: WIDTH,
     backgroundColor: '#F3F4F6',
   },
-});
+})

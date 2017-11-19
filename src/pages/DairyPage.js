@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react'
 import {
   StyleSheet,
   Navigator,
@@ -7,138 +7,144 @@ import {
   Modal,
   DeviceEventEmitter,
   Alert
-} from 'react-native';
-import Carousel from 'react-native-snap-carousel';
-import ImageViewer from 'react-native-image-zoom-viewer';
-import { createAnimatableComponent, View, Text } from 'react-native-animatable';
-import Image from 'react-native-image-progress';
-import * as Progress from 'react-native-progress';
+} from 'react-native'
+import Carousel from 'react-native-snap-carousel'
+import ImageViewer from 'react-native-image-zoom-viewer'
+import {View} from 'react-native-animatable'
+import Image from 'react-native-image-progress'
+import * as Progress from 'react-native-progress'
 
-import TextPingFang from '../common/TextPingFang';
-import {HOST} from '../util/config';
-import HttpUtils from '../util/HttpUtils';
+import TextPingFang from '../common/TextPingFang'
+import {HOST} from '../util/config'
+import HttpUtils from '../util/HttpUtils'
 
-const WIDTH = Dimensions.get("window").width
-const HEIGHT = Dimensions.get("window").height
-const URL = HOST + 'notes/delete';
+const WIDTH = Dimensions.get('window').width
+const HEIGHT = Dimensions.get('window').height
+const URL = HOST + 'notes/delete'
 
 export default class DairyPage extends Component {
   static defaultProps = {}
+
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
       isImageViewerVisible: false,
-      ImageViewerIndex:0,
+      ImageViewerIndex: 0,
       note_images: [
         'https://airing.ursb.me/image/twolife/demo.png-yasuo.jpg',
         'https://airing.ursb.me/image/twolife/demo.png-yasuo.jpg',
         'https://airing.ursb.me/image/twolife/demo.png-yasuo.jpg'
       ],
       note_location: '来自地球上的某个角落'
-    };
+    }
   }
 
-  formatDate(now) {     
-    var year = now.getYear() - 100 + 2000;     
-    var month = (now.getMonth() + 1)  < 10 ? '0' + (now.getMonth() + 1) : (now.getMonth() + 1);     
-    var date = now.getDate() < 10 ? '0' + now.getDate() : now.getDate();      
-    return month+"-"+date+"-"+year;     
+  formatDate(now) {
+    let year = now.getYear() - 100 + 2000
+    let month = (now.getMonth() + 1) < 10 ? '0' + (now.getMonth() + 1) : (now.getMonth() + 1)
+    let date = now.getDate() < 10 ? '0' + now.getDate() : now.getDate()
+    return month + '-' + date + '-' + year
   }
 
-  formatTime(now) {     
-    var hour = now.getHours() < 10 ? '0' + now.getHours() : now.getHours();     
-    var minute = now.getMinutes() < 10 ? '0' + now.getMinutes() : now.getMinutes();     
-    return hour+":"+minute;     
+  formatTime(now) {
+    let hour = now.getHours() < 10 ? '0' + now.getHours() : now.getHours()
+    let minute = now.getMinutes() < 10 ? '0' + now.getMinutes() : now.getMinutes()
+    return hour + ':' + minute
   }
 
   showImageViewer() {
-    this.setState({isImageViewerVisible:true});
+    this.setState({isImageViewerVisible: true})
   }
 
   render() {
 
-    var d = new Date(this.props.note_time)
-    var date = this.formatDate(d);
-    var time = this.formatTime(d);
+    let d = new Date(this.props.note_time)
+    let date = this.formatDate(d)
+    let time = this.formatTime(d)
 
-    var images = [];
-    var note_images = '';
+    let images = []
+    let note_images = ''
     if (this.props.note_images !== null) {
-      note_images = this.props.note_images.split(',');
+      note_images = this.props.note_images.split(',')
     } else {
-      note_images = this.state.note_images;
+      note_images = this.state.note_images
     }
     if (this.props.note_location !== 'undefined' && this.props.note_location !== null) {
-      this.state.note_location = this.props.note_location;
+      this.state.note_location = this.props.note_location
     }
 
-    note_images.map(item=>{
+    note_images.map(item => {
       images.push({url: item})
     })
 
-    let AvatarContainer,DeleteButton = null;
-    if (this.props.me == 'yes') {
+    let AvatarContainer, DeleteButton = null
+    if (this.props.me === 'yes') {
       AvatarContainer = <View style={styles.avatarContainer}>
-      <Image style={styles.avatar} source={{uri:this.props.user.user_face}}></Image>
-      <TextPingFang style={styles.username}>{this.props.user.user_name}</TextPingFang>
+        <Image style={styles.avatar} source={{uri: this.props.user.user_face}}/>
+        <TextPingFang style={styles.username}>{this.props.user.user_name}</TextPingFang>
       </View>
 
       DeleteButton = <View>
         <TouchableOpacity
-            onPress={()=> {
-              Alert.alert('是否删除日记？','',[
-                {text:'取消', onPress:this.userCanceled},
-                {text:'确定', onPress:(user_state)=>{
-                  HttpUtils.post(URL, {
-                    uid: this.props.user.uid,
-                    token: this.props.user.token,
-                    timestamp: this.props.user.timestamp,
-                    note_id: this.props.note_id
-                  }).then((res)=>{
-                    if (res.status == 0) {
-                      Alert.alert('小提醒', '删除成功！');
-                      DeviceEventEmitter.emit('homepageDidChange', 'update');
-                      this.props.navigator.pop();
-                    }
-                  })
-                }}])
-            }}>
-            <Image style={styles.delete} source={require('../../res/images/icondelete1.png')}/>
-          </TouchableOpacity>
-        </View>
+          onPress={() => {
+            Alert.alert('是否删除日记？', '', [
+              {text: '取消', onPress: this.userCanceled},
+              {
+                text: '确定',
+                onPress: (user_state) => {
+                  HttpUtils.post(URL,
+                    {
+                      uid: this.props.user.uid,
+                      token: this.props.user.token,
+                      timestamp: this.props.user.timestamp,
+                      note_id: this.props.note_id
+                    })
+                    .then((res) => {
+                      if (res.status === 0) {
+                        Alert.alert('小提醒', '删除成功！')
+                        DeviceEventEmitter.emit('homepageDidChange', 'update')
+                        this.props.navigator.pop()
+                      }
+                    })
+                }
+              }])
+          }}>
+          <Image style={styles.delete} source={require('../../res/images/icondelete1.png')}/>
+        </TouchableOpacity>
+      </View>
     } else {
       AvatarContainer = <View style={styles.avatarContainer}>
-      <Image style={styles.avatar} source={{uri:this.props.partner.user_face}}></Image>
-      <TextPingFang style={styles.username}>{this.props.partner.user_name}</TextPingFang>
+        <Image style={styles.avatar} source={{uri: this.props.partner.user_face}} />
+        <TextPingFang style={styles.username}>{this.props.partner.user_name}</TextPingFang>
       </View>
     }
 
     return (
       <View style={styles.container}>
-        <Modal 
-          animationType={"fade"} 
-          transparent={true} 
+        <Modal
+          animationType={'fade'}
+          transparent={true}
           visible={this.state.isImageViewerVisible}>
-          <ImageViewer 
-            imageUrls={images} 
-            index={this.state.ImageViewerIndex} 
-            onClick={()=>{ 
-              this.setState({isImageViewerVisible:false}) 
+          <ImageViewer
+            imageUrls={images}
+            index={this.state.ImageViewerIndex}
+            onClick={() => {
+              this.setState({isImageViewerVisible: false})
             }}/>
         </Modal>
         <View style={styles.card}>
           <View style={styles.menuContainer}>
-          <TouchableOpacity
-            onPress={()=> {
-              this.props.navigator.pop();
-            }}>
-            <Image style={styles.menu} source={require('../../res/images/menu.png')}></Image>
-          </TouchableOpacity>
-          <TextPingFang style={styles.date}>{date}</TextPingFang>
-          <TextPingFang style={styles.time}>{time}</TextPingFang>
-          {
-            DeleteButton
-          }
+            <TouchableOpacity
+              onPress={() => {
+                this.props.navigator.pop()
+              }}>
+              <Image style={styles.menu} source={require('../../res/images/menu.png')}/>
+            </TouchableOpacity>
+            <TextPingFang style={styles.date}>{date}</TextPingFang>
+            <TextPingFang style={styles.time}>{time}</TextPingFang>
+            {
+              DeleteButton
+            }
           </View>
           {
             AvatarContainer
@@ -157,25 +163,24 @@ export default class DairyPage extends Component {
               snapOnAndroid={true}
               removeClippedSubviews={false}
             >
-            {
-              note_images.map((d, i) => {
-                console.log(d)
-                return (
-                  <TouchableOpacity
-                    onPress={()=>{
-                      this.state.ImageViewerIndex = i;
-                      this.showImageViewer();
-                    }}>
-                    <Image 
-                      style={styles.image} 
-                      source={{uri: d}}
-                      indicator={Progress.Circle}>
-                    </Image>
-                  </TouchableOpacity>
-                )
-              })
-            }
-            </Carousel> 
+              {
+                note_images.map((d, i) => {
+                  return (
+                    <TouchableOpacity
+                      onPress={() => {
+                        this.state.ImageViewerIndex = i
+                        this.showImageViewer()
+                      }}>
+                      <Image
+                        style={styles.image}
+                        source={{uri: d}}
+                        indicator={Progress.Circle}>
+                      </Image>
+                    </TouchableOpacity>
+                  )
+                })
+              }
+            </Carousel>
           </View>
           <View style={styles.contentContainer}>
             <TextPingFang style={styles.title}>{this.props.title}</TextPingFang>
@@ -184,22 +189,22 @@ export default class DairyPage extends Component {
           </View>
         </View>
       </View>
-    );
+    )
   }
 }
 
 const styles = StyleSheet.create({
   container: {
     height: HEIGHT,
-    backgroundColor: "rgb(242,246,250)"
+    backgroundColor: 'rgb(242,246,250)'
   },
   card: {
-    backgroundColor:"white",
-    flexDirection:'column',
+    backgroundColor: 'white',
+    flexDirection: 'column',
     marginTop: (HEIGHT - 567 / 667 * HEIGHT) / 2,
     marginLeft: (WIDTH - 336 / 375 * WIDTH) / 2,
     borderRadius: 5 / 667 * HEIGHT,
-    shadowColor: "#000000",
+    shadowColor: '#000000',
     shadowOffset: {width: 0, height: 4},
     shadowRadius: 4,
     shadowOpacity: 0.5,
@@ -279,13 +284,12 @@ const styles = StyleSheet.create({
     margin: 0,
     width: 220 / 375 * WIDTH,
     height: 108 / 667 * HEIGHT
-  },  
-  sliderContainer: {
   },
+  sliderContainer: {},
   delete: {
     width: 8 / 375 * WIDTH,
     height: 8 / 667 * HEIGHT,
     marginLeft: 10 / 375 * WIDTH,
     marginTop: 5 / 667 * HEIGHT
   }
-});
+})
