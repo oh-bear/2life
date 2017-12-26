@@ -7,9 +7,9 @@ import {
 } from 'react-native'
 import {View, Text} from 'react-native-animatable'
 
-import CommonNav from '../common/CommonNav'
+import CommonNav from '../components/CommonNav'
 import {HOST} from '../util/config'
-import TextPingFang from '../common/TextPingFang'
+import TextPingFang from '../components/TextPingFang'
 import HttpUtils from '../util/HttpUtils'
 
 const HEIGHT = Dimensions.get('window').height

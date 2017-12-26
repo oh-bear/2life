@@ -66,3 +66,5 @@ android/.idea/
 android/build/
 android/.gradle/
 android/gradle/
+
+.idea/

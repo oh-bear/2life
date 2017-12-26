@@ -5,7 +5,7 @@ import {
   Dimensions,
   WebView
 } from 'react-native'
-import CommonNav from '../common/CommonNav'
+import CommonNav from '../components/CommonNav'
 
 
 const WIDTH = Dimensions.get('window').width

@@ -8,12 +8,12 @@ import {
 } from 'react-native'
 import {View, Text} from 'react-native-animatable'
 
-import RightButtonNav from '../common/RightButtonNav'
-import TextPingFang from '../common/TextPingFang'
+import RightButtonNav from '../components/RightButtonNav'
+import TextPingFang from '../components/TextPingFang'
 import {HOST, QINIU_UPHOST} from '../util/config'
 import HttpUtils from '../util/HttpUtils'
 import Platform from 'Platform'
-import AlertBox from '../common/AlertBox'
+import AlertBox from '../components/AlertBox'
 
 import ImageCropPicker from 'react-native-image-crop-picker'
 import ImageResizer from 'react-native-image-resizer'

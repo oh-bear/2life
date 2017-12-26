@@ -14,7 +14,7 @@ import {View} from 'react-native-animatable'
 import Image from 'react-native-image-progress'
 import * as Progress from 'react-native-progress'
 
-import TextPingFang from '../common/TextPingFang'
+import TextPingFang from '../components/TextPingFang'
 import {HOST} from '../util/config'
 import HttpUtils from '../util/HttpUtils'
 

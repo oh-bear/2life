@@ -10,8 +10,8 @@ import {Agenda} from 'react-native-calendars'
 import {View} from 'react-native-animatable'
 
 import DairyPage from './DairyPage'
-import NavigationBar from '../common/NavigationBar'
-import TextPingFang from '../common/TextPingFang'
+import NavigationBar from '../components/NavigationBar'
+import TextPingFang from '../components/TextPingFang'
 import {HOST} from '../util/config'
 import HttpUtils from '../util/HttpUtils'
 

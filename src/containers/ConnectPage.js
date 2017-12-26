@@ -11,12 +11,12 @@ import {
 } from 'react-native'
 import {View, Text} from 'react-native-animatable'
 
-import CommonNav from '../common/CommonNav'
-import TextPingFang from '../common/TextPingFang'
+import CommonNav from '../components/CommonNav'
+import TextPingFang from '../components/TextPingFang'
 import {HOST} from '../util/config'
 import HttpUtils from '../util/HttpUtils'
 import Platform from 'Platform'
-import AlertBox from '../common/AlertBox'
+import AlertBox from '../components/AlertBox'
 
 const WIDTH = Dimensions.get('window').width
 const HEIGHT = Dimensions.get('window').height

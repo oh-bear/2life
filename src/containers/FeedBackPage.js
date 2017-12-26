@@ -7,10 +7,10 @@ import {
 } from 'react-native'
 import {View} from 'react-native-animatable'
 
-import RightButtonNav from '../common/RightButtonNav'
+import RightButtonNav from '../components/RightButtonNav'
 import HttpUtils from '../util/HttpUtils'
 import {HOST} from '../util/config'
-import AlertBox from '../common/AlertBox'
+import AlertBox from '../components/AlertBox'
 
 const WIDTH = Dimensions.get('window').width
 const HEIGHT = Dimensions.get('window').height

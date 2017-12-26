@@ -9,9 +9,9 @@ import {
 } from 'react-native'
 import {createAnimatableComponent} from 'react-native-animatable'
 
-import NavigationBar from '../common/NavigationBar'
+import NavigationBar from '../components/NavigationBar'
 import HttpUtils from '../util/HttpUtils'
-import NotificationCell from '../common/NotificationCell'
+import NotificationCell from '../components/NotificationCell'
 
 import {HOST} from '../util/config'
 

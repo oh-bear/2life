@@ -12,7 +12,7 @@ import {
 import dismissKeyboard from 'dismissKeyboard'
 import {View, Text} from 'react-native-animatable'
 
-import TextPingFang from '../common/TextPingFang'
+import TextPingFang from '../components/TextPingFang'
 import HomeScreen from './HomeScreen'
 import RegisterPage from './RegisterPage'
 import HttpUtils from '../util/HttpUtils'

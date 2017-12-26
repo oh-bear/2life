@@ -2,7 +2,7 @@ import React, {Component} from 'React'
 import {
   Navigator
 } from 'react-native'
-import WelcomePage from './pages/WelcomePage'
+import WelcomePage from './containers/WelcomePage'
 
 function setup() {
 

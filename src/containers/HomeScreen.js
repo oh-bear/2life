@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import BottomTabs from '../common/BottomTabs'
+import BottomTabs from '../components/BottomTabs'
 import AgendaScreen from './AgendaScreen'
 import ProfileScreen from './ProfileScreen'
 import NotificationsPage from './NotificationsPage'

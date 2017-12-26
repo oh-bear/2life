@@ -10,8 +10,8 @@ import {
 } from 'react-native'
 import {View, Text} from 'react-native-animatable'
 
-import CommonNav from '../common/CommonNav'
-import TextPingFang from '../common/TextPingFang'
+import CommonNav from '../components/CommonNav'
+import TextPingFang from '../components/TextPingFang'
 import HttpUtils from '../util/HttpUtils'
 import {HOST} from '../util/config'
 
