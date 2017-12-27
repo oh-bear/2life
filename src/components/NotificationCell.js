@@ -9,7 +9,7 @@ import Image from 'react-native-image-progress'
 import * as Progress from 'react-native-progress'
 
 import TextPingFang from './TextPingFang'
-import NotificationDetailPage from '../pages/NotificationDetailPage'
+import NotificationDetailPage from '../containers/NotificationDetailPage'
 
 const WIDTH = Dimensions.get('window').width
 const HEIGHT = Dimensions.get('window').height
