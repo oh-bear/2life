@@ -1,5 +1,11 @@
 # 双生：遇见另一半的美好：）
 
+持续更新中，欢迎Star~欢迎下载~
+
+2017.12.28 注：2.0版重构计划正式启动！！
+
+---
+
 > 写下此时的心情匹配和你一样的TA吧~
 
 双生app是一款与众不同的写日记软件，很多朋友写日记坚持不下去是因为太枯燥乏味，没有兴趣感，而这款软件可以在你写日记的同时匹配更多同类型心情的日记主人，让你们一起分享彼此的心情，共建友谊。欢迎下载体验。
@@ -8,9 +14,9 @@
 
 * App Store 下载地址：[https://itunes.apple.com/cn/app/%E5%8F%8C%E7%94%9F/id1245100877?l=en&mt=8](https://itunes.apple.com/cn/app/%E5%8F%8C%E7%94%9F/id1245100877?l=en&mt=8)
 
-* 前端 GitHub 地址：[https://github.com/airingursb/two-life](https://github.com/airingursb/two-life)
+* 前端 GitHub 地址：[https://github.com/oh-bear/2life](https://github.com/oh-bear/2life)
 
-* 后端 GitHub 地址：[https://github.com/airingursb/two-life-express](https://github.com/airingursb/two-life-express)
+* 后端 GitHub 地址：[https://github.com/airingursb/2life-server](https://github.com/airingursb/2life-server)
 
 ## Screenshots
 
@@ -58,21 +64,12 @@
 
 ---
 
-持续更新中，欢迎Star~欢迎下载~
-
----
-
 > 还在为总是坚持不了写日记而烦恼？_(:з」∠)_
 > 还在为自己的小心事无处诉说而头疼？_(:з」∠)_
 > 还在为总是遇不到另一个 TA 而孤单作狗？_(:з」∠)_
 
 > 双生帮你解决！
 > 双生，帮你打开另一半的心门 (๑•ㅂ•)و
-
-> v1.0 功能如下：
-1. 书写并保存纯文字的日记
-2. 随机匹配 TA 的日记
-3. 上传头像、定向匹配以及更丰富的日记类型 即将到来...
 
 > 作者Github：https://github.com/airingursb
 > 作者博客：http://me.ursb.me
@@ -154,5 +151,8 @@
 2. 随机匹配 TA 的日记
 
 ## Contributors
-* @DingLin
+
+* @[Airing](https://github.com/airingursb)
+* @[mieruko0713](https://github.com/mieruko0713)
+* @[LinDing](https://github.com/linding)
 
