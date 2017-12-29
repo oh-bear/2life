@@ -1,5 +1,6 @@
 import React, {Component} from 'react'
 import Login from './containers/Login'
+import Register from './containers/Register'
 import Index from './containers/Index'
 
 import {Scene, Router, ActionConst} from 'react-native-router-flux'
@@ -19,6 +20,14 @@ export default class AppRouter extends Component {
               component={Login}
               title="登录"
               type={ActionConst.RESET}
+              duration={0}
+              hideNavBar
+            />
+            <Scene
+              key={scenes.SCENE_REGISTER}
+              component={Register}
+              title="登录"
+              type={ActionConst.REPLACE}
               duration={0}
               hideNavBar
             />
