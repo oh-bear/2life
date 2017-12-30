@@ -19,7 +19,8 @@ const URL = USERS.login
 
 function mapStateToProps(state) {
   return {
-    user: state.user
+    user: state.user,
+    partner: state.partner
   }
 }
 
@@ -28,7 +29,7 @@ class SplashScreen extends Component {
 
   async componentDidMount() {
     const user = await Storage.get('user', {})
-    if (!user.account || !user.password) {
+    if (!user.user_account || !user.user_password) {
       Actions[SCENE_LOGIN]()
       RNSplashScreen.hide()
       return
@@ -51,9 +52,11 @@ class SplashScreen extends Component {
     this.props.dispatch(initApp())
 
     try {
-      HttpUtils.post(URL, {account: user.account, password: user.password}).then(
+      HttpUtils.post(URL, {user_account: user.user_account, user_password: user.user_password}).then(
         res => {
-          Actions[SCENE_INDEX]()
+          if (res.code === 0) {
+            Actions[SCENE_INDEX]({user: res.data, partner: res.partner})
+          }
         }
       )
 

@@ -7,7 +7,7 @@ import {
 import Home from './Home'
 import Calendar from './Calendar'
 import Notification from './Notification'
-import Profile from './Profile'
+import Profile from './profile/Profile'
 import { HEIGHT, getResponsiveHeight } from '../common/styles'
 import TabNavigator from 'react-native-tab-navigator'
 

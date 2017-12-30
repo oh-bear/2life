@@ -16,6 +16,14 @@ export default class AppRouter extends Component {
         <Router>
           <Scene key="root">
             <Scene
+              key={scenes.SCENE_SPLASH_SCREEN}
+              component={SplashScreen}
+              initial
+              type={ActionConst.RESET}
+              duration={0}
+              hideNavBar
+            />
+            <Scene
               key={scenes.SCENE_LOGIN}
               component={Login}
               title="登录"

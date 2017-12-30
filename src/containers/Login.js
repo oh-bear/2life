@@ -24,6 +24,7 @@ import { setToken } from '../network/HttpUtils'
 import HttpUtils from '../network/HttpUtils'
 import store from '../redux/store'
 import { fetchProfileSuccess } from '../redux/modules/user'
+import { fetchPartnerSuccess } from '../redux/modules/partner'
 import initApp from '../redux/modules/init'
 import dismissKeyboard from 'dismissKeyboard'
 import { View, Text } from 'react-native-animatable'
@@ -65,9 +66,10 @@ export default class Login extends Component {
         setToken({uid, token, timestamp})
 
         store.dispatch(fetchProfileSuccess(res.data))
+        store.dispatch(fetchPartnerSuccess(res.partner))
         store.dispatch(initApp())
 
-        Actions[SCENE_INDEX]({user: res.data})
+        Actions[SCENE_INDEX]({user: res.data, partner: res.partner})
       } else {
         Alert.alert('小提示', '登录失败！')
       }
