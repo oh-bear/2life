@@ -13,7 +13,7 @@ export function setToken(data) {
   }
 }
 
-let baseUrl = 'http://localhost:9022'
+let baseUrl = 'http://localhost:3002'
 
 axios.defaults.timeout = 20000
 

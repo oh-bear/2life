@@ -23,7 +23,7 @@ export function getResponsiveHeight(height) {
  * 获取响应式宽度
  *
  * @export
- * @param {any} width
+ * @param {number} width
  * @returns
  */
 export function getResponsiveWidth(width) {

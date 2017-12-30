@@ -1,25 +1,29 @@
-import React, {Component} from 'react'
+import React, { Component } from 'react'
 import {
   StyleSheet,
   TouchableOpacity,
   Image,
   TextInput,
-  TouchableWithoutFeedback
+  TouchableWithoutFeedback,
+  ImageBackground,
+  Alert
 } from 'react-native'
 
 import {
   WIDTH,
-  HEIGHT
+  HEIGHT,
+  getResponsiveHeight,
+  getResponsiveWidth
 } from '../common/styles'
 
 import Storage from '../common/storage'
-import {SCENE_INDEX, SCENE_REGISTER} from '../constants/scene'
-import {Actions} from 'react-native-router-flux'
-import {USERS} from '../network/Urls'
-import {setToken} from '../network/HttpUtils'
+import { SCENE_INDEX, SCENE_REGISTER } from '../constants/scene'
+import { Actions } from 'react-native-router-flux'
+import { USERS } from '../network/Urls'
+import { setToken } from '../network/HttpUtils'
 import HttpUtils from '../network/HttpUtils'
 import store from '../redux/store'
-import {fetchProfileSuccess} from '../redux/modules/user'
+import { fetchProfileSuccess } from '../redux/modules/user'
 import initApp from '../redux/modules/init'
 import dismissKeyboard from 'dismissKeyboard'
 import { View, Text } from 'react-native-animatable'
@@ -46,7 +50,7 @@ export default class Login extends Component {
     }, 3600 * 1000)
   }
 
-  onSubmit = () => {
+  onSubmit = async () => {
 
     const {user_account, user_password} = this.state
 
@@ -64,6 +68,8 @@ export default class Login extends Component {
         store.dispatch(initApp())
 
         Actions[SCENE_INDEX]({user: res.data})
+      } else {
+        Alert.alert('小提示', '登录失败！')
       }
     })
   }
@@ -72,7 +78,7 @@ export default class Login extends Component {
     return (
       <TouchableWithoutFeedback onPress={dismissKeyboard}>
         <View style={styles.container} animation='fadeIn'>
-          <Image style={styles.bg} source={require('../../res/images/login/welcome_bg.png')}>
+          <ImageBackground style={styles.bg} source={require('../../res/images/login/welcome_bg.png')}>
             <Image style={styles.logo} source={require('../../res/images/login/ilo.png')}/>
             <View style={styles.text}>
               <TextPingFang style={styles.title}>双生</TextPingFang>
@@ -124,7 +130,7 @@ export default class Login extends Component {
                 </Text>
               </View>
             </TouchableOpacity>
-          </Image>
+          </ImageBackground>
         </View>
       </TouchableWithoutFeedback>
     )
@@ -144,8 +150,8 @@ const styles = StyleSheet.create({
     height: HEIGHT
   },
   logo: {
-    marginTop: 60 * HEIGHT / 667,
-    height: HEIGHT / 667 * 68.5,
+    marginTop: getResponsiveHeight(60),
+    height: getResponsiveHeight(68.5),
   },
   text: {
     alignItems: 'center',
@@ -155,7 +161,7 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 20,
     fontWeight: '600',
-    height: 33 / 667 * HEIGHT,
+    height: getResponsiveHeight(33),
     marginTop: HEIGHT * 0.0419
   },
   e_title: {
@@ -169,16 +175,16 @@ const styles = StyleSheet.create({
     justifyContent: 'center'
   },
   text_input: {
-    height: 44 / 667 * HEIGHT,
-    width: 240 / 375 * WIDTH,
+    height: getResponsiveHeight(44),
+    width: getResponsiveWidth(240),
     color: 'white',
     backgroundColor: 'rgb(139,203,255)',
-    borderRadius: 22 / 667 * HEIGHT,
-    marginBottom: 14 / 667 * HEIGHT,
+    borderRadius: getResponsiveHeight(22),
+    marginBottom: getResponsiveWidth(14),
     fontSize: 14,
     alignItems: 'center',
     justifyContent: 'center',
-    paddingLeft: 10 / 375 * WIDTH,
+    paddingLeft: getResponsiveWidth(10),
     flexDirection: 'row'
   },
   remind: {
@@ -193,9 +199,9 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     alignItems: 'center',
     justifyContent: 'center',
-    width: 150 / 375 * WIDTH,
-    height: 44 / 667 * HEIGHT,
-    borderRadius: 22 / 667 * HEIGHT
+    width: getResponsiveWidth(150),
+    height: getResponsiveHeight(44),
+    borderRadius: getResponsiveHeight(22)
   },
   online_register: {
     position: 'absolute',
@@ -203,9 +209,9 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     alignItems: 'center',
     justifyContent: 'center',
-    width: 150 / 375 * WIDTH,
-    height: 44 / 667 * HEIGHT,
-    borderRadius: 22 / 667 * HEIGHT
+    width: getResponsiveWidth(150),
+    height: getResponsiveHeight(44),
+    borderRadius: getResponsiveHeight(22)
   },
   online_font: {
     fontSize: 14
