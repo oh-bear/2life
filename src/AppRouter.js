@@ -1,13 +1,15 @@
-import React, {Component} from 'react'
-import Login from './containers/Login'
-import Register from './containers/Register'
-import Index from './containers/Index'
+import React, { Component } from "react"
+import Login from "./containers/Login"
+import Register from "./containers/Register"
+import Index from "./containers/Index"
+import Edit from "./containers/Edit"
+import Home from "./containers/Home"
 
-import {Scene, Router, ActionConst} from 'react-native-router-flux'
-import * as scenes from './constants/scene'
-import SplashScreen from './SplashScreen'
-import {Provider} from 'react-redux'
-import store from './redux/store'
+import { Scene, Router, ActionConst } from "react-native-router-flux"
+import * as scenes from "./constants/scene"
+import SplashScreen from "./SplashScreen"
+import { Provider } from "react-redux"
+import store from "./redux/store"
 
 export default class AppRouter extends Component {
   render() {
@@ -18,7 +20,13 @@ export default class AppRouter extends Component {
             <Scene
               key={scenes.SCENE_SPLASH_SCREEN}
               component={SplashScreen}
-              initial
+              type={ActionConst.RESET}
+              duration={0}
+              hideNavBar
+            />
+            <Scene
+              key={scenes.SCENE_EDIT}
+              component={Edit}
               type={ActionConst.RESET}
               duration={0}
               hideNavBar
@@ -45,6 +53,15 @@ export default class AppRouter extends Component {
               title="首页"
               type={ActionConst.REPLACE}
               hideNavBar
+              duration={0}
+            />
+            <Scene
+              key={scenes.SCENE_HOME}
+              component={Home}
+              title="主页"
+              type={ActionConst.REPLACE}
+              hideNavBar
+              initial
               duration={0}
             />
           </Scene>

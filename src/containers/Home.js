@@ -1,16 +1,17 @@
-import React, {Component} from 'react'
-import {
-  View,
-  StyleSheet,
-  Text
-} from 'react-native'
-import { HEIGHT, getResponsiveHeight } from '../common/styles'
+import React, { Component } from "react"
+import { View, StyleSheet, Text, ListView } from "react-native"
+import { HEIGHT, getResponsiveHeight } from "../common/styles"
+import HomeItem from "../components/HomeItem"
+import { PropTypes } from "prop-types"
 
 export default class Home extends Component {
+  static propTypes = {
+    data: PropTypes.array
+  }
   render() {
     return (
       <View style={styles.container}>
-        <Text>Home</Text>
+        <HomeItem />
       </View>
     )
   }
@@ -18,9 +19,9 @@ export default class Home extends Component {
 
 const styles = StyleSheet.create({
   container: {
-    flexDirection: 'column',
-    backgroundColor: 'rgb(242,246,250)',
-    alignItems: 'center',
+    flexDirection: "column",
+    backgroundColor: "rgb(242,246,250)",
+    alignItems: "center",
     height: HEIGHT
   }
 })
