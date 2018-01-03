@@ -1,6 +1,7 @@
-export const SCENE_LOGIN = "LOGIN"
-export const SCENE_SPLASH_SCREEN = "SPLASH_SCREEN"
-export const SCENE_INDEX = "INDEX"
-export const SCENE_REGISTER = "REGISTER"
-export const SCENE_EDIT = "EDIT"
-export const SCENE_HOME = "HOME"
+export const SCENE_LOGIN = 'LOGIN'
+export const SCENE_SPLASH_SCREEN = 'SPLASH_SCREEN'
+export const SCENE_INDEX = 'INDEX'
+export const SCENE_REGISTER = 'REGISTER'
+export const SCENE_NOTEEDITOR = 'NOTEEDITOR'
+export const SCENE_HOME = 'HOME'
+export const SCENE_FEEDBACK = 'FEEDBACK'

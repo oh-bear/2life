@@ -2,8 +2,9 @@ import React, { Component } from 'react'
 import Login from './containers/Login'
 import Register from './containers/Register'
 import Index from './containers/Index'
-import Edit from './containers/Edit'
+import NoteEditor from './containers/NoteEditor'
 import Home from './containers/Home'
+import Feedback from './containers/profile/Feedback'
 
 import { Scene, Router, ActionConst } from 'react-native-router-flux'
 import * as scenes from './constants/scene'
@@ -20,13 +21,7 @@ export default class AppRouter extends Component {
             <Scene
               key={scenes.SCENE_SPLASH_SCREEN}
               component={SplashScreen}
-              type={ActionConst.RESET}
-              duration={0}
-              hideNavBar
-            />
-            <Scene
-              key={scenes.SCENE_EDIT}
-              component={Edit}
+              initial
               type={ActionConst.RESET}
               duration={0}
               hideNavBar
@@ -59,9 +54,19 @@ export default class AppRouter extends Component {
               key={scenes.SCENE_HOME}
               component={Home}
               title='主页'
-              type={ActionConst.REPLACE}
               hideNavBar
-              initial
+              duration={0}
+            />
+            <Scene
+              key={scenes.SCENE_NOTEEDITOR}
+              component={NoteEditor}
+              duration={0}
+              hideNavBar
+            />
+            <Scene
+              key={scenes.SCENE_FEEDBACK}
+              component={Feedback}
+              title='意见反馈'
               duration={0}
             />
           </Scene>

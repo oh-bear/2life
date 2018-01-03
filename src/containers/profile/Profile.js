@@ -44,13 +44,9 @@ export default class Profile extends Component {
     if (this.props.user.user_other_id !== -1 && this.props.user.user_other_id !== -404) {
       LinkImage =
         <View style={styles.link_round}>
-          <ImageBackground
-            style={styles.avatar_round}
-            source={require('../../../res/images/profile/avatar_round.png')}>
-            <Image
-              style={styles.link}
-              source={require('../../../res/images/profile/link.png')}/>
-          </ImageBackground>
+          <Image
+            style={styles.link}
+            source={require('../../../res/images/profile/link.png')}/>
         </View>
       PartnerView =
         <View style={styles.avatar_content}>
@@ -112,7 +108,7 @@ export default class Profile extends Component {
                   onPress={() => {
                     switch (pageName) {
                     case '创建日记':
-                      this.onJump(scenes.SCENE_, pageName)
+                      this.onJump(scenes.SCENE_NOTEEDITOR, pageName)
                       break
                     case '匹配':
                       this.onJump(scenes.SCENE_CONNECT, pageName)
@@ -146,10 +142,10 @@ export default class Profile extends Component {
                   onPress={() => {
                     switch (pageName) {
                     case '意见反馈':
-                      this.onJump(scenes.SCENE_FEEDBACK, {})
+                      this.onJump(scenes.SCENE_FEEDBACK, pageName)
                       break
                     case '关于我们':
-                      this.onJump(scenes.SCENE_ABOUT_US, {})
+                      this.onJump(scenes.SCENE_ABOUT_US, pageName)
                     }
                   }}
                   key={i}
