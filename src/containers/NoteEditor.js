@@ -3,7 +3,7 @@ import { StyleSheet, View, Text } from 'react-native'
 import NavigationBar from '../components/NavigationBar'
 import { WIDTH, HEIGHT } from '../common/styles'
 
-export default class Edit extends Component {
+export default class NoteEditor extends Component {
   render() {
     return (
       <View style={styles.container}>
