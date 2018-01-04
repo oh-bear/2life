@@ -1,47 +1,69 @@
 import React, { Component } from 'react'
-import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native'
-import { PropTypes } from 'prop-types'
 import {
-  WIDTH,
-  INNERWIDTH,
-  getResponsiveHeight,
-  getResponsiveWidth
-} from '../common/styles'
+  View,
+  Text,
+  Image,
+  StyleSheet,
+  StatusBar
+} from 'react-native'
+import { PropTypes } from 'prop-types'
+import { WIDTH } from '../common/styles'
+const NAVBAR_HEIGHT = 44
+const STATUS_BAR_HEIGHT = 20
 
-export default class NavigationBar extends Component {
+const StatusBarShape = {
+  backgroundColor: PropTypes.string,
+  barStyle: PropTypes.oneOf(['default', 'light-content', 'dark-content']),
+  hidden: PropTypes.bool
+}
+
+export default class Navigator extends Component {
+
   static propTypes = {
     style: View.propTypes.style,
     title: PropTypes.string,
-    backArrow: PropTypes.bool,
-    rightIcon: PropTypes.element,
-    leftIcon: PropTypes.element
+    titleView: PropTypes.element,
+    hide: PropTypes.bool,
+    leftButton: PropTypes.element,
+    rightButton: PropTypes.element,
+    statusBar: PropTypes.shape(StatusBarShape)
   }
+
   static defaultProps = {
-    backArrow: false,
-    leftIcon: <View />,
+    statusBar: {
+      hidden: false
+    }
+  }
+
+  state = {
     title: '',
-    rightIcon: <View />
+    hide: false
   }
 
   render() {
-    let backArrow = (
-      <TouchableOpacity style={styles.back_container}>
-        <Image
-          style={styles.backArrow}
-          source={require('../../res/images/profile/back.png')}
-        />
-      </TouchableOpacity>
+    let status = (
+      <View style={styles.statusBar}>
+        <StatusBar {...this.props.statusBar} />
+      </View>
     )
-    let title = <Text style={styles.title}>{this.props.title}</Text>
-    return (
-      <View style={styles.container}>
-        {this.props.backArrow ? backArrow : this.props.leftIcon}
-        <View style={styles.title}>
-          <Text>{title}</Text>
+    let titleView = this.props.titleView
+      ? this.props.titleView
+      : <Text style={styles.title}>
+        {this.props.title}
+      </Text>
+    let content = (
+      <View style={[styles.navBar, this.props.navBarStyle]}>
+        {this.props.leftButton}
+        <View style={[styles.titleViewContainer, this.props.titleStyle]}>
+          {titleView}
         </View>
-        <TouchableOpacity style={styles.rightIcon}>
-          {this.props.rightIcon}
-        </TouchableOpacity>
+        {this.props.rightButton}
+      </View>
+    )
+    return (
+      <View style={[styles.container, this.props.navStyle]}>
+        {status}
+        {content}
       </View>
     )
   }
@@ -49,37 +71,29 @@ export default class NavigationBar extends Component {
 
 const styles = StyleSheet.create({
   container: {
-    width: WIDTH,
-    marginTop: getResponsiveHeight(20),
-    display: 'flex',
-    flexDirection: 'row',
-    height: getResponsiveHeight(40),
+    backgroundColor: 'white',
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  navBar: {
     alignItems: 'center',
+    height: NAVBAR_HEIGHT,
+    backgroundColor: 'white',
+    flexDirection: 'row',
+    width: WIDTH,
     justifyContent: 'center'
   },
-  back_container: {
-    width: WIDTH / 3,
-    paddingLeft: getResponsiveWidth(16),
-    display: 'flex',
-    justifyContent: 'center'
-  },
-  backArrow: {
-    height: getResponsiveHeight(20),
-    width: getResponsiveWidth(18)
+  titleViewContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: WIDTH - 100
   },
   title: {
-    color: '#45B0F9',
-    fontSize: 18,
-    width: WIDTH / 3,
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center'
+    fontSize: 17,
+    color: 'black',
+    alignItems: 'center'
   },
-  rightIcon: {
-    paddingRight: getResponsiveWidth(16),
-    width: WIDTH / 3,
-    display: 'flex',
-    alignItems: 'flex-end',
-    justifyContent: 'center'
+  statusBar: {
+    height: STATUS_BAR_HEIGHT
   }
 })
