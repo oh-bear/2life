@@ -3,7 +3,9 @@ import {
   TextInput,
   StyleSheet,
   Alert,
-  TouchableWithoutFeedback
+  TouchableWithoutFeedback,
+  TouchableOpacity,
+  Text
 } from 'react-native'
 import { View } from 'react-native-animatable'
 
@@ -19,7 +21,7 @@ import { connect } from 'react-redux'
 import { USERS } from '../../network/Urls'
 import dismissKeyboard from 'dismissKeyboard'
 import HttpUtils from '../../network/HttpUtils'
-import NavigationBar from '../../components/NavigationBar'
+import CommonNav from '../../components/CommonNav'
 
 const URL = USERS.feedback
 
@@ -38,27 +40,41 @@ export default class Feedback extends Component {
   }
 
   onPost() {
-    if (!this.state.contact.trim()) {
+    const {
+      content,
+      contact
+    } = this.state
+
+    if (!contact.trim()) {
       Alert.alert('小提示', '请输入您的联系方式哦~')
       return
     }
-    if (!this.state.content.trim()) {
+    if (!content.trim()) {
       Alert.alert('小提示', '请输入您的反馈内容哦~')
       return
     }
-    HttpUtils.post(URL, {
-      content: this.state.content,
-      contact: this.state.contact,
-    }).then(res => {
-      if (res.msg === '请求成功') {
-        this.showDialog()
-      }
-    })
+    HttpUtils.post(URL, {content, contact})
+      .then(res => {
+        if (res.msg === '请求成功') {
+          this.showDialog()
+        }
+      })
   }
 
   render() {
     return <TouchableWithoutFeedback onPress={dismissKeyboard}>
       <View style={styles.container}>
+        <CommonNav
+          title={this.props.title}
+          rightButton={
+            <TouchableOpacity
+              onPress={this.onPost}
+              style={styles.rightButton}
+            >
+              <Text style={styles.rightButton_font}>完成</Text>
+            </TouchableOpacity>
+          }
+        />
         <TextInput
           underlineColorAndroid='transparent'
           placeholder={'请输入您的邮箱或者电话'}
@@ -88,6 +104,17 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgb(242,246,250)',
     width: WIDTH,
     height: HEIGHT
+  },
+  rightButton: {
+    position: 'absolute',
+    right: 0,
+    width: 56,
+    alignItems: 'center'
+  },
+  rightButton_font: {
+    color: '#73C0FF',
+    fontSize: 17,
+    fontWeight: '500'
   },
   textInput_title: {
     fontFamily: 'PingFang SC',

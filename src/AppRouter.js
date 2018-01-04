@@ -5,6 +5,8 @@ import Index from './containers/Index'
 import NoteEditor from './containers/NoteEditor'
 import Home from './containers/Home'
 import Feedback from './containers/profile/Feedback'
+import AboutUs from './containers/profile/AboutUs'
+import AboutUsWeb from './containers/profile/AboutUsWeb'
 
 import { Scene, Router, ActionConst } from 'react-native-router-flux'
 import * as scenes from './constants/scene'
@@ -68,6 +70,21 @@ export default class AppRouter extends Component {
               component={Feedback}
               title='意见反馈'
               duration={0}
+              hideNavBar
+            />
+            <Scene
+              key={scenes.SCENE_ABOUT_US}
+              component={AboutUs}
+              title='关于我们'
+              duration={0}
+              hideNavBar
+            />
+            <Scene
+              key={scenes.SCENE_ABOUT_US_WEB}
+              component={AboutUsWeb}
+              title='联系我们'
+              duration={0}
+              hideNavBar
             />
           </Scene>
         </Router>
