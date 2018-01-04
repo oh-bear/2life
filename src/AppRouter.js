@@ -39,7 +39,7 @@ export default class AppRouter extends Component {
             <Scene
               key={scenes.SCENE_REGISTER}
               component={Register}
-              title='登录'
+              title='注册'
               type={ActionConst.REPLACE}
               duration={0}
               hideNavBar

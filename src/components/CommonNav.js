@@ -5,6 +5,10 @@ import {
   TouchableOpacity,
   Image
 } from 'react-native'
+import {
+  getResponsiveWidth,
+  getResponsiveHeight
+} from '../common/styles'
 import NavigationBar from './NavigationBar'
 import { Actions } from 'react-native-router-flux'
 
@@ -52,7 +56,7 @@ const styles = StyleSheet.create({
     left: 0
   },
   back: {
-    marginTop: 5,
-    marginLeft: 11
+    marginTop: getResponsiveHeight(5),
+    marginLeft: getResponsiveWidth(11)
   }
 })

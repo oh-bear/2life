@@ -4,7 +4,7 @@ import {
   StyleSheet,
   Text,
   TouchableOpacity,
-  Image
+  ImageBackground
 } from 'react-native'
 
 import {
@@ -19,10 +19,10 @@ import TextPingFang from '../../components/TextPingFang'
 import { Actions } from 'react-native-router-flux'
 import { SCENE_ABOUT_US_WEB } from '../../constants/scene'
 
-export default function AboutUs () {
+export default function AboutUs() {
   return (
     <View style={styles.container}>
-      <Image
+      <ImageBackground
         style={styles.bg}
         source={require('../../../res/images/profile/about_bg.png')}
       >
@@ -31,12 +31,12 @@ export default function AboutUs () {
           navStyle={styles.opacity0}
           navBarStyle={styles.opacity0}
         />
-      </Image>
+      </ImageBackground>
       <View style={styles.text}>
         <Text style={styles.slogan}>TWO</Text>
         <TextPingFang style={styles.name}>双生</TextPingFang>
         <Text style={styles.slogan}>LIFE</Text>
-        <View style={styles.border} />
+        <View style={styles.border}/>
       </View>
       <View style={styles.names}>
         <Text style={styles.name}>Front-End: Airing, mieruko0713</Text>
@@ -65,7 +65,8 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },
   bg: {
-    width: WIDTH
+    width: WIDTH,
+    height: getResponsiveHeight(240)
   },
   opacity0: {
     backgroundColor: 'rgba(0,0,0,0)'

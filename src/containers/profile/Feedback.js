@@ -15,8 +15,6 @@ import {
   HEIGHT
 } from '../../common/styles'
 
-import { Actions } from 'react-native-router-flux'
-import * as scenes from '../../constants/scene'
 import { connect } from 'react-redux'
 import { USERS } from '../../network/Urls'
 import dismissKeyboard from 'dismissKeyboard'
