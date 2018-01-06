@@ -110,7 +110,6 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },
   rightButton_font: {
-    color: '#73C0FF',
     fontSize: 17,
     fontWeight: '500'
   },
