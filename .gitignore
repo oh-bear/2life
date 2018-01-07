@@ -61,7 +61,6 @@ typings/
 ios/build/
 
 # android
-android/
 android/.idea/
 android/build/
 android/.gradle/
