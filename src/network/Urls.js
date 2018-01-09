@@ -4,7 +4,9 @@ export const USERS = {
   code: '/users/code',
   feedback: '/users/feedback',
   update: 'users/update',
-  close_connect: 'users/close_connect'
+  close_connect: 'users/close_connect',
+  connect: 'users/connect',
+  connect_by_id: 'user/connect_by_id'
 }
 
 export const NOTES = {

@@ -111,7 +111,7 @@ export default class Profile extends Component {
                       this.onJump(scenes.SCENE_NOTEEDITOR, pageName)
                       break
                     case '匹配':
-                      this.onJump(scenes.SCENE_CONNECT, pageName)
+                      this.onJump(scenes.SCENE_CONNECTION, pageName)
                       break
                     case '设置':
                       this.onJump(scenes.SCENE_SETTING, pageName)

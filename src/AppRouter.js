@@ -8,6 +8,7 @@ import Feedback from './containers/profile/Feedback'
 import AboutUs from './containers/profile/AboutUs'
 import AboutUsWeb from './containers/profile/AboutUsWeb'
 import Setting from './containers/profile/Setting'
+import Connection from './containers/profile/Connection'
 
 import { Scene, Router, ActionConst } from 'react-native-router-flux'
 import * as scenes from './constants/scene'
@@ -64,6 +65,13 @@ export default class AppRouter extends Component {
               key={scenes.SCENE_NOTEEDITOR}
               component={NoteEditor}
               title='创建日记'
+              duration={0}
+              hideNavBar
+            />
+            <Scene
+              key={scenes.SCENE_CONNECTION}
+              component={Connection}
+              title='匹配'
               duration={0}
               hideNavBar
             />
