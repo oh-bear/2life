@@ -63,7 +63,7 @@ export default class Nickname extends Component {
               placeholder='输入昵称'
               placeholderTextColor='#aaa'
             />
-            <TextPingFang style={[styles.text_tip, {color: this.state.showNameTip ? '#F43C56' : 'transparent'}]}>验证码错误</TextPingFang>
+            <TextPingFang style={[styles.text_tip, {color: this.state.showNameTip ? '#F43C56' : 'transparent'}]}>昵称不能为空</TextPingFang>
             <TouchableOpacity
               style={styles.btn_container}
               onPress={() => this.setNickname()}

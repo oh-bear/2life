@@ -2,8 +2,8 @@ export const USERS = {
   login: '/users/login',
   register: '/users/register',
   code: '/users/code',
-  update: 'users/update',
-  user: 'users/user',
+  update: '/users/update',
+  user: '/users/user',
 
 
 

@@ -52,8 +52,7 @@ export default class Gender extends Component {
 
       if (res.code === 0) {
         store.dispatch(fetchProfileSuccess(res.data))
-        store.dispatch(fetchPartnerSuccess(res.partner))
-        Actions[SCENE_INDEX]({user: res.data, partner: res.partner})
+        Actions[SCENE_INDEX]({user: res.data})
       }
     }
   }

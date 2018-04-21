@@ -54,11 +54,11 @@ export default class Signin extends Component {
         password: this.state.password
       })
 
-      const {uid, token, timestamp} = res.data
+      const {uid, token, timestamp} = res.data.key
       setToken({uid, token, timestamp})
 
-      store.dispatch(fetchProfileSuccess(res.data))
-      store.dispatch(fetchPartnerSuccess(res.partner))
+      store.dispatch(fetchProfileSuccess(res.data.user))
+      store.dispatch(fetchPartnerSuccess(res.data.partner))
 
       Actions[SCENE_INDEX]({user: res.data, partner: res.partner})
     }
@@ -79,7 +79,7 @@ export default class Signin extends Component {
           <View style={styles.inputs_container}>
             <TextInput
               style={styles.input}
-              onChangeText={account => this.setState({account})}
+              onChangeText={account => this.setState({account, showAccountTip: false})}
               value={this.state.account}
               keyboardType='numeric'
               maxLength={11}

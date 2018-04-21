@@ -15,6 +15,10 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 
 import TextPingFang from '../../components/TextPingFang'
 import Banner from './Banner'
+import Storage from '../../common/storage'
+import store from '../../redux/store'
+import { fetchProfileSuccess } from '../../redux/modules/user'
+import { fetchPartnerSuccess } from '../../redux/modules/partner'
 
 import {
   HEIGHT,
@@ -26,9 +30,11 @@ import { SCENE_LOGIN_NICKNAME } from '../../constants/scene'
 
 import { USERS } from '../../network/Urls'
 import HttpUtils from '../../network/HttpUtils'
+import { setToken } from '../../network/HttpUtils'
 
 const URL_code = USERS.code
 const URL_register = USERS.register
+const URL_login = USERS.login
 
 export default class Signup extends Component {
 
@@ -53,7 +59,6 @@ export default class Signup extends Component {
 
     const res = await HttpUtils.post(URL_code, {account: this.state.account})
     if (res.code === 0) {
-      console.log(res)
       this.setState({timestamp: res.data.timestamp})
       Alert.alert('', '验证码已发送')
     }
@@ -79,15 +84,24 @@ export default class Signup extends Component {
     if (res.code === 302) return this.setState({showAccountTip: true, accountTip: '该号码已被注册'})
     if (res.code === 405) return this.setState({showCodeTip: true})
     if (res.code === 0) {
-      Storage.set('user', {
+      const data = {
         account: this.state.account,
         password: this.state.password
-      })
+      }
+      const res = await HttpUtils.post(URL_login, data)
+      if (res.code === 0) {
+        Storage.set('user', {
+          account: this.state.account,
+          password: this.state.password
+        })
+        const {uid, token, timestamp} = res.data.key
+        setToken({uid, token, timestamp})
 
-      const {uid, token, timestamp} = res.data
-      setToken({uid, token, timestamp})
-      
-      Actions.jump(SCENE_LOGIN_NICKNAME, {user: res.user})
+        store.dispatch(fetchProfileSuccess(res.data.user))
+        store.dispatch(fetchPartnerSuccess(res.data.partner))
+
+        Actions.jump(SCENE_LOGIN_NICKNAME, {user: res.data.user})
+      }
     }
   }
 
@@ -107,7 +121,7 @@ export default class Signup extends Component {
             <View style={styles.inputs_container}>
               <TextInput
                 style={styles.input}
-                onChangeText={account => this.setState({account})}
+                onChangeText={account => this.setState({account, showAccountTip: false})}
                 value={this.state.account}
                 keyboardType='numeric'
                 maxLength={11}
@@ -120,10 +134,9 @@ export default class Signup extends Component {
               <View style={styles.code_container}>
                 <TextInput
                   style={[styles.input, styles.input_code]}
-                  onChangeText={code => this.setState({code})}
+                  onChangeText={code => this.setState({code, showCodeTip: false})}
                   value={this.state.code}
                   keyboardType='numeric'
-                  clearButtonMode='while-editing'
                   placeholder='请输入验证码'
                   placeholderTextColor='#aaa'
                   multiline={false}
@@ -139,7 +152,7 @@ export default class Signup extends Component {
 
               <TextInput
                 style={styles.input}
-                onChangeText={password => this.setState({password})}
+                onChangeText={password => this.setState({password, showPswTip: false})}
                 value={this.state.password}
                 clearButtonMode='while-editing'
                 placeholder='请输入密码'
