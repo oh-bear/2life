@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { View } from 'react-native'
 import RNSplashScreen from 'react-native-splash-screen'
 import { Actions } from 'react-native-router-flux'
-import { SCENE_INDEX, SCENE_LOGIN } from './constants/scene'
+import { SCENE_INDEX, SCENE_LOGIN_OPTIONS } from './constants/scene'
 import Storage from './common/storage'
 import { setApiBaseUrl, setToken } from './network/HttpUtils'
 import Toast from 'antd-mobile/lib/toast'
@@ -27,7 +27,7 @@ class SplashScreen extends Component {
   async componentDidMount() {
     const user = await Storage.get('user', {})
     if (!user.user_account || !user.user_password) {
-      Actions[SCENE_LOGIN]()
+      Actions[SCENE_LOGIN_OPTIONS]()
       RNSplashScreen.hide()
       return
     }
@@ -51,12 +51,15 @@ class SplashScreen extends Component {
       }).then(res => {
         if (res.code === 0) {
           Actions[SCENE_INDEX]({ user: res.data, partner: res.partner })
+        } else {
+          Toast.fail('自动登录失败', 1.5)
+          Actions[SCENE_LOGIN_OPTIONS]()
         }
       })
     } catch (e) {
       console.log(e)
       Toast.fail('自动登录失败', 1.5)
-      Actions[SCENE_LOGIN]()
+      Actions[SCENE_LOGIN_OPTIONS]()
     }
 
     RNSplashScreen.hide()

@@ -10,6 +10,15 @@ import AboutUsWeb from './containers/profile/AboutUsWeb'
 import Setting from './containers/profile/Setting'
 import Connection from './containers/profile/Connection'
 
+// 2.0
+// login
+import Options from './containers/login/Options'
+import Signin from './containers/login/Signin'
+import Signup from './containers/login/Signup'
+import Nickname from './containers/login/Nickname'
+import Gender from './containers/login/Gender'
+
+
 import { Scene, Router, ActionConst } from 'react-native-router-flux'
 import * as scenes from './constants/scene'
 import SplashScreen from './SplashScreen'
@@ -31,18 +40,38 @@ export default class AppRouter extends Component {
               hideNavBar
             />
             <Scene
-              key={scenes.SCENE_LOGIN}
-              component={Login}
-              title='登录'
+              key={scenes.SCENE_LOGIN_OPTIONS}
+              component={Options}
+              title='登录选项'
               type={ActionConst.RESET}
               duration={0}
               hideNavBar
             />
             <Scene
-              key={scenes.SCENE_REGISTER}
-              component={Register}
+              key={scenes.SCENE_LOGIN_SIGNIN}
+              component={Signin}
+              title='手机登录'
+              duration={0}
+              hideNavBar
+            />
+            <Scene
+              key={scenes.SCENE_LOGIN_SIGNUP}
+              component={Signup}
               title='注册'
-              type={ActionConst.REPLACE}
+              duration={0}
+              hideNavBar
+            />
+            <Scene
+              key={scenes.SCENE_LOGIN_NICKNAME}
+              component={Nickname}
+              title='设置昵称'
+              duration={0}
+              hideNavBar
+            />
+            <Scene
+              key={scenes.SCENE_LOGIN_GENDER}
+              component={Gender}
+              title='设置性别'
               duration={0}
               hideNavBar
             />
@@ -53,55 +82,6 @@ export default class AppRouter extends Component {
               type={ActionConst.REPLACE}
               hideNavBar
               duration={0}
-            />
-            <Scene
-              key={scenes.SCENE_HOME}
-              component={Home}
-              title='主页'
-              hideNavBar
-              duration={0}
-            />
-            <Scene
-              key={scenes.SCENE_NOTEEDITOR}
-              component={NoteEditor}
-              title='创建日记'
-              duration={0}
-              hideNavBar
-            />
-            <Scene
-              key={scenes.SCENE_CONNECTION}
-              component={Connection}
-              title='匹配'
-              duration={0}
-              hideNavBar
-            />
-            <Scene
-              key={scenes.SCENE_SETTING}
-              component={Setting}
-              title='设置'
-              duration={0}
-              hideNavBar
-            />
-            <Scene
-              key={scenes.SCENE_FEEDBACK}
-              component={Feedback}
-              title='意见反馈'
-              duration={0}
-              hideNavBar
-            />
-            <Scene
-              key={scenes.SCENE_ABOUT_US}
-              component={AboutUs}
-              title='关于我们'
-              duration={0}
-              hideNavBar
-            />
-            <Scene
-              key={scenes.SCENE_ABOUT_US_WEB}
-              component={AboutUsWeb}
-              title='联系我们'
-              duration={0}
-              hideNavBar
             />
           </Scene>
         </Router>

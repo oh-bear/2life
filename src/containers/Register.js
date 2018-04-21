@@ -169,7 +169,7 @@ export default class Register extends Component {
             </View>
             <TouchableOpacity
               style={styles.online_code}
-              onPress={this.getCode()}>
+              onPress={this.getCode.bind(this)}>
               <View animation='zoomIn' delay={100}>
                 <Text
                   style={styles.online_font}>
@@ -179,7 +179,7 @@ export default class Register extends Component {
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.online_login}
-              onPress={this.onSubmit()}>
+              onPress={this.onSubmit.bind(this)}>
               <View animation='zoomIn' delay={100}>
                 <Text
                   style={styles.online_font}>
