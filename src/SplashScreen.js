@@ -7,13 +7,16 @@ import Storage from './common/storage'
 import { setApiBaseUrl, setToken } from './network/HttpUtils'
 import Toast from 'antd-mobile/lib/toast'
 import { connect } from 'react-redux'
+import store from './redux/store'
 import { delay } from 'redux-saga'
 import initApp from './redux/modules/init'
 import { isDev } from './common/util'
 import { USERS } from './network/Urls'
 import HttpUtils from './network/HttpUtils'
+import { fetchProfileSuccess } from './redux/modules/user'
+import { fetchPartnerSuccess } from './redux/modules/partner'
 
-const URL = USERS.login
+const URL_login = USERS.login
 
 function mapStateToProps(state) {
   return {
@@ -26,31 +29,24 @@ function mapStateToProps(state) {
 class SplashScreen extends Component {
   async componentDidMount() {
     const user = await Storage.get('user', {})
-    if (!user.user_account || !user.user_password) {
+    if (!user.account || !user.password) {
       Actions[SCENE_LOGIN_OPTIONS]()
       RNSplashScreen.hide()
       return
     }
 
-    await delay(200)
-
-    const { uid, token, timestamp } = this.props.user
-
-    setToken({
-      uid,
-      token,
-      timestamp
-    })
-
-    this.props.dispatch(initApp())
-
     try {
-      HttpUtils.post(URL, {
-        user_account: user.user_account,
-        user_password: user.user_password
+      HttpUtils.post(URL_login, {
+        account: user.account,
+        password: user.password
       }).then(res => {
         if (res.code === 0) {
-          Actions[SCENE_INDEX]({ user: res.data, partner: res.partner })
+          const {uid, token, timestamp} = res.data.key
+          setToken({uid, token, timestamp})
+
+          store.dispatch(fetchProfileSuccess(res.data.user))
+          store.dispatch(fetchPartnerSuccess(res.data.partner))
+          Actions[SCENE_INDEX]({user: res.data.user, partner: res.data.partner})
         } else {
           Toast.fail('自动登录失败', 1.5)
           Actions[SCENE_LOGIN_OPTIONS]()

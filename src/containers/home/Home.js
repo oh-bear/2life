@@ -12,7 +12,7 @@ import {
 	getResponsiveHeight
 } from '../../common/styles'
 
-export default class Profile extends Component {
+export default class Home extends Component {
   render() {
     return (
       <View style={styles.container}>

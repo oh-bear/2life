@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import {
   StyleSheet,
   TouchableOpacity,
-  ImageBackground,
   TextInput,
   TouchableWithoutFeedback,
   Alert

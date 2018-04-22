@@ -2,14 +2,9 @@ import React, { Component } from 'react'
 import {
   StyleSheet,
   TouchableOpacity,
-  ImageBackground,
-  TextInput,
-  TouchableWithoutFeedback,
-  Alert,
   Image
 } from 'react-native'
 
-import dismissKeyboard from 'dismissKeyboard'
 import { View, Text } from 'react-native-animatable'
 import { Actions } from 'react-native-router-flux'
 
@@ -25,7 +20,7 @@ import {
   getResponsiveHeight,
   getResponsiveWidth
 } from '../../common/styles'
-import { SCENE_LOGIN_NICKNAME, SCENE_LOGIN_GENDER } from '../../constants/scene'
+import { SCENE_INDEX } from '../../constants/scene'
 
 import { USERS } from '../../network/Urls'
 import HttpUtils from '../../network/HttpUtils'
@@ -59,45 +54,43 @@ export default class Gender extends Component {
 
   render() {
     return (
-      <TouchableWithoutFeedback onPress={dismissKeyboard}>
-        <View style={styles.container} animation='fadeIn'>
-					<Banner
-            bg={require('../../../res/images/login/bg_gender.png')}
-            title={['Hey', '你的性别是？']}
-            showNavLeft={true}
-            onNavLeftPress={() => Actions.pop()}
-            showNavRight={false}
-          />
+      <View style={styles.container} animation='fadeIn'>
+        <Banner
+          bg={require('../../../res/images/login/bg_gender.png')}
+          title={['Hey', '你的性别是？']}
+          showNavLeft={true}
+          onNavLeftPress={() => Actions.pop()}
+          showNavRight={false}
+        />
 
-          <View style={styles.inputs_container}>
-            <TouchableOpacity onPress={() => this.setState({gender: 0})}>
-              <View style={styles.gender_item}>
-                <TextPingFang style={[styles.text_gender, {color: this.state.gender ? '#aaa' : '#2DC3A6'}]}>男</TextPingFang>
-                <Image
-                  style={{display: this.state.gender ? 'none' : 'flex'}}
-                  source={require('../../../res/images/login/icon_checked.png')}
-                />
-              </View>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => this.setState({gender: 1})}>
-              <View style={styles.gender_item}>
-                <TextPingFang style={[styles.text_gender, {color: this.state.gender ? '#2DC3A6' : '#aaa'}]}>女</TextPingFang>
-                <Image
-                  style={{display: this.state.gender ? 'flex' : 'none'}}
-                  source={require('../../../res/images/login/icon_checked.png')}
-                />
-              </View>
-            </TouchableOpacity>
-            <TextPingFang style={styles.text_tip}>性别仅用于匹配。性别确定后不能再次修改，请谨慎。</TextPingFang>
-            <TouchableOpacity
-              style={styles.btn_container}
-              onPress={() => this.onSubmit()}
-            >
-              <TextPingFang style={styles.text_btn}>开启日记本</TextPingFang>
-            </TouchableOpacity>
-          </View>
+        <View style={styles.inputs_container}>
+          <TouchableOpacity onPress={() => this.setState({gender: 0})}>
+            <View style={styles.gender_item}>
+              <TextPingFang style={[styles.text_gender, {color: this.state.gender ? '#aaa' : '#2DC3A6'}]}>男</TextPingFang>
+              <Image
+                style={{display: this.state.gender ? 'none' : 'flex'}}
+                source={require('../../../res/images/login/icon_checked.png')}
+              />
+            </View>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => this.setState({gender: 1})}>
+            <View style={styles.gender_item}>
+              <TextPingFang style={[styles.text_gender, {color: this.state.gender ? '#2DC3A6' : '#aaa'}]}>女</TextPingFang>
+              <Image
+                style={{display: this.state.gender ? 'flex' : 'none'}}
+                source={require('../../../res/images/login/icon_checked.png')}
+              />
+            </View>
+          </TouchableOpacity>
+          <TextPingFang style={styles.text_tip}>性别仅用于匹配，确定后不能再次修改，请谨慎。</TextPingFang>
+          <TouchableOpacity
+            style={styles.btn_container}
+            onPress={() => this.onSubmit()}
+          >
+            <TextPingFang style={styles.text_btn}>开启日记本</TextPingFang>
+          </TouchableOpacity>
         </View>
-      </TouchableWithoutFeedback>
+      </View>
     )
   }
 }

@@ -2,10 +2,8 @@ import React, { Component } from 'react'
 import {
   StyleSheet,
   TouchableOpacity,
-  ImageBackground,
   TextInput,
   TouchableWithoutFeedback,
-  Alert
 } from 'react-native'
 
 import dismissKeyboard from 'dismissKeyboard'
@@ -21,10 +19,7 @@ import {
   getResponsiveHeight,
   getResponsiveWidth
 } from '../../common/styles'
-import { SCENE_LOGIN_NICKNAME, SCENE_LOGIN_GENDER } from '../../constants/scene'
-
-import { USERS } from '../../network/Urls'
-import HttpUtils from '../../network/HttpUtils'
+import { SCENE_LOGIN_GENDER } from '../../constants/scene'
 
 export default class Nickname extends Component {
 

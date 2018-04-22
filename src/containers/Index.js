@@ -4,12 +4,12 @@ import {
   StyleSheet,
   Image
 } from 'react-native'
-import Home from './Home'
-import Calendar from './Calendar'
-import Notification from './Notification'
+import Home from './home/Home'
+import Notification from './notification/Notification'
 import Profile from './profile/Profile'
-import { HEIGHT, getResponsiveHeight } from '../common/styles'
+import { WIDTH, HEIGHT, getResponsiveHeight } from '../common/styles'
 import TabNavigator from 'react-native-tab-navigator'
+import { ifIphoneX } from 'react-native-iphone-x-helper'
 
 export default class Index extends Component {
 
@@ -20,54 +20,35 @@ export default class Index extends Component {
   icons = {
     home: {
       default: (
-        <Image
-          style={styles.image}
-          source={require('../../res/images/tab/icon_home_def.png')}
-        />
+        <Image source={require('../../res/images/tab/icon_home_inactive.png')}/>
       ),
-      selected: <Image source={require('../../res/images/tab/icon_home_sel.png')} />
-    },
-    calendar: {
-      default: (
-        <Image
-          style={styles.image}
-          source={require('../../res/images/tab/icon_calendar_def.png')}
-        />
-      ),
-      selected: <Image source={require('../../res/images/tab/icon_calendar_sel.png')} />
+      selected: <Image source={require('../../res/images/tab/icon_home_active.png')} />
     },
     notification: {
       default: (
-        <Image
-          style={styles.image}
-          source={require('../../res/images/tab/icon_notification_def.png')}
-        />
+        <Image source={require('../../res/images/tab/icon_notification_inactive.png')}/>
       ),
       selected: (
-        <Image
-          style={styles.image}
-          source={require('../../res/images/tab/icon_notification_sel.png')}
-        />
+        <Image source={require('../../res/images/tab/icon_notification_active.png')}/>
       )
     },
     profile: {
       default: (
-        <Image
-          style={styles.image}
-          source={require('../../res/images/tab/icon_profile_def.png')}
-        />
+        <Image source={require('../../res/images/tab/icon_profile_inactive.png')}/>
       ),
-      selected: <Image source={require('../../res/images/tab/icon_profile_sel.png')} />
+      selected: <Image source={require('../../res/images/tab/icon_profile_active.png')} />
     }
   }
 
   render() {
     return (
       <View style={styles.tabs_container}>
-        <TabNavigator>
+        <TabNavigator tabBarStyle={styles.tabbar}>
           <TabNavigator.Item
             selected={this.state.selectedTab === 'home'}
-            title="主页"
+            title='主页'
+            titleStyle={styles.text_title}
+            selectedTitleStyle={styles.text_title_selected}
             renderIcon={() => this.icons.home.default}
             renderSelectedIcon={() => this.icons.home.selected}
             onPress={() => this.setState({ selectedTab: 'home' })}
@@ -75,17 +56,10 @@ export default class Index extends Component {
             <Home />
           </TabNavigator.Item>
           <TabNavigator.Item
-            selected={this.state.selectedTab === 'calendar'}
-            title="日历"
-            renderIcon={() => this.icons.calendar.default}
-            renderSelectedIcon={() => this.icons.calendar.selected}
-            onPress={() => this.setState({ selectedTab: 'calendar' })}
-          >
-            <Calendar />
-          </TabNavigator.Item>
-          <TabNavigator.Item
             selected={this.state.selectedTab === 'notification'}
-            title="通知"
+            title='通知'
+            titleStyle={styles.text_title}
+            selectedTitleStyle={styles.text_title_selected}
             renderIcon={() => this.icons.notification.default}
             renderSelectedIcon={() => this.icons.notification.selected}
             onPress={() => this.setState({ selectedTab: 'notification' })}
@@ -94,7 +68,9 @@ export default class Index extends Component {
           </TabNavigator.Item>
           <TabNavigator.Item
             selected={this.state.selectedTab === 'profile'}
-            title="我的"
+            title='我的'
+            titleStyle={styles.text_title}
+            selectedTitleStyle={styles.text_title_selected}
             renderIcon={() => this.icons.profile.default}
             renderSelectedIcon={() => this.icons.profile.selected}
             onPress={() => this.setState({ selectedTab: 'profile' })}
@@ -108,42 +84,22 @@ export default class Index extends Component {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    // flex:1,
-    flexDirection: 'column',
-    backgroundColor: 'rgb(242,246,250)',
-    alignItems: 'center',
-    height: HEIGHT
-  },
-  top: {
-    height: 28,
-    backgroundColor: 'white',
-    marginTop: -28,
-    width: 375
-  },
-  book_list: {
-    // 一半的输入框高度加上maginBottom
-    paddingTop: getResponsiveHeight(10)
-  },
-  search_result_bar: {
-    backgroundColor: 'white'
-  },
   tabs_container: {
     flex: 1,
-    backgroundColor: 'white'
   },
-  page1: {
-    flex: 1,
-    backgroundColor: 'yellow'
+  tabbar: {
+    backgroundColor: 'rgba(255,255,255,.7)',
+    ...ifIphoneX({
+      height: 84,
+      paddingBottom: 34
+    })
   },
-  page2: {
-    flex: 1,
-    backgroundColor: 'blue'
+  text_title: {
+    color: '#aaa',
+    fontSize: 10
   },
-  image: {
-    // tintColor: '#929292'
+  text_title_selected: {
+    color: '#444',
+    fontSize: 10
   },
-  active: {
-    tintColor: '#607D8B'
-  }
 })

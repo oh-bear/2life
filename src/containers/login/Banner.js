@@ -9,7 +9,6 @@ import {
 import PropTypes from 'prop-types'
 import { ifIphoneX } from 'react-native-iphone-x-helper'
 
-import dismissKeyboard from 'dismissKeyboard'
 import { View, Text } from 'react-native-animatable'
 
 import TextPingFang from '../../components/TextPingFang'

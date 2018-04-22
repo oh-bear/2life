@@ -18,13 +18,7 @@ import {
 } from '../../common/styles'
 import { SCENE_LOGIN_SIGNIN, SCENE_LOGIN_SIGNUP } from '../../constants/scene'
 
-import { USERS } from '../../network/Urls'
-import HttpUtils from '../../network/HttpUtils'
-
 export default class Options extends Component {
-
-  state = {
-  }
 
   render() {
     return (

@@ -4,7 +4,6 @@ import {
   TouchableOpacity,
   TextInput,
   TouchableWithoutFeedback,
-  Alert
 } from 'react-native'
 
 import dismissKeyboard from 'dismissKeyboard'
@@ -23,10 +22,13 @@ import {
   getResponsiveHeight,
   getResponsiveWidth
 } from '../../common/styles'
+import Storage from '../../common/storage'
 import { SCENE_INDEX } from '../../constants/scene'
+
 
 import { USERS } from '../../network/Urls'
 import HttpUtils from '../../network/HttpUtils'
+import { setToken } from '../../network/HttpUtils'
 
 const URL_login = USERS.login
 
@@ -60,7 +62,7 @@ export default class Signin extends Component {
       store.dispatch(fetchProfileSuccess(res.data.user))
       store.dispatch(fetchPartnerSuccess(res.data.partner))
 
-      Actions[SCENE_INDEX]({user: res.data, partner: res.partner})
+      Actions[SCENE_INDEX]({user: res.data.user, partner: res.data.partner})
     }
   }
 
