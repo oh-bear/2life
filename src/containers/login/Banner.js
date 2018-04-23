@@ -21,8 +21,13 @@ import {
 } from '../../common/styles'
 
 export default class Banner extends Component {
-
-  state = {
+  static propTypes = {
+    bg: PropTypes.number.isRequired,
+    title: PropTypes.arrayOf(PropTypes.string).isRequired,
+    showNavLeft: PropTypes.bool.isRequired,
+    showNavRight: PropTypes.bool.isRequired,
+    onNavLeftPress: PropTypes.func,
+    onNavRightPress: PropTypes.func
   }
 
   render() {
@@ -45,15 +50,6 @@ export default class Banner extends Component {
 			</View>
     )
   }
-}
-
-Banner.propTypes = {
-  bg: PropTypes.number.isRequired,
-  title: PropTypes.arrayOf(PropTypes.string).isRequired,
-  showNavLeft: PropTypes.bool.isRequired,
-  showNavRight: PropTypes.bool.isRequired,
-  onNavLeftPress: PropTypes.func,
-  onNavRightPress: PropTypes.func
 }
 
 const styles = StyleSheet.create({

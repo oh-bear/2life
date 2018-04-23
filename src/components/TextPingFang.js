@@ -7,7 +7,10 @@ import {
 export default class TextPingFang extends Component {
   render() {
     return (
-      <Text style={[styles.font, this.props.style]}>
+      <Text
+        style={[styles.font, this.props.style]}
+        numberOfLines={this.props.numberOfLines}
+      >
         {this.props.children}
       </Text>
     )

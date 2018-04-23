@@ -27,6 +27,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#f9f9f9',
     alignItems: 'center',
     width: WIDTH,
-    height: HEIGHT
+    minHeight: HEIGHT
   }
 })
