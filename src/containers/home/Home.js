@@ -8,12 +8,11 @@ import {
   Image,
   FlatList,
 } from 'react-native'
-import { Calendar,CalendarList, LocaleConfig } from 'react-native-calendars'
+import { Calendar, CalendarList } from 'react-native-calendars'
 
 import Container from '../../components/Container'
 import TextPingFang from '../../components/TextPingFang'
 import Diary from './Diary'
-
 
 import {
 	WIDTH,
@@ -32,14 +31,44 @@ export default class Home extends Component {
     showCalendar: false,
     weather_text: '19℃ 晴',
     weather_icon: require('../../../res/images/home/icon_sunny.png'),
-    diaryData: [{
-      date: 'San',
-      dairy_img: require('../../../res/images/home/icon_sunny.png'),
-      dairy_title: '今天是个好日子',
-      dairy_brief: '今天是个好日子今天是个好日子今天是个好日子今天是个好日子今天是个好日子今天是个好日子今天是个好日子今天是个好日子今天是个好日子今天是个好日子今天是个好日子今天是个好日子今天是个好日子今天是个好日子',
-      diary_time: '15:24',
-      dairy_location: '广州，广东省，中国'
-    }]
+    diaryData: [
+      [
+        {
+          date: 'San',
+          dairy_img: require('../../../res/images/home/icon_sunny.png'),
+          dairy_title: '今天是个好日子asdafafdfsddffd',
+          dairy_brief: '今天是个好日子今天是个好日子今天是个好日子今天是个好日子今天是个好日子今天是个好日子今天是个好日子今天是个好日子今天是个好日子今天是个好日子今天是个好日子今天是个好日子今天是个好日子今天是个好日子',
+          diary_time: '15:24',
+          dairy_location: '广州，广东省，中国'
+        },
+        {
+          date: 'San',
+          // dairy_img: require('../../../res/images/home/icon_sunny.png'),
+          dairy_title: '今天是个好日子asdafafdfsddffd',
+          dairy_brief: '今天是个好日子今天是个好日子今天是个好日子今天是个好日子今天是个好日子今天是个好日子今天是个好日子今天是个好日子今天是个好日子今天是个好日子今天是个好日子今天是个好日子今天是个好日子今天是个好日子',
+          diary_time: '15:24',
+          dairy_location: '广州，广东省，中国'
+        }
+      ],
+      [
+        {
+          date: 'San',
+          dairy_img: require('../../../res/images/home/icon_sunny.png'),
+          dairy_title: '今天是个好日子asdafafdfsddffd',
+          dairy_brief: '今天是个好日子今天是个好日子今天是个好日子今天是个好日子今天是个好日子今天是个好日子今天是个好日子今天是个好日子今天是个好日子今天是个好日子今天是个好日子今天是个好日子今天是个好日子今天是个好日子',
+          diary_time: '15:24',
+          dairy_location: '广州，广东省，中国'
+        },
+        {
+          date: 'San',
+          // dairy_img: require('../../../res/images/home/icon_sunny.png'),
+          dairy_title: '今天是个好日子asdafafdfsddffd',
+          dairy_brief: '今天是个好日子今天是个好日子今天是个好日子今天是个好日子今天是个好日子今天是个好日子今天是个好日子今天是个好日子今天是个好日子今天是个好日子今天是个好日子今天是个好日子今天是个好日子今天是个好日子',
+          diary_time: '15:24',
+          dairy_location: '广州，广东省，中国'
+        }
+      ],
+    ]
   }
 
   tri () {
@@ -56,21 +85,37 @@ export default class Home extends Component {
   _renderItem ({item}) {
     return (
       <Diary
-        date={item.date}
-        dairy_img={item.dairy_img}
-        dairy_title={item.dairy_title}
-        dairy_brief={item.dairy_brief}
-        diary_time={item.diary_time}
-        dairy_location={item.dairy_location}
+        data={item}
+        date='Snn'
       />
     )
   }
 
-  _none_diary () {
+  _emptyDiary () {
     return (
       <View style={styles.none_container}>
         <TextPingFang style={styles.text_none}>空空如也，{'\n'}来写一篇日记吧～</TextPingFang>
       </View>
+    )
+  }
+
+  _listHeader () {
+    return (
+      <View style={styles.weather}>
+        <View style={styles.weather_inner}>
+          <Image style={styles.weather_icon} source={this.state.weather_icon}/>
+          <TextPingFang style={styles.text_weather}>{this.state.weather_text}</TextPingFang>
+          <TouchableOpacity  style={styles.weather_exchange} onPress={() => this.setWeather()}>
+            <Image source={require('../../../res/images/home/icon_exchange.png')}/>
+          </TouchableOpacity>
+        </View>
+      </View>
+    )
+  }
+
+  _listFooter () {
+    return (
+      <View style={styles.list_footer}></View>
     )
   }
 
@@ -119,24 +164,22 @@ export default class Home extends Component {
           }}
           markingType={'custom'}
         />
-
-        <View style={styles.weather}>
-          <View style={styles.weather_inner}>
-            <Image style={styles.weather_icon} source={this.state.weather_icon}/>
-            <TextPingFang style={styles.text_weather}>{this.state.weather_text}</TextPingFang>
-            <TouchableOpacity  style={styles.weather_exchange} onPress={() => this.setWeather()}>
-              <Image source={require('../../../res/images/home/icon_exchange.png')}/>
-            </TouchableOpacity>
-          </View>
-        </View>
         
         <FlatList
           style={styles.dairy_container}
           data={this.state.diaryData}
           extraData={this.state}
           renderItem={this._renderItem}
-          ListEmptyComponent={() => this._none_diary()}
+          ListEmptyComponent={() => this._emptyDiary()}
+          ListHeaderComponent={() => this._listHeader()}
+          ListFooterComponent={() => this._listFooter()}
         />
+
+        <TouchableOpacity
+          style={styles.new_diary}
+        >
+          <Image source={require('../../../res/images/home/icon_new_dairy.png')}/>
+        </TouchableOpacity>
       </Container> 
     )
   }
@@ -184,21 +227,17 @@ const styles = StyleSheet.create({
   },
   calendar: {
     width: WIDTH,
-    top: getResponsiveHeight(-30),
-    zIndex: 2
+    height: getResponsiveHeight(500),
+    // zIndex: 20,
   },
-  weather: {
-    width: WIDTH,
-    paddingLeft: getResponsiveWidth(24),
-    paddingRight: getResponsiveWidth(24),
-    backgroundColor: '#fff',
-  },
+  // weather: {
+  // },
   weather_inner: {
-    height: getResponsiveHeight(80),
+    height: getResponsiveHeight(60),
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    borderBottomWidth: 1,
+    borderBottomWidth: getResponsiveWidth(1),
     borderBottomColor: '#f1f1f1',
   },
   // weather_icon: {
@@ -210,6 +249,12 @@ const styles = StyleSheet.create({
   },
   // weather_exchange: {
   // },
+  dairy_container: {
+    width: WIDTH,
+    paddingLeft: getResponsiveWidth(24),
+    paddingRight: getResponsiveWidth(24),
+    backgroundColor: '#fff',
+  },
   none_container: {
     height: HEIGHT,
     alignItems: 'center',
@@ -221,11 +266,14 @@ const styles = StyleSheet.create({
     fontSize: 16,
     textAlign: 'center'
   },
-  dairy_container: {
+  list_footer: {
     width: WIDTH,
-    minHeight: HEIGHT,
-    paddingLeft: getResponsiveWidth(24),
-    paddingRight: getResponsiveWidth(24),
-    backgroundColor: '#fff',
+    height: getResponsiveHeight(250),
+    backgroundColor: '#fff'
+  },
+  new_diary: {
+    position: 'absolute',
+    bottom: getResponsiveHeight(65),
+    right: getResponsiveWidth(16),
   }
 })

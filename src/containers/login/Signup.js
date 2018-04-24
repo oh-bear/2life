@@ -99,7 +99,7 @@ export default class Signup extends Component {
         store.dispatch(fetchProfileSuccess(res.data.user))
         store.dispatch(fetchPartnerSuccess(res.data.partner))
 
-        Actions.jump(SCENE_LOGIN_NICKNAME, {user: res.data.user})
+        Actions.reset(SCENE_LOGIN_NICKNAME, {user: res.data.user})
       }
     }
   }

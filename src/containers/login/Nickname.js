@@ -34,7 +34,7 @@ export default class Nickname extends Component {
     } else {
       return this.setState({showNameTip: true})
     }
-    Actions.jump(SCENE_LOGIN_GENDER, {user: Object.assign(this.props.user, {name: this.state.nickname})})
+    Actions.reset(SCENE_LOGIN_GENDER, {user: Object.assign(this.props.user, {name: this.state.nickname})})
   }
 
   render() {
@@ -44,8 +44,7 @@ export default class Nickname extends Component {
 					<Banner
             bg={require('../../../res/images/login/bg_nickname.png')}
             title={['注册成功', '取个好听的昵称吧']}
-            showNavLeft={true}
-            onNavLeftPress={() => Actions.pop()}
+            showNavLeft={false}
             showNavRight={false}
           />
 

@@ -47,7 +47,7 @@ export default class Gender extends Component {
 
       if (res.code === 0) {
         store.dispatch(fetchProfileSuccess(res.data))
-        Actions[SCENE_INDEX]({user: res.data})
+        Actions.reset(SCENE_INDEX, {user: res.data})
       }
     }
   }
@@ -58,8 +58,7 @@ export default class Gender extends Component {
         <Banner
           bg={require('../../../res/images/login/bg_gender.png')}
           title={['Hey', '你的性别是？']}
-          showNavLeft={true}
-          onNavLeftPress={() => Actions.pop()}
+          showNavLeft={false}
           showNavRight={false}
         />
 

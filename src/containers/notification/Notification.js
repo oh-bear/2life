@@ -12,21 +12,19 @@ import {
 	getResponsiveHeight
 } from '../../common/styles'
 
+import Container from '../../components/Container'
+import TextPingFang from '../../components/TextPingFang'
+
 export default class Notification extends Component {
   render() {
     return (
-      <View style={styles.container}>
-      </View>
+      <Container>
+        <TextPingFang>???</TextPingFang>
+      </Container>
     )
   }
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flexDirection: 'column',
-    backgroundColor: '#f9f9f9',
-    alignItems: 'center',
-    width: WIDTH,
-    minHeight: HEIGHT
-  }
+  
 })

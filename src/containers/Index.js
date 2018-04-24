@@ -88,7 +88,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   tabbar: {
-    backgroundColor: 'rgba(255,255,255,.7)',
+    backgroundColor: 'rgba(255,255,255,.9)',
     ...ifIphoneX({
       height: 84,
       paddingBottom: 34

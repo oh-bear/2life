@@ -18,6 +18,9 @@ import Signup from './containers/login/Signup'
 import Nickname from './containers/login/Nickname'
 import Gender from './containers/login/Gender'
 
+// home
+import NewDiary from './containers/home/NewDiary'
+import DiaryDetail from './containers/home/DiaryDetail'
 
 import { Scene, Router, ActionConst } from 'react-native-router-flux'
 import * as scenes from './constants/scene'
@@ -80,6 +83,20 @@ export default class AppRouter extends Component {
               component={Index}
               title='首页'
               type={ActionConst.REPLACE}
+              hideNavBar
+              duration={0}
+            />
+            <Scene
+              key={scenes.SCENE_NEW_DIARY}
+              component={NewDiary}
+              title='新建日记'
+              hideNavBar
+              duration={0}
+            />
+            <Scene
+              key={scenes.SCENE_DIARY_DETAIL}
+              component={DiaryDetail}
+              title='日记详情'
               hideNavBar
               duration={0}
             />

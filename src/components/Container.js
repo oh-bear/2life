@@ -21,14 +21,14 @@ export default class Container extends Component {
 	}
 	
 	render() {
-		let paddingTop = isIphoneX() ? 44 : 20
+		let padding_top = isIphoneX() ? 44 : 20
 
 		return (
 			<View 
-				contentContainerStyle={[
+				style={[
 					styles.container,
 					{
-						paddingTop: this.props.hidePadding ? 0 : paddingTop
+						paddingTop: this.props.hidePadding ? 0 : padding_top
 					}
 				]}
 			>
@@ -41,9 +41,9 @@ export default class Container extends Component {
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'column',
-    backgroundColor: '#f9f9f9',
+    backgroundColor: '#fff',
     alignItems: 'center',
     width: WIDTH,
-		minHeight: HEIGHT,
+	height: HEIGHT,
   }
 })
