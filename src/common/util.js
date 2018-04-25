@@ -160,7 +160,6 @@ export async function getLocation (longitude, latitude) {
 		location: `${longitude},${latitude}`
 	}
 	const res = await axios.get(url, {params})
-	console.log(res)
 	let city = ''
 	let province = ''
 	let country = ''

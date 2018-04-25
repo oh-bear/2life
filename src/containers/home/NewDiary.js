@@ -2,9 +2,9 @@ import React, { Component } from 'react'
 import {
 	View,
 	StyleSheet,
-  Text,
-  TouchableOpacity,
-  ImageBackground,
+	Text,
+	TouchableOpacity,
+	ImageBackground,
 	Image,
 	ScrollView,
 	TextInput,
@@ -15,6 +15,7 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 
 import Container from '../../components/Container'
 import TextPingFang from '../../components/TextPingFang'
+import DiaryBanner from './DiaryBanner'
 
 import {
 	WIDTH,
@@ -62,7 +63,6 @@ export default class NewDiary extends Component {
 
 		const { title, content, images, latitude, longitude } = this.state
 		const data = { title, content, images, latitude, longitude }
-		console.log(data)
 		const res = await HttpUtils.post(URL_publish, data)
 		if (res.code === 0) {
 			Alert.alert('', '日记保存成功')
@@ -71,9 +71,11 @@ export default class NewDiary extends Component {
 
   render() {
     return (
-      <Container>
+      <Container hidePadding={true}>
         
 				<ScrollView>
+					<DiaryBanner/>
+
 					<View style={styles.date_container}>
 						<TextPingFang style={styles.text_date}>{getMonth(this.state.date.getMonth())} </TextPingFang>
 						<TextPingFang style={styles.text_date}>{this.state.date.getDate()}，</TextPingFang>
