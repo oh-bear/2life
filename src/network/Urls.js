@@ -5,17 +5,11 @@ export const USERS = {
   update: '/users/update',
   user: '/users/user',
 
-
-
-
-
-  feedback: '/users/feedback',
-  close_connect: 'users/close_connect',
-  connect: 'users/connect',
-  connect_by_id: 'user/connect_by_id'
 }
 
 export const NOTES = {
+  list: '/notes/list', //get
+  publish: '/notes/publish', //post {title，content，images，latitude，longitude}
 }
 
 export const UTIL = {

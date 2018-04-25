@@ -8,6 +8,7 @@ import {
   Image,
 } from 'react-native'
 import PropTypes from 'prop-types'
+import { Actions } from 'react-native-router-flux'
 
 import TextPingFang from '../../components/TextPingFang'
 
@@ -18,6 +19,7 @@ import {
 	getResponsiveHeight
 } from '../../common/styles'
 import { getMonth, getToday } from '../../common/util'
+import { SCENE_DIARY_DETAIL } from '../../constants/scene'
 
 class SingleDiary extends Component {
 	static propTypes = {
@@ -26,19 +28,22 @@ class SingleDiary extends Component {
 
 	render () {
 		return (
-			<TouchableOpacity style={styles.dairy_container}>
-				<View style={styles.dairy_top}>
-					<View style={styles.dairy_top_text}>
-						<TextPingFang style={styles.text_dairy_title} numberOfLines={1}>{this.props.dairy_title}</TextPingFang>
-						<TextPingFang style={styles.text_dairy_brief} numberOfLines={2}>{this.props.dairy_brief}</TextPingFang>
+			<TouchableOpacity
+				style={styles.diary_container}
+				onPress={() => Actions.jump(SCENE_DIARY_DETAIL)}
+			>
+				<View style={styles.diary_top}>
+					<View style={styles.diary_top_text}>
+						<TextPingFang style={styles.text_diary_title} numberOfLines={1}>{this.props.diary_title}</TextPingFang>
+						<TextPingFang style={styles.text_diary_content} numberOfLines={2}>{this.props.diary_content}</TextPingFang>
 					</View>
-					<Image style={[styles.img_dairy, {display: this.props.dairy_img ? 'flex' : 'none'}]} source={this.props.dairy_img}/>
+					<Image style={[styles.img_diary, {display: this.props.diary_img ? 'flex' : 'none'}]} source={{uri: this.props.diary_img}}/>
 				</View>
-				<View style={styles.dairy_bottom}>
+				<View style={styles.diary_bottom}>
 					<TextPingFang style={styles.time}>{this.props.diary_time}</TextPingFang>
 					<View style={styles.location_container}>
 						<Image style={styles.location_icon} source={require('../../../res/images/home/icon_location.png')}/>
-						<TextPingFang style={styles.text_location}>{this.props.dairy_location}</TextPingFang>
+						<TextPingFang style={styles.text_location}>{this.props.diary_location}</TextPingFang>
 					</View>
 				</View>
 			</TouchableOpacity>
@@ -48,26 +53,30 @@ class SingleDiary extends Component {
 
 export default class Diary extends Component {
 	static propTypes = {
-		date: PropTypes.string.isRequired,
 		data: PropTypes.arrayOf(PropTypes.object).isRequired,
 	}
 
   render () {
+		let date = ''
+		if (this.props.data.length !== 0) {
+			date = this.props.data[0].date
+		}
+
     return (
       <View style={styles.container}>
-				<TextPingFang style={styles.date}>{this.props.date}</TextPingFang>
+				<TextPingFang style={styles.date}>{date}</TextPingFang>
 				<View style={styles.main_container}>
 					{
-						this.props.data.map((dairy, index) => {
+						this.props.data.map((diary, index) => {
 							return (
 								<SingleDiary
 									key={index}
-									date={dairy.date}
-									dairy_img={dairy.dairy_img}
-									dairy_title={dairy.dairy_title}
-									dairy_brief={dairy.dairy_brief}
-									diary_time={dairy.diary_time}
-									dairy_location={dairy.dairy_location}
+									date={diary.date}
+									diary_img={diary.diary_img}
+									diary_title={diary.diary_title}
+									diary_content={diary.diary_content}
+									diary_time={diary.diary_time}
+									diary_location={diary.diary_location}
 								/>
 							)
 						})
@@ -93,7 +102,7 @@ const styles = StyleSheet.create({
 	main_container: {
 		flex: 1
 	},
-	dairy_container: {
+	diary_container: {
 		marginLeft: getResponsiveWidth(24),
 		paddingTop: getResponsiveWidth(16),
 		paddingBottom: getResponsiveWidth(16),
@@ -101,32 +110,33 @@ const styles = StyleSheet.create({
 		borderBottomWidth: getResponsiveWidth(1),
 		borderBottomColor: '#f1f1f1'
 	},
-	dairy_top: {
-		height: getResponsiveHeight(72),
+	diary_top: {
+		// height: getResponsiveHeight(80),
 		flexDirection: 'row',
 		justifyContent: 'space-between',
 	},
-	dairy_top_text: {
+	diary_top_text: {
 		flex: 1,
 		height: getResponsiveWidth(72),
 		paddingRight: getResponsiveWidth(10),
 		justifyContent: 'space-between',
 	},
-	text_dairy_title: {
+	text_diary_title: {
 		color: '#444',
 		fontSize: 20
 	},
-	text_dairy_brief: {
+	text_diary_content: {
 		color: '#666',
 		fontSize: 12,
 	},
-	img_dairy: {
+	img_diary: {
 		width: getResponsiveWidth(72),
 		height: getResponsiveWidth(72)
 	},
-	dairy_bottom: {
+	diary_bottom: {
 		flexDirection: 'row',
 		justifyContent: 'space-between',
+		paddingTop: getResponsiveWidth(16),
 		paddingRight: getResponsiveWidth(10),
 	},
 	time: {
@@ -143,6 +153,6 @@ const styles = StyleSheet.create({
 	},
 	text_location: {
 		color: '#aaa',
-		fontSize: 12
+		fontSize: 10
 	}
 })

@@ -9,6 +9,7 @@ import {
   FlatList,
 } from 'react-native'
 import { Calendar, CalendarList } from 'react-native-calendars'
+import { Actions } from 'react-native-router-flux'
 
 import Container from '../../components/Container'
 import TextPingFang from '../../components/TextPingFang'
@@ -20,7 +21,20 @@ import {
 	getResponsiveWidth,
 	getResponsiveHeight
 } from '../../common/styles'
-import { getMonth, getToday } from '../../common/util'
+import {
+  getMonth,
+  getToday,
+  getDay,
+  getTime,
+  getLocation,
+  diaryClassify,
+} from '../../common/util'
+import { SCENE_NEW_DIARY } from '../../constants/scene'
+
+import HttpUtils from '../../network/HttpUtils'
+import { NOTES } from '../../network/Urls'
+
+const URL_list = NOTES.list
 
 export default class Home extends Component {
 
@@ -31,44 +45,36 @@ export default class Home extends Component {
     showCalendar: false,
     weather_text: '19℃ 晴',
     weather_icon: require('../../../res/images/home/icon_sunny.png'),
-    diaryData: [
-      [
-        {
-          date: 'San',
-          dairy_img: require('../../../res/images/home/icon_sunny.png'),
-          dairy_title: '今天是个好日子asdafafdfsddffd',
-          dairy_brief: '今天是个好日子今天是个好日子今天是个好日子今天是个好日子今天是个好日子今天是个好日子今天是个好日子今天是个好日子今天是个好日子今天是个好日子今天是个好日子今天是个好日子今天是个好日子今天是个好日子',
-          diary_time: '15:24',
-          dairy_location: '广州，广东省，中国'
-        },
-        {
-          date: 'San',
-          // dairy_img: require('../../../res/images/home/icon_sunny.png'),
-          dairy_title: '今天是个好日子asdafafdfsddffd',
-          dairy_brief: '今天是个好日子今天是个好日子今天是个好日子今天是个好日子今天是个好日子今天是个好日子今天是个好日子今天是个好日子今天是个好日子今天是个好日子今天是个好日子今天是个好日子今天是个好日子今天是个好日子',
-          diary_time: '15:24',
-          dairy_location: '广州，广东省，中国'
+    diaryData: []
+  }
+
+  async componentDidMount () {
+    const res = await HttpUtils.get(URL_list)
+    if (res.code === 0) {
+      const { partner, recommend, user } = res.data
+      let diaryList = [...partner, ...user]
+      // 判断是否空对象
+      if (recommend.id) diaryList.push(recommend)
+      diaryList.sort((a, b) => b.date - a.date)
+      diaryList = diaryClassify(diaryList, 'date')
+
+      let diaryData = []
+      for(let i = 0; i < diaryList.length; i++) {
+        diaryData.push([])
+        for(let j = 0; j < diaryList[i].length; j++) {
+          let obj = {
+            date: getDay(diaryList[i][j].date),
+            diary_img: diaryList[i][j].images,
+            diary_title: diaryList[i][j].title,
+            diary_content: diaryList[i][j].content,
+            diary_time: getTime(diaryList[i][j].date),
+            diary_location: await getLocation(diaryList[i][j].longitude, diaryList[i][j].latitude)
+          }
+          diaryData[i].push(obj)
         }
-      ],
-      [
-        {
-          date: 'San',
-          dairy_img: require('../../../res/images/home/icon_sunny.png'),
-          dairy_title: '今天是个好日子asdafafdfsddffd',
-          dairy_brief: '今天是个好日子今天是个好日子今天是个好日子今天是个好日子今天是个好日子今天是个好日子今天是个好日子今天是个好日子今天是个好日子今天是个好日子今天是个好日子今天是个好日子今天是个好日子今天是个好日子',
-          diary_time: '15:24',
-          dairy_location: '广州，广东省，中国'
-        },
-        {
-          date: 'San',
-          // dairy_img: require('../../../res/images/home/icon_sunny.png'),
-          dairy_title: '今天是个好日子asdafafdfsddffd',
-          dairy_brief: '今天是个好日子今天是个好日子今天是个好日子今天是个好日子今天是个好日子今天是个好日子今天是个好日子今天是个好日子今天是个好日子今天是个好日子今天是个好日子今天是个好日子今天是个好日子今天是个好日子',
-          diary_time: '15:24',
-          dairy_location: '广州，广东省，中国'
-        }
-      ],
-    ]
+      }
+      this.setState({diaryData})
+    }
   }
 
   tri () {
@@ -86,7 +92,6 @@ export default class Home extends Component {
     return (
       <Diary
         data={item}
-        date='Snn'
       />
     )
   }
@@ -166,7 +171,7 @@ export default class Home extends Component {
         />
         
         <FlatList
-          style={styles.dairy_container}
+          style={styles.diary_container}
           data={this.state.diaryData}
           extraData={this.state}
           renderItem={this._renderItem}
@@ -177,8 +182,9 @@ export default class Home extends Component {
 
         <TouchableOpacity
           style={styles.new_diary}
+          onPress={() => Actions.jump(SCENE_NEW_DIARY)}
         >
-          <Image source={require('../../../res/images/home/icon_new_dairy.png')}/>
+          <Image source={require('../../../res/images/home/icon_new_diary.png')}/>
         </TouchableOpacity>
       </Container> 
     )
@@ -249,7 +255,7 @@ const styles = StyleSheet.create({
   },
   // weather_exchange: {
   // },
-  dairy_container: {
+  diary_container: {
     width: WIDTH,
     paddingLeft: getResponsiveWidth(24),
     paddingRight: getResponsiveWidth(24),
@@ -268,7 +274,7 @@ const styles = StyleSheet.create({
   },
   list_footer: {
     width: WIDTH,
-    height: getResponsiveHeight(250),
+    height: getResponsiveHeight(100),
     backgroundColor: '#fff'
   },
   new_diary: {
