@@ -64,8 +64,8 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-  [JPUSHService setupWithOption:launchOptions appKey:@""
-                        channel:nil apsForProduction:nil];
+  [JPUSHService setupWithOption:launchOptions appKey:@"67fdf21f35e554cc0b985e4e"
+                        channel:@"App Store" apsForProduction:YES];
 
   NSURL *jsCodeLocation;
   

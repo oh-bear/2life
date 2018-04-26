@@ -8,6 +8,7 @@ export default class Home extends Component {
   static propTypes = {
     data: PropTypes.array
   }
+
   render() {
     return (
       <View style={styles.container}>
