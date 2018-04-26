@@ -44,16 +44,26 @@ export default class NewDiary extends Component {
 		date: new Date(),
 		title: '',
 		content: '',
-		images: '222',
 		latitude: 0,
 		longitude: 0,
 		showKeyboard: false,
-		base64List: []
+		base64List: [],
+		keyboardHeight: 0
 	}
 
 	componentDidMount () {
-		Keyboard.addListener('keyboardDidShow', () => this.setState({showKeyboard: true}))
-		Keyboard.addListener('keyboardDidHide', () => this.setState({showKeyboard: false}))
+		Keyboard.addListener('keyboardDidShow', (e) => {
+			this.setState({
+				showKeyboard: true,
+				keyboardHeight: e.endCoordinates.height
+			})
+		})
+		Keyboard.addListener('keyboardDidHide', () => {
+			this.setState({
+				showKeyboard: false,
+				keyboardHeight: 0
+			})
+		})
 		this.getLocation()
 	}
 
@@ -70,12 +80,16 @@ export default class NewDiary extends Component {
 	async saveDiary () {
 		Keyboard.dismiss()
 
+		const { title, content, latitude, longitude } = this.state
+
+		if (!title) return Alert.alert('', '给日记起个标题吧')
+		if (!content) return Alert.alert('', '日记内容不能为空哦')
+
 		const images = await postImgToQiniu(this.state.base64List, {
 			type: 'note',
 			user_id: this.props.user.id
 		})
 
-		const { title, content, latitude, longitude } = this.state
 		const data = { title, content, images, latitude, longitude }
 		const res = await HttpUtils.post(URL_publish, data)
 		if (res.code === 0) {
@@ -91,9 +105,15 @@ export default class NewDiary extends Component {
     return (
       <Container hidePadding={true}>
         
-				<KeyboardAwareScrollView>
+				<KeyboardAwareScrollView
+					contentContainerStyle={styles.scroll_style}
+					extraScrollHeight={0}
+					enableResetScrollToCoords
+				>
 					<DiaryBanner
-						showBottomBar
+						showBanner={true}
+						showNav={true}
+						showBottomBar={true}
 						getBase64List={this.getBase64List.bind(this)}
 					/>
 
@@ -128,6 +148,7 @@ export default class NewDiary extends Component {
 					>
 						<TextPingFang style={styles.text_hide}>保存</TextPingFang>
 					</TouchableOpacity>
+					
 				</KeyboardAwareScrollView>
       </Container> 
     )
@@ -141,6 +162,10 @@ const styles = StyleSheet.create({
 		paddingLeft: getResponsiveWidth(24),
 		paddingTop: getResponsiveWidth(24),
 		paddingBottom: getResponsiveWidth(24),
+	},
+	scroll_style: {
+		// height: HEIGHT,
+		// backgroundColor: 'red'
 	},
 	text_date: {
 		color: '#aaa',
@@ -163,25 +188,25 @@ const styles = StyleSheet.create({
 	text_content: {
 		color: '#444',
 		fontSize: 16,
-		height: getResponsiveWidth(240),
+		height: getResponsiveWidth(100),
 		paddingLeft: getResponsiveWidth(24),
 		paddingRight: getResponsiveWidth(24),
 		marginTop: getResponsiveWidth(24),
 		paddingBottom: getResponsiveWidth(24),
 	},
 	hide_keyboard: {
-		position: 'absolute',
+		// position: 'absolute',
 		width: getResponsiveWidth(50),
 		height: getResponsiveWidth(20),
-		justifyContent: 'center',
-		bottom: getResponsiveHeight(70),
-		right: 2,
+		// justifyContent: 'center',
+		// bottom: 0,
+		// right: 2,
 		backgroundColor: '#eee',
 		borderRadius: getResponsiveWidth(10)
 	},
 	text_hide: {
 		color: '#bbb',
-		fontSize: 20,
+		fontSize: 12,
 		textAlign: 'center'
 	}
 })

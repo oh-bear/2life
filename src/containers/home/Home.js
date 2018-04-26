@@ -45,7 +45,7 @@ export default class Home extends Component {
     showCalendar: false,
     weather_text: '19℃ 晴',
     weather_icon: require('../../../res/images/home/icon_sunny.png'),
-    diaryData: []
+    diaryList: []
   }
 
   async componentDidMount () {
@@ -58,22 +58,7 @@ export default class Home extends Component {
       diaryList.sort((a, b) => b.date - a.date)
       diaryList = diaryClassify(diaryList, 'date')
 
-      let diaryData = []
-      for(let i = 0; i < diaryList.length; i++) {
-        diaryData.push([])
-        for(let j = 0; j < diaryList[i].length; j++) {
-          let obj = {
-            date: getDay(diaryList[i][j].date),
-            diary_img: diaryList[i][j].images,
-            diary_title: diaryList[i][j].title,
-            diary_content: diaryList[i][j].content,
-            diary_time: getTime(diaryList[i][j].date),
-            diary_location: await getLocation(diaryList[i][j].longitude, diaryList[i][j].latitude)
-          }
-          diaryData[i].push(obj)
-        }
-      }
-      this.setState({diaryData})
+      this.setState({diaryList})
     }
   }
 
@@ -120,7 +105,7 @@ export default class Home extends Component {
 
   _listFooter () {
     return (
-      <View style={[styles.list_footer, {display: this.state.diaryData.length === 0 ? 'none' : 'flex'}]}></View>
+      <View style={[styles.list_footer, {display: this.state.diaryList.length === 0 ? 'none' : 'flex'}]}></View>
     )
   }
 
@@ -172,7 +157,7 @@ export default class Home extends Component {
         
         <FlatList
           style={styles.diary_container}
-          data={this.state.diaryData}
+          data={this.state.diaryList}
           extraData={this.state}
           renderItem={this._renderItem}
           ListEmptyComponent={() => this._emptyDiary()}

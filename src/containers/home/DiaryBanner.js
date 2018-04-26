@@ -80,12 +80,22 @@ export default class DiaryBanner extends Component {
 	}
 
 	_setImgList () {
+		if (this.props.imageList && this.props.imageList.length !== 0) {
+			imgListComponent = this.props.imageList.map((item, index) => {
+				return (
+					<Image key={index} style={styles.img} resizeMode='cover' source={{uri: item}}/>
+				)
+			})
+			this.setState({imgListComponent})
+			return
+		}
+
 		let imgListComponent = []
 
 		if (this.state.sources.length !== 0) {
 			imgListComponent = this.state.sources.map((item, index) => {
 				return (
-					<Image key={index} style={styles.img} resizeMode='cover' source={this.state.sources[index]}/>
+					<Image key={index} style={styles.img} resizeMode='cover' source={item}/>
 				)
 			})
 		} else {
@@ -104,10 +114,11 @@ export default class DiaryBanner extends Component {
 
   render() {
     return (
-			<View style={styles.container} animation='fadeIn'>
+			<View style={[styles.container, {display: this.props.showBanner ? 'flex' : 'none'}]} animation='fadeIn'>
 				<CommonNav
-					navStyle={styles.nav_style}
+					navStyle={[styles.nav_style, {display: this.props.showNav ? 'flex' : 'none'}]}
 					navBarStyle={styles.navbar_style}
+					rightButton={this.props.rightButton}
 				/>
 
 				<Swiper
@@ -116,7 +127,6 @@ export default class DiaryBanner extends Component {
 					style={styles.swiper}
 					onIndexChanged={(index) => {
 						this.setState({imgIndex: index})
-						console.log(this.state)
 					}}
 				>
 					{this.state.imgListComponent}

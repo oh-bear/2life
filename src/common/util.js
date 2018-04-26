@@ -186,6 +186,7 @@ export async function getLocation (longitude, latitude) {
  * @returns {String} 图片链接 img_url&img_url...
  */
 export async function postImgToQiniu (base64List, obj) {
+	if (base64List.length === 0) return ''
 	const { type, user_id } = obj
 	if (!type && !user_id) return
 
