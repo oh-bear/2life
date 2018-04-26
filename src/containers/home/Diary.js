@@ -18,32 +18,48 @@ import {
 	getResponsiveWidth,
 	getResponsiveHeight
 } from '../../common/styles'
-import { getMonth, getToday } from '../../common/util'
+import {
+  getDay,
+  getTime,
+  getLocation,
+  diaryClassify,
+} from '../../common/util'
 import { SCENE_DIARY_DETAIL } from '../../constants/scene'
 
 class SingleDiary extends Component {
 	static propTypes = {
+		diary: PropTypes.object
+	}
 
+	state = {
+		location: ''
+	}
+
+	async componentDidMount () {
+		const location = await getLocation(this.props.diary.longitude, this.props.diary.latitude)
+		this.setState({location})
 	}
 
 	render () {
+		const diary = this.props.diary
+
 		return (
 			<TouchableOpacity
 				style={styles.diary_container}
-				onPress={() => Actions.jump(SCENE_DIARY_DETAIL)}
+				onPress={() => Actions.jump(SCENE_DIARY_DETAIL, {diary: this.props.diary})}
 			>
 				<View style={styles.diary_top}>
 					<View style={styles.diary_top_text}>
-						<TextPingFang style={styles.text_diary_title} numberOfLines={1}>{this.props.diary_title}</TextPingFang>
-						<TextPingFang style={styles.text_diary_content} numberOfLines={2}>{this.props.diary_content}</TextPingFang>
+						<TextPingFang style={styles.text_diary_title} numberOfLines={1}>{diary.title}</TextPingFang>
+						<TextPingFang style={styles.text_diary_content} numberOfLines={2}>{diary.content}</TextPingFang>
 					</View>
-					<Image style={[styles.img_diary, {display: this.props.diary_img ? 'flex' : 'none'}]} source={{uri: this.props.diary_img}}/>
+					<Image style={[styles.img_diary, {display: diary.images ? 'flex' : 'none'}]} source={{uri: diary.images ? diary.images.split('&')[0] : ''}}/>
 				</View>
 				<View style={styles.diary_bottom}>
-					<TextPingFang style={styles.time}>{this.props.diary_time}</TextPingFang>
+					<TextPingFang style={styles.time}>{getTime(diary.date)}</TextPingFang>
 					<View style={styles.location_container}>
 						<Image style={styles.location_icon} source={require('../../../res/images/home/icon_location.png')}/>
-						<TextPingFang style={styles.text_location}>{this.props.diary_location}</TextPingFang>
+						<TextPingFang style={styles.text_location}>{this.state.location}</TextPingFang>
 					</View>
 				</View>
 			</TouchableOpacity>
@@ -59,7 +75,7 @@ export default class Diary extends Component {
   render () {
 		let date = ''
 		if (this.props.data.length !== 0) {
-			date = this.props.data[0].date
+			date = getDay(this.props.data[0].date)
 		}
 
     return (
@@ -69,15 +85,7 @@ export default class Diary extends Component {
 					{
 						this.props.data.map((diary, index) => {
 							return (
-								<SingleDiary
-									key={index}
-									date={diary.date}
-									diary_img={diary.diary_img}
-									diary_title={diary.diary_title}
-									diary_content={diary.diary_content}
-									diary_time={diary.diary_time}
-									diary_location={diary.diary_location}
-								/>
+								<SingleDiary key={index} diary={diary}/>
 							)
 						})
 					}
