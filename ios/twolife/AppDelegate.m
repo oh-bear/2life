@@ -17,6 +17,9 @@
 #import <React/RCTBundleURLProvider.h>
 #import <React/RCTRootView.h>
 
+@interface AppDelegate ()<JPUSHRegisterDelegate>
+@end
+
 @implementation AppDelegate
 
 - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken
@@ -64,12 +67,19 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-  [JPUSHService setupWithOption:launchOptions appKey:@"67fdf21f35e554cc0b985e4e"
-                        channel:@"App Store" apsForProduction:YES];
-
   NSURL *jsCodeLocation;
-  
   jsCodeLocation = [[RCTBundleURLProvider sharedSettings] jsBundleURLForBundleRoot:@"index" fallbackResource:nil];
+  
+  BOOL release = YES;
+#ifdef DEBUG
+  release = NO;
+#endif
+  JPUSHRegisterEntity * entity = [[JPUSHRegisterEntity alloc] init];
+  entity.types = UNAuthorizationOptionAlert|UNAuthorizationOptionBadge|UNAuthorizationOptionSound;
+  [JPUSHService registerForRemoteNotificationConfig:entity delegate:self];
+  [JPUSHService setupWithOption:launchOptions appKey:@"67fdf21f35e554cc0b985e4e"
+                        channel:@"App Store" apsForProduction:release];
+
   
   RCTRootView *rootView = [[RCTRootView alloc] initWithBundleURL:jsCodeLocation
                                                       moduleName:@"twolife"
