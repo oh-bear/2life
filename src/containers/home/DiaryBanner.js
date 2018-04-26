@@ -26,21 +26,80 @@ import {
 export default class DiaryBanner extends Component {
   static propTypes = {
 	}
+
+	state = {
+		sources: [],
+		base64List: [],
+		imgIndex: 0,
+		imgListComponent: [],
+	}
+
+	componentDidMount () {
+		this._setImgList()
+	}
 	
-	async _showPicker () {
+	async _addImg () {
 		const options = {
-			title: 'Select Avatar',
-			customButtons: [
-				{name: 'fb', title: 'Choose Photo from Facebook'},
-			],
+			title: '',
+			cancelButtonTitle: '取消',
+			takePhotoButtonTitle: '拍摄',
+			chooseFromLibraryButtonTitle: '从相册选择',
+			cameraType: 'back',
+			mediaType: 'photo',
+			maxWidth: 300,
+			maxHeight: 300,
+			quality: 1,
+			allowsEditing: true,
 			storageOptions: {
 				skipBackup: true,
-				path: 'images'
+				cameraRoll: true,
+				waitUntilSaved: true
 			}
 		}
 		ImagePicker.showImagePicker(options, res => {
 			console.log(res)
+			if (!res.didCancel) {
+				let source = { uri: res.uri }
+				let { sources, base64List } = this.state
+				sources.push(source)
+				base64List.push(res.data)
+				this.setState({ sources, base64List })
+				this._setImgList()
+				this.props.getBase64List(base64List)
+			}
 		})
+	}
+
+	_removeImg () {
+		let { sources, base64List } = this.state
+		sources.splice(this.state.imgIndex, 1)
+		base64List.splice(this.state.imgIndex, 1)
+		this.setState({ sources, base64List })
+		this._setImgList()
+		this.props.getBase64List(base64List)
+	}
+
+	_setImgList () {
+		let imgListComponent = []
+
+		if (this.state.sources.length !== 0) {
+			imgListComponent = this.state.sources.map((item, index) => {
+				return (
+					<Image key={index} style={styles.img} resizeMode='cover' source={this.state.sources[index]}/>
+				)
+			})
+		} else {
+			imgListComponent[0] = (
+				<TouchableOpacity
+					style={[styles.img_container, {display: this.state.source ? 'none' : 'flex'}]}
+					onPress={() => this._addImg()}
+					key={0} 
+				>
+					<Image source={require('../../../res/images/home/icon_add_photo.png')}/>
+				</TouchableOpacity>
+			)
+		}
+		this.setState({imgListComponent})
 	}
 
   render() {
@@ -55,14 +114,22 @@ export default class DiaryBanner extends Component {
 					width={WIDTH}
 					height={getResponsiveWidth(282)}
 					style={styles.swiper}
+					onIndexChanged={(index) => {
+						this.setState({imgIndex: index})
+						console.log(this.state)
+					}}
 				>
-					<TouchableOpacity
-						style={styles.img_container}
-						onPress={() => this._showPicker()}
-					>
-						<Image source={require('../../../res/images/home/icon_add_photo.png')}/>
-					</TouchableOpacity>
+					{this.state.imgListComponent}
 				</Swiper>
+
+				<View style={[styles.bottom_bar, {display: (this.props.showBottomBar && this.state.sources.length) ? 'flex' : 'none'}]}>
+					<TouchableOpacity style={styles.icon_container} onPress={() => this._removeImg()}>
+						<Image source={require('../../../res/images/home/icon_remove_photo.png')}/>
+					</TouchableOpacity>
+					<TouchableOpacity onPress={() => this._addImg()}>
+						<Image source={require('../../../res/images/home/icon_add_photo2.png')}/>
+					</TouchableOpacity>
+				</View>
 			</View>
     )
   }
@@ -105,5 +172,21 @@ const styles = StyleSheet.create({
 		flex: 1,
 		justifyContent: 'center',
 		alignItems: 'center',
+	},
+	img: {
+		width: '100%',
+		height: '100%',
+	},
+	bottom_bar: {
+		width: WIDTH,
+		position: 'absolute',
+		bottom: 0,
+		flexDirection: 'row',
+		justifyContent: 'flex-end',
+		paddingRight: getResponsiveWidth(24),
+		marginBottom: getResponsiveWidth(24),
+	},
+	icon_container: {
+		marginRight: getResponsiveWidth(24)
 	}
 })

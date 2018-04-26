@@ -1,4 +1,12 @@
 import axios from 'axios'
+import { Buffer } from 'buffer'
+import HttpUtils from '../network/HttpUtils'
+import { UTILS } from '../network/Urls'
+
+const URL_qiniu_token = UTILS.qiniu_token
+const URL_qiniu_host = 'http://upload.qiniu.com/putb64/-1/key/'
+// const URL_qiniu_host = 'http://upload-z2.qiniup.com/putb64/-1/key/'
+const BASE_IMG_URL = 'https://airing.ursb.me/'
 
 export const isDev = global.process.env.NODE_ENV === 'development'
 
@@ -169,4 +177,53 @@ export async function getLocation (longitude, latitude) {
 		country = res.data.regeocode.addressComponent.country
 	}
 	return (`${city}，${province}，${country}`)
+}
+
+/**
+ * 上传base64至七牛
+ * @param {Array of String} base64List
+ * @param {Object} obj
+ * @returns {String} 图片链接 img_url&img_url...
+ */
+export async function postImgToQiniu (base64List, obj) {
+	const { type, user_id } = obj
+	if (!type && !user_id) return
+
+	// 并发上传图片
+	const qiniuPromises = base64List.map(async (base64, index) => {
+		let filename
+		if (type === 'note') {
+			filename = `2life/user/${user_id}/img_${Date.now()}.png`
+		}
+		if (type === 'prifile') {
+			filename = `2life/user/${user_id}/prifile_${Date.now()}.png`
+		}
+		const res_token = await HttpUtils.get(URL_qiniu_token, { filename })
+		const key_base64 = Buffer.from(filename).toString('base64')
+
+		if (res_token.code === 0) {
+			const qiniu_token = res_token.data   //七牛token
+
+			const res_qiniu = await fetch(URL_qiniu_host + key_base64, {
+				method: 'post',
+				headers: {
+					'Content-Type': 'application/octet-stream',
+					'Authorization': 'UpToken ' + qiniu_token
+				},
+				body: base64List[index]
+			})
+
+			return res_qiniu
+		}
+	})
+
+	let imgUrls = []
+	for(let i = 0; i < qiniuPromises.length; i++) {
+		const res = await qiniuPromises[i]
+		if (res.status === 200) {
+			const body = JSON.parse(res._bodyText)
+			imgUrls.push(BASE_IMG_URL + body.key)
+		}
+	}
+	return imgUrls.join('&')
 }

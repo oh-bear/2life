@@ -12,6 +12,7 @@ import {
 	Alert
 } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import { connect } from 'react-redux'
 
 import Container from '../../components/Container'
 import TextPingFang from '../../components/TextPingFang'
@@ -23,13 +24,20 @@ import {
 	getResponsiveWidth,
 	getResponsiveHeight
 } from '../../common/styles'
-import { getMonth, getToday } from '../../common/util'
+import { getMonth, postImgToQiniu } from '../../common/util'
 
 import HttpUtils from '../../network/HttpUtils'
 import { NOTES } from '../../network/Urls'
 
 const URL_publish = NOTES.publish
 
+function mapStateToProps(state) {
+  return {
+    user: state.user,
+  }
+}
+
+@connect(mapStateToProps)
 export default class NewDiary extends Component {
 
 	state = {
@@ -39,7 +47,8 @@ export default class NewDiary extends Component {
 		images: '222',
 		latitude: 0,
 		longitude: 0,
-		showKeyboard: false
+		showKeyboard: false,
+		base64List: []
 	}
 
 	componentDidMount () {
@@ -61,7 +70,12 @@ export default class NewDiary extends Component {
 	async saveDiary () {
 		Keyboard.dismiss()
 
-		const { title, content, images, latitude, longitude } = this.state
+		const images = await postImgToQiniu(this.state.base64List, {
+			type: 'note',
+			user_id: this.props.user.id
+		})
+
+		const { title, content, latitude, longitude } = this.state
 		const data = { title, content, images, latitude, longitude }
 		const res = await HttpUtils.post(URL_publish, data)
 		if (res.code === 0) {
@@ -69,12 +83,19 @@ export default class NewDiary extends Component {
 		}
 	}
 
+	getBase64List (base64List) {
+		this.setState({base64List})
+	}
+
   render() {
     return (
       <Container hidePadding={true}>
         
-				<ScrollView>
-					<DiaryBanner/>
+				<KeyboardAwareScrollView>
+					<DiaryBanner
+						showBottomBar
+						getBase64List={this.getBase64List.bind(this)}
+					/>
 
 					<View style={styles.date_container}>
 						<TextPingFang style={styles.text_date}>{getMonth(this.state.date.getMonth())} </TextPingFang>
@@ -101,12 +122,13 @@ export default class NewDiary extends Component {
 					/>
 
 					<TouchableOpacity
-						style={[styles.hide_keyboard, {display: this.state.showKeyboard ? 'flex' : 'none'}]}
+						// style={[styles.hide_keyboard, {display: this.state.showKeyboard ? 'flex' : 'none'}]}
+						style={[styles.hide_keyboard]}
 						onPress={() => this.saveDiary()}
 					>
-						<TextPingFang style={styles.text_hide}>收起</TextPingFang>
+						<TextPingFang style={styles.text_hide}>保存</TextPingFang>
 					</TouchableOpacity>
-				</ScrollView>
+				</KeyboardAwareScrollView>
       </Container> 
     )
   }
@@ -159,7 +181,7 @@ const styles = StyleSheet.create({
 	},
 	text_hide: {
 		color: '#bbb',
-		fontSize: 12,
+		fontSize: 20,
 		textAlign: 'center'
 	}
 })

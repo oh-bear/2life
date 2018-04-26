@@ -12,6 +12,6 @@ export const NOTES = {
   publish: '/notes/publish', //post {title，content，images，latitude，longitude}
 }
 
-export const UTIL = {
-  qiniu_token: 'util/qiniu_token'
+export const UTILS = {
+  qiniu_token: '/utils/qiniu_token', //get {filename}
 }

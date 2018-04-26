@@ -120,7 +120,7 @@ export default class Home extends Component {
 
   _listFooter () {
     return (
-      <View style={styles.list_footer}></View>
+      <View style={[styles.list_footer, {display: this.state.diaryData.length === 0 ? 'none' : 'flex'}]}></View>
     )
   }
 
@@ -262,7 +262,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
   none_container: {
-    height: HEIGHT,
     alignItems: 'center',
     paddingTop: getResponsiveHeight(150),
     backgroundColor: '#fff'
@@ -274,7 +273,7 @@ const styles = StyleSheet.create({
   },
   list_footer: {
     width: WIDTH,
-    height: getResponsiveHeight(100),
+    height: getResponsiveHeight(50),
     backgroundColor: '#fff'
   },
   new_diary: {
