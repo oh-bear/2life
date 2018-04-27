@@ -2,7 +2,8 @@ import React, { Component } from 'react'
 import {
   View,
   StyleSheet,
-  Image
+  Image,
+  DeviceEventEmitter
 } from 'react-native'
 import Home from './home/Home'
 import Notification from './notification/Notification'
@@ -19,7 +20,9 @@ export default class Index extends Component {
 
     JPushModule.addReceiveCustomMsgListener((message) => {
       console.log(message)
-      JPushModule.setBadge(1, success => {})
+      JPushModule.setBadge(1, success => {
+      })
+      DeviceEventEmitter.emit('flash_notification', {})
     })
 
     JPushModule.addReceiveNotificationListener(message => {
@@ -28,7 +31,8 @@ export default class Index extends Component {
   }
 
   state = {
-    selectedTab: 'home'
+    selectedTab: 'home',
+    unread: this.props.user.unread
   }
 
   icons = {
@@ -36,7 +40,7 @@ export default class Index extends Component {
       default: (
         <Image source={require('../../res/images/tab/icon_home_inactive.png')}/>
       ),
-      selected: <Image source={require('../../res/images/tab/icon_home_active.png')} />
+      selected: <Image source={require('../../res/images/tab/icon_home_active.png')}/>
     },
     notification: {
       default: (
@@ -50,7 +54,7 @@ export default class Index extends Component {
       default: (
         <Image source={require('../../res/images/tab/icon_profile_inactive.png')}/>
       ),
-      selected: <Image source={require('../../res/images/tab/icon_profile_active.png')} />
+      selected: <Image source={require('../../res/images/tab/icon_profile_active.png')}/>
     }
   }
 
@@ -73,10 +77,11 @@ export default class Index extends Component {
             selected={this.state.selectedTab === 'notification'}
             title='通知'
             titleStyle={styles.text_title}
+            badgeText={this.state.unread}
             selectedTitleStyle={styles.text_title_selected}
             renderIcon={() => this.icons.notification.default}
             renderSelectedIcon={() => this.icons.notification.selected}
-            onPress={() => this.setState({ selectedTab: 'notification' })}
+            onPress={() => this.setState({ selectedTab: 'notification', unread: 0 })}
           >
             <Notification />
           </TabNavigator.Item>
