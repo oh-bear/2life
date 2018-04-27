@@ -11,7 +11,21 @@ import { WIDTH, HEIGHT, getResponsiveHeight } from '../common/styles'
 import TabNavigator from 'react-native-tab-navigator'
 import { ifIphoneX } from 'react-native-iphone-x-helper'
 
+import JPushModule from 'jpush-react-native'
+
 export default class Index extends Component {
+
+  componentDidMount() {
+
+    JPushModule.addReceiveCustomMsgListener((message) => {
+      console.log(message)
+      JPushModule.setBadge(1, success => {})
+    })
+
+    JPushModule.addReceiveNotificationListener(message => {
+      console.log(message)
+    })
+  }
 
   state = {
     selectedTab: 'home'

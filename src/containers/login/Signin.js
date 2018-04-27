@@ -25,10 +25,11 @@ import {
 import Storage from '../../common/storage'
 import { SCENE_INDEX } from '../../constants/scene'
 
-
 import { USERS } from '../../network/Urls'
 import HttpUtils from '../../network/HttpUtils'
 import { setToken } from '../../network/HttpUtils'
+
+import JPushModule from 'jpush-react-native'
 
 const URL_login = USERS.login
 
@@ -61,6 +62,10 @@ export default class Signin extends Component {
 
       store.dispatch(fetchProfileSuccess(res.data.user))
       store.dispatch(fetchPartnerSuccess(res.data.partner))
+
+      JPushModule.setAlias(res.data.user.id.toString(), success => {
+        console.log(success)
+      })
 
       Actions[SCENE_INDEX]({user: res.data.user, partner: res.data.partner})
     }

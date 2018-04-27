@@ -1,16 +1,6 @@
 import React, { Component } from 'react'
-import Login from './containers/Login'
-import Register from './containers/Register'
 import Index from './containers/Index'
-import NoteEditor from './containers/NoteEditor'
-import Home from './containers/Home'
-import Feedback from './containers/profile/Feedback'
-import AboutUs from './containers/profile/AboutUs'
-import AboutUsWeb from './containers/profile/AboutUsWeb'
-import Setting from './containers/profile/Setting'
-import Connection from './containers/profile/Connection'
 
-// 2.0
 // login
 import Options from './containers/login/Options'
 import Signin from './containers/login/Signin'

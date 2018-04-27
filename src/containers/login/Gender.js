@@ -25,6 +25,8 @@ import { SCENE_INDEX } from '../../constants/scene'
 import { USERS } from '../../network/Urls'
 import HttpUtils from '../../network/HttpUtils'
 
+import JPushModule from 'jpush-react-native'
+
 const URL_update = USERS.update
 const URL_user = USERS.user
 
@@ -46,6 +48,11 @@ export default class Gender extends Component {
       const res = await HttpUtils.get(URL_user, {user_id: this.props.user.id})
 
       if (res.code === 0) {
+
+        JPushModule.setAlias(this.props.user.id.toString(), success => {
+          console.log(success)
+        })
+
         store.dispatch(fetchProfileSuccess(res.data))
         Actions.reset(SCENE_INDEX, {user: res.data})
       }
