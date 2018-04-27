@@ -10,9 +10,12 @@ const BASE_IMG_URL = 'https://airing.ursb.me/'
 
 export const isDev = global.process.env.NODE_ENV === 'development'
 
-// 2011-01-11
-export function getToday () {
-	const date = new Date()
+/**
+ * 返回 yyyy-mm-hh
+ * @param {Number} timestamp 时间戳
+ */
+export function getFormDay (timestamp) {
+	const date = new Date(timestamp)
 	const year = date.getFullYear()
 	const month = date.getMonth() < 10 ? `0${date.getMonth() + 1}` : date.getMonth()
 	const day = date.getDate() < 10 ? `0${date.getDate()}` : date.getDate()
@@ -156,7 +159,7 @@ export function diaryClassify (arr) {
 }
 
 /**
- * 
+ * 根据经纬度获取地理位置
  * @param {Number} longitude 经度
  * @param {Number} latitude 纬度
  * @returns {String}
@@ -176,7 +179,27 @@ export async function getLocation (longitude, latitude) {
 		province = res.data.regeocode.addressComponent.province
 		country = res.data.regeocode.addressComponent.country
 	}
-	return (`${city}，${province}，${country}`)
+	return {city, province, country}
+}
+
+/**
+ * 根据经纬度获取天气预报
+ * @param {String}  region 地名
+ * @returns {Object}
+ */
+export async function getWeather (region) {
+	const url = 'https://ali-weather.showapi.com/hour24'
+	const APPCODE = '0d769b31ca454261919def4f08864cf6'
+	const params = {area: region}
+	const config = {
+		url,
+		params,
+		headers: {
+			Authorization: `APPCODE ${APPCODE}`
+		}
+	}
+	const res = await axios(config)
+	return res.data.showapi_res_body.hourList[0]
 }
 
 /**

@@ -45,7 +45,7 @@ export default class DiaryDetail extends Component {
       this.setState({showBanner: false})
     }
     const location = await getLocation(this.props.diary.longitude, this.props.diary.latitude)
-    this.setState({location})
+		this.setState({location: `${location.city}，${location.province}，${location.country}`})
     
     this.renderlikeComponent()
   }

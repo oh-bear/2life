@@ -37,7 +37,7 @@ class SingleDiary extends Component {
 
 	async componentDidMount () {
 		const location = await getLocation(this.props.diary.longitude, this.props.diary.latitude)
-		this.setState({location})
+		this.setState({location: `${location.city}，${location.province}，${location.country}`})
 	}
 
 	render () {
