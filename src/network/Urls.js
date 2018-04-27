@@ -4,7 +4,7 @@ export const USERS = {
   code: '/users/code',
   update: '/users/update',
   user: '/users/user',
-
+  notification: '/users/show_notification'
 }
 
 export const NOTES = {
