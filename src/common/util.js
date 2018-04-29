@@ -124,7 +124,7 @@ export function getTime (timestamp) {
  */
 export function diaryClassify (arr) {
 	let oldArr = arr.map(dairy => {
-		dairy.formDate = new Date(dairy.date).toLocaleDateString()
+		dairy.formDate = getFormDay(dairy.date)
 		return dairy
 	})
 
@@ -217,10 +217,10 @@ export async function postImgToQiniu (base64List, obj) {
 	const qiniuPromises = base64List.map(async (base64, index) => {
 		let filename
 		if (type === 'note') {
-			filename = `2life/user/${user_id}/img_${Date.now()}.png`
+			filename = `2life/user/${user_id}/img_${Date.now()}.png-2life_note.jpg`
 		}
-		if (type === 'prifile') {
-			filename = `2life/user/${user_id}/prifile_${Date.now()}.png`
+		if (type === 'profile') {
+			filename = `2life/user/${user_id}/profile_${Date.now()}.png-2life_face.jpg`
 		}
 		const res_token = await HttpUtils.get(URL_qiniu_token, { filename })
 		const key_base64 = Buffer.from(filename).toString('base64')

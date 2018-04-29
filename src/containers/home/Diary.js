@@ -32,11 +32,12 @@ class SingleDiary extends Component {
 	}
 
 	state = {
-		location: ''
+		location: '地球的某个角落'
 	}
 
 	async componentDidMount () {
 		const location = await getLocation(this.props.diary.longitude, this.props.diary.latitude)
+		if (location.city instanceof Array) return
 		this.setState({location: `${location.city}，${location.province}，${location.country}`})
 	}
 

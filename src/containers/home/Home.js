@@ -9,7 +9,7 @@ import {
   FlatList,
   Alert
 } from 'react-native'
-import { CalendarList } from 'react-native-calendars'
+import { CalendarList, Calendar } from '../../components/react-native-calendars/src'
 import { Actions } from 'react-native-router-flux'
 import { connect } from 'react-redux'
 
@@ -54,9 +54,10 @@ export default class Home extends Component {
     month: getMonth(new Date().getMonth()),
     day: new Date().getDate(),
     showCalendar: false,
-    weather_text: '',
+    weather_text: '你在的地方一定是晴天吧',
     weather_icon: require('../../../res/images/home/icon_sunny.png'),
     diaryList: [],
+    filterDiaryList: [],
     markedDates: {}
   }
 
@@ -97,7 +98,11 @@ export default class Home extends Component {
         }
       })
 
-      this.setState({diaryList, markedDates})
+      this.setState({
+        diaryList,
+        markedDates,
+        filterDiaryList: diaryList
+      })
     }
   }
 
@@ -105,50 +110,49 @@ export default class Home extends Component {
     navigator.geolocation.getCurrentPosition(async res => {
       try {
         const {latitude, longitude} = res.coords
-        const location = await getLocation(113.387061, 23.053829)
+        const location = await getLocation(latitude, longitude)
+        // const location = await getLocation(113.387061, 23.053829)
         const weather = await getWeather(location.city)
-        switch(weather.weather) {
-          case '晴':
-            this.setState({
-              weather_text: `${weather.weather} ${weather.temperature}℃`,
-              weather_icon: require('../../../res/images/home/icon_sunny.png')
-            })
-            break
-          case '多云':
-            this.setState({
-              weather_text: `${weather.weather} ${weather.temperature}℃`,
-              weather_icon: require('../../../res/images/home/icon_cloud.png')
-            })
-            break
-          case '阵雨':
-            this.setState({
-              weather_text: `${weather.weather} ${weather.temperature}℃`,
-              weather_icon: require('../../../res/images/home/icon_rainy.png')
-            })
-            break
-          case '阵雪':
-            this.setState({
-              weather_text: `${weather.weather} ${weather.temperature}℃`,
-              weather_icon: require('../../../res/images/home/icon_snow.png')
-            })
-            break
-          case '霾':
-            this.setState({
-              weather_text: `${weather.weather} ${weather.temperature}℃`,
-              weather_icon: require('../../../res/images/home/icon_snow.png')
-            })
-            break
-          defaylt:
-            this.setState({
-              weather_text: ``,
-              weather_icon: require('')
-            }) 
+
+        if (weather.code === '00') {
+          this.setState({
+            weather_text: `${weather.weather} ${weather.temperature}℃`,
+            weather_icon: require('../../../res/images/home/icon_sunny.png')
+          })
+        }
+        if (weather.code === '01' || weather.code === '02') {
+          this.setState({
+            weather_text: `${weather.weather} ${weather.temperature}℃`,
+            weather_icon: require('../../../res/images/home/icon_cloud.png')
+          })
+        }
+        if (weather.weather.includes('雨')) {
+          this.setState({
+            weather_text: `${weather.weather} ${weather.temperature}℃`,
+            weather_icon: require('../../../res/images/home/icon_rainy.png')
+          })
+        }
+        if (weather.weather.includes('雪')) {
+          this.setState({
+            weather_text: `${weather.weather} ${weather.temperature}℃`,
+            weather_icon: require('../../../res/images/home/icon_snow.png')
+          })
+        }
+        if (weather.weather.includes('雾') || weather.weather.includes('尘') || weather.weather.includes('沙')|| weather.weather.includes('霾')) {
+          this.setState({
+            weather_text: `${weather.weather} ${weather.temperature}℃`,
+            weather_icon: require('../../../res/images/home/icon_fly_ash.png')
+          })
         }
       } catch (e){
         console.log(e)
-        Alert.alert('', '无法获取天气')
       }
     })
+  }
+
+  async onDayPress (day) {
+    const filterDiaryList = this.state.diaryList.filter(dayDiary => dayDiary[0].formDate === day.dateString)
+    this.setState({filterDiaryList})
   }
 
   async setDate (months) {
@@ -232,7 +236,7 @@ export default class Home extends Component {
             textDayFontSize: 14,
           }}
           maxDate={new Date()}
-          onDayPress={day => {console.log(day)}}
+          onDayPress={day => this.onDayPress(day)}
           onVisibleMonthsChange={months => this.setDate(months)}
           markedDates={this.state.markedDates}
           markingType={'multi-dot'}
@@ -240,7 +244,7 @@ export default class Home extends Component {
         
         <FlatList
           style={styles.diary_container}
-          data={this.state.diaryList}
+          data={this.state.filterDiaryList}
           extraData={this.state}
           renderItem={this._renderItem}
           ListEmptyComponent={() => this._emptyDiary()}
@@ -300,14 +304,18 @@ const styles = StyleSheet.create({
   },
   calendar: {
     width: WIDTH,
-    height: 470
+    height: (() => {
+      if (HEIGHT === 568) return 280  //iphone 5/5s/SE
+      if (HEIGHT === 667) return 190  //iphone 6/7/8
+      if (HEIGHT === 736) return 335  //iphone 6P/7P/8P
+      if (HEIGHT === 812) return 350  //iphone X
+    })()
   },
   // weather: {
   // },
   weather_inner: {
     height: getResponsiveHeight(60),
     flexDirection: 'row',
-    justifyContent: 'space-between',
     alignItems: 'center',
     borderBottomWidth: getResponsiveWidth(1),
     borderBottomColor: '#f1f1f1',
@@ -315,13 +323,21 @@ const styles = StyleSheet.create({
   // weather_icon: {
   // },
   text_weather: {
-    right: getResponsiveWidth(96),
+    marginLeft: getResponsiveWidth(10),
     color: '#aaa',
-    fontSize: 14
+    fontSize: 14,
   },
-  // weather_exchange: {
-  // },
+  weather_exchange: {
+    position: 'absolute',
+    right: 0
+  },
   diary_container: {
+    height: (() => {
+      if (HEIGHT === 568) return 190  //iphone 5/5s/SE
+      if (HEIGHT === 667) return 190  //iphone 6/7/8
+      if (HEIGHT === 736) return 425  //iphone 6P/7P/8P
+      if (HEIGHT === 812) return 500  //iphone X
+    })(),
     width: WIDTH,
     paddingLeft: getResponsiveWidth(24),
     paddingRight: getResponsiveWidth(24),

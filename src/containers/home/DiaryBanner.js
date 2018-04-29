@@ -46,8 +46,8 @@ export default class DiaryBanner extends Component {
 			chooseFromLibraryButtonTitle: '从相册选择',
 			cameraType: 'back',
 			mediaType: 'photo',
-			maxWidth: 300,
-			maxHeight: 300,
+			maxWidth: 375,
+			maxHeight: 282,
 			quality: 1,
 			allowsEditing: true,
 			storageOptions: {
