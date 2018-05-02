@@ -21,6 +21,9 @@ import {
 } from '../../common/styles'
 import { getMonth, getLocation } from '../../common/util'
 
+import HttpUtils from '../../network/HttpUtils'
+import { NOTES } from '../../network/Urls'
+
 function mapStateToProps(state) {
   return {
     user: state.user,
@@ -38,6 +41,7 @@ export default class DiaryDetail extends Component {
   }
 
   async componentWillMount () {
+    // HttpUtils.post(NOTES.like, {note_id: this.props.diary.id}).then(res=> console.log(res))
     if (this.props.diary.images) {
       let imageList = this.props.diary.images.split('&')
       this.setState({imageList, showBanner: true})

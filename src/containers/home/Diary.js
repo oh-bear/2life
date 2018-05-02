@@ -2,10 +2,10 @@ import React, { Component } from 'react'
 import {
 	View,
 	StyleSheet,
-  Text,
-  TouchableOpacity,
-  ImageBackground,
-  Image,
+	Text,
+	TouchableOpacity,
+	ImageBackground,
+	Image,
 } from 'react-native'
 import PropTypes from 'prop-types'
 import { Actions } from 'react-native-router-flux'
@@ -19,10 +19,10 @@ import {
 	getResponsiveHeight
 } from '../../common/styles'
 import {
-  getDay,
-  getTime,
-  getLocation,
-  diaryClassify,
+	getDay,
+	getTime,
+	getLocation,
+	diaryClassify,
 } from '../../common/util'
 import { SCENE_DIARY_DETAIL } from '../../constants/scene'
 
@@ -35,31 +35,31 @@ class SingleDiary extends Component {
 		location: '地球的某个角落'
 	}
 
-	async componentDidMount () {
+	async componentDidMount() {
 		const location = await getLocation(this.props.diary.longitude, this.props.diary.latitude)
 		if (location.city instanceof Array) return
-		this.setState({location: `${location.city}，${location.province}，${location.country}`})
+		this.setState({ location: `${location.city}，${location.province}，${location.country}` })
 	}
 
-	render () {
+	render() {
 		const diary = this.props.diary
 
 		return (
 			<TouchableOpacity
 				style={styles.diary_container}
-				onPress={() => Actions.jump(SCENE_DIARY_DETAIL, {diary: this.props.diary})}
+				onPress={() => Actions.jump(SCENE_DIARY_DETAIL, { diary: this.props.diary })}
 			>
 				<View style={styles.diary_top}>
 					<View style={styles.diary_top_text}>
 						<TextPingFang style={styles.text_diary_title} numberOfLines={1}>{diary.title}</TextPingFang>
 						<TextPingFang style={styles.text_diary_content} numberOfLines={2}>{diary.content}</TextPingFang>
 					</View>
-					<Image style={[styles.img_diary, {display: diary.images ? 'flex' : 'none'}]} source={{uri: diary.images ? diary.images.split('&')[0] : ''}}/>
+					<Image style={[styles.img_diary, { display: diary.images ? 'flex' : 'none' }]} source={{ uri: diary.images ? diary.images.split('&')[0] : '' }} />
 				</View>
 				<View style={styles.diary_bottom}>
 					<TextPingFang style={styles.time}>{getTime(diary.date)}</TextPingFang>
 					<View style={styles.location_container}>
-						<Image style={styles.location_icon} source={require('../../../res/images/home/icon_location.png')}/>
+						<Image style={styles.location_icon} source={require('../../../res/images/home/icon_location.png')} />
 						<TextPingFang style={styles.text_location}>{this.state.location}</TextPingFang>
 					</View>
 				</View>
@@ -73,31 +73,31 @@ export default class Diary extends Component {
 		data: PropTypes.arrayOf(PropTypes.object).isRequired,
 	}
 
-  render () {
+	render() {
 		let date = ''
 		if (this.props.data.length !== 0) {
 			date = getDay(this.props.data[0].date)
 		}
 
-    return (
-      <View style={styles.container}>
+		return (
+			<View style={styles.container}>
 				<TextPingFang style={styles.date}>{date}</TextPingFang>
 				<View style={styles.main_container}>
 					{
 						this.props.data.map((diary, index) => {
 							return (
-								<SingleDiary key={index} diary={diary}/>
+								<SingleDiary key={index} diary={diary} />
 							)
 						})
 					}
 				</View>
 			</View>
-    )
-  }
+		)
+	}
 }
 
 const styles = StyleSheet.create({
-  container: {
+	container: {
 		width: '100%',
 		flexDirection: 'row',
 		paddingBottom: getResponsiveWidth(16),

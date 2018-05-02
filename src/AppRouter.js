@@ -12,6 +12,13 @@ import Gender from './containers/login/Gender'
 import NewDiary from './containers/home/NewDiary'
 import DiaryDetail from './containers/home/DiaryDetail'
 
+// profile
+import ProfileBadge from './containers/profile/ProfileBadge'
+import ProfileEdit from './containers/profile/ProfileEdit'
+import ProfileMatch from './containers/profile/ProfileMatch'
+import ProfileMode from './containers/profile/ProfileMode'
+import ProfileSync from './containers/profile/ProfileSync'
+
 import { Scene, Router, ActionConst } from 'react-native-router-flux'
 import * as scenes from './constants/scene'
 import SplashScreen from './SplashScreen'
@@ -87,6 +94,41 @@ export default class AppRouter extends Component {
               key={scenes.SCENE_DIARY_DETAIL}
               component={DiaryDetail}
               title='日记详情'
+              hideNavBar
+              duration={0}
+            />
+            <Scene
+              key={scenes.SCENE_PROFILE_BADGE}
+              component={ProfileBadge}
+              title='个人徽章'
+              hideNavBar
+              duration={0}
+            />
+            <Scene
+              key={scenes.SCENE_PROFILE_EDIT}
+              component={ProfileEdit}
+              title='编辑个人信息'
+              hideNavBar
+              duration={0}
+            />
+            <Scene
+              key={scenes.SCENE_PROFILE_MATCH}
+              component={ProfileMatch}
+              title='匹配'
+              hideNavBar
+              duration={0}
+            />
+            <Scene
+              key={scenes.SCENE_PROFILE_MODE}
+              component={ProfileMode}
+              title='个人情绪'
+              hideNavBar
+              duration={0}
+            />
+            <Scene
+              key={scenes.SCENE_PROFILE_SYNC}
+              component={ProfileSync}
+              title='同步'
               hideNavBar
               duration={0}
             />

@@ -17,14 +17,14 @@ import TextPingFang from '../../components/TextPingFang'
 import CommonNav from '../../components/CommonNav'
 
 import {
-  HEIGHT,
-  WIDTH,
-  getResponsiveHeight,
-  getResponsiveWidth
+	HEIGHT,
+	WIDTH,
+	getResponsiveHeight,
+	getResponsiveWidth
 } from '../../common/styles'
 
 export default class DiaryBanner extends Component {
-  static propTypes = {
+	static propTypes = {
 	}
 
 	state = {
@@ -34,11 +34,11 @@ export default class DiaryBanner extends Component {
 		imgListComponent: [],
 	}
 
-	componentDidMount () {
+	componentDidMount() {
 		this._setImgList()
 	}
-	
-	async _addImg () {
+
+	async _addImg() {
 		const options = {
 			title: '',
 			cancelButtonTitle: '取消',
@@ -70,7 +70,7 @@ export default class DiaryBanner extends Component {
 		})
 	}
 
-	_removeImg () {
+	_removeImg() {
 		let { sources, base64List } = this.state
 		sources.splice(this.state.imgIndex, 1)
 		base64List.splice(this.state.imgIndex, 1)
@@ -79,14 +79,14 @@ export default class DiaryBanner extends Component {
 		this.props.getBase64List(base64List)
 	}
 
-	_setImgList () {
+	_setImgList() {
 		if (this.props.imageList && this.props.imageList.length !== 0) {
 			imgListComponent = this.props.imageList.map((item, index) => {
 				return (
-					<Image key={index} style={styles.img} resizeMode='cover' source={{uri: item}}/>
+					<Image key={index} style={styles.img} resizeMode='cover' source={{ uri: item }} />
 				)
 			})
-			this.setState({imgListComponent})
+			this.setState({ imgListComponent })
 			return
 		}
 
@@ -95,28 +95,28 @@ export default class DiaryBanner extends Component {
 		if (this.state.sources.length !== 0) {
 			imgListComponent = this.state.sources.map((item, index) => {
 				return (
-					<Image key={index} style={styles.img} resizeMode='cover' source={item}/>
+					<Image key={index} style={styles.img} resizeMode='cover' source={item} />
 				)
 			})
 		} else {
 			imgListComponent[0] = (
 				<TouchableOpacity
-					style={[styles.img_container, {display: this.state.source ? 'none' : 'flex'}]}
+					style={[styles.img_container, { display: this.state.source ? 'none' : 'flex' }]}
 					onPress={() => this._addImg()}
-					key={0} 
+					key={0}
 				>
-					<Image source={require('../../../res/images/home/icon_add_photo.png')}/>
+					<Image source={require('../../../res/images/home/icon_add_photo.png')} />
 				</TouchableOpacity>
 			)
 		}
-		this.setState({imgListComponent})
+		this.setState({ imgListComponent })
 	}
 
-  render() {
-    return (
-			<View style={[styles.container, {display: this.props.showBanner ? 'flex' : 'none'}]} animation='fadeIn'>
+	render() {
+		return (
+			<View style={[styles.container, { display: this.props.showBanner ? 'flex' : 'none' }]} animation='fadeIn'>
 				<CommonNav
-					navStyle={[styles.nav_style, {display: this.props.showNav ? 'flex' : 'none'}]}
+					navStyle={[styles.nav_style, { display: this.props.showNav ? 'flex' : 'none' }]}
 					navBarStyle={styles.navbar_style}
 					rightButton={this.props.rightButton}
 				/>
@@ -126,27 +126,27 @@ export default class DiaryBanner extends Component {
 					height={getResponsiveWidth(282)}
 					style={styles.swiper}
 					onIndexChanged={(index) => {
-						this.setState({imgIndex: index})
+						this.setState({ imgIndex: index })
 					}}
 				>
 					{this.state.imgListComponent}
 				</Swiper>
 
-				<View style={[styles.bottom_bar, {display: (this.props.showBottomBar && this.state.sources.length) ? 'flex' : 'none'}]}>
+				<View style={[styles.bottom_bar, { display: (this.props.showBottomBar && this.state.sources.length) ? 'flex' : 'none' }]}>
 					<TouchableOpacity style={styles.icon_container} onPress={() => this._removeImg()}>
-						<Image source={require('../../../res/images/home/icon_remove_photo.png')}/>
+						<Image source={require('../../../res/images/home/icon_remove_photo.png')} />
 					</TouchableOpacity>
 					<TouchableOpacity onPress={() => this._addImg()}>
-						<Image source={require('../../../res/images/home/icon_add_photo2.png')}/>
+						<Image source={require('../../../res/images/home/icon_add_photo2.png')} />
 					</TouchableOpacity>
 				</View>
 			</View>
-    )
-  }
+		)
+	}
 }
 
 const styles = StyleSheet.create({
-  container: {
+	container: {
 	},
 	nav_style: {
 		position: 'absolute',
@@ -155,8 +155,8 @@ const styles = StyleSheet.create({
 		...ifIphoneX({
 			marginTop: 44
 		}, {
-			marginTop: 20
-		}),
+				marginTop: 20
+			}),
 		zIndex: 2,
 		backgroundColor: 'transparent'
 	},
@@ -164,17 +164,17 @@ const styles = StyleSheet.create({
 		backgroundColor: 'transparent'
 	},
 	nav_bar: {
-    width: WIDTH,
-    height: 44,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingLeft: getResponsiveWidth(18),
-    paddingRight: getResponsiveWidth(18)
+		width: WIDTH,
+		height: 44,
+		flexDirection: 'row',
+		justifyContent: 'space-between',
+		alignItems: 'center',
+		paddingLeft: getResponsiveWidth(18),
+		paddingRight: getResponsiveWidth(18)
 	},
 	nav_left_container: {
-    width: getResponsiveWidth(25)
-  },
+		width: getResponsiveWidth(25)
+	},
 	swiper: {
 		backgroundColor: '#f5f5f5'
 	},

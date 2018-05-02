@@ -296,9 +296,8 @@ const styles = StyleSheet.create({
     bottom: getResponsiveWidth(10)
   },
   text_day: {
-    position: 'absolute',
-    top: 9.5,
-    left: 6.8,
+    textAlign: 'center',
+    paddingTop: getResponsiveWidth(9),
     color: '#444',
     fontSize: 10,
   },

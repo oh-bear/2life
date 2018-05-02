@@ -62,7 +62,6 @@ export default class Navigator extends Component {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#fff',
     justifyContent: 'center',
     alignItems: 'center'
   },
@@ -72,8 +71,8 @@ const styles = StyleSheet.create({
     height: 44,
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingLeft: getResponsiveWidth(16),
-    paddingRight: getResponsiveWidth(16),
+    paddingLeft: getResponsiveWidth(24),
+    paddingRight: getResponsiveWidth(24),
     backgroundColor: '#fff'
   },
   titleViewContainer: {
