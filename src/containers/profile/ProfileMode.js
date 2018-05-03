@@ -14,7 +14,7 @@ import ScrollableTabView from 'react-native-scrollable-tab-view'
 import TextPingFang from '../../components/TextPingFang'
 import Container from '../../components/Container'
 import ProfileHeader from './ProfileHeader'
-import TimeBar from './TimeBar'
+import TabBar from './TabBar'
 import ModeCharts from './ModeCharts'
 
 import {
@@ -48,7 +48,7 @@ export default class ProfileMode extends Component {
 
 					<ScrollableTabView
 						style={styles.tabview}
-						renderTabBar={() => <TimeBar tabNames={['一周','一年','一月','全部']}/>}
+						renderTabBar={() => <TabBar tabNames={['一周','一年','一月','全部']}/>}
 					>
 						<ModeCharts
 							modeData={[50, 10, 40, 95, -4, -24, 85, 91, 35, 53]}

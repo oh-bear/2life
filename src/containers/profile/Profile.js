@@ -186,7 +186,7 @@ export default class Profile extends Component {
 
             <TouchableOpacity
               style={styles.row_match}
-              onPress={() => Actions.jump(SCENE_PROFILE_MATCH)}
+              onPress={() => Actions.jump(SCENE_PROFILE_MATCH, {user: this.props.user})}
             >
               <View style={styles.row_match_top}>
                 <Image source={require('../../../res/images/profile/icon_match.png')}/>

@@ -23,7 +23,7 @@ import {
 	getResponsiveHeight
 } from '../../common/styles'
 
-export default class TimeBar extends Component {
+export default class TabBar extends Component {
 	static propTypes = {
 		goToPage: PropTypes.func, // 跳转到对应tab的方法
 		activeTab: PropTypes.number, // 当前被选中的tab下标
@@ -34,11 +34,11 @@ export default class TimeBar extends Component {
 	renderTab(name, i) {
 		return (
 			<TouchableOpacity
-				key={name}
+				key={i}
 				onPress={() => this.props.goToPage(i)}
 				style={[styles.tab_item, this.props.activeTab === i ? styles.activeTab : null]}
 			>
-				<TextPingFang style={styles.text_tab}>
+				<TextPingFang style={[styles.text_tab, this.props.activeTab === i ? styles.activeText : null]}>
 					{this.props.tabNames[i]}
 				</TextPingFang>
 			</TouchableOpacity>
@@ -82,4 +82,7 @@ const styles = StyleSheet.create({
 		fontSize: 14,
 		fontWeight: '500'
 	},
+	activeText: {
+		color: '#2DC3A6',
+	}
 })

@@ -13,11 +13,13 @@ import NewDiary from './containers/home/NewDiary'
 import DiaryDetail from './containers/home/DiaryDetail'
 
 // profile
+import Profile from './containers/profile/Profile'
 import ProfileBadge from './containers/profile/ProfileBadge'
 import ProfileEdit from './containers/profile/ProfileEdit'
 import ProfileMatch from './containers/profile/ProfileMatch'
 import ProfileMode from './containers/profile/ProfileMode'
 import ProfileSync from './containers/profile/ProfileSync'
+import MatchResult from './containers/profile/MatchResult'
 
 import { Scene, Router, ActionConst } from 'react-native-router-flux'
 import * as scenes from './constants/scene'
@@ -98,6 +100,13 @@ export default class AppRouter extends Component {
               duration={0}
             />
             <Scene
+              key={scenes.SCENE_PROFILE}
+              component={Profile}
+              title='个人'
+              hideNavBar
+              duration={0}
+            />
+            <Scene
               key={scenes.SCENE_PROFILE_BADGE}
               component={ProfileBadge}
               title='个人徽章'
@@ -115,6 +124,13 @@ export default class AppRouter extends Component {
               key={scenes.SCENE_PROFILE_MATCH}
               component={ProfileMatch}
               title='匹配'
+              hideNavBar
+              duration={0}
+            />
+            <Scene
+              key={scenes.SCENE_MATCH_RESULT}
+              component={MatchResult}
+              title='匹配结果'
               hideNavBar
               duration={0}
             />
