@@ -30,6 +30,7 @@ export default class ProfileHeader extends Component {
       <View style={styles.container}>
 				<CommonNav
           navBarStyle={styles.navbar}
+          rightButton={this.props.rightButton}
         />
 
         <TextPingFang style={styles.text_title}>{this.props.title}</TextPingFang>

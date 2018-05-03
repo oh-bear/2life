@@ -5,7 +5,6 @@
 	};
 	objectVersion = 46;
 	objects = {
-
 /* Begin PBXBuildFile section */
 		00C302E51ABCBA2D00DB3ED1 /* libRCTActionSheet.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302AC1ABCB8CE00DB3ED1 /* libRCTActionSheet.a */; };
 		00C302E71ABCBA2D00DB3ED1 /* libRCTGeolocation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302BA1ABCB90400DB3ED1 /* libRCTGeolocation.a */; };
@@ -50,6 +49,7 @@
 		E677AB462BA94DF7888044CE /* MaterialCommunityIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = C6B2BD8D1EEF4CD3BFF8AE36 /* MaterialCommunityIcons.ttf */; };
 		F15975032708487CA067E050 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1BFF6A3CE2D24A5BA61607A3 /* SystemConfiguration.framework */; };
 		F4DB41B3C20847258E17BC9D /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F10A05898C9844D6B90702E3 /* UIKit.framework */; };
+		AB2F3D04F10F42B0B035E330 /* libRNSVG.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DFEDE23D26454B0BACF5F50B /* libRNSVG.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -445,6 +445,8 @@
 		F10A05898C9844D6B90702E3 /* UIKit.framework */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		F268BB9C26E64FF1973CC673 /* libRCTJPushModule.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRCTJPushModule.a; sourceTree = "<group>"; };
 		FE2B1BF901624642909105E4 /* libRNImagePicker.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNImagePicker.a; sourceTree = "<group>"; };
+		F8CAD2C6107F41359A851F13 /* RNSVG.xcodeproj */ = {isa = PBXFileReference; name = "RNSVG.xcodeproj"; path = "../node_modules/react-native-svg/ios/RNSVG.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
+		DFEDE23D26454B0BACF5F50B /* libRNSVG.a */ = {isa = PBXFileReference; name = "libRNSVG.a"; path = "libRNSVG.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -480,6 +482,7 @@
 				F4DB41B3C20847258E17BC9D /* UIKit.framework in Frameworks */,
 				2BCD0246C1C544B9B14036AB /* libresolv.tbd in Frameworks */,
 				C41B4BDEA3554829A748F54D /* CoreGraphics.framework in Frameworks */,
+				AB2F3D04F10F42B0B035E330 /* libRNSVG.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -680,6 +683,7 @@
 				046D6C076C264CACA77FF613 /* RNImagePicker.xcodeproj */,
 				7486839506C5443D80CA3074 /* RCTJCoreModule.xcodeproj */,
 				545E5818A6094122BF5038E6 /* RCTJPushModule.xcodeproj */,
+				F8CAD2C6107F41359A851F13 /* RNSVG.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -1353,12 +1357,14 @@
 					"$(SRCROOT)/../node_modules/react-native-image-picker/ios",
 					"$(SRCROOT)/../node_modules/jcore-react-native/ios/RCTJCoreModule",
 					"$(SRCROOT)/../node_modules/jpush-react-native/ios/RCTJPushModule",
+					"$(SRCROOT)/../node_modules/react-native-svg/ios/**",
 				);
 				"HEADER_SEARCH_PATHS[arch=*]" = "$(SRCROOT)/../node_modules/jpush-react-native/ios/RCTJPushModule";
 				INFOPLIST_FILE = twolife/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/twolife\"",
 					"\"$(SRCROOT)/twolife\"",
 					"\"$(SRCROOT)/twolife\"",
 				);
@@ -1401,12 +1407,14 @@
 					"$(SRCROOT)/../node_modules/react-native-image-picker/ios",
 					"$(SRCROOT)/../node_modules/jcore-react-native/ios/RCTJCoreModule",
 					"$(SRCROOT)/../node_modules/jpush-react-native/ios/RCTJPushModule",
+					"$(SRCROOT)/../node_modules/react-native-svg/ios/**",
 				);
 				"HEADER_SEARCH_PATHS[arch=*]" = "$(SRCROOT)/../node_modules/jpush-react-native/ios/RCTJPushModule";
 				INFOPLIST_FILE = twolife/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/twolife\"",
 					"\"$(SRCROOT)/twolife\"",
 					"\"$(SRCROOT)/twolife\"",
 				);

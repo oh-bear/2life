@@ -195,7 +195,7 @@ export default class Home extends Component {
           <Image style={styles.weather_icon} source={this.state.weather_icon}/>
           <TextPingFang style={styles.text_weather}>{this.state.weather_text}</TextPingFang>
           <TouchableOpacity  style={styles.weather_exchange} onPress={() => this.setWeather()}>
-            <Image source={require('../../../res/images/home/icon_exchange.png')}/>
+            <Image source={require('../../../res/images/common/icon_exchange.png')}/>
           </TouchableOpacity>
         </View>
       </View>

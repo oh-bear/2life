@@ -9,9 +9,13 @@ import {
 } from 'react-native'
 import { ifIphoneX } from 'react-native-iphone-x-helper'
 import { Actions } from 'react-native-router-flux'
+import ScrollableTabView from 'react-native-scrollable-tab-view'
 
 import TextPingFang from '../../components/TextPingFang'
+import Container from '../../components/Container'
 import ProfileHeader from './ProfileHeader'
+import TimeBar from './TimeBar'
+import ModeCharts from './ModeCharts'
 
 import {
 	WIDTH,
@@ -22,15 +26,56 @@ import {
 
 export default class ProfileMode extends Component {
 
+	renderRightButton() {
+		return (
+			<TouchableOpacity
+				style={styles.nav_right_btn}
+				onPress={() => console.log('right')}
+			>
+				<Image source={require('../../../res/images/common/icon_exchange.png')}/>
+			</TouchableOpacity>
+		)
+	}
+
 	render() {
 		return (
-			<View>
-				<ProfileHeader />
-			</View>
+			<Container>
+				<ScrollView>
+					<ProfileHeader
+						title='情绪图表'
+						rightButton={this.renderRightButton()}
+					/>
+
+					<ScrollableTabView
+						style={styles.tabview}
+						renderTabBar={() => <TimeBar tabNames={['一周','一年','一月','全部']}/>}
+					>
+						<ModeCharts
+							modeData={[50, 10, 40, 95, -4, -24, 85, 91, 35, 53]}
+							timeRange={['日','一','二','三','四','五','六',]}
+						/>
+						<ModeCharts
+							modeData={[50, 10, 40, 95, -4, -24, 85, 91, 35, 53]}
+							timeRange={['日','一','二','三','四','五','六',]}
+						/>
+						<ModeCharts
+							modeData={[50, 10, 40, 95, -4, -24, 85, 91, 35, 53]}
+							timeRange={['日','一','二','三','四','五','六',]}
+						/>
+						<ModeCharts
+							modeData={[50, 10, 40, 95, -4, -24, 85, 91, 35, 53]}
+							timeRange={['日','一','二','三','四','五','六',]}
+						/>
+					</ScrollableTabView>
+				</ScrollView>
+			</Container>
 		)
 	}
 }
 
 const styles = StyleSheet.create({
-
+	tabview: {
+		marginLeft: getResponsiveWidth(24),
+		marginRight: getResponsiveWidth(24),
+	}
 })
