@@ -6,6 +6,7 @@ import {
   FlatList,
   DeviceEventEmitter,
 } from 'react-native'
+import { ifIphoneX } from 'react-native-iphone-x-helper'
 
 import {
   WIDTH,
@@ -58,26 +59,52 @@ export default class Notification extends Component {
     )
   }
 
+  _renderEmpty() {
+    return (
+      <TextPingFang style={styles.text_empty}>哎呀这里怎么空空如也</TextPingFang>
+    )
+  }
+
   render() {
     return (
-      <Container>
-        <TextPingFang>通知</TextPingFang>
-        <FlatList
-          style={styles.notification_container}
-          data={this.state.notificationList}
-          extraData={this.state}
-          renderItem={this._renderItem}
-        />
+      <Container hidePadding={true}>
+        <View>
+          <TextPingFang style={styles.title}>通知</TextPingFang>
+          <FlatList
+            style={styles.notification_container}
+            data={this.state.notificationList}
+            extraData={this.state}
+            renderItem={this._renderItem}
+            ListEmptyComponent={this._renderEmpty}
+          />
+        </View>
       </Container>
     )
   }
 }
 
 const styles = StyleSheet.create({
+  title: {
+    width: WIDTH,
+    paddingLeft: getResponsiveWidth(72),
+    ...ifIphoneX({
+      paddingTop: getResponsiveWidth(28),
+    }, {
+      paddingTop: getResponsiveWidth(52),
+    }),
+    color: '#444',
+    fontSize: 34,
+    fontWeight: '500',
+  },
   notification_container: {
     width: WIDTH,
     paddingLeft: getResponsiveWidth(24),
     paddingRight: getResponsiveWidth(24),
     backgroundColor: '#fff',
   },
+  text_empty: {
+    paddingLeft: getResponsiveWidth(48),
+    color: '#aaa',
+    fontSize: 16
+  }
 })

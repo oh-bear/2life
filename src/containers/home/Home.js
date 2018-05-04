@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import {
-	View,
 	StyleSheet,
   Text,
   TouchableOpacity,
@@ -9,6 +8,7 @@ import {
   FlatList,
   Alert
 } from 'react-native'
+import { View } from 'react-native-animatable'
 import { CalendarList, Calendar } from '../../components/react-native-calendars/src'
 import { Actions } from 'react-native-router-flux'
 import { connect } from 'react-redux'
@@ -43,6 +43,7 @@ const URL_list = NOTES.list
 function mapStateToProps(state) {
   return {
     user: state.user,
+    partner: state.partner
   }
 }
 
@@ -58,11 +59,17 @@ export default class Home extends Component {
     weather_icon: require('../../../res/images/home/icon_sunny.png'),
     diaryList: [],
     filterDiaryList: [],
-    markedDates: {}
+    markedDates: {},
+    showDayTip: false,
+    showWeatherTip: false,
+    showWeatherFlag: false,
+    showMyWeather: true
   }
 
   async componentDidMount () {
+    this._showTips()
     this._getWeather()
+
     const res = await HttpUtils.get(URL_list)
     if (res.code === 0) {
       const { partner, recommend, user } = res.data
@@ -104,6 +111,17 @@ export default class Home extends Component {
         filterDiaryList: diaryList
       })
     }
+  }
+
+  async _showTips() {
+    const firstUse = await Storage.get('firstUse', true)
+    if (firstUse) {
+      this.setState({
+        showDayTip: true,
+        showWeatherTip: false
+      })
+    }
+    Storage.set('firstUse', false)
   }
 
   async _getWeather () {
@@ -171,6 +189,30 @@ export default class Home extends Component {
     }
   }
 
+  setWeather() {
+    this.setState({showWeatherTip: false})
+
+    // if (!this.props.partner.id) return Alert.alert('', '你还没有匹配的对象哦')
+
+    // todo: 切换天气
+    if (this.state.showMyWeather) {
+      // 切换到对方的天气
+      this.setState({
+        weather_text: '对方的天气',
+        weather_icon: require('../../../res/images/home/icon_cloud.png'),
+        showMyWeather: false
+      })
+    } else {
+      // 切换到自己的天气
+      this.setState({
+        weather_text: '我的天气',
+        weather_icon: require('../../../res/images/home/icon_sunny.png'),
+        showMyWeather: true
+      })
+    }
+
+  }
+
   _renderItem ({item}) {
     return (
       <Diary
@@ -183,21 +225,6 @@ export default class Home extends Component {
     return (
       <View style={styles.none_container}>
         <TextPingFang style={styles.text_none}>空空如也，{'\n'}来写一篇日记吧～</TextPingFang>
-      </View>
-    )
-  }
-
-  _listHeader () {
-    
-    return (
-      <View style={styles.weather}>
-        <View style={styles.weather_inner}>
-          <Image style={styles.weather_icon} source={this.state.weather_icon}/>
-          <TextPingFang style={styles.text_weather}>{this.state.weather_text}</TextPingFang>
-          <TouchableOpacity  style={styles.weather_exchange} onPress={() => this.setWeather()}>
-            <Image source={require('../../../res/images/common/icon_exchange.png')}/>
-          </TouchableOpacity>
-        </View>
       </View>
     )
   }
@@ -222,9 +249,28 @@ export default class Home extends Component {
             <TextPingFang style={styles.text_year}>{this.state.year}</TextPingFang>
             {this.tri()}
           </TouchableOpacity>
-          <ImageBackground style={styles.header_right} source={require('../../../res/images/home/icon_calendar.png')}>
-            <TextPingFang style={styles.text_day}>{this.state.day}</TextPingFang>
-          </ImageBackground>
+
+          <TouchableOpacity
+            style={styles.header_right_container}
+            onPress={() => this.setState({
+              filterDiaryList: this.state.diaryList,
+              showDayTip: false,
+              showWeatherTip: this.state.showWeatherFlag ? false : true,
+              showWeatherFlag: true
+            })}
+          >
+            <ImageBackground style={styles.header_right} source={require('../../../res/images/home/icon_calendar.png')}>
+              <TextPingFang style={styles.text_day}>{this.state.day}</TextPingFang>
+            </ImageBackground>
+          </TouchableOpacity>
+
+          <View
+            style={[styles.tip_container, {display: this.state.showDayTip ? 'flex' : 'none'}]}
+            animation='bounceIn'
+          >
+            <TextPingFang style={styles.text_tip}>点击这里回到当天日期哦</TextPingFang>
+            <View style={styles.triangle}></View>
+          </View>
         </View>
 
         <CalendarList
@@ -241,6 +287,30 @@ export default class Home extends Component {
           markedDates={this.state.markedDates}
           markingType={'multi-dot'}
         />
+
+        <View style={styles.weather}>
+          <View style={styles.weather_inner}>
+            <TouchableOpacity
+              style={styles.inner_left}
+              // onPress={}
+            >
+              <Image style={styles.weather_icon} source={this.state.weather_icon}/>
+              <TextPingFang style={[styles.text_weather, {color: this.state.showMyWeather ? '#aaa' : '#000'}]}>{this.state.weather_text}</TextPingFang>
+            </TouchableOpacity>
+
+            <TouchableOpacity  style={styles.weather_exchange} onPress={() => this.setWeather()}>
+              <Image source={require('../../../res/images/common/icon_exchange.png')}/>
+            </TouchableOpacity>
+          </View>
+
+          <View
+            style={[styles.tip_container, {display: this.state.showWeatherTip ? 'flex' : 'none'}]}
+            animation='bounceIn'
+          >
+            <TextPingFang style={styles.text_tip}>点击这里可以看到对方天气哦</TextPingFang>
+            <View style={styles.triangle}></View>
+          </View>
+        </View>
         
         <FlatList
           style={styles.diary_container}
@@ -248,7 +318,6 @@ export default class Home extends Component {
           extraData={this.state}
           renderItem={this._renderItem}
           ListEmptyComponent={() => this._emptyDiary()}
-          ListHeaderComponent={() => this._listHeader()}
           ListFooterComponent={() => this._listFooter()}
         />
 
@@ -288,18 +357,49 @@ const styles = StyleSheet.create({
   img_tri: {
     marginLeft: getResponsiveWidth(6)
   },
-  header_right: {
+  header_right_container: {
     position: 'absolute',
-    width: 25,
-    height: 25,
     right: getResponsiveWidth(20),
-    bottom: getResponsiveWidth(10)
+    bottom: getResponsiveWidth(10),
+  },
+  header_right: {
+    width: getResponsiveWidth(25),
+    height: getResponsiveWidth(25)
   },
   text_day: {
     textAlign: 'center',
     paddingTop: getResponsiveWidth(9),
     color: '#444',
     fontSize: 10,
+  },
+  tip_container: {
+    width: getResponsiveWidth(164),
+    height: getResponsiveWidth(37),
+    position: 'absolute',
+    right: getResponsiveWidth(8),
+    bottom: getResponsiveWidth(-35),
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#2DC3A6',
+    borderRadius: getResponsiveWidth(8),
+    zIndex: 10
+  },
+  triangle: {
+    position: 'absolute',
+    top: getResponsiveWidth(-16),
+    right: getResponsiveWidth(16),
+    borderBottomWidth: 8,
+    borderBottomColor: '#2DC3A6',
+    borderTopWidth: 8,
+    borderTopColor: 'transparent',
+    borderRightWidth: 8,
+    borderRightColor: 'transparent',
+    borderLeftWidth: 8,
+    borderLeftColor: 'transparent',
+  },
+  text_tip: {
+    color: '#fff',
+    fontSize: 12
   },
   calendar: {
     width: WIDTH,
@@ -310,14 +410,22 @@ const styles = StyleSheet.create({
       if (HEIGHT === 812) return 350  //iphone X
     })()
   },
-  // weather: {
-  // },
+  weather: {
+    width: WIDTH,
+    paddingLeft: getResponsiveWidth(24),
+    paddingRight: getResponsiveWidth(24),
+    zIndex: -10
+  },
   weather_inner: {
     height: getResponsiveHeight(60),
     flexDirection: 'row',
     alignItems: 'center',
     borderBottomWidth: getResponsiveWidth(1),
     borderBottomColor: '#f1f1f1',
+  },
+  inner_left: {
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   // weather_icon: {
   // },
@@ -328,7 +436,7 @@ const styles = StyleSheet.create({
   },
   weather_exchange: {
     position: 'absolute',
-    right: 0
+    right: 0,
   },
   diary_container: {
     height: (() => {
@@ -340,12 +448,14 @@ const styles = StyleSheet.create({
     width: WIDTH,
     paddingLeft: getResponsiveWidth(24),
     paddingRight: getResponsiveWidth(24),
-    backgroundColor: '#fff',
+    backgroundColor: 'transparent',
+    zIndex: -10
   },
   none_container: {
     alignItems: 'center',
     paddingTop: getResponsiveHeight(150),
-    backgroundColor: '#fff'
+    backgroundColor: 'transparent',
+    zIndex: -10
   },
   text_none: {
     color: '#aaa',
@@ -355,7 +465,8 @@ const styles = StyleSheet.create({
   list_footer: {
     width: WIDTH,
     height: getResponsiveHeight(50),
-    backgroundColor: '#fff'
+    backgroundColor: '#fff',
+    zIndex: -10
   },
   new_diary: {
     position: 'absolute',

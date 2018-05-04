@@ -27,12 +27,12 @@ export default class Popup extends Component {
 		showPopup: PropTypes.bool.isRequired,
 		popupBgColor: PropTypes.string.isRequired,
 		icon: PropTypes.number,
-		title: PropTypes.string.isRequired,
+		title: PropTypes.string,
 		content: PropTypes.string.isRequired,
 		onPressLeft: PropTypes.func,
 		onPressRight: PropTypes.func,
-		textBtnLeft: PropTypes.string.isRequired,
-		textBtnRight: PropTypes.string.isRequired,
+		textBtnLeft: PropTypes.string,
+		textBtnRight: PropTypes.string,
 	}
 
 	render() {

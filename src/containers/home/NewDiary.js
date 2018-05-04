@@ -13,9 +13,11 @@ import {
 } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { connect } from 'react-redux'
+import { Actions } from 'react-native-router-flux'
 
 import Container from '../../components/Container'
 import TextPingFang from '../../components/TextPingFang'
+import Popup from '../../components/Popup'
 import DiaryBanner from './DiaryBanner'
 
 import {
@@ -32,9 +34,9 @@ import { NOTES } from '../../network/Urls'
 const URL_publish = NOTES.publish
 
 function mapStateToProps(state) {
-  return {
-    user: state.user,
-  }
+	return {
+		user: state.user,
+	}
 }
 
 @connect(mapStateToProps)
@@ -46,12 +48,14 @@ export default class NewDiary extends Component {
 		content: '',
 		latitude: 0,
 		longitude: 0,
+		location: '',
 		showKeyboard: false,
 		base64List: [],
-		keyboardHeight: 0
+		keyboardHeight: 0,
+		showPopup: false
 	}
 
-	componentDidMount () {
+	componentDidMount() {
 		Keyboard.addListener('keyboardDidShow', (e) => {
 			this.setState({
 				showKeyboard: true,
@@ -64,24 +68,30 @@ export default class NewDiary extends Component {
 				keyboardHeight: 0
 			})
 		})
-		this.getLocation()
+		this._getLocation()
 	}
 
-	getLocation () {
-		navigator.geolocation.getCurrentPosition(res => {
+	_getLocation() {
+		navigator.geolocation.getCurrentPosition(async res => {
 			const latitude = res.coords.latitude
 			const longitude = res.coords.longitude
-			this.setState({latitude, longitude})
-		}, err => {
-			Alert.alert('', '无法获取地理位置')
+			const location = await getLocation(longitude, latitude)
+			if (location.city instanceof Array) {
+				// 无法获取具体位置
+				this.setState({location: '地球的某个角落'})
+			} else {
+				this.setState({ location: `${location.city}，${location.province}，${location.country}` })
+			}
+			this.setState({ latitude, longitude })
 		})
 	}
 
-	async saveDiary () {
+	async saveDiary() {
 		Keyboard.dismiss()
 
-		const { title, content, latitude, longitude } = this.state
+		const { title, content, latitude, longitude, location } = this.state
 
+		if (!title && !content) return Actions.pop()
 		if (!title) return Alert.alert('', '给日记起个标题吧')
 		if (!content) return Alert.alert('', '日记内容不能为空哦')
 
@@ -90,21 +100,21 @@ export default class NewDiary extends Component {
 			user_id: this.props.user.id
 		})
 
-		const data = { title, content, images, latitude, longitude }
+		const data = { title, content, images, latitude, longitude, location }
 		const res = await HttpUtils.post(URL_publish, data)
 		if (res.code === 0) {
-			Alert.alert('', '日记保存成功')
+			this.setState({showPopup: true})
 		}
 	}
 
-	getBase64List (base64List) {
-		this.setState({base64List})
+	getBase64List(base64List) {
+		this.setState({ base64List })
 	}
 
-  render() {
-    return (
-      <Container hidePadding={true}>
-        
+	render() {
+		return (
+			<Container hidePadding={true}>
+
 				<KeyboardAwareScrollView
 					contentContainerStyle={styles.scroll_style}
 					extraScrollHeight={0}
@@ -115,6 +125,7 @@ export default class NewDiary extends Component {
 						showNav={true}
 						showBottomBar={true}
 						getBase64List={this.getBase64List.bind(this)}
+						onPressBack={() => this.saveDiary()}
 					/>
 
 					<View style={styles.date_container}>
@@ -123,10 +134,10 @@ export default class NewDiary extends Component {
 						<TextPingFang style={styles.text_date}>{this.state.date.getFullYear()}</TextPingFang>
 					</View>
 
-					
+
 					<TextInput
 						style={styles.text_title}
-						onChangeText={title => this.setState({title})}
+						onChangeText={title => this.setState({ title })}
 						placeholder='标题'
 						placeholderTextColor='#aaa'
 					/>
@@ -135,28 +146,40 @@ export default class NewDiary extends Component {
 
 					<TextInput
 						style={styles.text_content}
-						onChangeText={content => this.setState({content})}
+						onChangeText={content => this.setState({ content })}
 						placeholder='请输入正文'
 						placeholderTextColor='#aaa'
 						multiline
 					/>
 
-					<TouchableOpacity
+					{/* <TouchableOpacity
 						// style={[styles.hide_keyboard, {display: this.state.showKeyboard ? 'flex' : 'none'}]}
 						style={[styles.hide_keyboard]}
 						onPress={() => this.saveDiary()}
 					>
 						<TextPingFang style={styles.text_hide}>保存</TextPingFang>
-					</TouchableOpacity>
-					
+					</TouchableOpacity> */}
+
 				</KeyboardAwareScrollView>
-      </Container> 
-    )
-  }
+
+				<Popup
+					showPopup={this.state.showPopup}
+					popupBgColor='#2DC3A6'
+					icon={require('../../../res/images/home/icon_save.png')}
+					content='你的日记已经自动保存并同步，放心退出吧'
+					onPressLeft={() => {
+						this.setState({showPopup: false})
+						Actions.pop()
+					}}
+					textBtnLeft='我明白了'
+				/>
+			</Container>
+		)
+	}
 }
 
 const styles = StyleSheet.create({
-  date_container: {
+	date_container: {
 		width: WIDTH,
 		flexDirection: 'row',
 		paddingLeft: getResponsiveWidth(24),
