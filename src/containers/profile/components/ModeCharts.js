@@ -13,14 +13,14 @@ import PropTypes from 'prop-types'
 import { LineChart, Grid} from 'react-native-svg-charts'
 import * as shape from 'd3-shape'
 
-import TextPingFang from '../../components/TextPingFang'
+import TextPingFang from '../../../components/TextPingFang'
 
 import {
 	WIDTH,
 	HEIGHT,
 	getResponsiveWidth,
 	getResponsiveHeight
-} from '../../common/styles'
+} from '../../../common/styles'
 
 export default class ModeCharts extends Component {
 	static propTypes = {

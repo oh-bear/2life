@@ -12,16 +12,14 @@ import { Actions } from 'react-native-router-flux'
 import ScrollableTabView from 'react-native-scrollable-tab-view'
 import PropTypes from 'prop-types'
 
-import TextPingFang from '../../components/TextPingFang'
-import Container from '../../components/Container'
-import ProfileHeader from './ProfileHeader'
+import TextPingFang from '../../../components/TextPingFang'
 
 import {
 	WIDTH,
 	HEIGHT,
 	getResponsiveWidth,
 	getResponsiveHeight
-} from '../../common/styles'
+} from '../../../common/styles'
 
 export default class TabBar extends Component {
 	static propTypes = {

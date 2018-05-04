@@ -13,9 +13,9 @@ import ScrollableTabView from 'react-native-scrollable-tab-view'
 
 import TextPingFang from '../../components/TextPingFang'
 import Container from '../../components/Container'
-import ProfileHeader from './ProfileHeader'
-import TabBar from './TabBar'
-import ModeCharts from './ModeCharts'
+import ProfileHeader from './components/ProfileHeader'
+import TabBar from './components/TabBar'
+import ModeCharts from './components/ModeCharts'
 
 import {
 	WIDTH,

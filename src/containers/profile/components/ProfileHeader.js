@@ -10,15 +10,15 @@ import {
 import { ifIphoneX } from 'react-native-iphone-x-helper'
 import { Actions } from 'react-native-router-flux'
 
-import TextPingFang from '../../components/TextPingFang'
-import CommonNav from '../../components/CommonNav'
+import TextPingFang from '../../../components/TextPingFang'
+import CommonNav from '../../../components/CommonNav'
 
 import {
 	WIDTH,
 	HEIGHT,
 	getResponsiveWidth,
 	getResponsiveHeight
-} from '../../common/styles'
+} from '../../../common/styles'
 
 export default class ProfileHeader extends Component {
 

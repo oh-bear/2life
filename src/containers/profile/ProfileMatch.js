@@ -15,8 +15,9 @@ import ScrollableTabView from 'react-native-scrollable-tab-view'
 
 import TextPingFang from '../../components/TextPingFang'
 import Container from '../../components/Container'
-import ProfileHeader from './ProfileHeader'
-import TabBar from './TabBar'
+import ProfileHeader from './components/ProfileHeader'
+import TabBar from './components/TabBar'
+import MatchTips from './components/MatchTips'
 
 import {
 	WIDTH,
@@ -33,7 +34,8 @@ export default class ProfileMatch extends Component {
 		matchGender: 0,
 		beMatched: true,
 		character: '互补',
-		matchUserId: null
+		matchUserId: null,
+		showPopup: true
 	}
 
 	componentDidMount() {
@@ -145,7 +147,30 @@ export default class ProfileMatch extends Component {
 					>
 						<TextPingFang style={styles.text_start_btn}>开始匹配</TextPingFang>
 					</TouchableOpacity>
+
 				</ScrollView>
+
+				<MatchTips
+					showPopup={this.state.showPopup}
+					onClose={() => this.setState({showPopup: false})}
+					tips={[
+						{
+							bg: require('../../../res/images/profile/bg_match_tips_1.png'),
+							title: '每个月只有 3 次宝贵的匹配机会',
+							sTitle: '',
+						},
+						{
+							bg: require('../../../res/images/profile/bg_match_tips_2.png'),
+							title: '解除匹配关系将失去所有互动信息',
+							sTitle: '并且无法再次匹配到 ta',
+						},
+						{
+							bg: require('../../../res/images/profile/bg_match_tips_3.png'),
+							title: '多写日记更容易匹配成功哦',
+							sTitle: '至少要写 1 篇日记才能匹配',
+						}
+					]}
+				/>
 			</Container>
 		)
 	}

@@ -21,7 +21,11 @@ import {
 	getResponsiveHeight
 } from '../../common/styles'
 import {
-  SCENE_PROFILE_EDIT, SCENE_PROFILE_MODE, SCENE_PROFILE_BADGE, SCENE_PROFILE_MATCH, SCENE_PROFILE_SYNC
+  SCENE_PROFILE_EDIT,
+  SCENE_PROFILE_MODE,
+  SCENE_PROFILE_BADGE,
+  SCENE_PROFILE_MATCH,
+  SCENE_PROFILE_SYNC
 } from '../../constants/scene'
 
 function mapStateToProps(state) {

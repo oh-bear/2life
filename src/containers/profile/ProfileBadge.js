@@ -13,7 +13,7 @@ import { Actions } from 'react-native-router-flux'
 
 import TextPingFang from '../../components/TextPingFang'
 import Container from '../../components/Container'
-import ProfileHeader from './ProfileHeader'
+import ProfileHeader from './components/ProfileHeader'
 
 import {
 	WIDTH,

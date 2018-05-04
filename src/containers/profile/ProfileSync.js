@@ -13,7 +13,8 @@ import { Actions } from 'react-native-router-flux'
 
 import TextPingFang from '../../components/TextPingFang'
 import Container from '../../components/Container'
-import ProfileHeader from './ProfileHeader'
+import Popup from '../../components/Popup'
+import ProfileHeader from './components/ProfileHeader'
 import Storage from '../../common/storage'
 
 import {
@@ -26,7 +27,8 @@ import {
 export default class ProfileSync extends Component {
 
 	state = {
-		isSync: true
+		isSync: true,
+		showPopup: false
 	}
 
 	async componentDidMount() {
@@ -37,7 +39,18 @@ export default class ProfileSync extends Component {
 	componentWillUnmount() {
 		Storage.set('isSync', this.state.isSync)
 	}
+
+	SyncChange(isSync) {
+		if(!isSync) return this.setState({showPopup: true})
+		this.setState({isSync: true})
+	}
 	
+	closeSync() {
+		this.setState({
+			isSync: false,
+			showPopup: false
+		})
+	}
 
 	render() {
 		return (
@@ -50,7 +63,7 @@ export default class ProfileSync extends Component {
 							<TextPingFang style={styles.text_left}>同步</TextPingFang>
 							<Switch
 								value={this.state.isSync}
-								onValueChange={isSync => this.setState({isSync})}
+								onValueChange={isSync => this.SyncChange(isSync)}
 								onTintColor='#2DC3A6'
 							/>
 						</View>
@@ -69,6 +82,17 @@ export default class ProfileSync extends Component {
 					</View>
 
 				</ScrollView>
+				<Popup
+					showPopup={this.state.showPopup}
+					popupBgColor='#ff5757'
+					icon={require('../../../res/images/profile/icon_warning.png')}
+					title='注意'
+					content='关闭同步功能将不能匹配对象，已经匹配对象的将会被解除关系!'
+					onPressLeft={() => this.setState({showPopup: false})}
+					onPressRight={() => this.closeSync()}
+					textBtnLeft='不关闭'
+					textBtnRight='确定关闭'
+				/>
 			</Container>
 		)
 	}

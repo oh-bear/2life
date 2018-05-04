@@ -15,7 +15,7 @@ import ImagePicker from 'react-native-image-picker'
 
 import TextPingFang from '../../components/TextPingFang'
 import Container from '../../components/Container'
-import ProfileHeader from './ProfileHeader'
+import ProfileHeader from './components/ProfileHeader'
 
 import store from '../../redux/store'
 import { fetchProfileSuccess } from '../../redux/modules/user'
