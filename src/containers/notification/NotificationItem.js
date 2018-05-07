@@ -8,8 +8,6 @@ import {
 import PropTypes from 'prop-types'
 
 import {
-  WIDTH,
-  HEIGHT,
   getResponsiveWidth,
   getResponsiveHeight
 } from '../../common/styles'

@@ -7,7 +7,7 @@ import {
 } from 'react-native'
 
 import dismissKeyboard from 'dismissKeyboard'
-import { View, Text } from 'react-native-animatable'
+import { View } from 'react-native-animatable'
 import { Actions } from 'react-native-router-flux'
 
 import TextPingFang from '../../components/TextPingFang'
@@ -28,20 +28,20 @@ export default class Nickname extends Component {
     showNameTip: false
   }
 
-  async setNickname () {
+  async setNickname() {
     if (this.state.nickname) {
-      this.setState({showNameTip: false})
+      this.setState({ showNameTip: false })
     } else {
-      return this.setState({showNameTip: true})
+      return this.setState({ showNameTip: true })
     }
-    Actions.reset(SCENE_LOGIN_GENDER, {user: Object.assign(this.props.user, {name: this.state.nickname})})
+    Actions.reset(SCENE_LOGIN_GENDER, { user: Object.assign(this.props.user, { name: this.state.nickname }) })
   }
 
   render() {
     return (
       <TouchableWithoutFeedback onPress={dismissKeyboard}>
         <View style={styles.container} animation='fadeIn'>
-					<Banner
+          <Banner
             bg={require('../../../res/images/login/bg_nickname.png')}
             title={['注册成功', '取个好听的昵称吧']}
             showNavLeft={false}
@@ -51,13 +51,13 @@ export default class Nickname extends Component {
           <View style={styles.inputs_container}>
             <TextInput
               style={styles.input}
-              onChangeText={nickname => this.setState({nickname})}
+              onChangeText={nickname => this.setState({ nickname })}
               value={this.state.nickname}
               clearButtonMode='while-editing'
               placeholder='输入昵称'
               placeholderTextColor='#aaa'
             />
-            <TextPingFang style={[styles.text_tip, {color: this.state.showNameTip ? '#F43C56' : 'transparent'}]}>昵称不能为空</TextPingFang>
+            <TextPingFang style={[styles.text_tip, { color: this.state.showNameTip ? '#F43C56' : 'transparent' }]}>昵称不能为空</TextPingFang>
             <TouchableOpacity
               style={styles.btn_container}
               onPress={() => this.setNickname()}

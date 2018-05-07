@@ -1,8 +1,7 @@
 import React, { Component } from 'react'
 import {
-	View,
-	StyleSheet,
-  Text,
+  View,
+  StyleSheet,
   ScrollView,
   TouchableOpacity,
   Image
@@ -15,11 +14,11 @@ import Container from '../../components/Container'
 import TextPingFang from '../../components/TextPingFang'
 
 import {
-	WIDTH,
-	HEIGHT,
-	getResponsiveWidth,
-	getResponsiveHeight
+  WIDTH,
+  HEIGHT,
+  getResponsiveWidth,
 } from '../../common/styles'
+
 import {
   SCENE_PROFILE_EDIT,
   SCENE_PROFILE_MODE,
@@ -38,7 +37,7 @@ function mapStateToProps(state) {
 @connect(mapStateToProps)
 export default class Profile extends Component {
 
-  renderPartner () {
+  renderPartner() {
     if (!this.props.partner.id) return
     return (
       <View>
@@ -56,13 +55,17 @@ export default class Profile extends Component {
             </View>
           </View>
           <View style={styles.head_right}>
-            <Image style={styles.img_head} source={{uri: this.props.user.face}}/>
+            <Image style={styles.img_head} source={{ uri: this.props.user.face }}/>
             {
               (() => {
                 if (this.props.user.sex === 0) {
-                  return <Image style={styles.img_gender} source={require('../../../res/images/profile/icon_male.png')}/>
+                  return <Image
+                    style={styles.img_gender}
+                    source={require('../../../res/images/profile/icon_male.png')}/>
                 } else {
-                  return <Image style={styles.img_gender} source={require('../../../res/images/profile/icon_female.png')}/>
+                  return <Image
+                    style={styles.img_gender}
+                    source={require('../../../res/images/profile/icon_female.png')}/>
                 }
               })()
             }
@@ -93,7 +96,8 @@ export default class Profile extends Component {
               }
             })()
           }
-          <TextPingFang style={styles.text_row_left}>{this.props.user.total_notes ? this.props.user.total_notes : 0}</TextPingFang>
+          <TextPingFang
+            style={styles.text_row_left}>{this.props.user.total_notes ? this.props.user.total_notes : 0}</TextPingFang>
           <TextPingFang style={styles.text_row_desc}>日记数量</TextPingFang>
         </TouchableOpacity>
       </View>
@@ -103,14 +107,14 @@ export default class Profile extends Component {
   render() {
     return (
       <Container hidePadding={true}>
-        <ScrollView contentContainerStyle={{height: this.props.partner.id ? HEIGHT * 1.1 : HEIGHT}}>
+        <ScrollView contentContainerStyle={{ height: this.props.partner.id ? HEIGHT * 1.1 : HEIGHT }}>
           <TextPingFang style={styles.title}>关于我</TextPingFang>
 
           <View style={styles.profile_container}>
             <TouchableOpacity
               style={styles.head_container}
               activeOpacity={1}
-              onPress={() => Actions.jump(SCENE_PROFILE_EDIT, {user: this.props.user})}
+              onPress={() => Actions.jump(SCENE_PROFILE_EDIT, { user: this.props.user })}
             >
               <View style={styles.head_left}>
                 <View style={styles.head_left_top}>
@@ -121,13 +125,17 @@ export default class Profile extends Component {
                 </View>
               </View>
               <View style={styles.head_right}>
-                <Image style={styles.img_head} source={{uri: this.props.user.face}}/>
+                <Image style={styles.img_head} source={{ uri: this.props.user.face }}/>
                 {
                   (() => {
                     if (this.props.user.sex === 0) {
-                      return <Image style={styles.img_gender} source={require('../../../res/images/profile/icon_male.png')}/>
+                      return <Image
+                        style={styles.img_gender}
+                        source={require('../../../res/images/profile/icon_male.png')}/>
                     } else {
-                      return <Image style={styles.img_gender} source={require('../../../res/images/profile/icon_female.png')}/>
+                      return <Image
+                        style={styles.img_gender}
+                        source={require('../../../res/images/profile/icon_female.png')}/>
                     }
                   })()
                 }
@@ -147,7 +155,8 @@ export default class Profile extends Component {
                   }
                 })()
               }
-              <TextPingFang style={styles.text_row_left}>{this.props.user.mode ? this.props.user.mode : '暂无'}</TextPingFang>
+              <TextPingFang
+                style={styles.text_row_left}>{this.props.user.mode ? this.props.user.mode : '暂无'}</TextPingFang>
               <TextPingFang style={styles.text_row_desc}>平均情绪值</TextPingFang>
               <Image style={styles.row_indicator} source={require('../../../res/images/common/icon_indicator.png')}/>
             </TouchableOpacity>
@@ -164,7 +173,8 @@ export default class Profile extends Component {
                   }
                 })()
               }
-              <TextPingFang style={styles.text_row_left}>{this.props.user.total_notes ? this.props.user.total_notes : 0}</TextPingFang>
+              <TextPingFang
+                style={styles.text_row_left}>{this.props.user.total_notes ? this.props.user.total_notes : 0}</TextPingFang>
               <TextPingFang style={styles.text_row_desc}>日记数量</TextPingFang>
             </TouchableOpacity>
 
@@ -181,7 +191,8 @@ export default class Profile extends Component {
                   }
                 })()
               }
-              <TextPingFang style={styles.text_row_left}>{this.props.user.mode ? this.props.user.mode : '暂无'}</TextPingFang>
+              <TextPingFang
+                style={styles.text_row_left}>{this.props.user.mode ? this.props.user.mode : '暂无'}</TextPingFang>
               <TextPingFang style={styles.text_row_desc}>我的徽章</TextPingFang>
               <Image style={styles.row_indicator} source={require('../../../res/images/common/icon_indicator.png')}/>
             </TouchableOpacity>
@@ -190,7 +201,7 @@ export default class Profile extends Component {
 
             <TouchableOpacity
               style={styles.row_match}
-              onPress={() => Actions.jump(SCENE_PROFILE_MATCH, {user: this.props.user})}
+              onPress={() => Actions.jump(SCENE_PROFILE_MATCH, { user: this.props.user })}
             >
               <View style={styles.row_match_top}>
                 <Image source={require('../../../res/images/profile/icon_match.png')}/>
@@ -247,8 +258,7 @@ const styles = StyleSheet.create({
   head_left: {
     paddingLeft: getResponsiveWidth(24),
   },
-  head_left_top: {
-  },
+  head_left_top: {},
   text_name: {
     color: '#444',
     fontSize: 24,

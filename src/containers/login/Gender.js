@@ -5,14 +5,13 @@ import {
   Image
 } from 'react-native'
 
-import { View, Text } from 'react-native-animatable'
+import { View } from 'react-native-animatable'
 import { Actions } from 'react-native-router-flux'
 
 import TextPingFang from '../../components/TextPingFang'
 import Banner from './Banner'
 import store from '../../redux/store'
 import { fetchProfileSuccess } from '../../redux/modules/user'
-import { fetchPartnerSuccess } from '../../redux/modules/partner'
 
 import {
   HEIGHT,
@@ -36,7 +35,7 @@ export default class Gender extends Component {
     gender: 0
   }
 
-  async onSubmit () {
+  async onSubmit() {
     const data = {
       sex: this.state.gender,
       name: this.props.user.name,
@@ -45,7 +44,7 @@ export default class Gender extends Component {
     const res = await HttpUtils.post(URL_update, data)
 
     if (res.code === 0) {
-      const res = await HttpUtils.get(URL_user, {user_id: this.props.user.id})
+      const res = await HttpUtils.get(URL_user, { user_id: this.props.user.id })
 
       if (res.code === 0) {
 
@@ -54,7 +53,7 @@ export default class Gender extends Component {
         })
 
         store.dispatch(fetchProfileSuccess(res.data))
-        Actions.reset(SCENE_INDEX, {user: res.data})
+        Actions.reset(SCENE_INDEX, { user: res.data })
       }
     }
   }
@@ -70,20 +69,22 @@ export default class Gender extends Component {
         />
 
         <View style={styles.inputs_container}>
-          <TouchableOpacity onPress={() => this.setState({gender: 0})}>
+          <TouchableOpacity onPress={() => this.setState({ gender: 0 })}>
             <View style={styles.gender_item}>
-              <TextPingFang style={[styles.text_gender, {color: this.state.gender ? '#aaa' : '#2DC3A6'}]}>男</TextPingFang>
+              <TextPingFang
+                style={[styles.text_gender, { color: this.state.gender ? '#aaa' : '#2DC3A6' }]}>男</TextPingFang>
               <Image
-                style={{display: this.state.gender ? 'none' : 'flex'}}
+                style={{ display: this.state.gender ? 'none' : 'flex' }}
                 source={require('../../../res/images/login/icon_checked.png')}
               />
             </View>
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => this.setState({gender: 1})}>
+          <TouchableOpacity onPress={() => this.setState({ gender: 1 })}>
             <View style={styles.gender_item}>
-              <TextPingFang style={[styles.text_gender, {color: this.state.gender ? '#2DC3A6' : '#aaa'}]}>女</TextPingFang>
+              <TextPingFang
+                style={[styles.text_gender, { color: this.state.gender ? '#2DC3A6' : '#aaa' }]}>女</TextPingFang>
               <Image
-                style={{display: this.state.gender ? 'flex' : 'none'}}
+                style={{ display: this.state.gender ? 'flex' : 'none' }}
                 source={require('../../../res/images/login/icon_checked.png')}
               />
             </View>

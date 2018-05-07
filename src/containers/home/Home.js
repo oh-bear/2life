@@ -1,15 +1,13 @@
 import React, { Component } from 'react'
 import {
-	StyleSheet,
-  Text,
+  StyleSheet,
   TouchableOpacity,
   ImageBackground,
   Image,
   FlatList,
-  Alert
 } from 'react-native'
 import { View } from 'react-native-animatable'
-import { CalendarList, Calendar } from '../../components/react-native-calendars/src'
+import { CalendarList } from '../../components/react-native-calendars/src'
 import { Actions } from 'react-native-router-flux'
 import { connect } from 'react-redux'
 
@@ -19,20 +17,20 @@ import Diary from './Diary'
 
 import Storage from '../../common/storage'
 import {
-	WIDTH,
-	HEIGHT,
-	getResponsiveWidth,
-	getResponsiveHeight
+  WIDTH,
+  HEIGHT,
+  getResponsiveWidth,
+  getResponsiveHeight
 } from '../../common/styles'
+
 import {
   getMonth,
   getFormDay,
-  getDay,
-  getTime,
   getLocation,
   getWeather,
   diaryClassify,
 } from '../../common/util'
+
 import { SCENE_NEW_DIARY } from '../../constants/scene'
 
 import HttpUtils from '../../network/HttpUtils'
@@ -66,7 +64,7 @@ export default class Home extends Component {
     showMyWeather: true
   }
 
-  async componentDidMount () {
+  async componentDidMount() {
     this._showTips()
     this._getWeather()
 
@@ -80,11 +78,11 @@ export default class Home extends Component {
       diaryList = diaryClassify(diaryList, 'date')
 
       let markedDates = {}
-      const boy = {key:'boy', color: 'pink'}
-      const girl = {key:'girl', color: 'pink'}
+      const boy = { key: 'boy', color: 'pink' }
+      const girl = { key: 'girl', color: 'pink' }
 
       diaryList.forEach(dayDiary => {
-        markedDates[getFormDay(dayDiary[0].date)] = {dots: []}
+        markedDates[getFormDay(dayDiary[0].date)] = { dots: [] }
         let hasBoyDiary = false
         let hasGirlDiary = false
 
@@ -124,10 +122,10 @@ export default class Home extends Component {
     Storage.set('firstUse', false)
   }
 
-  async _getWeather () {
+  async _getWeather() {
     navigator.geolocation.getCurrentPosition(async res => {
       try {
-        const {latitude, longitude} = res.coords
+        const { latitude, longitude } = res.coords
         const location = await getLocation(latitude, longitude)
         // const location = await getLocation(113.387061, 23.053829)
         const weather = await getWeather(location.city)
@@ -156,41 +154,41 @@ export default class Home extends Component {
             weather_icon: require('../../../res/images/home/icon_snow.png')
           })
         }
-        if (weather.weather.includes('雾') || weather.weather.includes('尘') || weather.weather.includes('沙')|| weather.weather.includes('霾')) {
+        if (weather.weather.includes('雾') || weather.weather.includes('尘') || weather.weather.includes('沙') || weather.weather.includes('霾')) {
           this.setState({
             weather_text: `${weather.weather} ${weather.temperature}℃`,
             weather_icon: require('../../../res/images/home/icon_fly_ash.png')
           })
         }
-      } catch (e){
+      } catch (e) {
         console.log(e)
       }
     })
   }
 
-  async onDayPress (day) {
+  async onDayPress(day) {
     const filterDiaryList = this.state.diaryList.filter(dayDiary => dayDiary[0].formDate === day.dateString)
-    this.setState({filterDiaryList})
+    this.setState({ filterDiaryList })
   }
 
-  async setDate (months) {
+  async setDate(months) {
     await 0
     this.setState({
-      month: getMonth(months[0].month-1),
+      month: getMonth(months[0].month - 1),
       year: months[0].year
     })
   }
 
-  tri () {
+  tri() {
     if (this.state.showCalendar) {
-      return <Image style={styles.img_tri} source={require('../../../res/images/home/icon_dropup.png')}></Image>
+      return <Image style={styles.img_tri} source={require('../../../res/images/home/icon_dropup.png')}/>
     } else {
-      return <Image style={styles.img_tri} source={require('../../../res/images/home/icon_dropdown.png')}></Image>
+      return <Image style={styles.img_tri} source={require('../../../res/images/home/icon_dropdown.png')}/>
     }
   }
 
   setWeather() {
-    this.setState({showWeatherTip: false})
+    this.setState({ showWeatherTip: false })
 
     // if (!this.props.partner.id) return Alert.alert('', '你还没有匹配的对象哦')
 
@@ -213,7 +211,7 @@ export default class Home extends Component {
 
   }
 
-  _renderItem ({item}) {
+  _renderItem({ item }) {
     return (
       <Diary
         data={item}
@@ -221,7 +219,7 @@ export default class Home extends Component {
     )
   }
 
-  _emptyDiary () {
+  _emptyDiary() {
     return (
       <View style={styles.none_container}>
         <TextPingFang style={styles.text_none}>空空如也，{'\n'}来写一篇日记吧～</TextPingFang>
@@ -229,9 +227,9 @@ export default class Home extends Component {
     )
   }
 
-  _listFooter () {
+  _listFooter() {
     return (
-      <View style={[styles.list_footer, {display: this.state.diaryList.length === 0 ? 'none' : 'flex'}]}></View>
+      <View style={[styles.list_footer, { display: this.state.diaryList.length === 0 ? 'none' : 'flex' }]}/>
     )
   }
 
@@ -243,7 +241,7 @@ export default class Home extends Component {
           <TouchableOpacity
             style={styles.header_left}
             activeOpacity={1}
-            onPress={() => this.setState({showCalendar: !this.state.showCalendar})}
+            onPress={() => this.setState({ showCalendar: !this.state.showCalendar })}
           >
             <TextPingFang style={styles.text_month}>{this.state.month}</TextPingFang>
             <TextPingFang style={styles.text_year}>{this.state.year}</TextPingFang>
@@ -255,7 +253,7 @@ export default class Home extends Component {
             onPress={() => this.setState({
               filterDiaryList: this.state.diaryList,
               showDayTip: false,
-              showWeatherTip: this.state.showWeatherFlag ? false : true,
+              showWeatherTip: !this.state.showWeatherFlag,
               showWeatherFlag: true
             })}
           >
@@ -265,18 +263,18 @@ export default class Home extends Component {
           </TouchableOpacity>
 
           <View
-            style={[styles.tip_container, {display: this.state.showDayTip ? 'flex' : 'none'}]}
+            style={[styles.tip_container, { display: this.state.showDayTip ? 'flex' : 'none' }]}
             animation='bounceIn'
           >
             <TextPingFang style={styles.text_tip}>点击这里回到当天日期哦</TextPingFang>
-            <View style={styles.triangle}></View>
+            <View style={styles.triangle}/>
           </View>
         </View>
 
         <CalendarList
           horizontal={true}
           pagingEnabled={true}
-          style={[styles.calendar, {display: this.state.showCalendar ? 'flex' : 'none'}]}
+          style={[styles.calendar, { display: this.state.showCalendar ? 'flex' : 'none' }]}
           theme={{
             calendarBackground: 'rgb(250,250,250)',
             textDayFontSize: 14,
@@ -295,23 +293,24 @@ export default class Home extends Component {
               // onPress={}
             >
               <Image style={styles.weather_icon} source={this.state.weather_icon}/>
-              <TextPingFang style={[styles.text_weather, {color: this.state.showMyWeather ? '#aaa' : '#000'}]}>{this.state.weather_text}</TextPingFang>
+              <TextPingFang
+                style={[styles.text_weather, { color: this.state.showMyWeather ? '#aaa' : '#000' }]}>{this.state.weather_text}</TextPingFang>
             </TouchableOpacity>
 
-            <TouchableOpacity  style={styles.weather_exchange} onPress={() => this.setWeather()}>
+            <TouchableOpacity style={styles.weather_exchange} onPress={() => this.setWeather()}>
               <Image source={require('../../../res/images/common/icon_exchange.png')}/>
             </TouchableOpacity>
           </View>
 
           <View
-            style={[styles.tip_container, {display: this.state.showWeatherTip ? 'flex' : 'none'}]}
+            style={[styles.tip_container, { display: this.state.showWeatherTip ? 'flex' : 'none' }]}
             animation='bounceIn'
           >
             <TextPingFang style={styles.text_tip}>点击这里可以看到对方天气哦</TextPingFang>
-            <View style={styles.triangle}></View>
+            <View style={styles.triangle}/>
           </View>
         </View>
-        
+
         <FlatList
           style={styles.diary_container}
           data={this.state.filterDiaryList}
@@ -327,7 +326,7 @@ export default class Home extends Component {
         >
           <Image source={require('../../../res/images/home/icon_new_diary.png')}/>
         </TouchableOpacity>
-      </Container> 
+      </Container>
     )
   }
 }
@@ -404,10 +403,10 @@ const styles = StyleSheet.create({
   calendar: {
     width: WIDTH,
     height: (() => {
-      if (HEIGHT === 568) return 280  //iphone 5/5s/SE
-      if (HEIGHT === 667) return 190  //iphone 6/7/8
-      if (HEIGHT === 736) return 335  //iphone 6P/7P/8P
-      if (HEIGHT === 812) return 350  //iphone X
+      if (HEIGHT === 568) return 280 // iphone 5/5s/SE
+      if (HEIGHT === 667) return 190 // iphone 6/7/8
+      if (HEIGHT === 736) return 335 // iphone 6P/7P/8P
+      if (HEIGHT === 812) return 350 // iphone X
     })()
   },
   weather: {
@@ -440,10 +439,10 @@ const styles = StyleSheet.create({
   },
   diary_container: {
     height: (() => {
-      if (HEIGHT === 568) return 190  //iphone 5/5s/SE
-      if (HEIGHT === 667) return 190  //iphone 6/7/8
-      if (HEIGHT === 736) return 425  //iphone 6P/7P/8P
-      if (HEIGHT === 812) return 500  //iphone X
+      if (HEIGHT === 568) return 190 // iphone 5/5s/SE
+      if (HEIGHT === 667) return 190 // iphone 6/7/8
+      if (HEIGHT === 736) return 425 // iphone 6P/7P/8P
+      if (HEIGHT === 812) return 500 // iphone X
     })(),
     width: WIDTH,
     paddingLeft: getResponsiveWidth(24),

@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import {
   View,
   StyleSheet,
-  Text,
   FlatList,
   DeviceEventEmitter,
 } from 'react-native'
@@ -10,9 +9,7 @@ import { ifIphoneX } from 'react-native-iphone-x-helper'
 
 import {
   WIDTH,
-  HEIGHT,
-  getResponsiveWidth,
-  getResponsiveHeight
+  getResponsiveWidth
 } from '../../common/styles'
 
 import Container from '../../components/Container'
@@ -40,7 +37,7 @@ export default class Notification extends Component {
 
     JPushModule.clearAllNotifications()
 
-    DeviceEventEmitter.addListener('flash_notification', async (v) =>{
+    DeviceEventEmitter.addListener('flash_notification', async (v) => {
       const res = await HttpUtils.get(USERS.notification, {})
       if (res.code === 0) {
         this.setState({

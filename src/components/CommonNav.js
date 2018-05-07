@@ -1,13 +1,11 @@
 import React, { Component } from 'react'
 import {
-  View,
   StyleSheet,
   TouchableOpacity,
   Image
 } from 'react-native'
 import {
   getResponsiveWidth,
-  getResponsiveHeight
 } from '../common/styles'
 import NavigationBar from './NavigationBar'
 import { Actions } from 'react-native-router-flux'

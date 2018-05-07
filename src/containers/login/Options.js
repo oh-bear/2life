@@ -4,7 +4,7 @@ import {
   TouchableOpacity,
 } from 'react-native'
 
-import { View, Text } from 'react-native-animatable'
+import { View } from 'react-native-animatable'
 import { Actions } from 'react-native-router-flux'
 
 import TextPingFang from '../../components/TextPingFang'
@@ -14,8 +14,8 @@ import {
   HEIGHT,
   WIDTH,
   getResponsiveHeight,
-  getResponsiveWidth
 } from '../../common/styles'
+
 import { SCENE_LOGIN_SIGNIN, SCENE_LOGIN_SIGNUP } from '../../constants/scene'
 
 export default class Options extends Component {

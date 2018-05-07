@@ -3,18 +3,16 @@ import {
   StyleSheet,
   TouchableOpacity,
   ImageBackground,
-  StatusBar,
   Image
 } from 'react-native'
 import PropTypes from 'prop-types'
 import { ifIphoneX } from 'react-native-iphone-x-helper'
 
-import { View, Text } from 'react-native-animatable'
+import { View } from 'react-native-animatable'
 
 import TextPingFang from '../../components/TextPingFang'
 
 import {
-  HEIGHT,
   WIDTH,
   getResponsiveHeight,
   getResponsiveWidth
@@ -32,29 +30,31 @@ export default class Banner extends Component {
 
   render() {
     return (
-			<View style={styles.container} animation='fadeIn'>
-				<ImageBackground style={styles.banner} source={this.props.bg}>
+      <View style={styles.container} animation='fadeIn'>
+        <ImageBackground style={styles.banner} source={this.props.bg}>
           <View style={styles.nav_bar}>
             <TouchableOpacity style={styles.nav_left_container} onPress={this.props.onNavLeftPress}>
-              <Image style={{display: this.props.showNavLeft ? 'flex' : 'none'}} source={require('../../../res/images/common/icon_back_white.png')}></Image>
+              <Image
+                style={{ display: this.props.showNavLeft ? 'flex' : 'none' }}
+                source={require('../../../res/images/common/icon_back_white.png')}/>
             </TouchableOpacity>
             <TouchableOpacity onPress={this.props.onNavRightPress}>
-              <TextPingFang style={[styles.text_nav_right, {display: this.props.showNavRight ? 'flex' : 'none'}]}>直接使用</TextPingFang>
+              <TextPingFang
+                style={[styles.text_nav_right, { display: this.props.showNavRight ? 'flex' : 'none' }]}>直接使用</TextPingFang>
             </TouchableOpacity>
           </View>
           <View style={styles.title_container}>
             <TextPingFang style={styles.text_title}>{this.props.title[0]}</TextPingFang>
             <TextPingFang style={styles.text_title}>{this.props.title[1]}</TextPingFang>
           </View>
-				</ImageBackground>
-			</View>
+        </ImageBackground>
+      </View>
     )
   }
 }
 
 const styles = StyleSheet.create({
-  container: {
-  },
+  container: {},
   banner: {
     width: WIDTH,
     height: getResponsiveHeight(224),

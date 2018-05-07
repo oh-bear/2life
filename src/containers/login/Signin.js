@@ -7,7 +7,7 @@ import {
 } from 'react-native'
 
 import dismissKeyboard from 'dismissKeyboard'
-import { View, Text } from 'react-native-animatable'
+import { View } from 'react-native-animatable'
 import { Actions } from 'react-native-router-flux'
 
 import TextPingFang from '../../components/TextPingFang'
@@ -42,23 +42,23 @@ export default class Signin extends Component {
     showPswTip: false
   }
 
-  async login () {
+  async login() {
     const data = {
       account: this.state.account,
       password: this.state.password
     }
     const res = await HttpUtils.post(URL_login, data)
 
-    if (res.code === 404) this.setState({showAccountTip: true})
-    if (res.code === 300) this.setState({showPswTip: true})
+    if (res.code === 404) this.setState({ showAccountTip: true })
+    if (res.code === 300) this.setState({ showPswTip: true })
     if (res.code === 0) {
       Storage.set('user', {
         account: this.state.account,
         password: this.state.password
       })
 
-      const {uid, token, timestamp} = res.data.key
-      setToken({uid, token, timestamp})
+      const { uid, token, timestamp } = res.data.key
+      setToken({ uid, token, timestamp })
 
       store.dispatch(fetchProfileSuccess(res.data.user))
       store.dispatch(fetchPartnerSuccess(res.data.partner))
@@ -67,7 +67,7 @@ export default class Signin extends Component {
         console.log(success)
       })
 
-      Actions[SCENE_INDEX]({user: res.data.user, partner: res.data.partner})
+      Actions[SCENE_INDEX]({ user: res.data.user, partner: res.data.partner })
     }
   }
 
@@ -75,7 +75,7 @@ export default class Signin extends Component {
     return (
       <TouchableWithoutFeedback onPress={dismissKeyboard}>
         <View style={styles.container} animation='fadeIn'>
-					<Banner
+          <Banner
             bg={require('../../../res/images/login/bg_signin.png')}
             title={['Hi', '欢迎来到双生！']}
             showNavLeft={true}
@@ -86,7 +86,7 @@ export default class Signin extends Component {
           <View style={styles.inputs_container}>
             <TextInput
               style={styles.input}
-              onChangeText={account => this.setState({account, showAccountTip: false})}
+              onChangeText={account => this.setState({ account, showAccountTip: false })}
               value={this.state.account}
               keyboardType='numeric'
               maxLength={11}
@@ -94,10 +94,10 @@ export default class Signin extends Component {
               placeholder='请输入手机号码'
               placeholderTextColor='#aaa'
             />
-            <TextPingFang style={[styles.text_tip, {color: this.state.showAccountTip ? '#F43C56' : 'transparent'}]}>用户不存在</TextPingFang>
+            <TextPingFang style={[styles.text_tip, { color: this.state.showAccountTip ? '#F43C56' : 'transparent' }]}>用户不存在</TextPingFang>
             <TextInput
               style={styles.input}
-              onChangeText={password => this.setState({password})}
+              onChangeText={password => this.setState({ password })}
               value={this.state.password}
               clearButtonMode='while-editing'
               placeholder='请输入密码'
@@ -105,11 +105,14 @@ export default class Signin extends Component {
               multiline={false}
               secureTextEntry
             />
-            <TextPingFang style={[styles.text_tip, {color: this.state.showPswTip ? '#F43C56' : 'transparent'}]}>密码不正确</TextPingFang>
+            <TextPingFang
+              style={[styles.text_tip, { color: this.state.showPswTip ? '#F43C56' : 'transparent' }]}>密码不正确</TextPingFang>
 
             <TouchableOpacity
               style={styles.btn_container}
-              onPress={() => {this.login()}}
+              onPress={() => {
+                this.login()
+              }}
             >
               <TextPingFang style={styles.text_btn}>登录</TextPingFang>
             </TouchableOpacity>

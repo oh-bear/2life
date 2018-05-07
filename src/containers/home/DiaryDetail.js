@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import {
-	View,
-	StyleSheet,
+  View,
+  StyleSheet,
   TouchableOpacity,
   Image,
   ScrollView
@@ -14,15 +14,10 @@ import CommonNav from '../../components/CommonNav'
 import DiaryBanner from './DiaryBanner'
 
 import {
-	WIDTH,
-	HEIGHT,
-	getResponsiveWidth,
-	getResponsiveHeight
+  WIDTH,
+  getResponsiveWidth,
 } from '../../common/styles'
 import { getMonth, getLocation } from '../../common/util'
-
-import HttpUtils from '../../network/HttpUtils'
-import { NOTES } from '../../network/Urls'
 
 function mapStateToProps(state) {
   return {
@@ -40,28 +35,28 @@ export default class DiaryDetail extends Component {
     likeComponent: null
   }
 
-  async componentWillMount () {
+  async componentWillMount() {
     // HttpUtils.post(NOTES.like, {note_id: this.props.diary.id}).then(res=> console.log(res))
     if (this.props.diary.images) {
       let imageList = this.props.diary.images.split('&')
-      this.setState({imageList, showBanner: true})
+      this.setState({ imageList, showBanner: true })
     } else {
-      this.setState({showBanner: false})
+      this.setState({ showBanner: false })
     }
     const location = await getLocation(this.props.diary.longitude, this.props.diary.latitude)
-		this.setState({location: `${location.city}，${location.province}，${location.country}`})
-    
+    this.setState({ location: `${location.city}，${location.province}，${location.country}` })
+
     this.renderlikeComponent()
   }
 
-  renderlikeComponent () {
+  renderlikeComponent() {
     let likeComponent
     if (this.props.diary.is_liked) {
       likeComponent = <Image style={styles.img_btn} source={require('../../../res/images/home/icon_liked.png')}/>
     } else {
       likeComponent = <Image style={styles.img_btn} source={require('../../../res/images/home/icon_like.png')}/>
     }
-    this.setState({likeComponent})
+    this.setState({ likeComponent })
   }
 
   render() {
@@ -75,32 +70,33 @@ export default class DiaryDetail extends Component {
           />
 
           <CommonNav
-            navStyle={[styles.nav_style, {display: this.state.showBanner ? 'none' : 'flex'}]}
+            navStyle={[styles.nav_style, { display: this.state.showBanner ? 'none' : 'flex' }]}
             navBarStyle={styles.navbar_style}
             rightButton={this.props.rightButton}
           />
 
           <View style={styles.date_container}>
-						<TextPingFang style={styles.text_date}>{getMonth(new Date(this.props.diary.date).getMonth())} </TextPingFang>
-						<TextPingFang style={styles.text_date}>{new Date(this.props.diary.date).getDate()}，</TextPingFang>
-						<TextPingFang style={styles.text_date}>{new Date(this.props.diary.date).getFullYear()}</TextPingFang>
-					</View>
+            <TextPingFang
+              style={styles.text_date}>{getMonth(new Date(this.props.diary.date).getMonth())} </TextPingFang>
+            <TextPingFang style={styles.text_date}>{new Date(this.props.diary.date).getDate()}，</TextPingFang>
+            <TextPingFang style={styles.text_date}>{new Date(this.props.diary.date).getFullYear()}</TextPingFang>
+          </View>
 
           <TextPingFang style={styles.text_title}>{this.props.diary.title}</TextPingFang>
 
-          <View style={styles.line}></View>
+          <View style={styles.line}/>
 
           <TextPingFang style={styles.text_content}>{this.props.diary.content}</TextPingFang>
 
           <View style={styles.location_container}>
-						<Image style={styles.location_icon} source={require('../../../res/images/home/icon_location.png')}/>
-						<TextPingFang style={styles.text_location}>{this.state.location}</TextPingFang>
-					</View>
+            <Image style={styles.location_icon} source={require('../../../res/images/home/icon_location.png')}/>
+            <TextPingFang style={styles.text_location}>{this.state.location}</TextPingFang>
+          </View>
 
           <View style={styles.mode_container}>
-						<Image style={styles.location_icon} source={require('../../../res/images/home/icon_happy.png')}/>
-						<TextPingFang style={styles.text_mode}>{this.props.diary.mode}</TextPingFang>
-						<TextPingFang style={styles.text_value}>情绪值</TextPingFang>
+            <Image style={styles.location_icon} source={require('../../../res/images/home/icon_happy.png')}/>
+            <TextPingFang style={styles.text_mode}>{this.props.diary.mode}</TextPingFang>
+            <TextPingFang style={styles.text_value}>情绪值</TextPingFang>
             <TouchableOpacity
               style={styles.update_container}
             >
@@ -108,64 +104,64 @@ export default class DiaryDetail extends Component {
             </TouchableOpacity>
 
             <TouchableOpacity
-              style={[styles.btn_container, {display: this.props.user.id !== this.props.diary.user_id ? 'flex' : 'none'}]}
+              style={[styles.btn_container, { display: this.props.user.id !== this.props.diary.user_id ? 'flex' : 'none' }]}
             >
               {this.state.likeComponent}
             </TouchableOpacity>
-					</View> 
+          </View>
         </ScrollView>
 
-      </Container> 
+      </Container>
     )
   }
 }
 
 const styles = StyleSheet.create({
   date_container: {
-		width: WIDTH,
-		flexDirection: 'row',
-		paddingLeft: getResponsiveWidth(24),
-		paddingTop: getResponsiveWidth(24),
-		paddingBottom: getResponsiveWidth(24),
+    width: WIDTH,
+    flexDirection: 'row',
+    paddingLeft: getResponsiveWidth(24),
+    paddingTop: getResponsiveWidth(24),
+    paddingBottom: getResponsiveWidth(24),
   },
   text_date: {
-		color: '#aaa',
-		fontSize: 12
+    color: '#aaa',
+    fontSize: 12
   },
   text_title: {
-		color: '#000',
-		fontSize: 24,
-		paddingLeft: getResponsiveWidth(24),
-		paddingRight: getResponsiveWidth(24),
-		paddingTop: getResponsiveWidth(48),
-		paddingBottom: getResponsiveWidth(48),
-	},
-	line: {
-		width: getResponsiveWidth(40),
-		height: getResponsiveWidth(1),
-		marginLeft: getResponsiveWidth(24),
-		backgroundColor: '#aaa'
-	},
-	text_content: {
-		color: '#444',
-		fontSize: 16,
-		paddingLeft: getResponsiveWidth(24),
-		paddingRight: getResponsiveWidth(24),
-		marginTop: getResponsiveWidth(24),
-		paddingBottom: getResponsiveWidth(24),
+    color: '#000',
+    fontSize: 24,
+    paddingLeft: getResponsiveWidth(24),
+    paddingRight: getResponsiveWidth(24),
+    paddingTop: getResponsiveWidth(48),
+    paddingBottom: getResponsiveWidth(48),
+  },
+  line: {
+    width: getResponsiveWidth(40),
+    height: getResponsiveWidth(1),
+    marginLeft: getResponsiveWidth(24),
+    backgroundColor: '#aaa'
+  },
+  text_content: {
+    color: '#444',
+    fontSize: 16,
+    paddingLeft: getResponsiveWidth(24),
+    paddingRight: getResponsiveWidth(24),
+    marginTop: getResponsiveWidth(24),
+    paddingBottom: getResponsiveWidth(24),
   },
   location_container: {
-		flexDirection: 'row',
-		justifyContent: 'flex-start',
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
     alignItems: 'center',
     paddingLeft: getResponsiveWidth(24)
-	},
-	location_icon: {
-		marginRight: getResponsiveWidth(8)
-	},
-	text_location: {
-		color: '#aaa',
-		fontSize: 10
+  },
+  location_icon: {
+    marginRight: getResponsiveWidth(8)
+  },
+  text_location: {
+    color: '#aaa',
+    fontSize: 10
   },
   mode_container: {
     height: getResponsiveWidth(88),

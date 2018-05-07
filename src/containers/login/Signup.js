@@ -8,7 +8,7 @@ import {
 } from 'react-native'
 
 import dismissKeyboard from 'dismissKeyboard'
-import { View, Text } from 'react-native-animatable'
+import { View } from 'react-native-animatable'
 import { Actions } from 'react-native-router-flux'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
@@ -49,27 +49,27 @@ export default class Signup extends Component {
     showPswTip: false,
   }
 
-  async getCode () {
+  async getCode() {
     if (/^1(3|4|5|7|8)\d{9}$/.test(this.state.account)) {
-      this.setState({showAccountTip: false})
+      this.setState({ showAccountTip: false })
     } else {
-      return this.setState({showAccountTip: true, accountTip: '手机格式错误'})
+      return this.setState({ showAccountTip: true, accountTip: '手机格式错误' })
     }
 
-    const res = await HttpUtils.post(URL_code, {account: this.state.account})
+    const res = await HttpUtils.post(URL_code, { account: this.state.account })
     if (res.code === 0) {
-      this.setState({timestamp: res.data.timestamp})
+      this.setState({ timestamp: res.data.timestamp })
       Alert.alert('', '验证码已发送')
     }
     if (res.code === 501) Alert.alert('', '请求过于频繁，请稍后再试')
   }
 
-  async register () {
+  async register() {
     if (!this.state.timestamp) return Alert.alert('', '请先获取验证码')
     if (/^[^\s]{6,16}$/.test(this.state.password)) {
-      this.setState({showPswTip: false})
+      this.setState({ showPswTip: false })
     } else {
-      return this.setState({showPswTip: true})
+      return this.setState({ showPswTip: true })
     }
 
     const data = {
@@ -80,8 +80,8 @@ export default class Signup extends Component {
     }
     const res = await HttpUtils.post(URL_register, data)
 
-    if (res.code === 302) return this.setState({showAccountTip: true, accountTip: '该号码已被注册'})
-    if (res.code === 405) return this.setState({showCodeTip: true})
+    if (res.code === 302) return this.setState({ showAccountTip: true, accountTip: '该号码已被注册' })
+    if (res.code === 405) return this.setState({ showCodeTip: true })
     if (res.code === 0) {
       const data = {
         account: this.state.account,
@@ -93,13 +93,13 @@ export default class Signup extends Component {
           account: this.state.account,
           password: this.state.password
         })
-        const {uid, token, timestamp} = res.data.key
-        setToken({uid, token, timestamp})
+        const { uid, token, timestamp } = res.data.key
+        setToken({ uid, token, timestamp })
 
         store.dispatch(fetchProfileSuccess(res.data.user))
         store.dispatch(fetchPartnerSuccess(res.data.partner))
 
-        Actions.reset(SCENE_LOGIN_NICKNAME, {user: res.data.user})
+        Actions.reset(SCENE_LOGIN_NICKNAME, { user: res.data.user })
       }
     }
   }
@@ -108,7 +108,7 @@ export default class Signup extends Component {
     return (
       <TouchableWithoutFeedback onPress={dismissKeyboard}>
         <View style={styles.container} animation='fadeIn'>
-					<Banner
+          <Banner
             bg={require('../../../res/images/login/bg_signup.png')}
             title={['Wow', '欢迎成为新成员！']}
             showNavLeft={true}
@@ -120,7 +120,7 @@ export default class Signup extends Component {
             <View style={styles.inputs_container}>
               <TextInput
                 style={styles.input}
-                onChangeText={account => this.setState({account, showAccountTip: false})}
+                onChangeText={account => this.setState({ account, showAccountTip: false })}
                 value={this.state.account}
                 keyboardType='numeric'
                 maxLength={11}
@@ -128,12 +128,13 @@ export default class Signup extends Component {
                 placeholder='请输入手机号码'
                 placeholderTextColor='#aaa'
               />
-              <TextPingFang style={[styles.text_tip, {color: this.state.showAccountTip ? '#F43C56' : 'transparent'}]}>{this.state.accountTip}</TextPingFang>
+              <TextPingFang
+                style={[styles.text_tip, { color: this.state.showAccountTip ? '#F43C56' : 'transparent' }]}>{this.state.accountTip}</TextPingFang>
 
               <View style={styles.code_container}>
                 <TextInput
                   style={[styles.input, styles.input_code]}
-                  onChangeText={code => this.setState({code, showCodeTip: false})}
+                  onChangeText={code => this.setState({ code, showCodeTip: false })}
                   value={this.state.code}
                   keyboardType='numeric'
                   placeholder='请输入验证码'
@@ -142,16 +143,18 @@ export default class Signup extends Component {
                 />
                 <TouchableOpacity
                   style={styles.text_code_container}
-                  onPress={() => {this.getCode()}}
+                  onPress={() => {
+                    this.getCode()
+                  }}
                 >
                   <TextPingFang style={styles.text_code}>{this.state.text_code}</TextPingFang>
                 </TouchableOpacity>
               </View>
-              <TextPingFang style={[styles.text_tip, {color: this.state.showCodeTip ? '#F43C56' : 'transparent'}]}>验证码错误</TextPingFang>
+              <TextPingFang style={[styles.text_tip, { color: this.state.showCodeTip ? '#F43C56' : 'transparent' }]}>验证码错误</TextPingFang>
 
               <TextInput
                 style={styles.input}
-                onChangeText={password => this.setState({password, showPswTip: false})}
+                onChangeText={password => this.setState({ password, showPswTip: false })}
                 value={this.state.password}
                 clearButtonMode='while-editing'
                 placeholder='请输入密码'
@@ -159,7 +162,7 @@ export default class Signup extends Component {
                 multiline={false}
                 secureTextEntry
               />
-              <TextPingFang style={[styles.text_tip, {color: this.state.showPswTip ? '#F43C56' : 'transparent'}]}>6-16位密码</TextPingFang>
+              <TextPingFang style={[styles.text_tip, { color: this.state.showPswTip ? '#F43C56' : 'transparent' }]}>6-16位密码</TextPingFang>
             </View>
           </KeyboardAwareScrollView>
 

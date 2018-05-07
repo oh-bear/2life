@@ -8,7 +8,6 @@ import {
 import Home from './home/Home'
 import Notification from './notification/Notification'
 import Profile from './profile/Profile'
-import { WIDTH, HEIGHT, getResponsiveHeight } from '../common/styles'
 import TabNavigator from 'react-native-tab-navigator'
 import { ifIphoneX } from 'react-native-iphone-x-helper'
 
@@ -18,6 +17,7 @@ export default class Index extends Component {
 
   componentDidMount() {
 
+    // 极光推送：添加事件角标，并触发强制刷新通知
     JPushModule.addReceiveCustomMsgListener((message) => {
       console.log(message)
       JPushModule.setBadge(1, success => {

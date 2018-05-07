@@ -8,11 +8,11 @@ export const USERS = {
 }
 
 export const NOTES = {
-  list: '/notes/list', //get
-  publish: '/notes/publish', //post {title，content，images，latitude，longitude}
-  like: '/notes/like', //post {note_id}
+  list: '/notes/list', // get
+  publish: '/notes/publish', // post {title，content，images，latitude，longitude}
+  like: '/notes/like', // post {note_id}
 }
 
 export const UTILS = {
-  qiniu_token: '/utils/qiniu_token', //get {filename}
+  qiniu_token: '/utils/qiniu_token', // get {filename}
 }

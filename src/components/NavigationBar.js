@@ -2,9 +2,7 @@ import React, { Component } from 'react'
 import {
   View,
   Text,
-  Image,
   StyleSheet,
-  StatusBar
 } from 'react-native'
 import { PropTypes } from 'prop-types'
 import { WIDTH, getResponsiveWidth } from '../common/styles'

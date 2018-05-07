@@ -1,41 +1,31 @@
 import React, { Component } from 'react'
 import {
-	View,
-	StyleSheet,
-  Text,
-  ScrollView,
-  TouchableOpacity,
-  Image
+  View,
+  StyleSheet
 } from 'react-native'
-import { ifIphoneX } from 'react-native-iphone-x-helper'
-import { Actions } from 'react-native-router-flux'
 
 import TextPingFang from '../../../components/TextPingFang'
 import CommonNav from '../../../components/CommonNav'
 
 import {
-	WIDTH,
-	HEIGHT,
-	getResponsiveWidth,
-	getResponsiveHeight
+  getResponsiveWidth
 } from '../../../common/styles'
 
 export default class ProfileHeader extends Component {
 
-  static propTypes = {
-  }
+  static propTypes = {}
 
   render() {
     return (
       <View style={styles.container}>
-				<CommonNav
+        <CommonNav
           navBarStyle={styles.navbar}
           rightButton={this.props.rightButton}
         />
 
         <TextPingFang style={styles.text_title}>{this.props.title}</TextPingFang>
         <TextPingFang style={styles.text_desc}>{this.props.desc}</TextPingFang>
-			</View>
+      </View>
     )
   }
 }
