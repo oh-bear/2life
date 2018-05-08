@@ -20,6 +20,7 @@
     "react-native": "^0.54.0",
     "react-native-animatable": "^1.2.4",
     "react-native-calendars": "^1.19.3",
+    "react-native-iap": "^0.3.23",
     "react-native-image-picker": "^0.26.7",
     "react-native-image-progress": "^1.0.1",
     "react-native-iphone-x-helper": "^1.0.2",
