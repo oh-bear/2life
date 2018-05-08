@@ -5,6 +5,7 @@ import {
   ImageBackground,
   Image,
   FlatList,
+  Alert
 } from 'react-native'
 import { View } from 'react-native-animatable'
 import { CalendarList } from '../../components/react-native-calendars/src'
@@ -29,12 +30,13 @@ import {
   getLocation,
   getWeather,
   diaryClassify,
+  getWeatherDesc
 } from '../../common/util'
 
 import { SCENE_NEW_DIARY } from '../../constants/scene'
 
 import HttpUtils from '../../network/HttpUtils'
-import { NOTES } from '../../network/Urls'
+import { NOTES, USERS } from '../../network/Urls'
 
 const URL_list = NOTES.list
 
@@ -116,7 +118,11 @@ export default class Home extends Component {
     if (firstUse) {
       this.setState({
         showDayTip: true,
-        showWeatherTip: false
+        showWeatherTip: false,
+      })
+    } else {
+      this.setState({
+        showWeatherFlag: true
       })
     }
     Storage.set('firstUse', false)
@@ -126,40 +132,17 @@ export default class Home extends Component {
     navigator.geolocation.getCurrentPosition(async res => {
       try {
         const { latitude, longitude } = res.coords
+        const { sex, name, face, status } = this.props.user
+
+        //更新用户经纬度
+        HttpUtils.post(USERS.update, { sex, name, face, status, latitude, longitude })
+
+        // 获取用户地理位置和天气信息
         const location = await getLocation(latitude, longitude)
         // const location = await getLocation(113.387061, 23.053829)
         const weather = await getWeather(location.city)
-
-        if (weather.code === '00') {
-          this.setState({
-            weather_text: `${weather.weather} ${weather.temperature}℃`,
-            weather_icon: require('../../../res/images/home/icon_sunny.png')
-          })
-        }
-        if (weather.code === '01' || weather.code === '02') {
-          this.setState({
-            weather_text: `${weather.weather} ${weather.temperature}℃`,
-            weather_icon: require('../../../res/images/home/icon_cloud.png')
-          })
-        }
-        if (weather.weather.includes('雨')) {
-          this.setState({
-            weather_text: `${weather.weather} ${weather.temperature}℃`,
-            weather_icon: require('../../../res/images/home/icon_rainy.png')
-          })
-        }
-        if (weather.weather.includes('雪')) {
-          this.setState({
-            weather_text: `${weather.weather} ${weather.temperature}℃`,
-            weather_icon: require('../../../res/images/home/icon_snow.png')
-          })
-        }
-        if (weather.weather.includes('雾') || weather.weather.includes('尘') || weather.weather.includes('沙') || weather.weather.includes('霾')) {
-          this.setState({
-            weather_text: `${weather.weather} ${weather.temperature}℃`,
-            weather_icon: require('../../../res/images/home/icon_fly_ash.png')
-          })
-        }
+        const { weather_text, weather_icon } = getWeatherDesc(weather)
+        this.setState({ weather_text, weather_icon, showMyWeather: true })
       } catch (e) {
         console.log(e)
       }
@@ -187,28 +170,44 @@ export default class Home extends Component {
     }
   }
 
-  setWeather() {
+  async exchangeWeather() {
     this.setState({ showWeatherTip: false })
 
-    // if (!this.props.partner.id) return Alert.alert('', '你还没有匹配的对象哦')
+    if (!this.props.partner.id) return Alert.alert('', '你还没有匹配对象哦')
 
-    // todo: 切换天气
     if (this.state.showMyWeather) {
       // 切换到对方的天气
+      const { latitude, longitude } = this.props.partner
+      const location = await getLocation(latitude, longitude)
+      // const location = await getLocation(113.387061, 23.053829)
+      const weather = await getWeather(location.city)
+      const { weather_text, weather_icon } = getWeatherDesc(weather)
+      this.setState({ weather_text, weather_icon, showMyWeather: false })
+    } else {
+      // 切换到自己的天气
+      this._getWeather()
+    }
+  }
+
+  exchangeWM() {
+    let partner = this.props.partner
+
+    if (!partner.id) return Alert.alert('', '你还没有匹配对象哦')
+    
+    if (this.state.showMyWeather) {
+      const mode_text = `${partner.mode} 情绪值`
+      let mode_icon
+      if (partner.mode >= 80) mode_icon = require('../../../res/images/home/icon_happy.png')
+      if (partner.mode >= 60 && partner.mode < 80) mode_icon = require('../../../res/images/home/icon_normal.png')
+      if (partner.mode < 60) mode_icon = require('../../../res/images/home/icon_sad.png')
       this.setState({
-        weather_text: '对方的天气',
-        weather_icon: require('../../../res/images/home/icon_cloud.png'),
+        weather_text: mode_text,
+        weather_icon: mode_icon,
         showMyWeather: false
       })
     } else {
-      // 切换到自己的天气
-      this.setState({
-        weather_text: '我的天气',
-        weather_icon: require('../../../res/images/home/icon_sunny.png'),
-        showMyWeather: true
-      })
+      this._getWeather()
     }
-
   }
 
   _renderItem({ item }) {
@@ -290,14 +289,14 @@ export default class Home extends Component {
           <View style={styles.weather_inner}>
             <TouchableOpacity
               style={styles.inner_left}
-              // onPress={}
+              onPress={() => this.exchangeWM()}
             >
               <Image style={styles.weather_icon} source={this.state.weather_icon}/>
               <TextPingFang
                 style={[styles.text_weather, { color: this.state.showMyWeather ? '#aaa' : '#000' }]}>{this.state.weather_text}</TextPingFang>
             </TouchableOpacity>
 
-            <TouchableOpacity style={styles.weather_exchange} onPress={() => this.setWeather()}>
+            <TouchableOpacity style={styles.weather_exchange} onPress={() => this.exchangeWeather()}>
               <Image source={require('../../../res/images/common/icon_exchange.png')}/>
             </TouchableOpacity>
           </View>

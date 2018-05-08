@@ -1,12 +1,13 @@
 import axios from 'axios'
 import { Buffer } from 'buffer'
 import HttpUtils from '../network/HttpUtils'
-import { UTILS } from '../network/Urls'
+import { UTILS, USERS } from '../network/Urls'
 
 const URL_qiniu_token = UTILS.qiniu_token
 const URL_qiniu_host = 'http://upload.qiniu.com/putb64/-1/key/'
-// const URL_qiniu_host = 'http://upload-z2.qiniup.com/putb64/-1/key/'
 const BASE_IMG_URL = 'https://airing.ursb.me/'
+// const URL_qiniu_host = 'http://upload-z2.qiniup.com/putb64/-1/key/'
+// const BASE_IMG_URL = 'http://p3nr2tlc4.bkt.clouddn.com/'
 
 export const isDev = global.process.env.NODE_ENV === 'development'
 
@@ -30,42 +31,42 @@ export function getFormDay(timestamp) {
 export function getMonth(month) {
   let chinese_month = ''
   switch (month) {
-  case 0:
-    chinese_month = '一月'
-    break
-  case 1:
-    chinese_month = '二月'
-    break
-  case 2:
-    chinese_month = '三月'
-    break
-  case 3:
-    chinese_month = '四月'
-    break
-  case 4:
-    chinese_month = '五月'
-    break
-  case 5:
-    chinese_month = '六月'
-    break
-  case 6:
-    chinese_month = '七月'
-    break
-  case 7:
-    chinese_month = '八月'
-    break
-  case 8:
-    chinese_month = '九月'
-    break
-  case 9:
-    chinese_month = '十月'
-    break
-  case 10:
-    chinese_month = '十一月'
-    break
-  case 11:
-    chinese_month = '腊月'
-    break
+    case 0:
+      chinese_month = '一月'
+      break
+    case 1:
+      chinese_month = '二月'
+      break
+    case 2:
+      chinese_month = '三月'
+      break
+    case 3:
+      chinese_month = '四月'
+      break
+    case 4:
+      chinese_month = '五月'
+      break
+    case 5:
+      chinese_month = '六月'
+      break
+    case 6:
+      chinese_month = '七月'
+      break
+    case 7:
+      chinese_month = '八月'
+      break
+    case 8:
+      chinese_month = '九月'
+      break
+    case 9:
+      chinese_month = '十月'
+      break
+    case 10:
+      chinese_month = '十一月'
+      break
+    case 11:
+      chinese_month = '腊月'
+      break
   }
   return chinese_month
 }
@@ -80,27 +81,27 @@ export function getDay(timestamp) {
   const weekDay = date.getDay()
   let EngWeekDay = ''
   switch (weekDay) {
-  case 0:
-    EngWeekDay = 'Sun'
-    break
-  case 1:
-    EngWeekDay = 'Mon'
-    break
-  case 2:
-    EngWeekDay = 'Tue'
-    break
-  case 3:
-    EngWeekDay = 'Wed'
-    break
-  case 4:
-    EngWeekDay = 'Thu'
-    break
-  case 5:
-    EngWeekDay = 'Fri'
-    break
-  case 6:
-    EngWeekDay = 'Sat'
-    break
+    case 0:
+      EngWeekDay = 'Sun'
+      break
+    case 1:
+      EngWeekDay = 'Mon'
+      break
+    case 2:
+      EngWeekDay = 'Tue'
+      break
+    case 3:
+      EngWeekDay = 'Wed'
+      break
+    case 4:
+      EngWeekDay = 'Thu'
+      break
+    case 5:
+      EngWeekDay = 'Fri'
+      break
+    case 6:
+      EngWeekDay = 'Sat'
+      break
   }
   return `${day}\n${EngWeekDay}`
 }
@@ -198,15 +199,19 @@ export async function getWeather(region) {
       Authorization: `APPCODE ${APPCODE}`
     }
   }
-  const res = await axios(config)
-  return res.data.showapi_res_body.hourList[0]
+  try {
+    const res = await axios(config)
+    return res.data.showapi_res_body.hourList[0]
+  } catch (e) {
+    return e
+  }
 }
 
 /**
  * 上传base64至七牛
  * @param {Array of String} base64List
  * @param {Object} obj
- * @returns {String} 图片链接 img_url&img_url...
+ * @returns {String} 图片链接 img_url,img_url...
  */
 export async function postImgToQiniu(base64List, obj) {
   if (base64List.length === 0) return ''
@@ -249,5 +254,34 @@ export async function postImgToQiniu(base64List, obj) {
       imgUrls.push(BASE_IMG_URL + body.key)
     }
   }
-  return imgUrls.join('&')
+  return imgUrls.join(',')
+}
+
+/**
+ * 获取首页天气图标和描述
+ * @param {Object} weather getWeather函数返回的天气预报
+ */
+export function getWeatherDesc(weather) {
+  let weather_text, weather_icon
+  if (weather.code === '00') {
+    weather_text = `${weather.weather} ${weather.temperature}℃`
+    weather_icon = require('../../res/images/home/icon_sunny.png')
+  }
+  if (weather.code === '01' || weather.code === '02') {
+    weather_text = `${weather.weather} ${weather.temperature}℃`
+    weather_icon = require('../../res/images/home/icon_cloud.png')
+  }
+  if (weather.weather.includes('雨')) {
+    weather_text = `${weather.weather} ${weather.temperature}℃`
+    weather_icon = require('../../res/images/home/icon_rainy.png')
+  }
+  if (weather.weather.includes('雪')) {
+    weather_text = `${weather.weather} ${weather.temperature}℃`
+    weather_icon = require('../../res/images/home/icon_snow.png')
+  }
+  if (weather.weather.includes('雾') || weather.weather.includes('尘') || weather.weather.includes('沙') || weather.weather.includes('霾')) {
+    weather_text = `${weather.weather} ${weather.temperature}℃`
+    weather_icon = require('../../res/images/home/icon_fly_ash.png')
+  }
+  return { weather_text, weather_icon }
 }

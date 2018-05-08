@@ -10,9 +10,18 @@ import Notification from './notification/Notification'
 import Profile from './profile/Profile'
 import TabNavigator from 'react-native-tab-navigator'
 import { ifIphoneX } from 'react-native-iphone-x-helper'
+import { connect } from 'react-redux'
 
 import JPushModule from 'jpush-react-native'
 
+function mapStateToProps(state) {
+  return {
+    user: state.user,
+    partner: state.partner
+  }
+}
+
+@connect(mapStateToProps)
 export default class Index extends Component {
 
   componentDidMount() {

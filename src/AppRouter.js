@@ -11,6 +11,7 @@ import Gender from './containers/login/Gender'
 // home
 import NewDiary from './containers/home/NewDiary'
 import DiaryDetail from './containers/home/DiaryDetail'
+import UpdateDiary from './containers/home/UpdateDiary'
 
 // profile
 import Profile from './containers/profile/Profile'
@@ -96,6 +97,13 @@ export default class AppRouter extends Component {
               key={scenes.SCENE_DIARY_DETAIL}
               component={DiaryDetail}
               title='日记详情'
+              hideNavBar
+              duration={0}
+            />
+            <Scene
+              key={scenes.SCENE_UPDATE_DIARY}
+              component={UpdateDiary}
+              title='修改日记'
               hideNavBar
               duration={0}
             />

@@ -26,9 +26,17 @@ export default class DiaryBanner extends Component {
     base64List: [],
     imgIndex: 0,
     imgListComponent: [],
+    updateDiary: false,
+    imageList: []
   }
 
   componentDidMount() {
+    if (this.props.updateDiary) {
+      this.setState({
+        updateDiary: true,
+        imageList: this.props.imageList
+      })
+    }
     this._setImgList()
   }
 
@@ -51,40 +59,72 @@ export default class DiaryBanner extends Component {
       }
     }
     ImagePicker.showImagePicker(options, res => {
-      console.log(res)
       if (!res.didCancel) {
         let source = { uri: res.uri }
-        let { sources, base64List } = this.state
-        sources.push(source)
-        base64List.push(res.data)
-        this.setState({ sources, base64List })
-        this._setImgList()
-        this.props.getBase64List(base64List)
+
+        if (this.state.updateDiary) {
+          let { imageList, base64List } = this.state
+          base64List[imageList.length] = res.data
+          imageList.push(source)
+          this.setState({ imageList, base64List })
+          this._setImgList()
+          this.props.getBase64List(base64List, imageList)
+        } else {
+          let { sources, base64List } = this.state
+          sources.push(source)
+          base64List.push(res.data)
+          this.setState({ sources, base64List })
+          this._setImgList()
+          this.props.getBase64List(base64List)
+        }
       }
     })
   }
 
   _removeImg() {
-    let { sources, base64List } = this.state
-    sources.splice(this.state.imgIndex, 1)
-    base64List.splice(this.state.imgIndex, 1)
-    this.setState({ sources, base64List })
-    this._setImgList()
-    this.props.getBase64List(base64List)
+    if (this.state.updateDiary) {
+      let { imageList, base64List, imgIndex } = this.state
+      imageList.splice(imgIndex, 1)
+      base64List.splice(imgIndex, 1)
+      this.setState({ imageList, base64List })
+      this._setImgList()
+      this.props.getBase64List(base64List, imageList)
+    } else {
+      let { sources, base64List, imgIndex } = this.state
+      sources.splice(imgIndex, 1)
+      base64List.splice(imgIndex, 1)
+      this.setState({ sources, base64List })
+      this._setImgList()
+      this.props.getBase64List(base64List)
+    }
   }
 
   _setImgList() {
+    let imgListComponent = []
+
+    if (this.state.updateDiary) {
+      imgListComponent = this.state.imageList.map((item, index) => {
+        if (typeof item === 'string') {
+          return (
+            <Image key={index} style={styles.img} resizeMode='cover' source={{ uri: item }}/>
+          )
+        } else {
+          return (
+            <Image key={index} style={styles.img} resizeMode='cover' source={item}/>
+          )
+        }
+      })
+      return this.setState({ imgListComponent })
+    }
+
     if (this.props.imageList && this.props.imageList.length !== 0) {
       imgListComponent = this.props.imageList.map((item, index) => {
         return (
           <Image key={index} style={styles.img} resizeMode='cover' source={{ uri: item }}/>
         )
       })
-      this.setState({ imgListComponent })
-      return
+      return this.setState({ imgListComponent })
     }
-
-    let imgListComponent = []
 
     if (this.state.sources.length !== 0) {
       imgListComponent = this.state.sources.map((item, index) => {
@@ -128,7 +168,7 @@ export default class DiaryBanner extends Component {
         </Swiper>
 
         <View
-          style={[styles.bottom_bar, { display: (this.props.showBottomBar && this.state.sources.length) ? 'flex' : 'none' }]}>
+          style={[styles.bottom_bar, { display: this.props.showBottomBar ? 'flex' : 'none' }]}>
           <TouchableOpacity style={styles.icon_container} onPress={() => this._removeImg()}>
             <Image source={require('../../../res/images/home/icon_remove_photo.png')}/>
           </TouchableOpacity>

@@ -19,8 +19,8 @@ import {
   WIDTH,
   getResponsiveWidth,
 } from '../../common/styles'
-
-import { getMonth, postImgToQiniu } from '../../common/util'
+import { getMonth, postImgToQiniu, getLocation } from '../../common/util'
+import { SCENE_INDEX } from '../../constants/scene'
 
 import HttpUtils from '../../network/HttpUtils'
 import { NOTES } from '../../network/Urls'
@@ -67,8 +67,7 @@ export default class NewDiary extends Component {
 
   _getLocation() {
     navigator.geolocation.getCurrentPosition(async res => {
-      const latitude = res.coords.latitude
-      const longitude = res.coords.longitude
+      const { longitude, latitude } = res.coords
       const location = await getLocation(longitude, latitude)
       if (location.city instanceof Array) {
         // 无法获取具体位置
@@ -163,7 +162,7 @@ export default class NewDiary extends Component {
           content='你的日记已经自动保存并同步，放心退出吧'
           onPressLeft={() => {
             this.setState({ showPopup: false })
-            Actions.pop()
+            Actions.reset(SCENE_INDEX)
           }}
           textBtnLeft='我明白了'
         />

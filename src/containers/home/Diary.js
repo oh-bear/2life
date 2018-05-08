@@ -26,16 +26,6 @@ class SingleDiary extends Component {
     diary: PropTypes.object
   }
 
-  state = {
-    location: '地球的某个角落'
-  }
-
-  async componentDidMount() {
-    const location = await getLocation(this.props.diary.longitude, this.props.diary.latitude)
-    if (location.city instanceof Array) return
-    this.setState({ location: `${location.city}，${location.province}，${location.country}` })
-  }
-
   render() {
     const diary = this.props.diary
 
@@ -51,13 +41,13 @@ class SingleDiary extends Component {
           </View>
           <Image
             style={[styles.img_diary, { display: diary.images ? 'flex' : 'none' }]}
-            source={{ uri: diary.images ? diary.images.split('&')[0] : '' }}/>
+            source={{ uri: diary.images ? diary.images.split(',')[0] : '' }}/>
         </View>
         <View style={styles.diary_bottom}>
           <TextPingFang style={styles.time}>{getTime(diary.date)}</TextPingFang>
           <View style={styles.location_container}>
             <Image style={styles.location_icon} source={require('../../../res/images/home/icon_location.png')}/>
-            <TextPingFang style={styles.text_location}>{this.state.location}</TextPingFang>
+            <TextPingFang style={styles.text_location}>{diary.location}</TextPingFang>
           </View>
         </View>
       </TouchableOpacity>
@@ -101,6 +91,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff'
   },
   date: {
+    width: getResponsiveWidth(48),
     paddingTop: getResponsiveWidth(16),
     color: '#aaa',
     fontSize: 14,
@@ -109,7 +100,6 @@ const styles = StyleSheet.create({
     flex: 1
   },
   diary_container: {
-    marginLeft: getResponsiveWidth(24),
     paddingTop: getResponsiveWidth(16),
     paddingBottom: getResponsiveWidth(16),
     justifyContent: 'space-between',

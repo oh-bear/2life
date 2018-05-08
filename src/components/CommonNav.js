@@ -22,7 +22,7 @@ export default class CommonNav extends Component {
         leftButton={
           <TouchableOpacity
             style={styles.left_btn}
-            onPress={this.props.onPressBack ? this.props.onPressBack : Actions.pop()}
+            onPress={this.props.onPressBack ? this.props.onPressBack : () => Actions.pop()}
           >
             <Image source={require('../../res/images/common/icon_back_black.png')}/>
           </TouchableOpacity>

@@ -39,7 +39,10 @@ export default class Gender extends Component {
     const data = {
       sex: this.state.gender,
       name: this.props.user.name,
-      face: this.props.user.face
+      face: this.props.user.face,
+      status: 502,
+      latitude: 0,
+      longitude: 0
     }
     const res = await HttpUtils.post(URL_update, data)
 

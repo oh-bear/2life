@@ -4,9 +4,13 @@ import {
   StyleSheet,
   TouchableOpacity,
   Image,
-  ScrollView
+  ActionSheetIOS,
+  TextInput,
+  Alert
 } from 'react-native'
 import { connect } from 'react-redux'
+import { Actions } from 'react-native-router-flux'
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
 import Container from '../../components/Container'
 import TextPingFang from '../../components/TextPingFang'
@@ -17,7 +21,11 @@ import {
   WIDTH,
   getResponsiveWidth,
 } from '../../common/styles'
+import { SCENE_INDEX, SCENE_UPDATE_DIARY } from '../../constants/scene'
 import { getMonth, getLocation } from '../../common/util'
+
+import HttpUtils from '../../network/HttpUtils'
+import { NOTES } from '../../network/Urls'
 
 function mapStateToProps(state) {
   return {
@@ -31,22 +39,59 @@ export default class DiaryDetail extends Component {
   state = {
     showBanner: false,
     imageList: [],
-    location: '',
-    likeComponent: null
+    likeComponent: null,
+    mode: '',
   }
 
   async componentWillMount() {
     // HttpUtils.post(NOTES.like, {note_id: this.props.diary.id}).then(res=> console.log(res))
     if (this.props.diary.images) {
-      let imageList = this.props.diary.images.split('&')
+      let imageList = this.props.diary.images.split(',')
       this.setState({ imageList, showBanner: true })
     } else {
       this.setState({ showBanner: false })
     }
-    const location = await getLocation(this.props.diary.longitude, this.props.diary.latitude)
-    this.setState({ location: `${location.city}，${location.province}，${location.country}` })
+    this.setState({mode: this.props.diary.mode.toString()})
 
     this.renderlikeComponent()
+  }
+
+  updateNote() {
+    const data = {
+      note_id: this.props.diary.id,
+      title: this.props.diary.title,
+      content: this.props.diary.content,
+      images: this.props.diary.images,
+      mode: this.state.mode
+    }
+    HttpUtils.post(NOTES.update, data).then(res => {
+      if (res.code === 0) Alert.alert('', '修改成功')
+    })
+  }
+
+  showOptions() {
+    const options = {
+      options: ['修改日记', '删除日记', '取消'],
+      cancelButtonIndex: 2,
+      destructiveButtonIndex: 1
+    }
+    ActionSheetIOS.showActionSheetWithOptions(options, index => {
+      if (index === 0) Actions.jump(SCENE_UPDATE_DIARY, {diary: this.props.diary})
+      if (index === 1) {
+        HttpUtils.get(NOTES.delete, {note_id: this.props.diary.id}).then(res => {
+          if (res.code === 0) Actions.reset(SCENE_INDEX)
+        })
+      }
+      if (index === 3) return
+    })
+  }
+
+  renderRightButton() {
+    return (
+      <TouchableOpacity onPress={() => this.showOptions()}>
+        <Image source={require('../../../res/images/common/icon_more_black.png')}/>
+      </TouchableOpacity>
+    )
   }
 
   renderlikeComponent() {
@@ -62,17 +107,18 @@ export default class DiaryDetail extends Component {
   render() {
     return (
       <Container hidePadding={this.state.showBanner}>
-        <ScrollView>
+        <KeyboardAwareScrollView>
           <DiaryBanner
             showBanner={this.state.showBanner}
             imageList={this.state.imageList}
             showNav={true}
+            rightButton={this.renderRightButton()}
           />
 
           <CommonNav
             navStyle={[styles.nav_style, { display: this.state.showBanner ? 'none' : 'flex' }]}
             navBarStyle={styles.navbar_style}
-            rightButton={this.props.rightButton}
+            rightButton={this.renderRightButton()}
           />
 
           <View style={styles.date_container}>
@@ -90,15 +136,25 @@ export default class DiaryDetail extends Component {
 
           <View style={styles.location_container}>
             <Image style={styles.location_icon} source={require('../../../res/images/home/icon_location.png')}/>
-            <TextPingFang style={styles.text_location}>{this.state.location}</TextPingFang>
+            <TextPingFang style={styles.text_location}>{this.props.diary.location}</TextPingFang>
           </View>
 
           <View style={styles.mode_container}>
             <Image style={styles.location_icon} source={require('../../../res/images/home/icon_happy.png')}/>
-            <TextPingFang style={styles.text_mode}>{this.props.diary.mode}</TextPingFang>
+            <TextInput
+              ref={ref => this.mode_ipt = ref}
+              style={styles.text_mode}
+              value={this.state.mode}
+              returnKeyType='done'
+              enablesReturnKeyAutomatically
+              maxLength={3}
+              onChangeText={mode => this.setState({mode})}
+              onSubmitEditing={() => this.updateNote()}
+            />
             <TextPingFang style={styles.text_value}>情绪值</TextPingFang>
             <TouchableOpacity
               style={styles.update_container}
+              onPress={() => this.mode_ipt.focus()}
             >
               <TextPingFang style={styles.text_update}>更正</TextPingFang>
             </TouchableOpacity>
@@ -109,7 +165,7 @@ export default class DiaryDetail extends Component {
               {this.state.likeComponent}
             </TouchableOpacity>
           </View>
-        </ScrollView>
+        </KeyboardAwareScrollView>
 
       </Container>
     )
@@ -173,9 +229,11 @@ const styles = StyleSheet.create({
     borderBottomColor: '#f5f5f5'
   },
   text_mode: {
+    width: getResponsiveWidth(30),
     marginLeft: getResponsiveWidth(15),
     color: '#444',
-    fontSize: 16
+    fontSize: 16,
+    fontWeight: 'bold'
   },
   text_value: {
     marginLeft: getResponsiveWidth(8),
