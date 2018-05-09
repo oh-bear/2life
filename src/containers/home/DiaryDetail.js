@@ -44,7 +44,6 @@ export default class DiaryDetail extends Component {
   }
 
   async componentWillMount() {
-    // HttpUtils.post(NOTES.like, {note_id: this.props.diary.id}).then(res=> console.log(res))
     if (this.props.diary.images) {
       let imageList = this.props.diary.images.split(',')
       this.setState({ imageList, showBanner: true })
@@ -53,7 +52,7 @@ export default class DiaryDetail extends Component {
     }
     this.setState({mode: this.props.diary.mode.toString()})
 
-    this.renderlikeComponent()
+    this.renderlikeComponent(this.props.diary.is_liked)
   }
 
   updateNote() {
@@ -86,20 +85,36 @@ export default class DiaryDetail extends Component {
     })
   }
 
-  renderRightButton() {
-    return (
-      <TouchableOpacity onPress={() => this.showOptions()}>
-        <Image source={require('../../../res/images/common/icon_more_black.png')}/>
-      </TouchableOpacity>
-    )
+  likeNote() {
+    HttpUtils.post(NOTES.like, {note_id: this.props.diary.id}).then(res => {
+      if (res === 0) this.renderlikeComponent(true)
+    })
   }
 
-  renderlikeComponent() {
+  renderRightButton() {
+    if (this.props.user.id === this.props.diary.user_id) {
+      return (
+        <TouchableOpacity onPress={() => this.showOptions()}>
+          <Image source={require('../../../res/images/common/icon_more_black.png')}/>
+        </TouchableOpacity>
+      )
+    }
+  }
+
+  renderlikeComponent(isLiked) {
     let likeComponent
-    if (this.props.diary.is_liked) {
-      likeComponent = <Image style={styles.img_btn} source={require('../../../res/images/home/icon_liked.png')}/>
+    if (isLiked) {
+      likeComponent = (
+        <TouchableOpacity>
+          <Image style={styles.img_btn} source={require('../../../res/images/home/icon_liked.png')}/>
+        </TouchableOpacity>
+      )
     } else {
-      likeComponent = <Image style={styles.img_btn} source={require('../../../res/images/home/icon_like.png')}/>
+      likeComponent = (
+        <TouchableOpacity onPress={() => this.likeNote()}>
+          <Image style={styles.img_btn} source={require('../../../res/images/home/icon_like.png')}/>
+        </TouchableOpacity>
+      )
     }
     this.setState({ likeComponent })
   }
@@ -153,7 +168,7 @@ export default class DiaryDetail extends Component {
             />
             <TextPingFang style={styles.text_value}>情绪值</TextPingFang>
             <TouchableOpacity
-              style={styles.update_container}
+              style={[styles.update_container, { display: this.props.user.id === this.props.diary.user_id ? 'flex' : 'none' }]}
               onPress={() => this.mode_ipt.focus()}
             >
               <TextPingFang style={styles.text_update}>更正</TextPingFang>

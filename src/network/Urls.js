@@ -4,7 +4,11 @@ export const USERS = {
   code: '/users/code',
   update: '/users/update', //post {sex, name, face, status, latitude, longitude}
   user: '/users/user',
-  notification: '/users/show_notification'
+  notification: '/users/show_notification',
+  connect_by_random: '/users/connect_by_random',
+  connect_by_id: '/users/connect_by_id', //get, {code}
+  disconnect: '/users/disconnect',
+  invitation_code: '/users/invitation_code',
 }
 
 export const NOTES = {

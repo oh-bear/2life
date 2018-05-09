@@ -22,7 +22,7 @@ export default class ProfileBadge extends Component {
   render() {
     return (
       <Container hidePadding={true}>
-        <ScrollView contentContainerStyle={styles.scroll_container}>
+        <View contentContainerStyle={styles.scroll_container}>
           <ImageBackground style={styles.bg_container} source={require('../../../res/images/profile/bg_badge.png')}>
             <ProfileHeader title='我的徽章'/>
             <View style={styles.badge_count}>
@@ -58,7 +58,7 @@ export default class ProfileBadge extends Component {
             </View>
 
           </View>
-        </ScrollView>
+        </View>
       </Container>
     )
   }

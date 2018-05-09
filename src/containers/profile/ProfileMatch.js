@@ -10,6 +10,7 @@ import {
 
 import { Actions } from 'react-native-router-flux'
 import ScrollableTabView from 'react-native-scrollable-tab-view'
+import { connect } from 'react-redux'
 
 import TextPingFang from '../../components/TextPingFang'
 import Container from '../../components/Container'
@@ -23,13 +24,23 @@ import {
 } from '../../common/styles'
 import { SCENE_MATCH_RESULT } from '../../constants/scene'
 
+import HttpUtils from '../../network/HttpUtils'
+import { USERS } from '../../network/Urls'
+
+function mapStateToProps(state) {
+  return {
+    user: state.user,
+  }
+}
+
+@connect(mapStateToProps)
 export default class ProfileMatch extends Component {
 
   state = {
     matchType: 0, // 0: 随机, 1: ID
-    matchGender: 0,
-    beMatched: true,
-    character: '互补',
+    matchGender: 0, //0男1女
+    beMatched: true, //是否希望被匹配
+    character: 1,//性格：1相同，2互补，3随意
     matchUserId: null,
     showPopup: true
   }
@@ -38,11 +49,59 @@ export default class ProfileMatch extends Component {
     this.setState({ matchGender: !this.props.user.sex })
   }
 
-  async match() {
+  async updateStatus() {
+    const { matchGender, beMatched, character, matchUserId } = this.state
+    const { sex, name, face, status, latitude, longitude } = this.props.user
+
+    if (status >= 501 && status <= 504 || status === 1000) {
+      return
+    }
+
+    if (!beMatched) {
+      await HttpUtils.post(USERS.update, { status: 999, sex, name, face, latitude, longitude })
+      return
+    }
+
+    let _status = status
+    // 101：未匹配，期待异性，性格相同，主体男
+    if (!sex && matchGender && character === 1) _status = 101
+    // 102：未匹配，期待异性，性格互补，主体男
+    if (!sex && matchGender && character === 2) _status = 102
+    // 103：未匹配，期待异性，性格随意，主体男
+    if (!sex && matchGender && character === 3) _status = 103
+    // 111：未匹配，期待异性，性格相同，主体女
+    if (sex && !matchGender && character === 1) _status = 111
+    // 112：未匹配，期待异性，性格互补，主体女
+    if (sex && !matchGender && character === 2) _status = 112
+    // 113：未匹配，期待异性，性格随意，主体女
+    if (sex && !matchGender && character === 3) _status = 113
+    // 201：未匹配，期待同性，性格相同，主体男
+    if (!sex && !matchGender && character === 1) _status = 201
+    // 202：未匹配，期待同性，性格互补，主体男
+    if (!sex && !matchGender && character === 2) _status = 202
+    // 203：未匹配，期待同性，性格随意，主体男
+    if (!sex && !matchGender && character === 3) _status = 203
+    // 211：未匹配，期待同性，性格相同，主体女
+    if (sex && matchGender && character === 1) _status = 211
+    // 212：未匹配，期待同性，性格互补，主体女
+    if (sex && matchGender && character === 2) _status = 212
+    // 213：未匹配，期待同性，性格随意，主体女
+    if (sex && matchGender && character === 3) _status = 213
+
+    await HttpUtils.post(USERS.update, { status: _status, sex, name, face, latitude, longitude })
+    return
+  }
+
+  async startMatch() {
+    if (this.state.matchType === 0) {
+      await this.updateStatus()
+      return Actions.jump(SCENE_MATCH_RESULT)
+    }
     if (this.state.matchType === 1 && !this.state.matchUserId) {
       return Alert.alert('', '对方ID不能为空哦')
+    } else {
+      return Actions.jump(SCENE_MATCH_RESULT, { matchUserId: this.state.matchUserId })
     }
-    Actions.jump(SCENE_MATCH_RESULT)
   }
 
   render() {
@@ -105,24 +164,24 @@ export default class ProfileMatch extends Component {
                 <TextPingFang style={styles.text_question}>匹配者的性格</TextPingFang>
                 <View style={styles.option_container}>
                   <TouchableOpacity
-                    style={[styles.btn, this.state.character === '互补' ? styles.active_btn : null]}
-                    onPress={() => this.setState({ character: '互补' })}
+                    style={[styles.btn, this.state.character === 1 ? styles.active_btn : null]}
+                    onPress={() => this.setState({ character: 1 })}
                   >
-                    <TextPingFang style={[styles.text_btn, this.state.character === '互补' ? styles.active_text : null]}>互补</TextPingFang>
+                    <TextPingFang style={[styles.text_btn, this.state.character === 1 ? styles.active_text : null]}>相同</TextPingFang>
                   </TouchableOpacity>
 
                   <TouchableOpacity
-                    style={[styles.btn, this.state.character === '相同' ? styles.active_btn : null]}
-                    onPress={() => this.setState({ character: '相同' })}
+                    style={[styles.btn, this.state.character === 2 ? styles.active_btn : null]}
+                    onPress={() => this.setState({ character: 2 })}
                   >
-                    <TextPingFang style={[styles.text_btn, this.state.character === '相同' ? styles.active_text : null]}>相同</TextPingFang>
+                    <TextPingFang style={[styles.text_btn, this.state.character === 2 ? styles.active_text : null]}>互补</TextPingFang>
                   </TouchableOpacity>
 
                   <TouchableOpacity
-                    style={[styles.btn, this.state.character === '随意' ? styles.active_btn : null]}
-                    onPress={() => this.setState({ character: '随意' })}
+                    style={[styles.btn, this.state.character === 3 ? styles.active_btn : null]}
+                    onPress={() => this.setState({ character: 3 })}
                   >
-                    <TextPingFang style={[styles.text_btn, this.state.character === '随意' ? styles.active_text : null]}>随意</TextPingFang>
+                    <TextPingFang style={[styles.text_btn, this.state.character === 3 ? styles.active_text : null]}>随意</TextPingFang>
                   </TouchableOpacity>
                 </View>
               </View>
@@ -134,7 +193,7 @@ export default class ProfileMatch extends Component {
               <TextInput
                 style={styles.input}
                 value={this.state.matchUserId}
-                placeholder='Example: 123'
+                placeholder='Example: 123456'
                 keyboardType='numeric'
                 onChangeText={id => this.setState({ matchUserId: id })}
               />
@@ -143,14 +202,14 @@ export default class ProfileMatch extends Component {
 
           <TouchableOpacity
             style={styles.start_btn}
-            onPress={() => this.match()}
+            onPress={() => this.startMatch()}
           >
             <TextPingFang style={styles.text_start_btn}>开始匹配</TextPingFang>
           </TouchableOpacity>
 
         </ScrollView>
 
-        <MatchTips
+        {/* <MatchTips
           showPopup={this.state.showPopup}
           onClose={() => this.setState({ showPopup: false })}
           tips={[
@@ -170,7 +229,7 @@ export default class ProfileMatch extends Component {
               sTitle: '至少要写 1 篇日记才能匹配',
             }
           ]}
-        />
+        /> */}
       </Container>
     )
   }

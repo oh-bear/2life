@@ -47,7 +47,7 @@ export default class Profile extends Component {
         >
           <View style={styles.head_left}>
             <View style={styles.head_left_top}>
-              <TextPingFang style={styles.text_name}>{this.props.user.name}</TextPingFang>
+              <TextPingFang style={styles.text_name}>{this.props.partner.name}</TextPingFang>
             </View>
             <View style={styles.head_left_bottom}>
               <Image source={require('../../../res/images/profile/icon_link.png')}/>
@@ -55,10 +55,10 @@ export default class Profile extends Component {
             </View>
           </View>
           <View style={styles.head_right}>
-            <Image style={styles.img_head} source={{ uri: this.props.user.face }}/>
+            <Image style={styles.img_head} source={{ uri: this.props.partner.face }}/>
             {
               (() => {
-                if (this.props.user.sex === 0) {
+                if (this.props.partner.sex === 0) {
                   return <Image
                     style={styles.img_gender}
                     source={require('../../../res/images/profile/icon_male.png')}/>
@@ -75,21 +75,21 @@ export default class Profile extends Component {
         <TouchableOpacity style={styles.row} activeOpacity={1}>
           {
             (() => {
-              if (this.props.user.sex === 0) {
+              if (this.props.partner.sex === 0) {
                 return <Image source={require('../../../res/images/profile/icon_mode_male.png')}/>
               } else {
                 return <Image source={require('../../../res/images/profile/icon_mode_female.png')}/>
               }
             })()
           }
-          <TextPingFang style={styles.text_row_left}>{this.props.user.mode ? this.props.user.mode : '暂无'}</TextPingFang>
+          <TextPingFang style={styles.text_row_left}>{this.props.partner.mode ? this.props.partner.mode : '暂无'}</TextPingFang>
           <TextPingFang style={styles.text_row_desc}>平均情绪值</TextPingFang>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.row} activeOpacity={1}>
+        <TouchableOpacity style={[styles.row, styles.row_border_bottom]} activeOpacity={1}>
           {
             (() => {
-              if (this.props.user.sex === 0) {
+              if (this.props.partner.sex === 0) {
                 return <Image source={require('../../../res/images/profile/icon_diary_male.png')}/>
               } else {
                 return <Image source={require('../../../res/images/profile/icon_diary_female.png')}/>
@@ -97,7 +97,7 @@ export default class Profile extends Component {
             })()
           }
           <TextPingFang
-            style={styles.text_row_left}>{this.props.user.total_notes ? this.props.user.total_notes : 0}</TextPingFang>
+            style={styles.text_row_left}>{this.props.partner.total_notes ? this.props.partner.total_notes : 0}</TextPingFang>
           <TextPingFang style={styles.text_row_desc}>日记数量</TextPingFang>
         </TouchableOpacity>
       </View>
@@ -106,11 +106,10 @@ export default class Profile extends Component {
 
   render() {
     return (
-      <Container hidePadding={true}>
-        <ScrollView contentContainerStyle={{ height: this.props.partner.id ? HEIGHT * 1.1 : HEIGHT }}>
+      <Container>
+        <View>
           <TextPingFang style={styles.title}>关于我</TextPingFang>
-
-          <View style={styles.profile_container}>
+          <ScrollView contentContainerStyle={styles.profile_container}>
             <TouchableOpacity
               style={styles.head_container}
               activeOpacity={1}
@@ -179,7 +178,7 @@ export default class Profile extends Component {
             </TouchableOpacity>
 
             <TouchableOpacity
-              style={styles.row}
+              style={[styles.row, styles.row_border_bottom]}
               onPress={() => Actions.jump(SCENE_PROFILE_BADGE)}
             >
               {
@@ -214,7 +213,7 @@ export default class Profile extends Component {
             </TouchableOpacity>
 
             <TouchableOpacity
-              style={styles.row}
+              style={[styles.row, styles.row_border_bottom]}
               onPress={() => Actions.jump(SCENE_PROFILE_SYNC)}
             >
               <Image source={require('../../../res/images/profile/icon_sync.png')}/>
@@ -223,9 +222,9 @@ export default class Profile extends Component {
               <Image style={styles.row_indicator} source={require('../../../res/images/common/icon_indicator.png')}/>
             </TouchableOpacity>
 
-          </View>
+          </ScrollView>
 
-        </ScrollView>
+        </View>
       </Container>
     )
   }
@@ -247,6 +246,11 @@ const styles = StyleSheet.create({
   profile_container: {
     paddingLeft: getResponsiveWidth(24),
     paddingRight: getResponsiveWidth(24),
+    ...ifIphoneX({
+      paddingBottom: 84,
+    }, {
+      paddingBottom: 50,
+    }),
   },
   head_container: {
     flexDirection: 'row',
@@ -289,6 +293,8 @@ const styles = StyleSheet.create({
     height: getResponsiveWidth(44),
     flexDirection: 'row',
     alignItems: 'center',
+  },
+  row_border_bottom: {
     borderBottomWidth: 1,
     borderBottomColor: '#f1f1f1'
   },

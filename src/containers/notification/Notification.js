@@ -64,7 +64,7 @@ export default class Notification extends Component {
 
   render() {
     return (
-      <Container hidePadding={true}>
+      <Container>
         <View>
           <TextPingFang style={styles.title}>通知</TextPingFang>
           <FlatList

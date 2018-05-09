@@ -85,10 +85,10 @@ export default class ProfileEdit extends Component {
   render() {
     return (
       <Container>
-        <ScrollView>
+        <View>
           <ProfileHeader title='个人信息'/>
 
-          <View style={styles.main_container}>
+          <ScrollView contentContainerStyle={styles.main_container}>
             <TouchableOpacity
               style={styles.row}
               onPress={() => this.seleceFace()}
@@ -122,15 +122,23 @@ export default class ProfileEdit extends Component {
 
             <View style={styles.row}>
               <TextPingFang style={styles.text_row_left}>ID</TextPingFang>
-              <TextPingFang style={styles.text_row_right}>{this.props.user.id}</TextPingFang>
+              <TextPingFang style={styles.text_row_right}>{this.props.user.code}</TextPingFang>
             </View>
 
             <View style={styles.badge}>
               <TextPingFang style={styles.text_badge_title}>展示徽章</TextPingFang>
-              <TextPingFang style={styles.text_badge_content}>你还没有获得任何徽章</TextPingFang>
+              {
+                (() => {
+                  if (!this.props.user.badges) {
+                    return <TextPingFang style={styles.text_badge_content}>你还没有获得任何徽章</TextPingFang>
+                  } else {
+                    // todo: 缺少获取徽章接口
+                  }
+                })()
+              }
             </View>
-          </View>
-        </ScrollView>
+          </ScrollView>
+        </View>
       </Container>
     )
   }

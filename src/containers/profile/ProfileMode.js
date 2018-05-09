@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
 import {
   StyleSheet,
-  ScrollView,
   TouchableOpacity,
-  Image
+  Image,
+  View
 } from 'react-native'
 import ScrollableTabView from 'react-native-scrollable-tab-view'
 
@@ -31,10 +31,10 @@ export default class ProfileMode extends Component {
   render() {
     return (
       <Container>
-        <ScrollView>
+        <View>
           <ProfileHeader
             title='情绪图表'
-            rightButton={this.renderRightButton()}
+            // rightButton={this.renderRightButton()}
           />
 
           <ScrollableTabView
@@ -58,7 +58,7 @@ export default class ProfileMode extends Component {
               timeRange={['日', '一', '二', '三', '四', '五', '六',]}
             />
           </ScrollableTabView>
-        </ScrollView>
+        </View>
       </Container>
     )
   }

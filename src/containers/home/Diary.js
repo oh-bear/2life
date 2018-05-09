@@ -39,9 +39,15 @@ class SingleDiary extends Component {
             <TextPingFang style={styles.text_diary_title} numberOfLines={1}>{diary.title}</TextPingFang>
             <TextPingFang style={styles.text_diary_content} numberOfLines={2}>{diary.content}</TextPingFang>
           </View>
-          <Image
-            style={[styles.img_diary, { display: diary.images ? 'flex' : 'none' }]}
-            source={{ uri: diary.images ? diary.images.split(',')[0] : '' }}/>
+          {
+            (() => {
+              if (diary.images) {
+                return (
+                  <Image style={styles.img_diary} source={{ uri: diary.images ? diary.images.split(',')[0] : '' }} />
+                )
+              }
+            })()
+          }
         </View>
         <View style={styles.diary_bottom}>
           <TextPingFang style={styles.time}>{getTime(diary.date)}</TextPingFang>
