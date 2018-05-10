@@ -292,5 +292,8 @@ const styles = StyleSheet.create({
     marginLeft: WIDTH - getResponsiveWidth(136),
     backgroundColor: '#2DC3A6',
     borderRadius: getResponsiveWidth(24)
+  },
+  text_start_btn: {
+    color: '#fff'
   }
 })
