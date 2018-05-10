@@ -24,7 +24,8 @@ import {
   SCENE_PROFILE_MODE,
   SCENE_PROFILE_BADGE,
   SCENE_PROFILE_MATCH,
-  SCENE_PROFILE_SYNC
+  SCENE_PROFILE_SYNC,
+  SCENE_PROFILE_REWARD
 } from '../../constants/scene'
 
 function mapStateToProps(state) {
@@ -221,6 +222,15 @@ export default class Profile extends Component {
               <TextPingFang style={styles.text_row_right}>10分钟前</TextPingFang>
               <Image style={styles.row_indicator} source={require('../../../res/images/common/icon_indicator.png')}/>
             </TouchableOpacity> */}
+
+            <TouchableOpacity
+              style={[styles.row, styles.row_border_bottom]}
+              onPress={() => Actions.jump(SCENE_PROFILE_REWARD)}
+            >
+              <Image source={require('../../../res/images/profile/icon_reward.png')}/>
+              <TextPingFang style={styles.text_row_left}>打赏</TextPingFang>
+              <Image style={styles.row_indicator} source={require('../../../res/images/common/icon_indicator.png')}/>
+            </TouchableOpacity>
 
           </ScrollView>
 
