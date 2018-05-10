@@ -25,7 +25,8 @@ import {
   SCENE_PROFILE_BADGE,
   SCENE_PROFILE_MATCH,
   SCENE_PROFILE_SYNC,
-  SCENE_PROFILE_REWARD
+  SCENE_PROFILE_REWARD,
+  SCENE_MATCH_RESULT
 } from '../../constants/scene'
 
 function mapStateToProps(state) {
@@ -45,6 +46,7 @@ export default class Profile extends Component {
         <TouchableOpacity
           style={styles.head_container}
           activeOpacity={1}
+          onPress={() => Actions.jump(SCENE_MATCH_RESULT)}
         >
           <View style={styles.head_left}>
             <View style={styles.head_left_top}>

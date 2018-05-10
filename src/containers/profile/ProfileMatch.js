@@ -52,7 +52,7 @@ export default class ProfileMatch extends Component {
 
   async updateStatus() {
     const { matchGender, beMatched, character, matchUserId } = this.state
-    let { status } = this.props.user
+    let { sex, status } = this.props.user
 
     if (status >= 501 && status <= 504 || status === 1000) {
       return

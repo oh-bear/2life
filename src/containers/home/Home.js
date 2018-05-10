@@ -114,6 +114,12 @@ export default class Home extends Component {
     }
   }
 
+  _updateUser() {
+    if (this.props.user.total_notes && this.props.user.status === 502) {
+      updateUser(this.props.user, {status: 101})
+    }
+  }
+
   async _showTips() {
     const firstUse = await Storage.get('firstUse', true)
     if (firstUse) {
@@ -135,7 +141,8 @@ export default class Home extends Component {
         const { latitude, longitude } = res.coords
 
         //更新用户经纬度
-        updateUser(this.props.user, {latitude, longitude})
+        await updateUser(this.props.user, {latitude, longitude})
+        this._updateUser()
 
         // 获取用户地理位置和天气信息
         const location = await getLocation(latitude, longitude)
@@ -211,11 +218,7 @@ export default class Home extends Component {
   }
 
   _renderItem({ item }) {
-    return (
-      <Diary
-        data={item}
-      />
-    )
+    return ( <Diary data={item}/> )
   }
 
   _emptyDiary() {
