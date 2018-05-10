@@ -64,7 +64,8 @@ export default class Home extends Component {
     showDayTip: false,
     showWeatherTip: false,
     showWeatherFlag: false,
-    showMyWeather: true
+    showMe: true,
+    showWeather: true
   }
 
   async componentDidMount() {
@@ -149,9 +150,13 @@ export default class Home extends Component {
         // const location = await getLocation(113.387061, 23.053829)
         const weather = await getWeather(location.city)
         const { weather_text, weather_icon } = getWeatherDesc(weather)
-        this.setState({ weather_text, weather_icon, showMyWeather: true })
+        this.setState({ weather_text, weather_icon})
       } catch (e) {
-        console.log(e)
+        this.setState({
+          weather_text: '你在的地方一定是晴天吧',
+          weather_icon: require('../../../res/images/home/icon_sunny.png'),
+        })
+        
       }
     })
   }
@@ -180,40 +185,68 @@ export default class Home extends Component {
   async exchangeWeather() {
     this.setState({ showWeatherTip: false })
 
-    if (!this.props.partner.id) return Alert.alert('', '你还没有匹配对象哦')
+    if (!this.props.partner.id) return
 
-    if (this.state.showMyWeather) {
-      // 切换到对方的天气
+    if (this.state.showMe) {
       const { latitude, longitude } = this.props.partner
       const location = await getLocation(latitude, longitude)
       // const location = await getLocation(113.387061, 23.053829)
       const weather = await getWeather(location.city)
       const { weather_text, weather_icon } = getWeatherDesc(weather)
-      this.setState({ weather_text, weather_icon, showMyWeather: false })
+      this.setState({ weather_text, weather_icon, showMe: false, showWeather: true })
     } else {
-      // 切换到自己的天气
       this._getWeather()
+      this.setState({
+        showMe: true,
+        showWeather: true
+      })
     }
   }
 
-  exchangeWM() {
+  async exchangeWM() {
+    let user = this.props.user
     let partner = this.props.partner
-
-    if (!partner.id) return Alert.alert('', '你还没有匹配对象哦')
+    let mode_icon, mode_text
     
-    if (this.state.showMyWeather) {
-      const mode_text = `${partner.mode} 情绪值`
-      let mode_icon
-      if (partner.mode >= 80) mode_icon = require('../../../res/images/home/icon_happy.png')
-      if (partner.mode >= 60 && partner.mode < 80) mode_icon = require('../../../res/images/home/icon_normal.png')
-      if (partner.mode < 60) mode_icon = require('../../../res/images/home/icon_sad.png')
-      this.setState({
-        weather_text: mode_text,
-        weather_icon: mode_icon,
-        showMyWeather: false
-      })
+    if (this.state.showMe) {
+      if (this.state.showWeather) {
+        mode_text = `${user.mode ? user.mode : 0} 情绪值`
+        if (user.mode >= 80) mode_icon = require('../../../res/images/home/icon_happy.png')
+        if (user.mode >= 60 && user.mode < 80) mode_icon = require('../../../res/images/home/icon_normal.png')
+        if (user.mode < 60) mode_icon = require('../../../res/images/home/icon_sad.png')
+        this.setState({
+          weather_text: mode_text,
+          weather_icon: mode_icon,
+          showMe: true,
+          showWeather: false
+        })
+      } else {
+        this._getWeather()
+        this.setState({
+          showMe: true,
+          showWeather: true
+        })
+      }
     } else {
-      this._getWeather()
+      if (this.state.showWeather) {
+        mode_text = `${partner.mode ? partner.mode : 0} 情绪值`
+        if (partner.mode >= 80) mode_icon = require('../../../res/images/home/icon_happy.png')
+        if (partner.mode >= 60 && partner.mode < 80) mode_icon = require('../../../res/images/home/icon_normal.png')
+        if (partner.mode < 60) mode_icon = require('../../../res/images/home/icon_sad.png')
+        this.setState({
+          weather_text: mode_text,
+          weather_icon: mode_icon,
+          showMe: false,
+          showWeather: false
+        })
+      } else {
+        const { latitude, longitude } = partner
+        const location = await getLocation(latitude, longitude)
+        // const location = await getLocation(113.387061, 23.053829)
+        const weather = await getWeather(location.city)
+        const { weather_text, weather_icon } = getWeatherDesc(weather)
+        this.setState({ weather_text, weather_icon, showMe: false, showWeather: true })
+      }
     }
   }
 
@@ -296,7 +329,7 @@ export default class Home extends Component {
             >
               <Image style={styles.weather_icon} source={this.state.weather_icon}/>
               <TextPingFang
-                style={[styles.text_weather, { color: this.state.showMyWeather ? '#aaa' : '#000' }]}>{this.state.weather_text}</TextPingFang>
+                style={[styles.text_weather, { color: this.state.showMe ? '#aaa' : '#000' }]}>{this.state.weather_text}</TextPingFang>
             </TouchableOpacity>
 
             <TouchableOpacity style={styles.weather_exchange} onPress={() => this.exchangeWeather()}>
@@ -431,7 +464,7 @@ const styles = StyleSheet.create({
   // weather_icon: {
   // },
   text_weather: {
-    marginLeft: getResponsiveWidth(10),
+    marginLeft: getResponsiveWidth(24),
     color: '#aaa',
     fontSize: 14,
   },

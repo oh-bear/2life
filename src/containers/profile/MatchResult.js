@@ -15,6 +15,7 @@ import Popup from '../../components/Popup'
 import Container from '../../components/Container'
 import ProfileHeader from './components/ProfileHeader'
 import { fetchPartnerSuccess } from '../../redux/modules/partner'
+import { fetchProfileSuccess } from '../../redux/modules/user'
 
 import {
   WIDTH,
@@ -81,6 +82,11 @@ export default class MatchResult extends Component {
       const res = await HttpUtils.get(USERS.connect_by_id, {code: this.props.matchUserId})
       if (res.code === 0) {
         store.dispatch(fetchPartnerSuccess(res.data))
+        
+        HttpUtils.get(USERS.user, {user_id: this.props.user.id}).then(res => {
+          if (res.code === 0) store.dispatch(fetchProfileSuccess(res.data))
+        })
+
         this.setState({partner: res.data})
         this.matchSucceed()
       } else {        
@@ -91,6 +97,11 @@ export default class MatchResult extends Component {
       const res = await HttpUtils.get(USERS.connect_by_random)
       if (res.code === 0) {
         store.dispatch(fetchPartnerSuccess(res.data))
+
+        HttpUtils.get(USERS.user, {user_id: this.props.user.id}).then(res => {
+          if (res.code === 0) store.dispatch(fetchProfileSuccess(res.data))
+        })
+
         this.setState({partner: res.data})
         this.matchSucceed()
       } else {

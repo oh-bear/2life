@@ -97,7 +97,7 @@ export default class ProfileEdit extends Component {
               onPress={() => this.seleceFace()}
             >
               <TextPingFang style={styles.text_row_left}>头像</TextPingFang>
-              <Image style={styles.row_face} source={{ uri: this.props.user.face }}/>
+              <Image style={styles.row_face} source={{ uri: this.state.user.face }}/>
               <Image style={styles.row_indicator} source={require('../../../res/images/common/icon_indicator.png')}/>
             </TouchableOpacity>
 
