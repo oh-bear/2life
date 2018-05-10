@@ -3,7 +3,8 @@ import {
   View,
   StyleSheet,
   Image,
-  TouchableOpacity
+  TouchableOpacity,
+  Platform
 } from 'react-native'
 
 import TextPingFang from '../../components/TextPingFang'
@@ -18,15 +19,39 @@ import {
 } from '../../common/styles'
 
 import * as RNIap from 'react-native-iap'
+import HttpUtils from '../../network/HttpUtils'
+import { USERS } from '../../network/Urls'
+
+const itemSkus = Platform.select({
+  ios: [
+    'award_small', 'award_middle', 'award_big'
+  ],
+  android: [],
+})
 
 export default class ProfileReward extends Component {
 
   state = {
     bg: require('../../../res/images/profile/bg-6.png'),
-    selecting: 1
+    selecting: 1,
+    productList: [],
+    receipt: '',
+    availableItemsMessage: '',
   }
 
-  _subscribe(id) {
+  async componentDidMount() {
+    try {
+      await RNIap.prepare()
+      const products = await RNIap.getProducts(itemSkus)
+      this.setState({ productList: products })
+    }
+    catch (err) {
+      console.warn(err.code, err.message)
+    }
+
+  }
+
+  _select(id) {
     switch (id) {
     case 1:
       this.setState({ bg: require('../../../res/images/profile/bg-6.png'), selecting: 1 })
@@ -42,6 +67,17 @@ export default class ProfileReward extends Component {
     }
   }
 
+  buyItem = async (product) => {
+    RNIap.buyProduct(product.productId).then(purchase => {
+      HttpUtils.post(USERS.update_rate, {price: product.price}).then(res => {
+        // TODO: resetting UI, 购买成功提醒
+      })
+    }).catch(err => {
+      // TODO: resetting UI, 取消购买提醒
+      console.warn(err) // standardized err.code and err.message available
+    })
+  }
+
   render() {
     return (
       <Container>
@@ -53,7 +89,7 @@ export default class ProfileReward extends Component {
           <TouchableOpacity
             style={[styles.item, this.state.selecting === 1 ? styles.item_selecting : null]}
             onPress={() => {
-              this._subscribe(1)
+              this._select(1)
             }}
           >
             <TextPingFang style={styles.text_top}>赏金</TextPingFang>
@@ -67,13 +103,13 @@ export default class ProfileReward extends Component {
           <TouchableOpacity
             style={[styles.item, this.state.selecting === 2 ? styles.item_selecting : null]}
             onPress={() => {
-              this._subscribe(2)
+              this._select(2)
             }}
           >
             <TextPingFang style={styles.text_top}>赏金</TextPingFang>
             <View style={styles.money_container}>
               <TextPingFang style={styles.text_money}>￥</TextPingFang>
-              <TextPingFang style={[styles.text_money, styles.text_bold]}>16</TextPingFang>
+              <TextPingFang style={[styles.text_money, styles.text_bold]}>12</TextPingFang>
               <TextPingFang style={styles.text_money}>.00</TextPingFang>
             </View>
             <TextPingFang style={styles.text_bottom}>一个汉堡</TextPingFang>
@@ -81,7 +117,7 @@ export default class ProfileReward extends Component {
           <TouchableOpacity
             style={[styles.item, this.state.selecting === 3 ? styles.item_selecting : null]}
             onPress={() => {
-              this._subscribe(3)
+              this._select(3)
             }}
           >
             <TextPingFang style={styles.text_top}>赏金</TextPingFang>
@@ -96,6 +132,9 @@ export default class ProfileReward extends Component {
 
         <TouchableOpacity
           style={styles.btn}
+          onPress={() => {
+            this.buyItem(this.state.productList[this.state.selecting - 1])
+          }}
         >
           <TextPingFang style={styles.text_btn}>打赏作者</TextPingFang>
         </TouchableOpacity>

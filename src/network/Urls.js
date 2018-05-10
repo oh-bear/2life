@@ -9,6 +9,7 @@ export const USERS = {
   connect_by_id: '/users/connect_by_id', //get, {code}
   disconnect: '/users/disconnect',
   invitation_code: '/users/invitation_code',
+  update_rate: '/users/update_rate'
 }
 
 export const NOTES = {
