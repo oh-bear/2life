@@ -41,10 +41,13 @@ export default class ProfileMode extends Component {
   async componentWillMount() {
     const res = await HttpUtils.get(MODES.show)
     if (res.code === 0) {
+      const weekData = res.data.length >= 7 ? res.data.slice(-7) : res.data
+      const monthData = res.data.length >= 30 ? res.data.slice(-30) : res.data
+      const yearData = res.data.length >= 365 ? res.data.slice(-365) : res.data
       this.setState({
-        weekModeData: this.formData(res.data, 'week'),
-        monthModeData: this.formData(res.data, 'month'),
-        yearModeData: this.formData(res.data, 'year'),
+        weekModeData: this.formData(weekData, 'week'),
+        monthModeData: this.formData(monthData, 'month'),
+        yearModeData: this.formData(yearData, 'year'),
         totalModeData: this.formData(res.data, 'total'),
       })
     }
