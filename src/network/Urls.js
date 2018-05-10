@@ -2,7 +2,7 @@ export const USERS = {
   login: '/users/login',
   register: '/users/register',
   code: '/users/code',
-  update: '/users/update', //post {sex, name, face, status, latitude, longitude}
+  update: '/users/update', //post {sex, name, face, status, latitude, longitude, badge_id, badges}
   user: '/users/user',
   notification: '/users/show_notification',
   connect_by_random: '/users/connect_by_random',
@@ -17,6 +17,10 @@ export const NOTES = {
   like: '/notes/like', // post {note_id}
   delete: '/notes/delete', // get {note_id}
   update: '/notes/update', // post {note_id, title, content, images, mode}
+}
+
+export const MODES = {
+  show: '/modes/show', // get
 }
 
 export const UTILS = {

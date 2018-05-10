@@ -285,3 +285,13 @@ export function getWeatherDesc(weather) {
   }
   return { weather_text, weather_icon }
 }
+
+/**
+ * 更新用户信息
+ * @param {object} user 用户数据
+ * @param {object} obj 要更新的数据
+ */
+export function updateUser(user, obj) {
+  const {sex, name, face, status, latitude, longitude, badge_id, badges} = user
+  return HttpUtils.post(USERS.update, Object.assign({sex, name, face, status, latitude, longitude, badge_id, badges}, obj))
+}

@@ -45,17 +45,19 @@ export default class ModeCharts extends Component {
             data={this.props.modeData}
             svg={{ stroke: '#2DC3A6', strokeWidth: 1.5 }}
             curve={ shape.curveNatural }
-            contentInset={{ top: 20, bottom: 20 }}
+            contentInset={{ top: 15, bottom: 15 }}
             animate={true}
+            gridMin={0}
+            gridMax={100}
           >
           </LineChart>
         </View>
 
         <View style={styles.xaxis}>
           {
-            this.props.timeRange.map(time => {
+            this.props.timeRange.map((time, index) => {
               return (
-                <TextPingFang style={styles.text_axis_item}>{time}</TextPingFang>
+                <TextPingFang key={index} style={styles.text_axis_item}>{time}</TextPingFang>
               )
             })
           }
@@ -96,7 +98,7 @@ const styles = StyleSheet.create({
   xaxis: {
     height: getResponsiveHeight(24),
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'space-around',
     alignItems: 'center',
     marginLeft: getResponsiveWidth(32)
   }

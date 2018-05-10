@@ -22,6 +22,7 @@ import {
   WIDTH,
   getResponsiveWidth,
 } from '../../common/styles'
+import { updateUser } from '../../common/util'
 import { SCENE_MATCH_RESULT } from '../../constants/scene'
 
 import HttpUtils from '../../network/HttpUtils'
@@ -51,44 +52,43 @@ export default class ProfileMatch extends Component {
 
   async updateStatus() {
     const { matchGender, beMatched, character, matchUserId } = this.state
-    const { sex, name, face, status, latitude, longitude } = this.props.user
+    let { status } = this.props.user
 
     if (status >= 501 && status <= 504 || status === 1000) {
       return
     }
 
     if (!beMatched) {
-      await HttpUtils.post(USERS.update, { status: 999, sex, name, face, latitude, longitude })
+      await updateUser(this.props.user, {status: 999})
       return
     }
 
-    let _status = status
     // 101：未匹配，期待异性，性格相同，主体男
-    if (!sex && matchGender && character === 1) _status = 101
+    if (!sex && matchGender && character === 1) status = 101
     // 102：未匹配，期待异性，性格互补，主体男
-    if (!sex && matchGender && character === 2) _status = 102
+    if (!sex && matchGender && character === 2) status = 102
     // 103：未匹配，期待异性，性格随意，主体男
-    if (!sex && matchGender && character === 3) _status = 103
+    if (!sex && matchGender && character === 3) status = 103
     // 111：未匹配，期待异性，性格相同，主体女
-    if (sex && !matchGender && character === 1) _status = 111
+    if (sex && !matchGender && character === 1) status = 111
     // 112：未匹配，期待异性，性格互补，主体女
-    if (sex && !matchGender && character === 2) _status = 112
+    if (sex && !matchGender && character === 2) status = 112
     // 113：未匹配，期待异性，性格随意，主体女
-    if (sex && !matchGender && character === 3) _status = 113
+    if (sex && !matchGender && character === 3) status = 113
     // 201：未匹配，期待同性，性格相同，主体男
-    if (!sex && !matchGender && character === 1) _status = 201
+    if (!sex && !matchGender && character === 1) status = 201
     // 202：未匹配，期待同性，性格互补，主体男
-    if (!sex && !matchGender && character === 2) _status = 202
+    if (!sex && !matchGender && character === 2) status = 202
     // 203：未匹配，期待同性，性格随意，主体男
-    if (!sex && !matchGender && character === 3) _status = 203
+    if (!sex && !matchGender && character === 3) status = 203
     // 211：未匹配，期待同性，性格相同，主体女
-    if (sex && matchGender && character === 1) _status = 211
+    if (sex && matchGender && character === 1) status = 211
     // 212：未匹配，期待同性，性格互补，主体女
-    if (sex && matchGender && character === 2) _status = 212
+    if (sex && matchGender && character === 2) status = 212
     // 213：未匹配，期待同性，性格随意，主体女
-    if (sex && matchGender && character === 3) _status = 213
+    if (sex && matchGender && character === 3) status = 213
 
-    await HttpUtils.post(USERS.update, { status: _status, sex, name, face, latitude, longitude })
+    await updateUser(this.props.user, {status})
     return
   }
 

@@ -177,9 +177,9 @@ export default class Profile extends Component {
               <TextPingFang style={styles.text_row_desc}>日记数量</TextPingFang>
             </TouchableOpacity>
 
-            <TouchableOpacity
+            {/* <TouchableOpacity
               style={[styles.row, styles.row_border_bottom]}
-              onPress={() => Actions.jump(SCENE_PROFILE_BADGE)}
+              onPress={() => Actions.jump(SCENE_PROFILE_BADGE, {user: this.props.user})}
             >
               {
                 (() => {
@@ -194,7 +194,7 @@ export default class Profile extends Component {
                 style={styles.text_row_left}>{this.props.user.mode ? this.props.user.mode : '暂无'}</TextPingFang>
               <TextPingFang style={styles.text_row_desc}>我的徽章</TextPingFang>
               <Image style={styles.row_indicator} source={require('../../../res/images/common/icon_indicator.png')}/>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
 
             {this.renderPartner()}
 
@@ -212,7 +212,7 @@ export default class Profile extends Component {
               </View>
             </TouchableOpacity>
 
-            <TouchableOpacity
+            {/* <TouchableOpacity
               style={[styles.row, styles.row_border_bottom]}
               onPress={() => Actions.jump(SCENE_PROFILE_SYNC)}
             >
@@ -220,7 +220,7 @@ export default class Profile extends Component {
               <TextPingFang style={styles.text_row_left}>同步</TextPingFang>
               <TextPingFang style={styles.text_row_right}>10分钟前</TextPingFang>
               <Image style={styles.row_indicator} source={require('../../../res/images/common/icon_indicator.png')}/>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
 
           </ScrollView>
 

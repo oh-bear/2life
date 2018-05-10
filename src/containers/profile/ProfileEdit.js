@@ -21,6 +21,9 @@ import { fetchProfileSuccess } from '../../redux/modules/user'
 import {
   getResponsiveWidth,
 } from '../../common/styles'
+import {
+  updateUser
+} from '../../common/util'
 
 import { postImgToQiniu } from '../../common/util'
 import HttpUtils from '../../network/HttpUtils'
@@ -72,7 +75,7 @@ export default class ProfileEdit extends Component {
       face: this.state.user.face
     }
     try {
-      const res = await HttpUtils.post(USERS.update, data)
+      const res = await updateUser(this.state.user, data)
       if (res.code === 0) {
         store.dispatch(fetchProfileSuccess(this.state.user))
         Alert.alert('', '修改成功')

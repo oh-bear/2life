@@ -19,6 +19,9 @@ import {
   getResponsiveHeight,
   getResponsiveWidth
 } from '../../common/styles'
+import {
+  updateUser
+} from '../../common/util'
 import { SCENE_INDEX } from '../../constants/scene'
 
 import { USERS } from '../../network/Urls'
@@ -26,7 +29,6 @@ import HttpUtils from '../../network/HttpUtils'
 
 import JPushModule from 'jpush-react-native'
 
-const URL_update = USERS.update
 const URL_user = USERS.user
 
 export default class Gender extends Component {
@@ -42,10 +44,12 @@ export default class Gender extends Component {
       face: this.props.user.face,
       status: 502,
       latitude: 0,
-      longitude: 0
+      longitude: 0,
+      badge_id: -1,
+      badges: -1
     }
-    const res = await HttpUtils.post(URL_update, data)
-
+    const res = await updateUser(this.props.user, data)
+    
     if (res.code === 0) {
       const res = await HttpUtils.get(URL_user, { user_id: this.props.user.id })
 

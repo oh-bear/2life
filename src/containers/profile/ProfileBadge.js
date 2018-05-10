@@ -27,7 +27,7 @@ export default class ProfileBadge extends Component {
             <ProfileHeader title='我的徽章'/>
             <View style={styles.badge_count}>
               <Image source={require('../../../res/images/profile/icon_badge_star.png')}/>
-              <TextPingFang style={styles.text_badge_count}>12个</TextPingFang>
+              <TextPingFang style={styles.text_badge_count}>{this.props.user.badges ? this.props.user.badges.split(',').length : 0}个</TextPingFang>
             </View>
           </ImageBackground>
 

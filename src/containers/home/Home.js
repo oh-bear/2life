@@ -30,7 +30,8 @@ import {
   getLocation,
   getWeather,
   diaryClassify,
-  getWeatherDesc
+  getWeatherDesc,
+  updateUser
 } from '../../common/util'
 
 import { SCENE_NEW_DIARY } from '../../constants/scene'
@@ -132,10 +133,9 @@ export default class Home extends Component {
     navigator.geolocation.getCurrentPosition(async res => {
       try {
         const { latitude, longitude } = res.coords
-        const { sex, name, face, status } = this.props.user
 
         //更新用户经纬度
-        HttpUtils.post(USERS.update, { sex, name, face, status, latitude, longitude })
+        updateUser(this.props.user, {latitude, longitude})
 
         // 获取用户地理位置和天气信息
         const location = await getLocation(latitude, longitude)

@@ -9,13 +9,14 @@ import PropTypes from 'prop-types'
 
 import {
   getResponsiveWidth,
-  getResponsiveHeight
+  getResponsiveHeight,
+  WIDTH
 } from '../../common/styles'
 
 export default class NotificationItem extends Component {
 
   static propTypes = {
-    notification: PropTypes.object
+    data: PropTypes.object
   }
 
   _convertTime = (ts) => {
@@ -30,11 +31,39 @@ export default class NotificationItem extends Component {
   }
 
   render() {
+    let source
+    switch(this.props.data.type) {
+      case 0:
+        source = require('../../../res/images/notification/icon_system.png')
+        break
+      case 101:
+        source = require('../../../res/images/notification/icon_system.png')
+        break
+      case 102:
+        source = require('../../../res/images/notification/icon_system.png')
+        break
+      case 201:
+        source = require('../../../res/images/notification/icon_connect.png')
+        break
+      case 202:
+        source = require('../../../res/images/notification/icon_disconnect.png')
+        break
+      case 203:
+        source = require('../../../res/images/notification/icon_like.png')
+        break
+      // 0：系统消息（被ban、无次数等）
+      // 101：通知（无url，有content）
+      // 102：活动、宣传等（有url，有content）
+      // 201：被匹配（无url，无content）
+      // 202：被解除匹配（无url，无content）
+      // 203：被喜欢（无url，无content） 
+    }
+
     return (
       <View style={styles.container}>
         <Image
           style={styles.icon}
-          source={require('../../../res/images/notification/like/female.png')}/>
+          source={source}/>
         <View style={styles.content_container}>
           <Text style={styles.title}>{this.props.data.title}</Text>
           <Text style={styles.date}>{this._convertTime(this.props.data.date)}</Text>
@@ -47,17 +76,16 @@ export default class NotificationItem extends Component {
 
 const styles = StyleSheet.create({
   container: {
-    flexDirection: 'column',
-    width: getResponsiveWidth(335),
+    width: WIDTH,
+    height: getResponsiveWidth(100),
+    flexDirection: 'row',
+    paddingTop: getResponsiveWidth(24),
   },
   content_container: {
     width: getResponsiveWidth(279),
-    marginLeft: getResponsiveWidth(48)
+    marginLeft: getResponsiveWidth(30),
   },
   icon: {
-    width: 25,
-    height: 25,
-    top: 44
   },
   title: {
     fontFamily: 'PingFang SC',
