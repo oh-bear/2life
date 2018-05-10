@@ -82,7 +82,7 @@ export default class Home extends Component {
       diaryList = diaryClassify(diaryList, 'date')
 
       let markedDates = {}
-      const boy = { key: 'boy', color: 'pink' }
+      const boy = { key: 'boy', color: '#4590F8' }
       const girl = { key: 'girl', color: 'pink' }
 
       diaryList.forEach(dayDiary => {
@@ -146,9 +146,10 @@ export default class Home extends Component {
         this._updateUser()
 
         // 获取用户地理位置和天气信息
-        const location = await getLocation(latitude, longitude)
-        // const location = await getLocation(113.387061, 23.053829)
+        const location = await getLocation(longitude, latitude)
+        // const location = await getLocation(117.28972256,31.8572069484)
         const weather = await getWeather(location.city)
+        console.log(weather)
         const { weather_text, weather_icon } = getWeatherDesc(weather)
         this.setState({ weather_text, weather_icon})
       } catch (e) {
@@ -189,7 +190,7 @@ export default class Home extends Component {
 
     if (this.state.showMe) {
       const { latitude, longitude } = this.props.partner
-      const location = await getLocation(latitude, longitude)
+      const location = await getLocation(longitude, latitude)
       // const location = await getLocation(113.387061, 23.053829)
       const weather = await getWeather(location.city)
       const { weather_text, weather_icon } = getWeatherDesc(weather)
@@ -241,7 +242,7 @@ export default class Home extends Component {
         })
       } else {
         const { latitude, longitude } = partner
-        const location = await getLocation(latitude, longitude)
+        const location = await getLocation(longitude, latitude)
         // const location = await getLocation(113.387061, 23.053829)
         const weather = await getWeather(location.city)
         const { weather_text, weather_icon } = getWeatherDesc(weather)

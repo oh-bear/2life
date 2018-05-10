@@ -6,19 +6,18 @@ import {
   TouchableOpacity,
   Platform
 } from 'react-native'
+import * as RNIap from 'react-native-iap'
 
 import TextPingFang from '../../components/TextPingFang'
 import Container from '../../components/Container'
 import Popup from '../../components/Popup'
 import ProfileHeader from './components/ProfileHeader'
-import Storage from '../../common/storage'
 
 import {
   WIDTH,
   getResponsiveWidth,
 } from '../../common/styles'
 
-import * as RNIap from 'react-native-iap'
 import HttpUtils from '../../network/HttpUtils'
 import { USERS } from '../../network/Urls'
 
@@ -37,6 +36,11 @@ export default class ProfileReward extends Component {
     productList: [],
     receipt: '',
     availableItemsMessage: '',
+    showPopup: false,
+    popupBgColor: '#2DC3A6',
+    pupupIcon: require('../../../res/images/home/icon_happy.png'),
+    popupTitle: '',
+    popupContent: '',
   }
 
   async componentDidMount() {
@@ -71,10 +75,24 @@ export default class ProfileReward extends Component {
     RNIap.buyProduct(product.productId).then(purchase => {
       HttpUtils.post(USERS.update_rate, {price: product.price}).then(res => {
         // TODO: resetting UI, 购买成功提醒
+        this.setState({
+          showPopup: true,
+          popupBgColor: '#2DC3A6',
+          pupupIcon: require('../../../res/images/home/icon_happy.png'),
+          popupTitle: '打赏成功',
+          popupContent: '感谢您对作者的支持，我们一定会更用心做好产品😊',
+        })
       })
     }).catch(err => {
       // TODO: resetting UI, 取消购买提醒
       console.warn(err) // standardized err.code and err.message available
+      this.setState({
+        showPopup: true,
+        popupBgColor: '#FF5757',
+        pupupIcon: require('../../../res/images/profile/icon_remove.png'),
+        popupTitle: '出了点问题',
+        popupContent: '打赏失败，等下再来试试吧',
+      })
     })
   }
 
@@ -138,6 +156,16 @@ export default class ProfileReward extends Component {
         >
           <TextPingFang style={styles.text_btn}>打赏作者</TextPingFang>
         </TouchableOpacity>
+
+        <Popup
+          showPopup={this.state.showPopup}
+          popupBgColor={this.state.popupBgColor}
+          icon={this.state.pupupIcon}
+          title={this.state.popupTitle}
+          content={this.state.popupContent}
+          onPressLeft={() => this.setState({showPopup: false})}
+          textBtnLeft={'OK'}
+        />
       </Container>
     )
   }

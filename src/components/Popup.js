@@ -21,7 +21,7 @@ export default class Popup extends Component {
   static propTypes = {
     showPopup: PropTypes.bool.isRequired,
     popupBgColor: PropTypes.string.isRequired,
-    icon: PropTypes.number,
+    icon: PropTypes.any,
     title: PropTypes.string,
     content: PropTypes.string.isRequired,
     onPressLeft: PropTypes.func,

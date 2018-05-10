@@ -263,11 +263,11 @@ export async function postImgToQiniu(base64List, obj) {
  */
 export function getWeatherDesc(weather) {
   let weather_text, weather_icon
-  if (weather.code === '00') {
+  if (weather.weather_code === '00') {
     weather_text = `${weather.weather} ${weather.temperature}℃`
     weather_icon = require('../../res/images/home/icon_sunny.png')
   }
-  if (weather.code === '01' || weather.code === '02') {
+  if (weather.weather_code === '01' || weather.weather_code === '02') {
     weather_text = `${weather.weather} ${weather.temperature}℃`
     weather_icon = require('../../res/images/home/icon_cloud.png')
   }

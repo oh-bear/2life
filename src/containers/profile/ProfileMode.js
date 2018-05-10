@@ -53,6 +53,10 @@ export default class ProfileMode extends Component {
     }
   }
 
+  filterData(data, type) {
+    
+  }
+
   formData(modeData, type) {
     let modes = [], timeRange = []
     
