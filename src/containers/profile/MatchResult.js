@@ -43,7 +43,7 @@ export default class MatchResult extends Component {
 
   componentDidMount() {
     if (this.props.partner.id) {
-      this.setState({partner: this.props.partner})
+      this.setState({ partner: this.props.partner })
       this.matchSucceed()
     } else {
       setTimeout(this.fetchMatch.bind(this), 500)
@@ -52,25 +52,25 @@ export default class MatchResult extends Component {
 
   codeToMessage(code) {
     let message = ''
-    switch(code) {
-      case 404: 
-        message = '找不到该用户'
-        break
-      case 603: 
-        message = '你本月已经没有匹配次数了'
-        break
-      case 604: 
-        message = '要写过日记才能匹配哦'
-        break
-      case 602: 
-        message = '你目前没有匹配权限'
-        break
-      case 600: 
-        message = '要开启匹配功能才能进行匹配哦'
-        break
-      case 601: 
-        message = '你已经有匹配对象了哦'
-        break
+    switch (code) {
+    case 404:
+      message = '找不到该用户'
+      break
+    case 603:
+      message = '你本月已经没有匹配次数了'
+      break
+    case 604:
+      message = '要写过日记才能匹配哦'
+      break
+    case 602:
+      message = '你目前没有匹配权限'
+      break
+    case 600:
+      message = '要开启匹配功能才能进行匹配哦'
+      break
+    case 601:
+      message = '你已经有匹配对象了哦'
+      break
     }
     return message
   }
@@ -78,12 +78,12 @@ export default class MatchResult extends Component {
   async fetchMatch() {
     if (this.props.matchUserId) {
       // ID匹配
-      const res = await HttpUtils.get(USERS.connect_by_id, {code: this.props.matchUserId})
+      const res = await HttpUtils.get(USERS.connect_by_id, { code: this.props.matchUserId })
       if (res.code === 0) {
         store.dispatch(fetchPartnerSuccess(res.data))
-        this.setState({partner: res.data})
+        this.setState({ partner: res.data })
         this.matchSucceed()
-      } else {        
+      } else {
         this.matchFailed(this.codeToMessage(res.code))
       }
     } else {
@@ -91,7 +91,7 @@ export default class MatchResult extends Component {
       const res = await HttpUtils.get(USERS.connect_by_random)
       if (res.code === 0) {
         store.dispatch(fetchPartnerSuccess(res.data))
-        this.setState({partner: res.data})
+        this.setState({ partner: res.data })
         this.matchSucceed()
       } else {
         this.matchFailed(this.codeToMessage(res.code))
@@ -147,7 +147,7 @@ export default class MatchResult extends Component {
   renderRightButton() {
     if (this.props.partner.id) {
       return (
-        <TouchableOpacity onPress={() => this.setState({showPopup: true})}>
+        <TouchableOpacity onPress={() => this.setState({ showPopup: true })}>
           <TextPingFang style={styles.text_nav_right}>解除匹配</TextPingFang>
         </TouchableOpacity>
       )
@@ -170,7 +170,7 @@ export default class MatchResult extends Component {
           icon={require('../../../res/images/profile/icon_remove.png')}
           title={'注意'}
           content={'你与对方的互动信息将永远消失，并且再也匹配不到对方'}
-          onPressLeft={() => this.setState({showPopup: false})}
+          onPressLeft={() => this.setState({ showPopup: false })}
           onPressRight={() => this.disconnect()}
           textBtnLeft={'再考虑'}
           textBtnRight={'狠心解除'}
@@ -221,5 +221,8 @@ const styles = StyleSheet.create({
     marginLeft: WIDTH - getResponsiveWidth(136),
     backgroundColor: '#2DC3A6',
     borderRadius: getResponsiveWidth(24)
+  },
+  text_start_btn: {
+    color: '#fff'
   }
 })
