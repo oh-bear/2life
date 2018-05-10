@@ -77,9 +77,8 @@ export default class NotificationItem extends Component {
 const styles = StyleSheet.create({
   container: {
     width: WIDTH,
-    height: getResponsiveWidth(100),
     flexDirection: 'row',
-    paddingTop: getResponsiveWidth(24),
+    marginTop: getResponsiveHeight(20),
   },
   content_container: {
     width: getResponsiveWidth(279),
