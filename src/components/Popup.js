@@ -74,13 +74,13 @@ const styles = StyleSheet.create({
     marginBottom: getResponsiveWidth(32)
   },
   text_title: {
-    color: '#000',
+    color: '#fff',
     fontSize: 24,
     fontWeight: 'bold'
   },
   text_content: {
     marginTop: getResponsiveWidth(24),
-    color: '#000',
+    color: '#fff',
     fontSize: 16
   },
   btn_container: {
@@ -92,7 +92,7 @@ const styles = StyleSheet.create({
     bottom: getResponsiveWidth(24),
   },
   text_btn_left: {
-    color: '#000',
+    color: '#fff',
     fontSize: 16,
     fontWeight: '500'
   }

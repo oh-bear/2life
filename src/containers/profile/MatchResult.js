@@ -5,6 +5,7 @@ import {
   ScrollView,
   TouchableOpacity,
   Image,
+  ImageBackground
 } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import { connect } from 'react-redux'
@@ -37,7 +38,13 @@ export default class MatchResult extends Component {
 
   state = {
     title: '匹配中...',
-    content: null,
+    content: (
+      <View style={styles.container}>
+        <View>
+          <Image source={require('../../../res/images/profile/matchAnimation.gif')}/>
+        </View>
+      </View>
+    ),
     partner: {},
     showPopup: false
   }
@@ -47,21 +54,21 @@ export default class MatchResult extends Component {
       this.setState({ partner: this.props.partner })
       this.matchSucceed()
     } else {
-      setTimeout(this.fetchMatch.bind(this), 500)
+      setTimeout(this.fetchMatch.bind(this), 3500)
     }
   }
 
-  codeToMessage(code) {
+  _codeToMessage(code) {
     let message = ''
     switch (code) {
     case 404:
-      message = '找不到该用户'
+      message = '找不到合适的用户哦~请再等等吧！'
       break
     case 603:
       message = '你本月已经没有匹配次数了'
       break
     case 604:
-      message = '要写过日记才能匹配哦'
+      message = '你必要写过日记才能匹配哦'
       break
     case 602:
       message = '你目前没有匹配权限'
@@ -82,15 +89,15 @@ export default class MatchResult extends Component {
       const res = await HttpUtils.get(USERS.connect_by_id, { code: this.props.matchUserId })
       if (res.code === 0) {
         store.dispatch(fetchPartnerSuccess(res.data))
-        
-        HttpUtils.get(USERS.user, {user_id: this.props.user.id}).then(res => {
+
+        HttpUtils.get(USERS.connect_by_random, { user_id: this.props.user.id }).then(res => {
           if (res.code === 0) store.dispatch(fetchProfileSuccess(res.data))
         })
 
-        this.setState({partner: res.data})
+        this.setState({ partner: res.data })
         this.matchSucceed()
       } else {
-        this.matchFailed(this.codeToMessage(res.code))
+        this.matchFailed(this._codeToMessage(res.code))
       }
     } else {
       // 随机匹配
@@ -98,11 +105,11 @@ export default class MatchResult extends Component {
       if (res.code === 0) {
         store.dispatch(fetchPartnerSuccess(res.data))
 
-        HttpUtils.get(USERS.user, {user_id: this.props.user.id}).then(res => {
+        HttpUtils.get(USERS.connect_by_id, { user_id: this.props.user.id }).then(res => {
           if (res.code === 0) store.dispatch(fetchProfileSuccess(res.data))
         })
 
-        this.setState({partner: res.data})
+        this.setState({ partner: res.data })
         this.matchSucceed()
       } else {
         this.matchFailed(this.codeToMessage(res.code))
@@ -130,7 +137,7 @@ export default class MatchResult extends Component {
     let content = (
       <View style={styles.container}>
         <Image style={styles.img_fail} source={require('../../../res/images/profile/bg_match_fail.png')}/>
-        {/* <TextPingFang style={styles.text_fail}>没有找到符合条件的人，或许你可以继续写日记，稍后再来匹配，成功率更高哦</TextPingFang> */}
+        <TextPingFang style={styles.text_fail}>没有找到符合条件的人，或许你可以继续写日记，稍后再来匹配，成功率更高哦</TextPingFang>
         <TextPingFang style={styles.text_fail}>{message}</TextPingFang>
         <TouchableOpacity
           style={styles.start_btn}
@@ -168,13 +175,11 @@ export default class MatchResult extends Component {
   render() {
     return (
       <Container>
-        <ScrollView>
-          <ProfileHeader
-            title={this.state.title}
-            rightButton={this.renderRightButton()}
-          />
-          {this.state.content}
-        </ScrollView>
+        <ProfileHeader
+          title={this.state.title}
+          rightButton={this.renderRightButton()}
+        />
+        {this.state.content}
         <Popup
           showPopup={this.state.showPopup}
           popupBgColor={'#FF5757'}

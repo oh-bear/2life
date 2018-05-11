@@ -74,7 +74,6 @@ export default class ProfileReward extends Component {
   buyItem = async (product) => {
     RNIap.buyProduct(product.productId).then(purchase => {
       HttpUtils.post(USERS.update_rate, {price: product.price}).then(res => {
-        // TODO: resetting UI, 购买成功提醒
         this.setState({
           showPopup: true,
           popupBgColor: '#2DC3A6',
@@ -84,14 +83,13 @@ export default class ProfileReward extends Component {
         })
       })
     }).catch(err => {
-      // TODO: resetting UI, 取消购买提醒
       console.warn(err) // standardized err.code and err.message available
       this.setState({
         showPopup: true,
         popupBgColor: '#FF5757',
         pupupIcon: require('../../../res/images/profile/icon_remove.png'),
-        popupTitle: '出了点问题',
-        popupContent: '打赏失败，等下再来试试吧',
+        popupTitle: '订单取消',
+        popupContent: '您真的要取消打赏吗？……',
       })
     })
   }

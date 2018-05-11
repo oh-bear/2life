@@ -39,9 +39,9 @@ export default class ProfileMatch extends Component {
 
   state = {
     matchType: 0, // 0: 随机, 1: ID
-    matchGender: 0, //0男1女
-    beMatched: true, //是否希望被匹配
-    character: 1,//性格：1相同，2互补，3随意
+    matchGender: 0, // 0: 男, 1: 女
+    beMatched: true, // 是否希望被匹配
+    character: 1, // 性格 1: 相同，2: 互补，3: 随意
     matchUserId: null,
     showPopup: true
   }
@@ -50,6 +50,7 @@ export default class ProfileMatch extends Component {
     this.setState({ matchGender: !this.props.user.sex })
   }
 
+  // TODO：这个函数貌似写的有问题，status 为 1000 时仍然可以更新，由此可以判断 props/redux 中的 user 在匹配成功之后没有更新
   async updateStatus() {
     const { matchGender, beMatched, character, matchUserId } = this.state
     let { sex, status } = this.props.user
@@ -59,7 +60,7 @@ export default class ProfileMatch extends Component {
     }
 
     if (!beMatched) {
-      await updateUser(this.props.user, {status: 999})
+      await updateUser(this.props.user, { status: 999 })
       return
     }
 
@@ -88,7 +89,7 @@ export default class ProfileMatch extends Component {
     // 213：未匹配，期待同性，性格随意，主体女
     if (sex && matchGender && character === 3) status = 213
 
-    await updateUser(this.props.user, {status})
+    await updateUser(this.props.user, { status })
     return
   }
 
@@ -107,12 +108,12 @@ export default class ProfileMatch extends Component {
   render() {
     return (
       <Container>
-        <ScrollView>
-          <ProfileHeader
-            title='选择你的匹配项'
-            desc={`本月还能匹配${this.props.user.last_times ? this.props.user.last_times : 0}次`}
-          />
 
+        <ProfileHeader
+          title='选择你的匹配项'
+          desc={`本月还能匹配${this.props.user.last_times ? this.props.user.last_times : 0}次`}
+        />
+        <ScrollView>
           <ScrollableTabView
             style={styles.tabview}
             renderTabBar={() => <TabBar tabNames={['随机匹配', 'ID匹配']}/>}
@@ -167,21 +168,24 @@ export default class ProfileMatch extends Component {
                     style={[styles.btn, this.state.character === 1 ? styles.active_btn : null]}
                     onPress={() => this.setState({ character: 1 })}
                   >
-                    <TextPingFang style={[styles.text_btn, this.state.character === 1 ? styles.active_text : null]}>相同</TextPingFang>
+                    <TextPingFang
+                      style={[styles.text_btn, this.state.character === 1 ? styles.active_text : null]}>相同</TextPingFang>
                   </TouchableOpacity>
 
                   <TouchableOpacity
                     style={[styles.btn, this.state.character === 2 ? styles.active_btn : null]}
                     onPress={() => this.setState({ character: 2 })}
                   >
-                    <TextPingFang style={[styles.text_btn, this.state.character === 2 ? styles.active_text : null]}>互补</TextPingFang>
+                    <TextPingFang
+                      style={[styles.text_btn, this.state.character === 2 ? styles.active_text : null]}>互补</TextPingFang>
                   </TouchableOpacity>
 
                   <TouchableOpacity
                     style={[styles.btn, this.state.character === 3 ? styles.active_btn : null]}
                     onPress={() => this.setState({ character: 3 })}
                   >
-                    <TextPingFang style={[styles.text_btn, this.state.character === 3 ? styles.active_text : null]}>随意</TextPingFang>
+                    <TextPingFang
+                      style={[styles.text_btn, this.state.character === 3 ? styles.active_text : null]}>随意</TextPingFang>
                   </TouchableOpacity>
                 </View>
               </View>
@@ -209,27 +213,28 @@ export default class ProfileMatch extends Component {
 
         </ScrollView>
 
+        // TODO：记得发布时取消注释
         {/* <MatchTips
-          showPopup={this.state.showPopup}
-          onClose={() => this.setState({ showPopup: false })}
-          tips={[
-            {
-              bg: require('../../../res/images/profile/bg_match_tips_1.png'),
-              title: '每个月只有 3 次宝贵的匹配机会',
-              sTitle: '',
-            },
-            {
-              bg: require('../../../res/images/profile/bg_match_tips_2.png'),
-              title: '解除匹配关系将失去所有互动信息',
-              sTitle: '并且无法再次匹配到 ta',
-            },
-            {
-              bg: require('../../../res/images/profile/bg_match_tips_3.png'),
-              title: '多写日记更容易匹配成功哦',
-              sTitle: '至少要写 1 篇日记才能匹配',
-            }
-          ]}
-        /> */}
+         showPopup={this.state.showPopup}
+         onClose={() => this.setState({ showPopup: false })}
+         tips={[
+         {
+         bg: require('../../../res/images/profile/bg_match_tips_1.png'),
+         title: '每个月只有 3 次宝贵的匹配机会',
+         sTitle: '',
+         },
+         {
+         bg: require('../../../res/images/profile/bg_match_tips_2.png'),
+         title: '解除匹配关系将失去所有互动信息',
+         sTitle: '并且无法再次匹配到 ta',
+         },
+         {
+         bg: require('../../../res/images/profile/bg_match_tips_3.png'),
+         title: '多写日记更容易匹配成功哦',
+         sTitle: '至少要写 1 篇日记才能匹配',
+         }
+         ]}
+         /> */}
       </Container>
     )
   }
