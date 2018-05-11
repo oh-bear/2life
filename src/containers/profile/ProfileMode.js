@@ -33,7 +33,7 @@ export default class ProfileMode extends Component {
       <TouchableOpacity
         style={styles.nav_right_btn}
       >
-        <Image source={require('../../../res/images/common/icon_exchange.png')}/>
+        <Image source={require('../../../res/images/common/icon_exchange.png')} />
       </TouchableOpacity>
     )
   }
@@ -41,9 +41,10 @@ export default class ProfileMode extends Component {
   async componentWillMount() {
     const res = await HttpUtils.get(MODES.show)
     if (res.code === 0) {
-      const weekData = res.data.length >= 7 ? res.data.slice(-7) : res.data
-      const monthData = res.data.length >= 30 ? res.data.slice(-30) : res.data
-      const yearData = res.data.length >= 365 ? res.data.slice(-365) : res.data
+      const mergeData = this.mergeData(res.data)
+      const weekData = mergeData.length >= 7 ? mergeData.slice(-7) : mergeData
+      const monthData = mergeData.length >= 30 ? mergeData.slice(-30) : mergeData
+      const yearData = mergeData.length >= 365 ? mergeData.slice(-365) : mergeData
       this.setState({
         weekModeData: this.formData(weekData, 'week'),
         monthModeData: this.formData(monthData, 'month'),
@@ -53,17 +54,56 @@ export default class ProfileMode extends Component {
     }
   }
 
-  filterData(data, type) {
-    
+  mergeData(modeData) {
+    console.log(modeData)
+
+    let newModeData = []
+    let sameDayModes = []
+    let sameDayStr = ''
+    let sameDayTs = 0
+
+    modeData.forEach((data, index) => {
+      const mode = Object.values(data)[0]
+      const ts = Object.keys(data)[0]
+      const date = new Date(parseInt(ts))
+      const y = date.getFullYear()
+      const m = date.getMonth() + 1
+      const d = date.getDate()
+      const dayStr = `${y}.${m}.${d}`
+
+      if (!sameDayStr) {
+        sameDayStr = dayStr
+        sameDayTs = ts
+        sameDayModes.push(mode)
+        return
+      }
+
+      if (sameDayStr && (sameDayStr === dayStr)) {
+        sameDayModes.push(mode)
+      }
+
+      if (sameDayStr && (sameDayStr !== dayStr)) {
+        newModeData.push({[sameDayTs]: sameDayModes.reduce((accu, curr) => accu + curr) / sameDayModes.length })
+        sameDayStr = dayStr
+        sameDayTs = ts
+        sameDayModes = []
+        sameDayModes.push(mode)
+      }
+
+      if (index === modeData.length - 1) {
+        newModeData.push({[sameDayTs]: sameDayModes.reduce((accu, curr) => accu + curr) / sameDayModes.length })
+      }
+    })
+    return newModeData
   }
 
   formData(modeData, type) {
     let modes = [], timeRange = []
-    
+
     modeData.forEach((data, index) => {
       const mode = Object.values(data)[0]
       modes.push(mode)
-      
+
       const ts = Object.keys(data)[0]
       const date = new Date(parseInt(ts))
 
@@ -82,9 +122,9 @@ export default class ProfileMode extends Component {
       if (type === 'year') {
         const m = date.getMonth() + 1 + '月'
 
-        if (timeRange.length === 0)timeRange.push(m)
+        if (timeRange.length === 0) timeRange.push(m)
 
-        for(let i = 0; i < timeRange.length; i++) {
+        for (let i = 0; i < timeRange.length; i++) {
           if (timeRange[i] === m) break
           if (i === timeRange.length - 1) timeRange.push(m)
         }
@@ -97,7 +137,7 @@ export default class ProfileMode extends Component {
         timeRange.push(`${y}.${m}.${d}`)
       }
     })
-    return {modes, timeRange}
+    return { modes, timeRange }
   }
 
   render() {
@@ -106,12 +146,12 @@ export default class ProfileMode extends Component {
         <View>
           <ProfileHeader
             title='情绪图表'
-            // rightButton={this.renderRightButton()}
+          // rightButton={this.renderRightButton()}
           />
 
           <ScrollableTabView
             style={styles.tabview}
-            renderTabBar={() => <TabBar tabNames={['一周', '一月', '一年', '全部']}/>}
+            renderTabBar={() => <TabBar tabNames={['一周', '一月', '一年', '全部']} />}
           >
             <ModeCharts
               modeData={this.state.weekModeData.modes}

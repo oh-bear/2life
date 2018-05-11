@@ -6,7 +6,8 @@ import {
   Image,
   ActionSheetIOS,
   TextInput,
-  Alert
+  Alert,
+  DeviceEventEmitter
 } from 'react-native'
 import { connect } from 'react-redux'
 import { Actions } from 'react-native-router-flux'
@@ -41,30 +42,46 @@ export default class DiaryDetail extends Component {
     imageList: [],
     likeComponent: null,
     mode: '',
+    mode_face: require('../../../res/images/home/icon_happy.png'),
+    changeMode: false
   }
 
   async componentWillMount() {
-    if (this.props.diary.images) {
-      let imageList = this.props.diary.images.split(',')
+    const diary = this.props.diary
+
+    if (diary.images) {
+      let imageList = diary.images.split(',')
       this.setState({ imageList, showBanner: true })
     } else {
       this.setState({ showBanner: false })
     }
-    this.setState({mode: this.props.diary.mode.toString()})
+    if (diary.mode < 60 ) this.setState({mode_face: require('../../../res/images/home/icon_sad_male.png')})
+    if (diary.mode >= 60 && diary.mode < 80) this.setState({mode_face: require('../../../res/images/home/icon_normal_male.png')})
+    if (diary.mode >= 80 && diary.mode <= 100 ) this.setState({mode_face: require('../../../res/images/home/icon_happy_male.png')})
 
-    this.renderlikeComponent(this.props.diary.is_liked)
+    this.setState({mode: diary.mode.toString()})
+
+    this.renderlikeComponent(diary.is_liked)
   }
 
-  updateNote() {
+  updateNote(mode, mode_face) {
     const data = {
       note_id: this.props.diary.id,
       title: this.props.diary.title,
       content: this.props.diary.content,
       images: this.props.diary.images,
-      mode: this.state.mode
+      mode
     }
     HttpUtils.post(NOTES.update, data).then(res => {
-      if (res.code === 0) Alert.alert('', '修改成功')
+      if (res.code === 0) {
+        Alert.alert('', '修改成功')
+        this.setState({
+          changeMode: false,
+          mode,
+          mode_face
+        })
+        DeviceEventEmitter.emit('flash_note', {})
+      }
     })
   }
 
@@ -155,21 +172,12 @@ export default class DiaryDetail extends Component {
           </View>
 
           <View style={styles.mode_container}>
-            <Image style={styles.location_icon} source={require('../../../res/images/home/icon_happy.png')}/>
-            <TextInput
-              ref={ref => this.mode_ipt = ref}
-              style={styles.text_mode}
-              value={this.state.mode}
-              returnKeyType='done'
-              enablesReturnKeyAutomatically
-              maxLength={3}
-              onChangeText={mode => this.setState({mode})}
-              onSubmitEditing={() => this.updateNote()}
-            />
+            <Image style={styles.location_icon} source={this.state.mode_face}/>
+            <TextPingFang style={styles.text_mode}>{this.state.mode}</TextPingFang>
             <TextPingFang style={styles.text_value}>情绪值</TextPingFang>
             <TouchableOpacity
               style={[styles.update_container, { display: this.props.user.id === this.props.diary.user_id ? 'flex' : 'none' }]}
-              onPress={() => this.mode_ipt.focus()}
+              onPress={() => this.setState({changeMode: !this.state.changeMode})}
             >
               <TextPingFang style={styles.text_update}>更正</TextPingFang>
             </TouchableOpacity>
@@ -179,6 +187,39 @@ export default class DiaryDetail extends Component {
             >
               {this.state.likeComponent}
             </TouchableOpacity>
+
+            <View style={[styles.choose_mode, {display: this.state.changeMode ? 'flex' : 'none'}]}>
+              <TouchableOpacity
+                style={styles.mode_item}
+                onPress={() => this.updateNote(0, require('../../../res/images/home/icon_very_sad_male.png'))}
+              >
+                <Image source={require('../../../res/images/home/icon_very_sad_male.png')}/>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.mode_item}
+                onPress={() => this.updateNote(25, require('../../../res/images/home/icon_sad_male.png'))}
+              >
+                <Image source={require('../../../res/images/home/icon_sad_male.png')}/>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.mode_item}
+                onPress={() => this.updateNote(50, require('../../../res/images/home/icon_normal_male.png'))}
+              >
+                <Image source={require('../../../res/images/home/icon_normal_male.png')}/>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.mode_item}
+                onPress={() => this.updateNote(75, require('../../../res/images/home/icon_happy_male.png'))}
+              >
+                <Image source={require('../../../res/images/home/icon_happy_male.png')}/>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.mode_item}
+                onPress={() => this.updateNote(100, require('../../../res/images/home/icon_very_happy_male.png'))}
+              >
+                <Image source={require('../../../res/images/home/icon_very_happy_male.png')}/>
+              </TouchableOpacity>
+            </View>
           </View>
         </KeyboardAwareScrollView>
 
@@ -271,5 +312,13 @@ const styles = StyleSheet.create({
   img_btn: {
     width: getResponsiveWidth(64),
     height: getResponsiveWidth(64)
+  },
+  choose_mode: {
+    width: getResponsiveWidth(250),
+    position: 'absolute',
+    left: 0,
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    backgroundColor: '#fff'
   }
 })

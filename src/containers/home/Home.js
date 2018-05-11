@@ -5,7 +5,8 @@ import {
   ImageBackground,
   Image,
   FlatList,
-  Alert
+  Alert,
+  DeviceEventEmitter
 } from 'react-native'
 import { View } from 'react-native-animatable'
 import { CalendarList } from '../../components/react-native-calendars/src'
@@ -71,7 +72,12 @@ export default class Home extends Component {
   async componentDidMount() {
     this._showTips()
     this._getWeather()
+    this._fetchDiary()
 
+    DeviceEventEmitter.addListener('flash_note', () => this._fetchDiary())
+  }
+
+  async _fetchDiary() {
     const res = await HttpUtils.get(URL_list)
     if (res.code === 0) {
       const { partner, recommend, user } = res.data
@@ -82,13 +88,17 @@ export default class Home extends Component {
       diaryList = diaryClassify(diaryList, 'date')
 
       let markedDates = {}
-      const boy = { key: 'boy', color: '#4590F8' }
+      const boy = { key: 'boy', color: '#4590F8'}
       const girl = { key: 'girl', color: 'pink' }
+      const otherBoy = { key: 'otherBoy', color: '#2DC3A6' }
+      const otherGirl = { key: 'otherGirl', color: '#F83AC1' }
 
       diaryList.forEach(dayDiary => {
         markedDates[getFormDay(dayDiary[0].date)] = { dots: [] }
         let hasBoyDiary = false
         let hasGirlDiary = false
+        let hasOtherBoyDiary = false
+        let hasOtherGirlDiary = false
 
         dayDiary.forEach(diary => {
           if ((diary.user_id === this.props.user.id) && (this.props.user.sex === 0)) {
@@ -97,14 +107,18 @@ export default class Home extends Component {
           if ((diary.user_id === this.props.user.id) && (this.props.user.sex === 1)) {
             hasGirlDiary = true
           }
+          if ((diary.user_id !== this.props.user.id) && (this.props.partner.sex === 0)) {
+            hasOtherBoyDiary = true
+          }
+          if ((diary.user_id !== this.props.user.id) && (this.props.partner.sex === 1)) {
+            hasOtherGirlDiary = true
+          }
         })
 
-        if (hasBoyDiary) {
-          markedDates[getFormDay(dayDiary[0].date)].dots.push(boy)
-        }
-        if (hasGirlDiary) {
-          markedDates[getFormDay(dayDiary[0].date)].dots.push(girl)
-        }
+        if (hasBoyDiary) markedDates[getFormDay(dayDiary[0].date)].dots.push(boy)
+        if (hasGirlDiary) markedDates[getFormDay(dayDiary[0].date)].dots.push(girl)
+        if (hasOtherBoyDiary) markedDates[getFormDay(dayDiary[0].date)].dots.push(otherBoy)
+        if (hasOtherGirlDiary) markedDates[getFormDay(dayDiary[0].date)].dots.push(otherGirl)
       })
 
       this.setState({
@@ -163,8 +177,16 @@ export default class Home extends Component {
   }
 
   async onDayPress(day) {
+    // let markedDates = this.state.markedDates
+    // for (let date in markedDates) {
+    //   if (date === day.dateString) {
+    //     markedDates[date].selected = true
+    //   } else {
+    //     markedDates[date].selected = false
+    //   }
+    // } 
     const filterDiaryList = this.state.diaryList.filter(dayDiary => dayDiary[0].formDate === day.dateString)
-    this.setState({ filterDiaryList })
+    this.setState({ markedDates, filterDiaryList })
   }
 
   async setDate(months) {
@@ -212,9 +234,11 @@ export default class Home extends Component {
     if (this.state.showMe) {
       if (this.state.showWeather) {
         mode_text = `${user.mode ? user.mode : 0} 情绪值`
-        if (user.mode >= 80) mode_icon = require('../../../res/images/home/icon_happy.png')
-        if (user.mode >= 60 && user.mode < 80) mode_icon = require('../../../res/images/home/icon_normal.png')
-        if (user.mode < 60) mode_icon = require('../../../res/images/home/icon_sad.png')
+        if (user.mode === 0) mode_icon = require('../../../res/images/home/icon_very_sad.png')
+        if (user.mode === 25) mode_icon = require('../../../res/images/home/icon_sad.png')
+        if (user.mode === 50) mode_icon = require('../../../res/images/home/icon_normal.png')
+        if (user.mode === 75) mode_icon = require('../../../res/images/home/icon_happy.png')
+        if (user.mode === 100) mode_icon = require('../../../res/images/home/icon_very_happy.png')
         this.setState({
           weather_text: mode_text,
           weather_icon: mode_icon,
@@ -231,9 +255,11 @@ export default class Home extends Component {
     } else {
       if (this.state.showWeather) {
         mode_text = `${partner.mode ? partner.mode : 0} 情绪值`
-        if (partner.mode >= 80) mode_icon = require('../../../res/images/home/icon_happy.png')
-        if (partner.mode >= 60 && partner.mode < 80) mode_icon = require('../../../res/images/home/icon_normal.png')
-        if (partner.mode < 60) mode_icon = require('../../../res/images/home/icon_sad.png')
+        if (partner.mode === 0) mode_icon = require('../../../res/images/home/icon_very_sad.png')
+        if (partner.mode === 25) mode_icon = require('../../../res/images/home/icon_sad.png')
+        if (partner.mode === 50) mode_icon = require('../../../res/images/home/icon_normal.png')
+        if (partner.mode === 75) mode_icon = require('../../../res/images/home/icon_happy.png')
+        if (partner.mode === 100) mode_icon = require('../../../res/images/home/icon_very_happy.png')
         this.setState({
           weather_text: mode_text,
           weather_icon: mode_icon,
