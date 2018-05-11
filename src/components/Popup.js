@@ -95,5 +95,8 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 16,
     fontWeight: '500'
+  },
+  text_btn_right: {
+    color: '#fff',
   }
 })

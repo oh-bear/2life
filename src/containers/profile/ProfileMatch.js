@@ -17,6 +17,7 @@ import Container from '../../components/Container'
 import ProfileHeader from './components/ProfileHeader'
 import TabBar from './components/TabBar'
 import MatchTips from './components/MatchTips'
+import Popup from '../../components/Popup'
 
 import {
   WIDTH,
@@ -43,11 +44,16 @@ export default class ProfileMatch extends Component {
     beMatched: true, // 是否希望被匹配
     character: 1, // 性格 1: 相同，2: 互补，3: 随意
     matchUserId: null,
-    showPopup: true
+    showPopup: true // TODO: 上线之后调整为 false
   }
 
   componentDidMount() {
     this.setState({ matchGender: !this.props.user.sex })
+  }
+
+  // TODO: 购买次数
+  buyItem() {
+
   }
 
   // TODO：这个函数貌似写的有问题，status 为 1000 时仍然可以更新，由此可以判断 props/redux 中的 user 在匹配成功之后没有更新
@@ -94,6 +100,10 @@ export default class ProfileMatch extends Component {
   }
 
   async startMatch() {
+    if (this.props.user.last_times <= 0) {
+      // 若用户没有匹配次数
+
+    }
     if (this.state.matchType === 0) {
       await this.updateStatus()
       return Actions.jump(SCENE_MATCH_RESULT)
@@ -235,6 +245,17 @@ export default class ProfileMatch extends Component {
          }
          ]}
          /> */}
+        <Popup
+          showPopup={this.state.showPopup}
+          popupBgColor={'#2DC3A6'}
+          icon={require('../../../res/images/profile/icon_remove.png')}
+          title={'注意'}
+          content={'你这个月已无匹配次数，若想匹配，可以选择花费1元购买1次匹配机会。'}
+          onPressLeft={() => this.setState({ showPopup: false })}
+          onPressRight={() => this.buyItem()}
+          textBtnLeft={'再考虑'}
+          textBtnRight={'购买1次匹配机会'}
+        />
       </Container>
     )
   }

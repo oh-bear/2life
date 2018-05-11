@@ -17,6 +17,7 @@ import {
   WIDTH,
   HEIGHT,
   getResponsiveWidth,
+  getResponsiveHeight
 } from '../../common/styles'
 
 import {
@@ -89,7 +90,7 @@ export default class Profile extends Component {
           <TextPingFang style={styles.text_row_desc}>平均情绪值</TextPingFang>
         </TouchableOpacity>
 
-        <TouchableOpacity style={[styles.row, styles.row_border_bottom]} activeOpacity={1}>
+        <TouchableOpacity style={[styles.row]} activeOpacity={1}>
           {
             (() => {
               if (this.props.partner.sex === 0) {
@@ -160,7 +161,6 @@ export default class Profile extends Component {
               <TextPingFang
                 style={styles.text_row_left}>{this.props.user.mode ? this.props.user.mode : '暂无'}</TextPingFang>
               <TextPingFang style={styles.text_row_desc}>平均情绪值</TextPingFang>
-              <Image style={styles.row_indicator} source={require('../../../res/images/common/icon_indicator.png')}/>
             </TouchableOpacity>
 
             <TouchableOpacity
@@ -201,7 +201,7 @@ export default class Profile extends Component {
 
             {this.renderPartner()}
 
-            <TouchableOpacity
+            {/* <TouchableOpacity
               style={styles.row_match}
               onPress={() => Actions.jump(SCENE_PROFILE_MATCH, { user: this.props.user })}
             >
@@ -213,7 +213,7 @@ export default class Profile extends Component {
                 <TextPingFang style={styles.text_match_desc}>来匹配一个日记伴侣吧～</TextPingFang>
                 <Image style={styles.row_indicator} source={require('../../../res/images/common/icon_indicator.png')}/>
               </View>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
 
             {/* <TouchableOpacity
               style={[styles.row, styles.row_border_bottom]}
@@ -224,6 +224,15 @@ export default class Profile extends Component {
               <TextPingFang style={styles.text_row_right}>10分钟前</TextPingFang>
               <Image style={styles.row_indicator} source={require('../../../res/images/common/icon_indicator.png')}/>
             </TouchableOpacity> */}
+
+            <TouchableOpacity
+              style={[styles.row, styles.row_top, styles.row_border_bottom]}
+              onPress={() => Actions.jump(SCENE_PROFILE_MATCH, { user: this.props.user })}
+            >
+              <Image source={require('../../../res/images/profile/icon_match.png')}/>
+              <TextPingFang style={styles.text_row_left}>匹配</TextPingFang>
+              <Image style={styles.row_indicator} source={require('../../../res/images/common/icon_indicator.png')}/>
+            </TouchableOpacity>
 
             <TouchableOpacity
               style={[styles.row, styles.row_border_bottom]}
@@ -300,6 +309,9 @@ const styles = StyleSheet.create({
     position: 'absolute',
     right: 0,
     bottom: 0
+  },
+  row_top: {
+    marginTop: getResponsiveHeight(20),
   },
   row: {
     height: getResponsiveWidth(44),
