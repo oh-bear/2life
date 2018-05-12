@@ -25,6 +25,7 @@ import {
   getResponsiveWidth,
 } from '../../common/styles'
 import { updateUser } from '../../common/util'
+import Storage from '../../common/storage'
 import { SCENE_MATCH_RESULT } from '../../constants/scene'
 
 import HttpUtils from '../../network/HttpUtils'
@@ -67,6 +68,8 @@ export default class ProfileMatch extends Component {
   // TODO: 返回时保存配置的状态，第一次会提醒
 
   async componentDidMount() {
+    this.showTips()
+
     // TODO: 加载状态
     try {
       await RNIap.prepare()
@@ -76,6 +79,15 @@ export default class ProfileMatch extends Component {
     catch (err) {
       console.warn(err.code, err.message)
     }
+  }
+
+  componentWillUnmount() {
+    Storage.set('firstMatch', false)
+  }
+
+  async showTips() {
+    const showTips = await Storage.get('firstMatch', true)
+    this.setState({showTips})
   }
 
   buyItem = async (product) => {

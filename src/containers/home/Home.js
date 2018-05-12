@@ -94,7 +94,7 @@ export default class Home extends Component {
       diaryList = diaryClassify(diaryList, 'date')
 
       let markedDates = {}
-      const boy = { key: 'boy', color: '#4590F8'}
+      const boy = { key: 'boy', color: '#4590F8' }
       const girl = { key: 'girl', color: 'pink' }
       const otherBoy = { key: 'otherBoy', color: '#2DC3A6' }
       const otherGirl = { key: 'otherGirl', color: '#F83AC1' }
@@ -187,14 +187,6 @@ export default class Home extends Component {
   }
 
   async onDayPress(day) {
-    // let markedDates = this.state.markedDates
-    // for (let date in markedDates) {
-    //   if (date === day.dateString) {
-    //     markedDates[date].selected = true
-    //   } else {
-    //     markedDates[date].selected = false
-    //   }
-    // } 
     const filterDiaryList = this.state.diaryList.filter(dayDiary => dayDiary[0].formDate === day.dateString)
     this.setState({ filterDiaryList })
   }
