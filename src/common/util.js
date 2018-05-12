@@ -31,42 +31,42 @@ export function getFormDay(timestamp) {
 export function getMonth(month) {
   let chinese_month = ''
   switch (month) {
-    case 0:
-      chinese_month = '一月'
-      break
-    case 1:
-      chinese_month = '二月'
-      break
-    case 2:
-      chinese_month = '三月'
-      break
-    case 3:
-      chinese_month = '四月'
-      break
-    case 4:
-      chinese_month = '五月'
-      break
-    case 5:
-      chinese_month = '六月'
-      break
-    case 6:
-      chinese_month = '七月'
-      break
-    case 7:
-      chinese_month = '八月'
-      break
-    case 8:
-      chinese_month = '九月'
-      break
-    case 9:
-      chinese_month = '十月'
-      break
-    case 10:
-      chinese_month = '十一月'
-      break
-    case 11:
-      chinese_month = '腊月'
-      break
+  case 0:
+    chinese_month = '一月'
+    break
+  case 1:
+    chinese_month = '二月'
+    break
+  case 2:
+    chinese_month = '三月'
+    break
+  case 3:
+    chinese_month = '四月'
+    break
+  case 4:
+    chinese_month = '五月'
+    break
+  case 5:
+    chinese_month = '六月'
+    break
+  case 6:
+    chinese_month = '七月'
+    break
+  case 7:
+    chinese_month = '八月'
+    break
+  case 8:
+    chinese_month = '九月'
+    break
+  case 9:
+    chinese_month = '十月'
+    break
+  case 10:
+    chinese_month = '十一月'
+    break
+  case 11:
+    chinese_month = '腊月'
+    break
   }
   return chinese_month
 }
@@ -81,27 +81,27 @@ export function getDay(timestamp) {
   const weekDay = date.getDay()
   let EngWeekDay = ''
   switch (weekDay) {
-    case 0:
-      EngWeekDay = 'Sun'
-      break
-    case 1:
-      EngWeekDay = 'Mon'
-      break
-    case 2:
-      EngWeekDay = 'Tue'
-      break
-    case 3:
-      EngWeekDay = 'Wed'
-      break
-    case 4:
-      EngWeekDay = 'Thu'
-      break
-    case 5:
-      EngWeekDay = 'Fri'
-      break
-    case 6:
-      EngWeekDay = 'Sat'
-      break
+  case 0:
+    EngWeekDay = 'Sun'
+    break
+  case 1:
+    EngWeekDay = 'Mon'
+    break
+  case 2:
+    EngWeekDay = 'Tue'
+    break
+  case 3:
+    EngWeekDay = 'Wed'
+    break
+  case 4:
+    EngWeekDay = 'Thu'
+    break
+  case 5:
+    EngWeekDay = 'Fri'
+    break
+  case 6:
+    EngWeekDay = 'Sat'
+    break
   }
   return `${day}\n${EngWeekDay}`
 }
@@ -231,7 +231,7 @@ export async function postImgToQiniu(base64List, obj) {
     const key_base64 = Buffer.from(filename).toString('base64')
 
     if (res_token.code === 0) {
-      const qiniu_token = res_token.data   //七牛token
+      const qiniu_token = res_token.data // 七牛token
 
       const res_qiniu = await fetch(URL_qiniu_host + key_base64, {
         method: 'post',
@@ -292,6 +292,15 @@ export function getWeatherDesc(weather) {
  * @param {object} obj 要更新的数据
  */
 export function updateUser(user, obj) {
-  const {sex, name, face, status, latitude, longitude, badge_id, badges} = user
-  return HttpUtils.post(USERS.update, Object.assign({sex, name, face, status, latitude, longitude, badge_id, badges}, obj))
+  const { sex, name, face, status, latitude, longitude, badge_id, badges } = user
+  return HttpUtils.post(USERS.update, Object.assign({
+    sex,
+    name,
+    face,
+    status,
+    latitude,
+    longitude,
+    badge_id,
+    badges
+  }, obj))
 }

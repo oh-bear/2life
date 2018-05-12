@@ -5,7 +5,8 @@ import {
   ScrollView,
   TouchableOpacity,
   TextInput,
-  Alert
+  Alert,
+  Platform
 } from 'react-native'
 
 import { Actions } from 'react-native-router-flux'
@@ -28,12 +29,20 @@ import { SCENE_MATCH_RESULT } from '../../constants/scene'
 
 import HttpUtils from '../../network/HttpUtils'
 import { USERS } from '../../network/Urls'
+import * as RNIap from 'react-native-iap'
 
 function mapStateToProps(state) {
   return {
     user: state.user,
   }
 }
+
+const itemSkus = Platform.select({
+  ios: [
+    'times_1'
+  ],
+  android: [],
+})
 
 @connect(mapStateToProps)
 export default class ProfileMatch extends Component {
@@ -45,20 +54,47 @@ export default class ProfileMatch extends Component {
     character: 1, // 性格 1: 相同，2: 互补，3: 随意
     matchUserId: null,
     showTips: false,
-    showPopup: false // TODO: 上线之后调整为 false
+    showPopup: false,
+    productList: [],
   }
 
-  componentDidMount() {
-    this.setState({ matchGender: !this.props.user.sex })
+  // TODO: 该页面有2种状态
+  // 1 未匹配：根据 status 加载页面
+  // 2 已匹配
+  // 是否希望被匹配的交互问题
+
+
+  // TODO: 返回时保存配置的状态，第一次会提醒
+
+  async componentDidMount() {
+    // TODO: 加载状态
+    try {
+      await RNIap.prepare()
+      const products = await RNIap.getProducts(itemSkus)
+      this.setState({ productList: products, matchGender: !this.props.user.sex })
+    }
+    catch (err) {
+      console.warn(err.code, err.message)
+    }
   }
 
-
-  // TODO: 购买次数
-  buyItem() {
-
+  buyItem = async (product) => {
+    RNIap.buyProduct(product.productId).then(purchase => {
+      HttpUtils.post(USERS.add_last_times).then(res => {
+        // TODO: 刷新用户数据
+        this.setState({
+          showPopup: true,
+          popupBgColor: '#2DC3A6',
+          pupupIcon: require('../../../res/images/home/icon_happy.png'),
+          popupTitle: '购买成功',
+          popupContent: '您已成功购买额外的匹配次数，感谢您对作者的支持，我们一定会更用心做好产品😊',
+        })
+      })
+    }).catch(err => {
+      console.warn(err) // standardized err.code and err.message available
+    })
   }
 
-  // TODO：这个函数貌似写的有问题，status 为 1000 时仍然可以更新，由此可以判断 props/redux 中的 user 在匹配成功之后没有更新
   async updateStatus() {
     const { matchGender, beMatched, character, matchUserId } = this.state
     let { sex, status } = this.props.user
@@ -102,8 +138,8 @@ export default class ProfileMatch extends Component {
   }
 
   async startMatch() {
+    // 若用户没有匹配次数，则提示购买
     if (this.props.user.last_times <= 0) {
-      // 若用户没有匹配次数
       return this.setState({ showPopup: true })
     }
     if (this.state.matchType === 0) {
@@ -134,26 +170,6 @@ export default class ProfileMatch extends Component {
             <View style={styles.tab_container}>
 
               <View style={styles.question_container}>
-                <TextPingFang style={styles.text_question}>你希望匹配到</TextPingFang>
-                <View style={styles.option_container}>
-                  <TouchableOpacity
-                    style={[styles.btn, this.state.matchGender !== this.props.user.sex ? styles.active_btn : null]}
-                    onPress={() => this.setState({ matchGender: !this.props.user.sex })}
-                  >
-                    <TextPingFang
-                      style={[styles.text_btn, this.state.matchGender !== this.props.user.sex ? styles.active_text : null]}>异性</TextPingFang>
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    style={[styles.btn, this.state.matchGender === this.props.user.sex ? styles.active_btn : null]}
-                    onPress={() => this.setState({ matchGender: this.props.user.sex })}
-                  >
-                    <TextPingFang
-                      style={[styles.text_btn, this.state.matchGender === this.props.user.sex ? styles.active_text : null]}>同性</TextPingFang>
-                  </TouchableOpacity>
-                </View>
-              </View>
-
-              <View style={styles.question_container}>
                 <TextPingFang style={styles.text_question}>你是否希望被匹配</TextPingFang>
                 <View style={styles.option_container}>
                   <TouchableOpacity
@@ -169,6 +185,26 @@ export default class ProfileMatch extends Component {
                   >
                     <TextPingFang
                       style={[styles.text_btn, !this.state.beMatched ? styles.active_text : null]}>不希望</TextPingFang>
+                  </TouchableOpacity>
+                </View>
+              </View>
+
+              <View style={styles.question_container}>
+                <TextPingFang style={styles.text_question}>你希望匹配到</TextPingFang>
+                <View style={styles.option_container}>
+                  <TouchableOpacity
+                    style={[styles.btn, this.state.matchGender !== this.props.user.sex ? styles.active_btn : null]}
+                    onPress={() => this.setState({ matchGender: !this.props.user.sex })}
+                  >
+                    <TextPingFang
+                      style={[styles.text_btn, this.state.matchGender !== this.props.user.sex ? styles.active_text : null]}>异性</TextPingFang>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={[styles.btn, this.state.matchGender === this.props.user.sex ? styles.active_btn : null]}
+                    onPress={() => this.setState({ matchGender: this.props.user.sex })}
+                  >
+                    <TextPingFang
+                      style={[styles.text_btn, this.state.matchGender === this.props.user.sex ? styles.active_text : null]}>同性</TextPingFang>
                   </TouchableOpacity>
                 </View>
               </View>
@@ -229,23 +265,23 @@ export default class ProfileMatch extends Component {
           showPopup={this.state.showTips}
           onClose={() => this.setState({ showTips: false })}
           tips={[
-          {
-            bg: require('../../../res/images/profile/bg_match_tips_1.png'),
-            title: '每个月只有 3 次宝贵的匹配机会',
-            sTitle: '',
-          },
-          {
-            bg: require('../../../res/images/profile/bg_match_tips_2.png'),
-            title: '解除匹配关系将失去所有互动信息',
-            sTitle: '并且无法再次匹配到 ta',
-          },
-          {
-            bg: require('../../../res/images/profile/bg_match_tips_3.png'),
-            title: '多写日记更容易匹配成功哦',
-            sTitle: '至少要写 1 篇日记才能匹配',
-          }
+            {
+              bg: require('../../../res/images/profile/bg_match_tips_1.png'),
+              title: '每个月只有 3 次宝贵的匹配机会',
+              sTitle: '',
+            },
+            {
+              bg: require('../../../res/images/profile/bg_match_tips_2.png'),
+              title: '解除匹配关系将失去所有互动信息',
+              sTitle: '并且无法再次匹配到 ta',
+            },
+            {
+              bg: require('../../../res/images/profile/bg_match_tips_3.png'),
+              title: '多写日记更容易匹配成功哦',
+              sTitle: '至少要写 1 篇日记才能匹配',
+            }
           ]}
-         />
+        />
 
         <Popup
           showPopup={this.state.showPopup}
@@ -254,7 +290,7 @@ export default class ProfileMatch extends Component {
           title={'注意'}
           content={'你这个月已无匹配次数，若想匹配，可以选择花费1元购买1次匹配机会。'}
           onPressLeft={() => this.setState({ showPopup: false })}
-          onPressRight={() => this.buyItem()}
+          onPressRight={() => this.buyItem(this.state.productList[0])}
           textBtnLeft={'再考虑'}
           textBtnRight={'购买1次匹配机会'}
         />
