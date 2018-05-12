@@ -51,8 +51,7 @@ export default class MatchResult extends Component {
 
   componentDidMount() {
     if (this.props.partner.id) {
-      this.setState({ partner: this.props.partner })
-      this.matchSucceed()
+      this.setState({ partner: this.props.partner }, () => this.matchSucceed())
     } else {
       setTimeout(this.fetchMatch.bind(this), 3500)
     }
@@ -90,7 +89,7 @@ export default class MatchResult extends Component {
       if (res.code === 0) {
         store.dispatch(fetchPartnerSuccess(res.data))
 
-        HttpUtils.get(USERS.connect_by_random, { user_id: this.props.user.id }).then(res => {
+        HttpUtils.get(USERS.user, { user_id: this.props.user.id }).then(res => {
           if (res.code === 0) store.dispatch(fetchProfileSuccess(res.data))
         })
 
@@ -105,14 +104,14 @@ export default class MatchResult extends Component {
       if (res.code === 0) {
         store.dispatch(fetchPartnerSuccess(res.data))
 
-        HttpUtils.get(USERS.connect_by_id, { user_id: this.props.user.id }).then(res => {
+        HttpUtils.get(USERS.user, { user_id: this.props.user.id }).then(res => {
           if (res.code === 0) store.dispatch(fetchProfileSuccess(res.data))
         })
 
         this.setState({ partner: res.data })
         this.matchSucceed()
       } else {
-        this.matchFailed(this.codeToMessage(res.code))
+        this.matchFailed(this._codeToMessage(res.code))
       }
     }
   }
@@ -213,6 +212,7 @@ const styles = StyleSheet.create({
   face: {
     width: getResponsiveWidth(88),
     height: getResponsiveWidth(88),
+    borderRadius: getResponsiveWidth(44)
   },
   img_fail: {
     width: WIDTH

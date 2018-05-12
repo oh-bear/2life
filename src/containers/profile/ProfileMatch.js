@@ -44,12 +44,14 @@ export default class ProfileMatch extends Component {
     beMatched: true, // 是否希望被匹配
     character: 1, // 性格 1: 相同，2: 互补，3: 随意
     matchUserId: null,
-    showPopup: true // TODO: 上线之后调整为 false
+    showTips: false,
+    showPopup: false // TODO: 上线之后调整为 false
   }
 
   componentDidMount() {
     this.setState({ matchGender: !this.props.user.sex })
   }
+
 
   // TODO: 购买次数
   buyItem() {
@@ -61,7 +63,7 @@ export default class ProfileMatch extends Component {
     const { matchGender, beMatched, character, matchUserId } = this.state
     let { sex, status } = this.props.user
 
-    if (status >= 501 && status <= 504 || status === 1000) {
+    if ((status >= 501 && status <= 504) || status === 1000) {
       return
     }
 
@@ -102,7 +104,7 @@ export default class ProfileMatch extends Component {
   async startMatch() {
     if (this.props.user.last_times <= 0) {
       // 若用户没有匹配次数
-
+      return this.setState({ showPopup: true })
     }
     if (this.state.matchType === 0) {
       await this.updateStatus()
@@ -223,28 +225,28 @@ export default class ProfileMatch extends Component {
 
         </ScrollView>
 
-        // TODO：记得发布时取消注释
-        {/* <MatchTips
-         showPopup={this.state.showPopup}
-         onClose={() => this.setState({ showPopup: false })}
-         tips={[
-         {
-         bg: require('../../../res/images/profile/bg_match_tips_1.png'),
-         title: '每个月只有 3 次宝贵的匹配机会',
-         sTitle: '',
-         },
-         {
-         bg: require('../../../res/images/profile/bg_match_tips_2.png'),
-         title: '解除匹配关系将失去所有互动信息',
-         sTitle: '并且无法再次匹配到 ta',
-         },
-         {
-         bg: require('../../../res/images/profile/bg_match_tips_3.png'),
-         title: '多写日记更容易匹配成功哦',
-         sTitle: '至少要写 1 篇日记才能匹配',
-         }
-         ]}
-         /> */}
+        <MatchTips
+          showPopup={this.state.showTips}
+          onClose={() => this.setState({ showTips: false })}
+          tips={[
+          {
+            bg: require('../../../res/images/profile/bg_match_tips_1.png'),
+            title: '每个月只有 3 次宝贵的匹配机会',
+            sTitle: '',
+          },
+          {
+            bg: require('../../../res/images/profile/bg_match_tips_2.png'),
+            title: '解除匹配关系将失去所有互动信息',
+            sTitle: '并且无法再次匹配到 ta',
+          },
+          {
+            bg: require('../../../res/images/profile/bg_match_tips_3.png'),
+            title: '多写日记更容易匹配成功哦',
+            sTitle: '至少要写 1 篇日记才能匹配',
+          }
+          ]}
+         />
+
         <Popup
           showPopup={this.state.showPopup}
           popupBgColor={'#2DC3A6'}

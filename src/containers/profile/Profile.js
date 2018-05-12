@@ -161,6 +161,7 @@ export default class Profile extends Component {
               <TextPingFang
                 style={styles.text_row_left}>{this.props.user.mode ? this.props.user.mode : '暂无'}</TextPingFang>
               <TextPingFang style={styles.text_row_desc}>平均情绪值</TextPingFang>
+              <Image style={styles.row_indicator} source={require('../../../res/images/common/icon_indicator.png')}/>
             </TouchableOpacity>
 
             <TouchableOpacity

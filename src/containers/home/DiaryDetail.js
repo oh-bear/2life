@@ -55,9 +55,12 @@ export default class DiaryDetail extends Component {
     } else {
       this.setState({ showBanner: false })
     }
-    if (diary.mode < 60 ) this.setState({mode_face: require('../../../res/images/home/icon_sad_male.png')})
-    if (diary.mode >= 60 && diary.mode < 80) this.setState({mode_face: require('../../../res/images/home/icon_normal_male.png')})
-    if (diary.mode >= 80 && diary.mode <= 100 ) this.setState({mode_face: require('../../../res/images/home/icon_happy_male.png')})
+
+    if (diary.mode >= 0 && diary.mode <= 20) this.setState({mode_face: require('../../../res/images/home/icon_very_sad_male.png')})
+    if (diary.mode > 20 && diary.mode <= 40) this.setState({mode_face: require('../../../res/images/home/icon_sad_male.png')})
+    if (diary.mode > 40 && diary.mode <= 60) this.setState({mode_face: require('../../../res/images/home/icon_normal_male.png')})
+    if (diary.mode > 60 && diary.mode <= 80) this.setState({mode_face: require('../../../res/images/home/icon_happy_male.png')})
+    if (diary.mode > 80 && diary.mode <= 100) this.setState({mode_face: require('../../../res/images/home/icon_very_happy_male.png')})
 
     this.setState({mode: diary.mode.toString()})
 

@@ -59,6 +59,10 @@ export default class Home extends Component {
     showCalendar: false,
     weather_text: '你在的地方一定是晴天吧',
     weather_icon: require('../../../res/images/home/icon_sunny.png'),
+    my_weather_text: '',
+    my_weather_icon: null,
+    other_weather_text: '',
+    other_weather_icon: null,
     diaryList: [],
     filterDiaryList: [],
     markedDates: {},
@@ -66,7 +70,8 @@ export default class Home extends Component {
     showWeatherTip: false,
     showWeatherFlag: false,
     showMe: true,
-    showWeather: true
+    showWeather: true,
+    isRefreshing: false
   }
 
   async componentDidMount() {
@@ -78,6 +83,7 @@ export default class Home extends Component {
   }
 
   async _fetchDiary() {
+    this.setState({isRefreshing: true})
     const res = await HttpUtils.get(URL_list)
     if (res.code === 0) {
       const { partner, recommend, user } = res.data
@@ -124,7 +130,8 @@ export default class Home extends Component {
       this.setState({
         diaryList,
         markedDates,
-        filterDiaryList: diaryList
+        filterDiaryList: diaryList,
+        isRefreshing: false
       })
     }
   }
@@ -163,15 +170,18 @@ export default class Home extends Component {
         const location = await getLocation(longitude, latitude)
         // const location = await getLocation(117.28972256,31.8572069484)
         const weather = await getWeather(location.city)
-        console.log(weather)
         const { weather_text, weather_icon } = getWeatherDesc(weather)
-        this.setState({ weather_text, weather_icon})
+        this.setState({
+          weather_text,
+          weather_icon,
+          my_weather_text: weather_text,
+          my_weather_icon: weather_icon
+        })
       } catch (e) {
         this.setState({
           weather_text: '你在的地方一定是晴天吧',
           weather_icon: require('../../../res/images/home/icon_sunny.png'),
         })
-        
       }
     })
   }
@@ -186,7 +196,7 @@ export default class Home extends Component {
     //   }
     // } 
     const filterDiaryList = this.state.diaryList.filter(dayDiary => dayDiary[0].formDate === day.dateString)
-    this.setState({ markedDates, filterDiaryList })
+    this.setState({ filterDiaryList })
   }
 
   async setDate(months) {
@@ -211,12 +221,21 @@ export default class Home extends Component {
     if (!this.props.partner.id) return
 
     if (this.state.showMe) {
-      const { latitude, longitude } = this.props.partner
-      const location = await getLocation(longitude, latitude)
-      // const location = await getLocation(113.387061, 23.053829)
-      const weather = await getWeather(location.city)
-      const { weather_text, weather_icon } = getWeatherDesc(weather)
-      this.setState({ weather_text, weather_icon, showMe: false, showWeather: true })
+      try {
+        const { latitude, longitude } = this.props.partner
+        const location = await getLocation(longitude, latitude)
+        // const location = await getLocation(113.387061, 23.053829)
+        const weather = await getWeather(location.city)
+        const { weather_text, weather_icon } = getWeatherDesc(weather)
+        this.setState({ weather_text, weather_icon, showMe: false, showWeather: true })
+      } catch(e) {
+        this.setState({
+          weather_text: 'ta在的地方一定是晴天吧',
+          weather_icon: require('../../../res/images/home/icon_sunny.png'),
+          showMe: false,
+          showWeather: true
+        })
+      }
     } else {
       this._getWeather()
       this.setState({
@@ -233,12 +252,14 @@ export default class Home extends Component {
     
     if (this.state.showMe) {
       if (this.state.showWeather) {
-        mode_text = `${user.mode ? user.mode : 0} 情绪值`
-        if (user.mode === 0) mode_icon = require('../../../res/images/home/icon_very_sad.png')
-        if (user.mode === 25) mode_icon = require('../../../res/images/home/icon_sad.png')
-        if (user.mode === 50) mode_icon = require('../../../res/images/home/icon_normal.png')
-        if (user.mode === 75) mode_icon = require('../../../res/images/home/icon_happy.png')
-        if (user.mode === 100) mode_icon = require('../../../res/images/home/icon_very_happy.png')
+        mode_text = user.mode ? `${user.mode ? user.mode : ''} 情绪值` : '还没有情绪值'
+        if (user.mode >= 0 && user.mode <= 20) mode_icon = require('../../../res/images/home/icon_very_sad.png')
+        if (user.mode > 20 && user.mode <= 40) mode_icon = require('../../../res/images/home/icon_sad.png')
+        if (user.mode > 40 && user.mode <= 60) mode_icon = require('../../../res/images/home/icon_normal.png')
+        if (user.mode > 60 && user.mode <= 80) mode_icon = require('../../../res/images/home/icon_happy.png')
+        if (user.mode > 80 && user.mode <= 100) mode_icon = require('../../../res/images/home/icon_very_happy.png')
+        if (!user.mode) mode_icon = require('../../../res/images/home/icon_normal.png')
+
         this.setState({
           weather_text: mode_text,
           weather_icon: mode_icon,
@@ -246,7 +267,14 @@ export default class Home extends Component {
           showWeather: false
         })
       } else {
-        this._getWeather()
+        if (this.state.my_weather_text && this.state.my_weather_icon) {
+          this.setState({
+            weather_text: this.state.my_weather_text,
+            weather_icon: this.state.my_weather_icon
+          })
+        } else {
+          this._getWeather()
+        }
         this.setState({
           showMe: true,
           showWeather: true
@@ -254,12 +282,14 @@ export default class Home extends Component {
       }
     } else {
       if (this.state.showWeather) {
-        mode_text = `${partner.mode ? partner.mode : 0} 情绪值`
-        if (partner.mode === 0) mode_icon = require('../../../res/images/home/icon_very_sad.png')
-        if (partner.mode === 25) mode_icon = require('../../../res/images/home/icon_sad.png')
-        if (partner.mode === 50) mode_icon = require('../../../res/images/home/icon_normal.png')
-        if (partner.mode === 75) mode_icon = require('../../../res/images/home/icon_happy.png')
-        if (partner.mode === 100) mode_icon = require('../../../res/images/home/icon_very_happy.png')
+        mode_text = partner.mode ? `${partner.mode ? partner.mode : ''} 情绪值` : '还没有情绪值'
+        if (partner.mode >= 0 && partner.mode <= 20) mode_icon = require('../../../res/images/home/icon_very_sad.png')
+        if (partner.mode > 20 && partner.mode <= 40) mode_icon = require('../../../res/images/home/icon_sad.png')
+        if (partner.mode > 40 && partner.mode <= 60) mode_icon = require('../../../res/images/home/icon_normal.png')
+        if (partner.mode > 60 && partner.mode <= 80) mode_icon = require('../../../res/images/home/icon_happy.png')
+        if (partner.mode > 80 && partner.mode <= 100) mode_icon = require('../../../res/images/home/icon_very_happy.png')
+        if (!partner.mode) mode_icon = require('../../../res/images/home/icon_normal.png')
+
         this.setState({
           weather_text: mode_text,
           weather_icon: mode_icon,
@@ -267,12 +297,38 @@ export default class Home extends Component {
           showWeather: false
         })
       } else {
-        const { latitude, longitude } = partner
-        const location = await getLocation(longitude, latitude)
-        // const location = await getLocation(113.387061, 23.053829)
-        const weather = await getWeather(location.city)
-        const { weather_text, weather_icon } = getWeatherDesc(weather)
-        this.setState({ weather_text, weather_icon, showMe: false, showWeather: true })
+        if (this.state.other_weather_text && this.state.other_weather_icon) {
+          this.setState({
+            weather_text: this.state.other_weather_text,
+            weather_icon: this.state.other_weather_icon,
+            showMe: false,
+            showWeather: true
+          })
+        } else {
+          try {
+            const { latitude, longitude } = partner
+            const location = await getLocation(longitude, latitude)
+            // const location = await getLocation(113.387061, 23.053829)
+            const weather = await getWeather(location.city)
+            const { weather_text, weather_icon } = getWeatherDesc(weather)
+            this.setState({
+              weather_text,
+              weather_icon,
+              other_weather_text: weather_text,
+              other_weather_icon: weather_icon,
+              showMe: false,
+              showWeather: true
+            })
+          } catch(e) {
+            this.setState({
+              weather_text: 'ta在的地方一定是晴天吧',
+              weather_icon: require('../../../res/images/home/icon_sunny.png'),
+              showMe: false,
+              showWeather: true
+            })
+
+          }
+        }
       }
     }
   }
@@ -359,27 +415,33 @@ export default class Home extends Component {
                 style={[styles.text_weather, { color: this.state.showMe ? '#aaa' : '#000' }]}>{this.state.weather_text}</TextPingFang>
             </TouchableOpacity>
 
-            <TouchableOpacity style={styles.weather_exchange} onPress={() => this.exchangeWeather()}>
+            <TouchableOpacity
+              style={[styles.weather_exchange, {display: this.props.partner.id ? 'flex' : 'none'}]}
+              onPress={() => this.exchangeWeather()}
+            >
               <Image source={require('../../../res/images/common/icon_exchange.png')}/>
             </TouchableOpacity>
           </View>
 
-          <View
+          {/* <View
             style={[styles.tip_container, { display: this.state.showWeatherTip ? 'flex' : 'none' }]}
             animation='bounceIn'
           >
             <TextPingFang style={styles.text_tip}>点击这里可以看到对方天气哦</TextPingFang>
             <View style={styles.triangle}/>
-          </View>
+          </View> */}
         </View>
 
         <FlatList
+          ref={ref => this.fl = ref}
           style={styles.diary_container}
           data={this.state.filterDiaryList}
           extraData={this.state}
           renderItem={this._renderItem}
           ListEmptyComponent={() => this._emptyDiary()}
           ListFooterComponent={() => this._listFooter()}
+          onRefresh={() => this._fetchDiary()}
+          refreshing={this.state.isRefreshing}
         />
 
         <TouchableOpacity

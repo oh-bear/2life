@@ -128,7 +128,7 @@ export default class ProfileEdit extends Component {
               <TextPingFang style={styles.text_row_right}>{this.props.user.code}</TextPingFang>
             </View>
 
-            <View style={styles.badge}>
+            {/* <View style={styles.badge}>
               <TextPingFang style={styles.text_badge_title}>展示徽章</TextPingFang>
               {
                 (() => {
@@ -139,7 +139,7 @@ export default class ProfileEdit extends Component {
                   }
                 })()
               }
-            </View>
+            </View> */}
           </ScrollView>
         </View>
       </Container>
@@ -176,7 +176,8 @@ const styles = StyleSheet.create({
   row_face: {
     width: getResponsiveWidth(48),
     height: getResponsiveWidth(48),
-    marginLeft: getResponsiveWidth(16)
+    marginLeft: getResponsiveWidth(16),
+    borderRadius: getResponsiveWidth(24)
   },
   row_indicator: {
     position: 'absolute',
