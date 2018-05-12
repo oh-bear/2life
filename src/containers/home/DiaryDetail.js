@@ -139,6 +139,8 @@ export default class DiaryDetail extends Component {
     this.setState({ likeComponent })
   }
 
+  // TODO: 滚动问题，删除提醒，返回bug等
+
   render() {
     return (
       <Container hidePadding={this.state.showBanner}>

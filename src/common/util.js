@@ -300,7 +300,7 @@ export function updateUser(user, obj) {
     status,
     latitude,
     longitude,
-    badge_id,
+    badge_id: -1,
     badges
   }, obj))
 }

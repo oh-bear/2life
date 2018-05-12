@@ -67,6 +67,8 @@ export default class ProfileMatch extends Component {
 
   // TODO: 返回时保存配置的状态，第一次会提醒
 
+  // TODO: 滚动问题
+
   async componentDidMount() {
     this.showTips()
 

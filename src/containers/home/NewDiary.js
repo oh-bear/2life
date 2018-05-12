@@ -104,6 +104,8 @@ export default class NewDiary extends Component {
     this.setState({ base64List })
   }
 
+  // TODO: 滚动问题
+
   render() {
     return (
       <Container hidePadding={true}>

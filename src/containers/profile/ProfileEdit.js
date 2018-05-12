@@ -91,7 +91,7 @@ export default class ProfileEdit extends Component {
         <View>
           <ProfileHeader title='个人信息'/>
 
-          <ScrollView contentContainerStyle={styles.main_container}>
+          <ScrollView scrollEnabled={false} contentContainerStyle={styles.main_container}>
             <TouchableOpacity
               style={styles.row}
               onPress={() => this.seleceFace()}
