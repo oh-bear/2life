@@ -21,6 +21,7 @@ export default class ProfileHeader extends Component {
         <CommonNav
           navBarStyle={styles.navbar}
           rightButton={this.props.rightButton}
+          onPressBack={this.props.onBack}
         />
 
         <TextPingFang style={styles.text_title}>{this.props.title}</TextPingFang>

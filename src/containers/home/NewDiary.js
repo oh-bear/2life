@@ -127,8 +127,6 @@ export default class NewDiary extends Component {
     this.setState({ base64List })
   }
 
-  // TODO: 滚动问题
-
   render() {
     return (
       <Container hidePadding={true}>
@@ -152,7 +150,6 @@ export default class NewDiary extends Component {
             <TextPingFang style={styles.text_date}>{this.state.date.getFullYear()}</TextPingFang>
           </View>
 
-
           <TextInput
             style={styles.text_title}
             onChangeText={title => this.setState({ title })}
@@ -160,7 +157,7 @@ export default class NewDiary extends Component {
             placeholderTextColor='#aaa'
           />
 
-          <View style={styles.line}></View>
+          <View style={styles.line}/>
 
           <TextInput
             style={styles.text_content}
