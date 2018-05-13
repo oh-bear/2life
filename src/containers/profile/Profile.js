@@ -40,17 +40,23 @@ function mapStateToProps(state) {
 @connect(mapStateToProps)
 export default class Profile extends Component {
 
+  state = {
+    is_scroll: false
+  }
 
-  // TODO: 滚动问题
+  componentDidMount() {
+    // 低于iPhone6机型，则滚动屏幕
+    if (HEIGHT < 650) {
+      this.setState({is_scroll: false})
+    }
+  }
 
   renderPartner() {
     if (!this.props.partner.id) return
     return (
       <View>
-        <TouchableOpacity
+        <View
           style={styles.head_container}
-          activeOpacity={1}
-          onPress={() => Actions.jump(SCENE_MATCH_RESULT)}
         >
           <View style={styles.head_left}>
             <View style={styles.head_left_top}>
@@ -77,7 +83,7 @@ export default class Profile extends Component {
               })()
             }
           </View>
-        </TouchableOpacity>
+        </View>
 
         <TouchableOpacity style={styles.row} activeOpacity={1}>
           {
@@ -116,20 +122,20 @@ export default class Profile extends Component {
       <Container>
         <View>
           <TextPingFang style={styles.title}>关于我</TextPingFang>
-          <ScrollView contentContainerStyle={styles.profile_container}>
-            <TouchableOpacity
-              style={styles.head_container}
-              activeOpacity={1}
-              onPress={() => Actions.jump(SCENE_PROFILE_EDIT, { user: this.props.user })}
-            >
-              <View style={styles.head_left}>
+          <ScrollView scrollEnabled={this.state.is_scroll} contentContainerStyle={styles.profile_container}>
+            <View
+              style={styles.head_container}>
+              <TouchableOpacity
+                style={styles.head_left}
+                activeOpacity={1}
+                onPress={() => Actions.jump(SCENE_PROFILE_EDIT, { user: this.props.user })}>
                 <View style={styles.head_left_top}>
                   <TextPingFang style={styles.text_name}>{this.props.user.name}</TextPingFang>
                 </View>
                 <View style={styles.head_left_bottom}>
                   <TextPingFang style={styles.text_check}>查看资料</TextPingFang>
                 </View>
-              </View>
+              </TouchableOpacity>
               <View style={styles.head_right}>
                 <Image style={styles.img_head} source={{ uri: this.props.user.face }}/>
                 {
@@ -146,7 +152,7 @@ export default class Profile extends Component {
                   })()
                 }
               </View>
-            </TouchableOpacity>
+            </View>
 
             <TouchableOpacity
               style={styles.row}
@@ -257,11 +263,11 @@ export default class Profile extends Component {
 const styles = StyleSheet.create({
   title: {
     width: WIDTH,
-    paddingLeft: getResponsiveWidth(72),
+    paddingLeft: getResponsiveWidth(70),
     ...ifIphoneX({
-      paddingTop: getResponsiveWidth(28),
+      paddingTop: getResponsiveHeight(4),
     }, {
-      paddingTop: getResponsiveWidth(52),
+      paddingTop: getResponsiveHeight(28),
     }),
     color: '#444',
     fontSize: 34,
@@ -280,8 +286,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     paddingLeft: getResponsiveWidth(24),
-    marginTop: getResponsiveWidth(24),
-    marginBottom: getResponsiveWidth(24),
+    marginTop: getResponsiveHeight(24),
+    marginBottom: getResponsiveHeight(24),
   },
   head_left: {
     paddingLeft: getResponsiveWidth(24),
@@ -317,7 +323,7 @@ const styles = StyleSheet.create({
     marginTop: getResponsiveHeight(20),
   },
   row: {
-    height: getResponsiveWidth(44),
+    height: getResponsiveHeight(44),
     flexDirection: 'row',
     alignItems: 'center',
   },
@@ -342,7 +348,7 @@ const styles = StyleSheet.create({
     right: 0
   },
   row_match: {
-    height: getResponsiveWidth(100),
+    height: getResponsiveHeight(100),
     justifyContent: 'space-between',
     borderBottomWidth: 1,
     borderBottomColor: '#f1f1f1'

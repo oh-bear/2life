@@ -162,7 +162,7 @@ export default class Home extends Component {
       try {
         const { latitude, longitude } = res.coords
 
-        //更新用户经纬度
+        // 更新用户经纬度
         await updateUser(this.props.user, {latitude, longitude})
         this._updateUser()
 
@@ -425,6 +425,7 @@ export default class Home extends Component {
         </View>
 
         <FlatList
+          showsVerticalScrollIndicator={false}
           ref={ref => this.fl = ref}
           style={styles.diary_container}
           data={this.state.filterDiaryList}

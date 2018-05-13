@@ -8,8 +8,10 @@ import {
 import { ifIphoneX } from 'react-native-iphone-x-helper'
 
 import {
+  HEIGHT,
   WIDTH,
-  getResponsiveWidth
+  getResponsiveWidth,
+  getResponsiveHeight
 } from '../../common/styles'
 
 import Container from '../../components/Container'
@@ -62,13 +64,13 @@ export default class Notification extends Component {
     )
   }
 
-  // TODO: 滚动问题，高度太大
   render() {
     return (
       <Container>
         <View>
           <TextPingFang style={styles.title}>通知</TextPingFang>
           <FlatList
+            showsVerticalScrollIndicator={false}
             style={styles.notification_container}
             data={this.state.notificationList}
             extraData={this.state}
@@ -86,9 +88,9 @@ const styles = StyleSheet.create({
     width: WIDTH,
     paddingLeft: getResponsiveWidth(72),
     ...ifIphoneX({
-      paddingTop: getResponsiveWidth(28),
+      paddingTop: getResponsiveHeight(4),
     }, {
-      paddingTop: getResponsiveWidth(52),
+      paddingTop: getResponsiveHeight(28),
     }),
     color: '#444',
     fontSize: 34,
@@ -98,6 +100,7 @@ const styles = StyleSheet.create({
     width: WIDTH,
     paddingLeft: getResponsiveWidth(24),
     paddingRight: getResponsiveWidth(24),
+    marginBottom: getResponsiveHeight(48),
     backgroundColor: '#fff',
   },
   text_empty: {

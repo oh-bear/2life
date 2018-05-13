@@ -4,7 +4,8 @@ import {
   StyleSheet,
   Image,
   TouchableOpacity,
-  Platform
+  Platform,
+  ScrollView
 } from 'react-native'
 import * as RNIap from 'react-native-iap'
 
@@ -15,6 +16,7 @@ import ProfileHeader from './components/ProfileHeader'
 
 import {
   WIDTH,
+  HEIGHT,
   getResponsiveWidth,
 } from '../../common/styles'
 
@@ -40,7 +42,7 @@ export default class ProfileReward extends Component {
     popupBgColor: '#2DC3A6',
     pupupIcon: require('../../../res/images/home/icon_happy.png'),
     popupTitle: '',
-    popupContent: '',
+    popupContent: ''
   }
 
   async componentDidMount() {
@@ -73,7 +75,7 @@ export default class ProfileReward extends Component {
 
   buyItem = async (product) => {
     RNIap.buyProduct(product.productId).then(purchase => {
-      HttpUtils.post(USERS.update_rate, {price: product.price}).then(res => {
+      HttpUtils.post(USERS.update_rate, { price: product.price }).then(res => {
         this.setState({
           showPopup: true,
           popupBgColor: '#2DC3A6',
@@ -98,9 +100,7 @@ export default class ProfileReward extends Component {
     return (
       <Container>
         <ProfileHeader title='打赏'/>
-
         <Image source={this.state.bg}/>
-
         <View style={styles.container}>
           <TouchableOpacity
             style={[styles.item, this.state.selecting === 1 ? styles.item_selecting : null]}
@@ -161,9 +161,10 @@ export default class ProfileReward extends Component {
           icon={this.state.pupupIcon}
           title={this.state.popupTitle}
           content={this.state.popupContent}
-          onPressLeft={() => this.setState({showPopup: false})}
+          onPressLeft={() => this.setState({ showPopup: false })}
           textBtnLeft={'OK'}
         />
+
       </Container>
     )
   }

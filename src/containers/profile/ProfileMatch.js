@@ -22,6 +22,7 @@ import Popup from '../../components/Popup'
 
 import {
   WIDTH,
+  HEIGHT,
   getResponsiveWidth,
 } from '../../common/styles'
 import { updateUser } from '../../common/util'
@@ -56,8 +57,9 @@ export default class ProfileMatch extends Component {
     matchUserId: null,
     showTips: false,
     showPopup: false,
-    productList: [],
+    productList: []
   }
+
 
   // TODO: 该页面有2种状态
   // 1 未匹配：根据 status 加载页面
@@ -66,8 +68,6 @@ export default class ProfileMatch extends Component {
 
 
   // TODO: 返回时保存配置的状态，第一次会提醒
-
-  // TODO: 滚动问题
 
   async componentDidMount() {
     this.showTips()
@@ -89,7 +89,7 @@ export default class ProfileMatch extends Component {
 
   async showTips() {
     const showTips = await Storage.get('firstMatch', true)
-    this.setState({showTips})
+    this.setState({ showTips })
   }
 
   buyItem = async (product) => {
@@ -175,7 +175,7 @@ export default class ProfileMatch extends Component {
           title='选择你的匹配项'
           desc={`本月还能匹配${this.props.user.last_times ? this.props.user.last_times : 0}次`}
         />
-        <ScrollView>
+        <ScrollView scrollEnabled={false}>
           <ScrollableTabView
             style={styles.tabview}
             renderTabBar={() => <TabBar tabNames={['随机匹配', 'ID匹配']}/>}
