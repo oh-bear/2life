@@ -3,7 +3,8 @@ import {
   StyleSheet,
   TouchableOpacity,
   Image,
-  View
+  View,
+  ScrollView
 } from 'react-native'
 import ScrollableTabView from 'react-native-scrollable-tab-view'
 
@@ -33,7 +34,7 @@ export default class ProfileMode extends Component {
       <TouchableOpacity
         style={styles.nav_right_btn}
       >
-        <Image source={require('../../../res/images/common/icon_exchange.png')} />
+        <Image source={require('../../../res/images/common/icon_exchange.png')}/>
       </TouchableOpacity>
     )
   }
@@ -83,7 +84,7 @@ export default class ProfileMode extends Component {
       }
 
       if (sameDayStr && (sameDayStr !== dayStr)) {
-        newModeData.push({[sameDayTs]: sameDayModes.reduce((accu, curr) => accu + curr) / sameDayModes.length })
+        newModeData.push({ [sameDayTs]: sameDayModes.reduce((accu, curr) => accu + curr) / sameDayModes.length })
         sameDayStr = dayStr
         sameDayTs = ts
         sameDayModes = []
@@ -91,7 +92,7 @@ export default class ProfileMode extends Component {
       }
 
       if (index === modeData.length - 1) {
-        newModeData.push({[sameDayTs]: sameDayModes.reduce((accu, curr) => accu + curr) / sameDayModes.length })
+        newModeData.push({ [sameDayTs]: sameDayModes.reduce((accu, curr) => accu + curr) / sameDayModes.length })
       }
     })
     return newModeData
@@ -146,30 +147,31 @@ export default class ProfileMode extends Component {
         <View>
           <ProfileHeader
             title='情绪图表'
-          // rightButton={this.renderRightButton()}
+            // rightButton={this.renderRightButton()}
           />
-
-          <ScrollableTabView
-            style={styles.tabview}
-            renderTabBar={() => <TabBar tabNames={['一周', '一月', '一年', '全部']} />}
-          >
-            <ModeCharts
-              modeData={this.state.weekModeData.modes}
-              timeRange={this.state.weekModeData.timeRange}
-            />
-            <ModeCharts
-              modeData={this.state.monthModeData.modes}
-              timeRange={this.state.monthModeData.timeRange}
-            />
-            <ModeCharts
-              modeData={this.state.yearModeData.modes}
-              timeRange={this.state.yearModeData.timeRange}
-            />
-            <ModeCharts
-              modeData={this.state.totalModeData.modes}
-              timeRange={this.state.totalModeData.timeRange}
-            />
-          </ScrollableTabView>
+          <ScrollView>
+            <ScrollableTabView
+              style={styles.tabview}
+              renderTabBar={() => <TabBar tabNames={['一周', '一月', '一年', '全部']}/>}
+            >
+              <ModeCharts
+                modeData={this.state.weekModeData.modes}
+                timeRange={this.state.weekModeData.timeRange}
+              />
+              <ModeCharts
+                modeData={this.state.monthModeData.modes}
+                timeRange={this.state.monthModeData.timeRange}
+              />
+              <ModeCharts
+                modeData={this.state.yearModeData.modes}
+                timeRange={this.state.yearModeData.timeRange}
+              />
+              <ModeCharts
+                modeData={this.state.totalModeData.modes}
+                timeRange={this.state.totalModeData.timeRange}
+              />
+            </ScrollableTabView>
+          </ScrollView>
         </View>
       </Container>
     )

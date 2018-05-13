@@ -41,14 +41,14 @@ function mapStateToProps(state) {
 export default class Profile extends Component {
 
   state = {
-    is_scroll: false
+    is_scroll: true
   }
 
   componentDidMount() {
     // 低于iPhone6机型，则滚动屏幕
-    if (HEIGHT < 650) {
-      this.setState({is_scroll: false})
-    }
+    // if (HEIGHT < 650) {
+    //   this.setState({is_scroll: false})
+    // }
   }
 
   renderPartner() {
@@ -95,7 +95,8 @@ export default class Profile extends Component {
               }
             })()
           }
-          <TextPingFang style={styles.text_row_left}>{this.props.partner.mode ? this.props.partner.mode : '暂无'}</TextPingFang>
+          <TextPingFang
+            style={styles.text_row_left}>{this.props.partner.mode ? this.props.partner.mode : '暂无'}</TextPingFang>
           <TextPingFang style={styles.text_row_desc}>平均情绪值</TextPingFang>
         </TouchableOpacity>
 
@@ -190,53 +191,59 @@ export default class Profile extends Component {
             </TouchableOpacity>
 
             {/* <TouchableOpacity
-              style={[styles.row, styles.row_border_bottom]}
-              onPress={() => Actions.jump(SCENE_PROFILE_BADGE, {user: this.props.user})}
-            >
-              {
-                (() => {
-                  if (this.props.user.sex === 0) {
-                    return <Image source={require('../../../res/images/profile/icon_badge_male.png')}/>
-                  } else {
-                    return <Image source={require('../../../res/images/profile/icon_badge_female.png')}/>
-                  }
-                })()
-              }
-              <TextPingFang
-                style={styles.text_row_left}>{this.props.user.mode ? this.props.user.mode : '暂无'}</TextPingFang>
-              <TextPingFang style={styles.text_row_desc}>我的徽章</TextPingFang>
-              <Image style={styles.row_indicator} source={require('../../../res/images/common/icon_indicator.png')}/>
-            </TouchableOpacity> */}
+             style={[styles.row, styles.row_border_bottom]}
+             onPress={() => Actions.jump(SCENE_PROFILE_BADGE, {user: this.props.user})}
+             >
+             {
+             (() => {
+             if (this.props.user.sex === 0) {
+             return <Image source={require('../../../res/images/profile/icon_badge_male.png')}/>
+             } else {
+             return <Image source={require('../../../res/images/profile/icon_badge_female.png')}/>
+             }
+             })()
+             }
+             <TextPingFang
+             style={styles.text_row_left}>{this.props.user.mode ? this.props.user.mode : '暂无'}</TextPingFang>
+             <TextPingFang style={styles.text_row_desc}>我的徽章</TextPingFang>
+             <Image style={styles.row_indicator} source={require('../../../res/images/common/icon_indicator.png')}/>
+             </TouchableOpacity> */}
 
             {this.renderPartner()}
 
             {/* <TouchableOpacity
-              style={styles.row_match}
-              onPress={() => Actions.jump(SCENE_PROFILE_MATCH, { user: this.props.user })}
-            >
-              <View style={styles.row_match_top}>
-                <Image source={require('../../../res/images/profile/icon_match.png')}/>
-                <TextPingFang style={styles.text_match_left}>匹配</TextPingFang>
-              </View>
-              <View style={styles.row_match_bottom}>
-                <TextPingFang style={styles.text_match_desc}>来匹配一个日记伴侣吧～</TextPingFang>
-                <Image style={styles.row_indicator} source={require('../../../res/images/common/icon_indicator.png')}/>
-              </View>
-            </TouchableOpacity> */}
+             style={styles.row_match}
+             onPress={() => Actions.jump(SCENE_PROFILE_MATCH, { user: this.props.user })}
+             >
+             <View style={styles.row_match_top}>
+             <Image source={require('../../../res/images/profile/icon_match.png')}/>
+             <TextPingFang style={styles.text_match_left}>匹配</TextPingFang>
+             </View>
+             <View style={styles.row_match_bottom}>
+             <TextPingFang style={styles.text_match_desc}>来匹配一个日记伴侣吧～</TextPingFang>
+             <Image style={styles.row_indicator} source={require('../../../res/images/common/icon_indicator.png')}/>
+             </View>
+             </TouchableOpacity> */}
 
             {/* <TouchableOpacity
-              style={[styles.row, styles.row_border_bottom]}
-              onPress={() => Actions.jump(SCENE_PROFILE_SYNC)}
-            >
-              <Image source={require('../../../res/images/profile/icon_sync.png')}/>
-              <TextPingFang style={styles.text_row_left}>同步</TextPingFang>
-              <TextPingFang style={styles.text_row_right}>10分钟前</TextPingFang>
-              <Image style={styles.row_indicator} source={require('../../../res/images/common/icon_indicator.png')}/>
-            </TouchableOpacity> */}
+             style={[styles.row, styles.row_border_bottom]}
+             onPress={() => Actions.jump(SCENE_PROFILE_SYNC)}
+             >
+             <Image source={require('../../../res/images/profile/icon_sync.png')}/>
+             <TextPingFang style={styles.text_row_left}>同步</TextPingFang>
+             <TextPingFang style={styles.text_row_right}>10分钟前</TextPingFang>
+             <Image style={styles.row_indicator} source={require('../../../res/images/common/icon_indicator.png')}/>
+             </TouchableOpacity> */}
 
             <TouchableOpacity
               style={[styles.row, styles.row_top, styles.row_border_bottom]}
-              onPress={() => Actions.jump(SCENE_PROFILE_MATCH, { user: this.props.user })}
+              onPress={() => {
+                if (this.props.user.status !== 1000) {
+                  Actions.jump(SCENE_PROFILE_MATCH, { user: this.props.user })
+                } else {
+                  Actions.jump(SCENE_MATCH_RESULT, { user: this.props.user })
+                }
+              }}
             >
               <Image source={require('../../../res/images/profile/icon_match.png')}/>
               <TextPingFang style={styles.text_row_left}>匹配</TextPingFang>

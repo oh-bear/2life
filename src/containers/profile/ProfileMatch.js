@@ -25,7 +25,7 @@ import {
   HEIGHT,
   getResponsiveWidth,
 } from '../../common/styles'
-import { updateUser } from '../../common/util'
+import { updateUser, updateReduxUser } from '../../common/util'
 import Storage from '../../common/storage'
 import { SCENE_MATCH_RESULT } from '../../constants/scene'
 
@@ -52,7 +52,7 @@ export default class ProfileMatch extends Component {
   state = {
     matchType: 0, // 0: 随机, 1: ID
     matchGender: !this.props.user.sex, // 0: 男, 1: 女
-    beMatched: true, // 是否希望被匹配
+    beMatched: this.props.user.status !== 999, // 是否希望被匹配
     character: 1, // 性格 1: 相同，2: 互补，3: 随意
     matchUserId: null,
     showTips: false,
@@ -64,15 +64,55 @@ export default class ProfileMatch extends Component {
   // TODO: 该页面有2种状态
   // 1 未匹配：根据 status 加载页面
   // 2 已匹配
-  // 是否希望被匹配的交互问题
-
 
   // TODO: 返回时保存配置的状态，第一次会提醒
 
   async componentDidMount() {
     this.showTips()
 
-    // TODO: 加载状态
+    switch (this.props.user.status) {
+    case 999:
+      this.setState({ beMatched: false })
+      break
+    case 101:
+      this.setState({ sex: false, matchGender: true, character: 1, beMatched: true })
+      break
+    case 102:
+      this.setState({ sex: false, matchGender: true, character: 2, beMatched: true })
+      break
+    case 103:
+      this.setState({ sex: false, matchGender: true, character: 3, beMatched: true })
+      break
+    case 111:
+      this.setState({ sex: true, matchGender: false, character: 1, beMatched: true })
+      break
+    case 112:
+      this.setState({ sex: true, matchGender: false, character: 2, beMatched: true })
+      break
+    case 113:
+      this.setState({ sex: true, matchGender: false, character: 3, beMatched: true })
+      break
+    case 201:
+      this.setState({ sex: false, matchGender: false, character: 1, beMatched: true })
+      break
+    case 202:
+      this.setState({ sex: false, matchGender: false, character: 2, beMatched: true })
+      break
+    case 203:
+      this.setState({ sex: false, matchGender: false, character: 3, beMatched: true })
+      break
+    case 211:
+      this.setState({ sex: true, matchGender: true, character: 1, beMatched: true })
+      break
+    case 212:
+      this.setState({ sex: true, matchGender: true, character: 2, beMatched: true })
+      break
+    case 213:
+      this.setState({ sex: true, matchGender: true, character: 3, beMatched: true })
+      break
+    default:
+      break
+    }
     try {
       await RNIap.prepare()
       const products = await RNIap.getProducts(itemSkus)
@@ -95,7 +135,7 @@ export default class ProfileMatch extends Component {
   buyItem = async (product) => {
     RNIap.buyProduct(product.productId).then(purchase => {
       HttpUtils.post(USERS.add_last_times).then(res => {
-        // TODO: 刷新用户数据
+        updateReduxUser(this.props.user.id)
         this.setState({
           showPopup: true,
           popupBgColor: '#2DC3A6',
@@ -118,7 +158,11 @@ export default class ProfileMatch extends Component {
     }
 
     if (!beMatched) {
+      if (this.props.user.status === 999) {
+        return
+      }
       await updateUser(this.props.user, { status: 999 })
+      await updateReduxUser(this.props.user.id)
       return
     }
 
@@ -147,7 +191,9 @@ export default class ProfileMatch extends Component {
     // 213：未匹配，期待同性，性格随意，主体女
     if (sex && matchGender && character === 3) status = 213
 
+    if (this.props.user.status === status) return
     await updateUser(this.props.user, { status })
+    await updateReduxUser(this.props.user.id)
     return
   }
 
@@ -167,15 +213,21 @@ export default class ProfileMatch extends Component {
     }
   }
 
+  async _back() {
+    Actions.pop()
+    await this.updateStatus()
+  }
+
   render() {
     return (
       <Container>
 
         <ProfileHeader
           title='选择你的匹配项'
-          desc={`本月还能匹配${this.props.user.last_times ? this.props.user.last_times : 0}次`}
+          desc={`本月还能匹配 ${this.props.user.last_times ? this.props.user.last_times : 0} 次`}
+          onBack={() => this._back()}
         />
-        <ScrollView scrollEnabled={false}>
+        <ScrollView scrollEnabled={true}>
           <ScrollableTabView
             style={styles.tabview}
             renderTabBar={() => <TabBar tabNames={['随机匹配', 'ID匹配']}/>}
@@ -184,26 +236,26 @@ export default class ProfileMatch extends Component {
             <View style={styles.tab_container}>
 
               <View style={styles.question_container}>
-                <TextPingFang style={styles.text_question}>你是否希望被匹配</TextPingFang>
+                <TextPingFang style={styles.text_question}>你是否想开启匹配功能</TextPingFang>
                 <View style={styles.option_container}>
                   <TouchableOpacity
                     style={[styles.btn, this.state.beMatched ? styles.active_btn : null]}
                     onPress={() => this.setState({ beMatched: true })}
                   >
                     <TextPingFang
-                      style={[styles.text_btn, this.state.beMatched ? styles.active_text : null]}>希望</TextPingFang>
+                      style={[styles.text_btn, this.state.beMatched ? styles.active_text : null]}>开启</TextPingFang>
                   </TouchableOpacity>
                   <TouchableOpacity
                     style={[styles.btn, !this.state.beMatched ? styles.active_btn : null]}
                     onPress={() => this.setState({ beMatched: false })}
                   >
                     <TextPingFang
-                      style={[styles.text_btn, !this.state.beMatched ? styles.active_text : null]}>不希望</TextPingFang>
+                      style={[styles.text_btn, !this.state.beMatched ? styles.active_text : null]}>关闭</TextPingFang>
                   </TouchableOpacity>
                 </View>
               </View>
 
-              <View style={styles.question_container}>
+              <View style={[styles.question_container, this.state.beMatched ? null : styles.no_show]}>
                 <TextPingFang style={styles.text_question}>你希望匹配到</TextPingFang>
                 <View style={styles.option_container}>
                   <TouchableOpacity
@@ -223,7 +275,7 @@ export default class ProfileMatch extends Component {
                 </View>
               </View>
 
-              <View style={styles.question_container}>
+              <View style={[styles.question_container, this.state.beMatched ? null : styles.no_show]}>
                 <TextPingFang style={styles.text_question}>匹配者的性格</TextPingFang>
                 <View style={styles.option_container}>
                   <TouchableOpacity
@@ -259,7 +311,7 @@ export default class ProfileMatch extends Component {
               <TextInput
                 style={styles.input}
                 value={this.state.matchUserId}
-                placeholder='Example: 123456'
+                placeholder='Example: 071512'
                 keyboardType='numeric'
                 onChangeText={id => this.setState({ matchUserId: id })}
               />
@@ -267,7 +319,7 @@ export default class ProfileMatch extends Component {
           </ScrollableTabView>
 
           <TouchableOpacity
-            style={styles.start_btn}
+            style={[styles.start_btn, this.state.beMatched ? null : styles.no_show]}
             onPress={() => this.startMatch()}
           >
             <TextPingFang style={styles.text_start_btn}>开始匹配</TextPingFang>
@@ -302,7 +354,7 @@ export default class ProfileMatch extends Component {
           popupBgColor={'#2DC3A6'}
           icon={require('../../../res/images/profile/icon_remove.png')}
           title={'注意'}
-          content={'你这个月已无匹配次数，若想匹配，可以选择花费1元购买1次匹配机会。'}
+          content={'你这个月已无匹配次数，若想匹配，可以选择花费 1 元购买额外的匹配机会。'}
           onPressLeft={() => this.setState({ showPopup: false })}
           onPressRight={() => this.buyItem(this.state.productList[0])}
           textBtnLeft={'再考虑'}
@@ -345,6 +397,9 @@ const styles = StyleSheet.create({
   },
   active_btn: {
     borderColor: '#2DC3A6',
+  },
+  no_show: {
+    display: 'none'
   },
   text_btn: {
     color: '#aaa',
