@@ -132,7 +132,6 @@ export default class MatchResult extends Component {
     let content = (
       <View style={styles.container}>
         <Image style={styles.img_fail} source={require('../../../res/images/profile/bg_match_fail.png')}/>
-        <TextPingFang style={styles.text_fail}>没有找到符合条件的人，或许你可以继续写日记，稍后再来匹配，成功率更高哦</TextPingFang>
         <TextPingFang style={styles.text_fail}>{message}</TextPingFang>
         <TouchableOpacity
           style={styles.start_btn}

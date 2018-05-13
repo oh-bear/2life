@@ -20,6 +20,7 @@ import {
   getResponsiveWidth,
 } from '../../common/styles'
 import { getMonth, postImgToQiniu, getLocation, updateReduxUser } from '../../common/util'
+import Storage from '../../common/storage'
 import { SCENE_INDEX } from '../../constants/scene'
 
 import HttpUtils from '../../network/HttpUtils'
@@ -46,8 +47,9 @@ export default class NewDiary extends Component {
     showKeyboard: false,
     base64List: [],
     keyboardHeight: 0,
-    showPopup: false,
-    savingDiary: false
+    savingDiary: false,
+    firstEntryDiary: false,
+    popupContent: '写完日记点击返回键就能自动保存哦'
   }
 
   componentDidMount() {
@@ -63,7 +65,18 @@ export default class NewDiary extends Component {
         keyboardHeight: 0
       })
     })
+    
+    this._firstIn()
     this._getLocation()
+  }
+
+  componentWillUnmount() {
+    Storage.set('firstEntryDiary', false)
+  }
+
+  async _firstIn() {
+    const firstEntryDiary = await Storage.get('firstEntryDiary', true)
+    this.setState({ firstEntryDiary })
   }
 
   _getLocation() {
@@ -101,8 +114,12 @@ export default class NewDiary extends Component {
     const data = { title, content, images, latitude, longitude, location }
     const res = await HttpUtils.post(URL_publish, data)
     if (res.code === 0) {
-      this.setState({ showPopup: true })
       updateReduxUser(this.props.user.id)
+
+      this.setState({
+        firstEntryDiary: true,
+        popupContent: '你的日记已经自动保存并同步，放心退出吧'
+      })
     }
   }
 
@@ -164,13 +181,13 @@ export default class NewDiary extends Component {
         </KeyboardAwareScrollView>
 
         <Popup
-          showPopup={this.state.showPopup}
+          showPopup={this.state.firstEntryDiary}
           popupBgColor='#2DC3A6'
           icon={require('../../../res/images/home/icon_save.png')}
-          content='你的日记已经自动保存并同步，放心退出吧'
+          content={this.state.popupContent}
           onPressLeft={() => {
-            this.setState({ showPopup: false })
-            Actions.reset(SCENE_INDEX)
+            this.setState({ firstEntryDiary: false })
+            if (this.state.content) Actions.reset(SCENE_INDEX)
           }}
           textBtnLeft='我明白了'
         />

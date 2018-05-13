@@ -161,6 +161,9 @@ export default class DiaryBanner extends Component {
           height={getResponsiveWidth(282)}
           style={styles.swiper}
           loop={false}
+          dot={<View style={styles.swiper_dot}></View>}
+          activeDot={<View style={[styles.swiper_dot, styles.swiper_active_dot]}></View>}
+          bounces={true}
           onIndexChanged={(index) => {
             this.setState({ imgIndex: index })
           }}
@@ -213,6 +216,17 @@ const styles = StyleSheet.create({
   },
   swiper: {
     backgroundColor: '#f5f5f5'
+  },
+  swiper_dot: {
+    width: 8,
+    height: 8,
+    marginLeft: 4,
+    marginRight: 4,
+    borderRadius: 4,
+    backgroundColor: 'rgba(255,255,255,.5)'
+  },
+  swiper_active_dot: {
+    backgroundColor: 'rgba(255,255,255,1)'
   },
   img_container: {
     flex: 1,

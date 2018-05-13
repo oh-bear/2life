@@ -31,11 +31,11 @@ export default class Options extends Component {
         />
 
         <View style={styles.options_container}>
-          <TouchableOpacity
+          {/* <TouchableOpacity
             style={styles.option}
           >
             <TextPingFang style={styles.text_option}>微信注册并登录</TextPingFang>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
           <TouchableOpacity
             style={styles.option}
             onPress={() => Actions[SCENE_LOGIN_SIGNIN]()}

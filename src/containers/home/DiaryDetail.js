@@ -31,6 +31,7 @@ import { NOTES } from '../../network/Urls'
 function mapStateToProps(state) {
   return {
     user: state.user,
+    partner: state.partner
   }
 }
 
@@ -128,7 +129,7 @@ export default class DiaryDetail extends Component {
 
   likeNote() {
     HttpUtils.post(NOTES.like, {note_id: this.props.diary.id}).then(res => {
-      if (res === 0) this.renderlikeComponent(true)
+      if (res.code === 0) this.renderlikeComponent(true)
     })
   }
 
@@ -187,6 +188,11 @@ export default class DiaryDetail extends Component {
           </View>
 
           <TextPingFang style={styles.text_title}>{this.props.diary.title}</TextPingFang>
+
+          <View style={[styles.partner_container, { display: this.props.diary.user_id !== this.props.user.id ? 'flex' : 'none'}]}>
+            <Image style={styles.partner_face} source={{uri: this.props.partner.face}}/>
+            <TextPingFang style={styles.text_name}>{this.props.partner.name}</TextPingFang>
+          </View>
 
           <View style={styles.line}/>
 
@@ -272,7 +278,24 @@ const styles = StyleSheet.create({
     paddingLeft: getResponsiveWidth(24),
     paddingRight: getResponsiveWidth(24),
     paddingTop: getResponsiveWidth(48),
-    paddingBottom: getResponsiveWidth(48),
+  },
+  partner_container: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingLeft: getResponsiveWidth(24),
+    marginTop: getResponsiveWidth(8),
+    marginBottom: getResponsiveWidth(48),
+  },
+  partner_face: {
+    width: getResponsiveWidth(24),
+    height: getResponsiveWidth(24),
+    borderRadius: getResponsiveWidth(12)
+  },
+  text_name: {
+    marginLeft: getResponsiveWidth(8),
+    color: '#000',
+    fontSize: 14,
+    fontWeight: 'bold'
   },
   line: {
     width: getResponsiveWidth(40),
