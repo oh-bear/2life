@@ -16,7 +16,6 @@ import Popup from '../../components/Popup'
 import Container from '../../components/Container'
 import ProfileHeader from './components/ProfileHeader'
 import { fetchPartnerSuccess } from '../../redux/modules/partner'
-import { fetchProfileSuccess } from '../../redux/modules/user'
 
 import {
   WIDTH,
@@ -25,6 +24,7 @@ import {
 
 import HttpUtils from '../../network/HttpUtils'
 import { USERS } from '../../network/Urls'
+import { updateReduxUser } from '../../common/util';
 
 function mapStateToProps(state) {
   return {
@@ -89,9 +89,7 @@ export default class MatchResult extends Component {
       if (res.code === 0) {
         store.dispatch(fetchPartnerSuccess(res.data))
 
-        HttpUtils.get(USERS.user, { user_id: this.props.user.id }).then(res => {
-          if (res.code === 0) store.dispatch(fetchProfileSuccess(res.data))
-        })
+        updateReduxUser(this.props.user.id)
 
         this.setState({ partner: res.data })
         this.matchSucceed()
@@ -104,9 +102,7 @@ export default class MatchResult extends Component {
       if (res.code === 0) {
         store.dispatch(fetchPartnerSuccess(res.data))
 
-        HttpUtils.get(USERS.user, { user_id: this.props.user.id }).then(res => {
-          if (res.code === 0) store.dispatch(fetchProfileSuccess(res.data))
-        })
+        updateReduxUser(this.props.user.id)
 
         this.setState({ partner: res.data })
         this.matchSucceed()
@@ -156,7 +152,7 @@ export default class MatchResult extends Component {
   async disconnect() {
     const res = await HttpUtils.get(USERS.disconnect)
     if (res.code === 0) {
-      store.dispatch(fetchPartnerSuccess({}))
+      store.dispatch(fetchPartnerSuccess({id: 0}))
       Actions.pop()
     }
   }

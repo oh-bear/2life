@@ -2,6 +2,8 @@ import axios from 'axios'
 import { Buffer } from 'buffer'
 import HttpUtils from '../network/HttpUtils'
 import { UTILS, USERS } from '../network/Urls'
+import store from '../redux/store'
+import { fetchProfileSuccess } from '../redux/modules/user'
 
 const URL_qiniu_token = UTILS.qiniu_token
 const URL_qiniu_host = 'http://upload.qiniu.com/putb64/-1/key/'
@@ -303,4 +305,14 @@ export function updateUser(user, obj) {
     badge_id: -1,
     badges
   }, obj))
+}
+
+/**
+ * 更新redux用户信息
+ */
+export async function updateReduxUser(user_id) {
+  const res = await HttpUtils.get(USERS.user, { user_id })
+  if (res.code === 0) {
+    store.dispatch(fetchProfileSuccess(res.data))
+  }
 }

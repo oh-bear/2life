@@ -23,7 +23,7 @@ import {
   getResponsiveWidth,
 } from '../../common/styles'
 import { SCENE_INDEX, SCENE_UPDATE_DIARY } from '../../constants/scene'
-import { getMonth, getLocation } from '../../common/util'
+import { getMonth, getLocation, updateReduxUser } from '../../common/util'
 
 import HttpUtils from '../../network/HttpUtils'
 import { NOTES } from '../../network/Urls'
@@ -77,7 +77,10 @@ export default class DiaryDetail extends Component {
     }
     HttpUtils.post(NOTES.update, data).then(res => {
       if (res.code === 0) {
+        updateReduxUser(this.props.user.id)
+
         Alert.alert('', '修改成功')
+
         this.setState({
           changeMode: false,
           mode,
@@ -97,9 +100,27 @@ export default class DiaryDetail extends Component {
     ActionSheetIOS.showActionSheetWithOptions(options, index => {
       if (index === 0) Actions.jump(SCENE_UPDATE_DIARY, {diary: this.props.diary})
       if (index === 1) {
-        HttpUtils.get(NOTES.delete, {note_id: this.props.diary.id}).then(res => {
-          if (res.code === 0) Actions.reset(SCENE_INDEX)
-        })
+        Alert.alert(
+          '',
+          '确定要删除这篇日记吗？',
+          [
+            {
+              text: '取消',
+              onPress: () => {}
+            },
+            {
+              text: '确定',
+              onPress: () => {
+                HttpUtils.get(NOTES.delete, {note_id: this.props.diary.id}).then(res => {
+                  if (res.code === 0) {
+                    updateReduxUser(this.props.user.id)
+                    Actions.reset(SCENE_INDEX)
+                  }
+                })
+              }
+            },
+          ]
+        )
       }
       if (index === 3) return
     })

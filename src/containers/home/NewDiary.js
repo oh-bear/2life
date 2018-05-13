@@ -19,7 +19,7 @@ import {
   WIDTH,
   getResponsiveWidth,
 } from '../../common/styles'
-import { getMonth, postImgToQiniu, getLocation } from '../../common/util'
+import { getMonth, postImgToQiniu, getLocation, updateReduxUser } from '../../common/util'
 import { SCENE_INDEX } from '../../constants/scene'
 
 import HttpUtils from '../../network/HttpUtils'
@@ -46,7 +46,8 @@ export default class NewDiary extends Component {
     showKeyboard: false,
     base64List: [],
     keyboardHeight: 0,
-    showPopup: false
+    showPopup: false,
+    savingDiary: false
   }
 
   componentDidMount() {
@@ -82,6 +83,10 @@ export default class NewDiary extends Component {
   async saveDiary() {
     Keyboard.dismiss()
 
+    if (this.state.savingDiary) return
+
+    this.setState({savingDiary: true})
+
     const { title, content, latitude, longitude, location } = this.state
 
     if (!title && !content) return Actions.pop()
@@ -97,6 +102,7 @@ export default class NewDiary extends Component {
     const res = await HttpUtils.post(URL_publish, data)
     if (res.code === 0) {
       this.setState({ showPopup: true })
+      updateReduxUser(this.props.user.id)
     }
   }
 

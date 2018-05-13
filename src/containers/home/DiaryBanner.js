@@ -160,6 +160,7 @@ export default class DiaryBanner extends Component {
           width={WIDTH}
           height={getResponsiveWidth(282)}
           style={styles.swiper}
+          loop={false}
           onIndexChanged={(index) => {
             this.setState({ imgIndex: index })
           }}

@@ -42,7 +42,8 @@ export default class UpdateDiary extends Component {
     base64List: [],
     keyboardHeight: 0,
     showPopup: false,
-    imageList: []
+    imageList: [],
+    savingDiary: false
   }
 
   componentWillMount() {
@@ -69,6 +70,10 @@ export default class UpdateDiary extends Component {
   async saveDiary() {
     Keyboard.dismiss()
 
+    if (this.state.savingDiary) return
+
+    this.setState({savingDiary: true})
+
     const { title, content, base64List, imageList } = this.state
 
     if (!title && !content) return Actions.pop()
@@ -80,8 +85,6 @@ export default class UpdateDiary extends Component {
       user_id: this.props.user.id
     })
 
-    console.log({ imageList, images })
-    console.log([...imageList, ...(images.split(','))].join(','))
     const data = {
       note_id: this.props.diary.id,
       title,

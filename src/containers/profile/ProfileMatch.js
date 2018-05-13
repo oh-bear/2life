@@ -51,7 +51,7 @@ export default class ProfileMatch extends Component {
 
   state = {
     matchType: 0, // 0: 随机, 1: ID
-    matchGender: 0, // 0: 男, 1: 女
+    matchGender: !this.props.user.sex, // 0: 男, 1: 女
     beMatched: true, // 是否希望被匹配
     character: 1, // 性格 1: 相同，2: 互补，3: 随意
     matchUserId: null,
@@ -76,7 +76,7 @@ export default class ProfileMatch extends Component {
     try {
       await RNIap.prepare()
       const products = await RNIap.getProducts(itemSkus)
-      this.setState({ productList: products, matchGender: !this.props.user.sex })
+      this.setState({ productList: products })
     }
     catch (err) {
       console.warn(err.code, err.message)
