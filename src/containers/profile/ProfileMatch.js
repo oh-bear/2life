@@ -153,7 +153,7 @@ export default class ProfileMatch extends Component {
     const { matchGender, beMatched, character, matchUserId } = this.state
     let { sex, status } = this.props.user
 
-    if ((status >= 501 && status <= 504) || status === 1000) {
+    if (status === 1000) {
       return
     }
 
@@ -163,6 +163,10 @@ export default class ProfileMatch extends Component {
       }
       await updateUser(this.props.user, { status: 999 })
       await updateReduxUser(this.props.user.id)
+      return
+    }
+
+    if ((status >= 501 && status <= 504)) {
       return
     }
 
