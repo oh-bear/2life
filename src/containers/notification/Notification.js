@@ -4,6 +4,7 @@ import {
   StyleSheet,
   FlatList,
   DeviceEventEmitter,
+  WebView
 } from 'react-native'
 import { ifIphoneX } from 'react-native-iphone-x-helper'
 
@@ -78,6 +79,10 @@ export default class Notification extends Component {
             ListEmptyComponent={this._renderEmpty}
           />
         </View>
+        <WebView
+          style={{width: 200, height: 200, backgroundColor: 'red'}}
+          source={{uri: 'https://www.baidu.com'}}
+        />
       </Container>
     )
   }

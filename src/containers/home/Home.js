@@ -32,7 +32,8 @@ import {
   getWeather,
   diaryClassify,
   getWeatherDesc,
-  updateUser
+  updateUser,
+  updateReduxUser
 } from '../../common/util'
 
 import { SCENE_NEW_DIARY } from '../../constants/scene'
@@ -162,6 +163,7 @@ export default class Home extends Component {
       try {
         const { latitude, longitude } = res.coords
 
+        await updateReduxUser(this.props.user.id)
         // 更新用户经纬度
         await updateUser(this.props.user, {latitude, longitude})
         this._updateUser()

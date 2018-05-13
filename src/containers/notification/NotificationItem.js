@@ -3,15 +3,19 @@ import {
   View,
   StyleSheet,
   Text,
-  Image
+  Image,
+  WebView,
+  TouchableOpacity
 } from 'react-native'
 import PropTypes from 'prop-types'
+import { Actions } from 'react-native-router-flux'
 
 import {
   getResponsiveWidth,
   getResponsiveHeight,
   WIDTH
 } from '../../common/styles'
+import { SCENE_WEB } from '../../constants/scene'
 
 export default class NotificationItem extends Component {
 
@@ -28,6 +32,12 @@ export default class NotificationItem extends Component {
     m = date.getMinutes() + ':'
     s = date.getSeconds()
     return Y + M + D + h + m + s
+  }
+
+  _jumpWeb() {
+    if (this.props.data.url) {
+      Actions.jump(SCENE_WEB, {url: this.props.data.url})
+    }
   }
 
   render() {
@@ -64,11 +74,15 @@ export default class NotificationItem extends Component {
         <Image
           style={styles.icon}
           source={source}/>
-        <View style={styles.content_container}>
+        <TouchableOpacity
+          style={styles.content_container}
+          activeOpacity={1}
+          onPress={() => this._jumpWeb()}
+        >
           <Text style={styles.title}>{this.props.data.title}</Text>
           <Text style={styles.date}>{this._convertTime(this.props.data.date)}</Text>
           <View style={styles.line}/>
-        </View>
+        </TouchableOpacity>
       </View>
     )
   }

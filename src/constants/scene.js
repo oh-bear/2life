@@ -11,6 +11,8 @@ export const SCENE_NEW_DIARY = 'NEW_DIARY'
 export const SCENE_DIARY_DETAIL = 'DIARY_DETAIL'
 export const SCENE_UPDATE_DIARY = 'UPDATE_DIARY'
 
+export const SCENE_WEB = 'WEB'
+
 export const SCENE_PROFILE = 'PROFILE'
 export const SCENE_PROFILE_BADGE = 'PROFILE_BADGE'
 export const SCENE_PROFILE_EDIT = 'PROFILE_EDIT'

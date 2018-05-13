@@ -24,6 +24,15 @@ function mapStateToProps(state) {
 @connect(mapStateToProps)
 export default class Index extends Component {
 
+  state = {
+    selectedTab: 'home',
+    unread: this.props.user.unread
+  }
+
+  componentWillMount() {
+    if (this.props.tab) this.setState({ selectedTab: this.props.tab })
+  }
+
   componentDidMount() {
 
     // 极光推送：添加事件角标，并触发强制刷新通知
@@ -37,11 +46,6 @@ export default class Index extends Component {
     JPushModule.addReceiveNotificationListener(message => {
       console.log(message)
     })
-  }
-
-  state = {
-    selectedTab: 'home',
-    unread: this.props.user.unread
   }
 
   icons = {

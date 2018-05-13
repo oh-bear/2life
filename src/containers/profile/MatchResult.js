@@ -25,7 +25,8 @@ import {
 
 import HttpUtils from '../../network/HttpUtils'
 import { USERS } from '../../network/Urls'
-import { updateReduxUser } from '../../common/util';
+import { updateReduxUser } from '../../common/util'
+import { SCENE_INDEX } from '../../constants/scene'
 
 function mapStateToProps(state) {
   return {
@@ -49,7 +50,8 @@ export default class MatchResult extends Component {
     partner: {},
     showPopup: false,
     faceLeft: new Animated.ValueXY({ x: 0, y: 0 }),
-    faceRight: new Animated.ValueXY({ x: 0, y: 0 })
+    faceRight: new Animated.ValueXY({ x: 0, y: 0 }),
+    matchSucceed: false
   }
 
   componentDidMount() {
@@ -138,6 +140,8 @@ export default class MatchResult extends Component {
           </View>
           <TextPingFang style={styles.text_name}>{this.props.user.name}</TextPingFang>
         </Animated.View>
+        
+        <Image source={require('../../../res/images/profile/icon_link.png')}/>
 
         <Animated.View
           style={{
@@ -158,7 +162,8 @@ export default class MatchResult extends Component {
 
     this.setState({
       title: '匹配成功',
-      content
+      content,
+      matchSucceed: true
     })
   }
 
@@ -180,6 +185,12 @@ export default class MatchResult extends Component {
       title: '匹配失败',
       content
     })
+  }
+
+  succeedBack() {
+    if (this.state.matchSucceed) {
+      Actions.reset(SCENE_INDEX, { tab: 'profile' })
+    }
   }
 
   async disconnect() {
@@ -207,6 +218,7 @@ export default class MatchResult extends Component {
         <ProfileHeader
           title={this.state.title}
           rightButton={this.renderRightButton()}
+          onBack={() => this.succeedBack()}
         />
         {this.state.content}
         <Popup

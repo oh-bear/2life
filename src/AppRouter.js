@@ -13,6 +13,8 @@ import NewDiary from './containers/home/NewDiary'
 import DiaryDetail from './containers/home/DiaryDetail'
 import UpdateDiary from './containers/home/UpdateDiary'
 
+import Web from './containers/notification/Web'
+
 // profile
 import Profile from './containers/profile/Profile'
 import ProfileBadge from './containers/profile/ProfileBadge'
@@ -161,6 +163,13 @@ export default class AppRouter extends Component {
               key={scenes.SCENE_PROFILE_REWARD}
               component={ProfileReward}
               title='打赏'
+              hideNavBar
+              duration={0}
+            />
+            <Scene
+              key={scenes.SCENE_WEB}
+              component={Web}
+              title='web'
               hideNavBar
               duration={0}
             />
