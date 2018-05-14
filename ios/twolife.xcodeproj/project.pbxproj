@@ -40,6 +40,7 @@
 		92B785A105714938A4CCB03C /* CoreTelephony.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 75FE64CED75040DFA12ED2D5 /* CoreTelephony.framework */; };
 		94BC4A8211D34096A7172DC4 /* libRCTJCoreModule.a in Frameworks */ = {isa = PBXBuildFile; fileRef = EA0BF20A7F0F4D64A67BF17D /* libRCTJCoreModule.a */; };
 		9D8B62071FF7769A000AAF34 /* libART.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9D080C861EF0FBA800A7A56C /* libART.a */; };
+		9DBAAD9520A886390006BC8A /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9DBAAD9420A886390006BC8A /* StoreKit.framework */; };
 		A07C4C11209082C3007CF633 /* libRNImagePicker.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A07C4C0E20908150007CF633 /* libRNImagePicker.a */; };
 		AB2F3D04F10F42B0B035E330 /* libRNSVG.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DFEDE23D26454B0BACF5F50B /* libRNSVG.a */; };
 		BB29EB49C5B24BECBFF4A859 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5988C38694A474A9D26EE6E /* Security.framework */; };
@@ -453,6 +454,7 @@
 		9D5A9B0C1EF5371100A09E59 /* QBImagePicker.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = QBImagePicker.framework; sourceTree = "<group>"; };
 		9D5A9B0D1EF5371100A09E59 /* RSKImageCropper.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = RSKImageCropper.framework; sourceTree = "<group>"; };
 		9D6068BE1FF7788C0029F046 /* ART.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ART.xcodeproj; path = "../node_modules/react-native/Libraries/ART/ART.xcodeproj"; sourceTree = "<group>"; };
+		9DBAAD9420A886390006BC8A /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		9EC2E5115E774CEE995B5D58 /* Zocial.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Zocial.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Zocial.ttf"; sourceTree = "<group>"; };
 		A8563AD954754FA79DC7BFD2 /* EvilIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = EvilIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/EvilIcons.ttf"; sourceTree = "<group>"; };
 		ABFB6C3C71B24D9683D7AE62 /* imageCropPicker.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = imageCropPicker.xcodeproj; path = "../node_modules/react-native-image-crop-picker/ios/imageCropPicker.xcodeproj"; sourceTree = "<group>"; };
@@ -506,6 +508,7 @@
 				2CD794C15C304EA3BC872572 /* Foundation.framework in Frameworks */,
 				F4DB41B3C20847258E17BC9D /* UIKit.framework in Frameworks */,
 				2BCD0246C1C544B9B14036AB /* libresolv.tbd in Frameworks */,
+				9DBAAD9520A886390006BC8A /* StoreKit.framework in Frameworks */,
 				C41B4BDEA3554829A748F54D /* CoreGraphics.framework in Frameworks */,
 				AB2F3D04F10F42B0B035E330 /* libRNSVG.a in Frameworks */,
 				C5F78104147E4A40B1C3CED5 /* libRNIap.a in Frameworks */,
@@ -635,6 +638,7 @@
 		49F78AE3580C412B93BF269C /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				9DBAAD9420A886390006BC8A /* StoreKit.framework */,
 				9D080C811EF0FBA800A7A56C /* ART.xcodeproj */,
 				CED43EC1C21140D1AF2B695C /* libz.tbd */,
 				0E14EDFD7B6B4A8587820696 /* UserNotifications.framework */,
@@ -890,6 +894,12 @@
 						DevelopmentTeam = CX8NZ6G6FX;
 						ProvisioningStyle = Manual;
 						SystemCapabilities = {
+							com.apple.BackgroundModes = {
+								enabled = 1;
+							};
+							com.apple.InAppPurchase = {
+								enabled = 1;
+							};
 							com.apple.Push = {
 								enabled = 1;
 							};
