@@ -39,8 +39,7 @@ export default class Banner extends Component {
                 source={require('../../../res/images/common/icon_back_white.png')}/>
             </TouchableOpacity>
             <TouchableOpacity onPress={this.props.onNavRightPress}>
-              {/* <TextPingFang
-                style={[styles.text_nav_right, { display: this.props.showNavRight ? 'flex' : 'none' }]}>直接使用</TextPingFang> */ }
+              <TextPingFang style={[styles.text_nav_right, { display: this.props.showNavRight ? 'flex' : 'none' }]}>直接使用</TextPingFang>
             </TouchableOpacity>
           </View>
           <View style={styles.title_container}>
