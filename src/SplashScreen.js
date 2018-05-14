@@ -16,8 +16,6 @@ import HttpUtils from './network/HttpUtils'
 import { fetchProfileSuccess } from './redux/modules/user'
 import { fetchPartnerSuccess } from './redux/modules/partner'
 
-const URL_login = USERS.login
-
 function mapStateToProps(state) {
   return {
     user: state.user,
@@ -36,22 +34,24 @@ class SplashScreen extends Component {
     }
 
     try {
-      HttpUtils.post(URL_login, {
+      const data = {
         account: user.account,
         password: user.password
-      }).then(res => {
-        if (res.code === 0) {
-          const {uid, token, timestamp} = res.data.key
-          setToken({uid, token, timestamp})
+      }
 
-          store.dispatch(fetchProfileSuccess(res.data.user))
-          store.dispatch(fetchPartnerSuccess(res.data.partner))
-          Actions[SCENE_INDEX]({user: res.data.user, partner: res.data.partner})
-        } else {
-          Toast.fail('自动登录失败', 1.5)
-          Actions[SCENE_LOGIN_OPTIONS]()
-        }
-      })
+      const res = await HttpUtils.post(USERS.login, data)
+      
+      if (res.code === 0) {
+        const {uid, token, timestamp} = res.data.key
+        setToken({uid, token, timestamp})
+
+        store.dispatch(fetchProfileSuccess(res.data.user))
+        store.dispatch(fetchPartnerSuccess(res.data.partner))
+        Actions[SCENE_INDEX]({user: res.data.user, partner: res.data.partner})
+      } else {
+        Toast.fail('自动登录失败', 1.5)
+        Actions[SCENE_LOGIN_OPTIONS]()
+      }
     } catch (e) {
       console.log(e)
       Toast.fail('自动登录失败', 1.5)
