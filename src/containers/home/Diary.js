@@ -142,7 +142,7 @@ const styles = StyleSheet.create({
     paddingRight: getResponsiveWidth(10),
   },
   time: {
-    color: '#000',
+    color: '#aaa',
     fontSize: 12
   },
   location_container: {

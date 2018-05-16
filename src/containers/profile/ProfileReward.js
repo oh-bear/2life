@@ -34,7 +34,7 @@ export default class ProfileReward extends Component {
 
   state = {
     bg: require('../../../res/images/profile/bg-6.png'),
-    selecting: 1,
+    selecting: 'award_small',
     productList: [],
     receipt: '',
     availableItemsMessage: '',
@@ -60,22 +60,26 @@ export default class ProfileReward extends Component {
   _select(id) {
     switch (id) {
     case 1:
-      this.setState({ bg: require('../../../res/images/profile/bg-6.png'), selecting: 1 })
+      this.setState({ bg: require('../../../res/images/profile/bg-6.png'), selecting: 'award_small' })
       break
     case 2:
-      this.setState({ bg: require('../../../res/images/profile/bg-16.png'), selecting: 2 })
+      this.setState({ bg: require('../../../res/images/profile/bg-16.png'), selecting: 'award_middle' })
       break
     case 3:
-      this.setState({ bg: require('../../../res/images/profile/bg-30.png'), selecting: 3 })
+      this.setState({ bg: require('../../../res/images/profile/bg-30.png'), selecting: 'award_big' })
       break
     default:
       break
     }
   }
 
-  buyItem = async (product) => {
-    RNIap.buyProduct(product.productId).then(purchase => {
-      HttpUtils.post(USERS.update_rate, { price: product.price }).then(res => {
+  buyItem = async () => {
+    let price = 6
+    if(this.state.selecting === 'award_big') price = 30
+    if(this.state.selecting === 'award_middle') price = 12
+      
+    RNIap.buyProduct(this.state.selecting).then(purchase => {
+      HttpUtils.post(USERS.update_rate, { price }).then(res => {
         this.setState({
           showPopup: true,
           popupBgColor: '#2DC3A6',
@@ -103,7 +107,7 @@ export default class ProfileReward extends Component {
         <Image source={this.state.bg}/>
         <View style={styles.container}>
           <TouchableOpacity
-            style={[styles.item, this.state.selecting === 1 ? styles.item_selecting : null]}
+            style={[styles.item, this.state.selecting === 'award_small' ? styles.item_selecting : null]}
             onPress={() => {
               this._select(1)
             }}
@@ -117,7 +121,7 @@ export default class ProfileReward extends Component {
             <TextPingFang style={styles.text_bottom}>两罐可乐</TextPingFang>
           </TouchableOpacity>
           <TouchableOpacity
-            style={[styles.item, this.state.selecting === 2 ? styles.item_selecting : null]}
+            style={[styles.item, this.state.selecting === 'award_middle' ? styles.item_selecting : null]}
             onPress={() => {
               this._select(2)
             }}
@@ -131,7 +135,7 @@ export default class ProfileReward extends Component {
             <TextPingFang style={styles.text_bottom}>一个汉堡</TextPingFang>
           </TouchableOpacity>
           <TouchableOpacity
-            style={[styles.item, this.state.selecting === 3 ? styles.item_selecting : null]}
+            style={[styles.item, this.state.selecting === 'award_big' ? styles.item_selecting : null]}
             onPress={() => {
               this._select(3)
             }}
@@ -149,7 +153,7 @@ export default class ProfileReward extends Component {
         <TouchableOpacity
           style={styles.btn}
           onPress={() => {
-            this.buyItem(this.state.productList[this.state.selecting - 1])
+            this.buyItem()
           }}
         >
           <TextPingFang style={styles.text_btn}>打赏作者</TextPingFang>
