@@ -36,31 +36,31 @@ export default class NotificationItem extends Component {
 
   _jumpWeb() {
     if (this.props.data.url) {
-      Actions.jump(SCENE_WEB, {url: this.props.data.url})
+      Actions.jump(SCENE_WEB, { url: this.props.data.url })
     }
   }
 
   render() {
     let source
-    switch(this.props.data.type) {
-      case 0:
-        source = require('../../../res/images/notification/icon_system.png')
-        break
-      case 101:
-        source = require('../../../res/images/notification/icon_system.png')
-        break
-      case 102:
-        source = require('../../../res/images/notification/icon_system.png')
-        break
-      case 201:
-        source = require('../../../res/images/notification/icon_connect.png')
-        break
-      case 202:
-        source = require('../../../res/images/notification/icon_disconnect.png')
-        break
-      case 203:
-        source = require('../../../res/images/notification/icon_like.png')
-        break
+    switch (this.props.data.type) {
+    case 0:
+      source = require('../../../res/images/notification/icon_system.png')
+      break
+    case 101:
+      source = require('../../../res/images/notification/icon_system.png')
+      break
+    case 102:
+      source = require('../../../res/images/notification/icon_system.png')
+      break
+    case 201:
+      source = require('../../../res/images/notification/icon_connect.png')
+      break
+    case 202:
+      source = require('../../../res/images/notification/icon_disconnect.png')
+      break
+    case 203:
+      source = require('../../../res/images/notification/icon_like.png')
+      break
       // 0：系统消息（被ban、无次数等）
       // 101：通知（无url，有content）
       // 102：活动、宣传等（有url，有content）
@@ -98,8 +98,7 @@ const styles = StyleSheet.create({
     width: getResponsiveWidth(279),
     marginLeft: getResponsiveWidth(30),
   },
-  icon: {
-  },
+  icon: {},
   title: {
     fontFamily: 'PingFang SC',
     fontSize: 20,

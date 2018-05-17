@@ -75,9 +75,9 @@ export default class ProfileReward extends Component {
 
   buyItem = async () => {
     let price = 6
-    if(this.state.selecting === 'award_big') price = 30
-    if(this.state.selecting === 'award_middle') price = 12
-      
+    if (this.state.selecting === 'award_big') price = 30
+    if (this.state.selecting === 'award_middle') price = 12
+
     RNIap.buyProduct(this.state.selecting).then(purchase => {
       HttpUtils.post(USERS.update_rate, { price }).then(res => {
         this.setState({
@@ -90,13 +90,6 @@ export default class ProfileReward extends Component {
       })
     }).catch(err => {
       console.warn(err) // standardized err.code and err.message available
-      this.setState({
-        showPopup: true,
-        popupBgColor: '#FF5757',
-        pupupIcon: require('../../../res/images/profile/icon_remove.png'),
-        popupTitle: '订单取消',
-        popupContent: '您真的要取消打赏吗？……',
-      })
     })
   }
 

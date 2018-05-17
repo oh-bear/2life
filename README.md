@@ -2,11 +2,9 @@
 
 持续更新中，欢迎 Star~欢迎下载~
 
-2017.12.28 注：2.0 版重构计划正式启动！！
-
 ---
 
-> 写下此时的心情匹配和你一样的 TA 吧~
+> 写下此时的心情，匹配和你一样的 TA 吧~
 
 双生 app 是一款与众不同的写日记软件，很多朋友写日记坚持不下去是因为太枯燥乏味，没有兴趣感，而这款软件可以在你写日记的同时匹配更多同类型心情的日记主人，让你们一起分享彼此的心情，共建友谊。欢迎下载体验。
 
@@ -20,60 +18,14 @@
 
 ## Screenshots
 
-![](http://airing.ursb.me/image/twolife/0.png-h600.jpg)
+![](http://airing.ursb.me/image/2life/cover/X-1.png-h600.jpg)
 
 ---
 
-![](http://airing.ursb.me/image/twolife/8.png-h600.jpg)
-
+![](http://airing.ursb.me/image/2life/cover/X-2.png-h600.jpg)
 ---
 
-![](http://airing.ursb.me/image/twolife/2.png-h600.jpg)
-
----
-
-![](http://airing.ursb.me/image/twolife/3.png-h600.jpg)
-
----
-
-![](http://airing.ursb.me/image/twolife/4.png-h600.jpg)
-
----
-
-![](http://airing.ursb.me/image/twolife/5.png-h600.jpg)
-
----
-
-![](http://airing.ursb.me/image/twolife/6.png-h600.jpg)
-
----
-
-![](http://airing.ursb.me/image/twolife/7.png-h600.jpg)
-
----
-
-![](http://airing.ursb.me/image/twolife/9.png-h600.jpg)
-
----
-
-![](http://airing.ursb.me/image/twolife/10.png-h600.jpg)
-
----
-
-![](http://airing.ursb.me/image/twolife/11.png-h600.jpg)
-
----
-
-> 还在为总是坚持不了写日记而烦恼？_(:з」∠)_
-> 还在为自己的小心事无处诉说而头疼？_(:з」∠)_
-> 还在为总是遇不到另一个 TA 而孤单作狗？_(:з」∠)_
-
-> 双生帮你解决！双生，帮你打开另一半的心门 (๑•ㅂ•)و
-
-> 作者 Github：https://github.com/airingursb
-> 作者博客：http://me.ursb.me
-
-> 联系邮箱：airing@ursb.me
+![](http://airing.ursb.me/image/2life/cover/X-3.png-h600.jpg)
 
 ## Contributing
 
@@ -83,8 +35,34 @@
 * Push to the branch: `git push origin my-new-feature`
 * Submit a pull request
 
-## 更新日志
+## 2.0
+### 2.0.1 / 2018-05-18
 
+- 增加了记录最后一次匹配时间的功能
+- 增加了对方日记的样式
+- 增加了切换天气按钮的样式
+- 优化了保存日记的提醒
+- 修复了首页允许左滑的 bug
+- 修复了可以匹配到不合条件的同性的 bug
+- 修复了打赏之后没有记录的 bug
+- 修复了更改日记之后日记总数显示 bug
+- 修复了匹配业务的数据不刷新 bug
+- 删除了取消打赏的弹窗
+
+### 2.0.0 / 2018-05-17
+
+双生日记2.0强势归来~~~
+
+全新的应用界面！优雅的写作体验！科学的情绪管理！
+
+- 重构了全部页面
+- 优化了日记体验
+- 丰富了匹配条件
+- 新增了情绪管理
+- 调整了系统通知
+
+
+## 1.x
 ### 1.8 / 2017-06-20
 
 1. 修复了设置头像后重新登录会被重置的 bug
@@ -160,5 +138,7 @@
 ## Contributors
 
 * @[Airing](https://github.com/airingursb)
-* @[mieruko0713](https://github.com/mieruko0713)
+* @[lightnate](https://github.com/lightnate)
 * @[LinDing](https://github.com/linding)
+* @[Jsonsnow](https://github.com/jsonsnow)
+* @[mieruko0713](https://github.com/mieruko0713)

@@ -67,7 +67,7 @@ export default class Signin extends Component {
         console.log(success)
       })
 
-      Actions[SCENE_INDEX]({ user: res.data.user, partner: res.data.partner })
+      Actions.reset(SCENE_INDEX, { user: res.data.user, partner: res.data.partner })
     }
   }
 

@@ -18,11 +18,23 @@ import {
 import Container from '../../components/Container'
 import TextPingFang from '../../components/TextPingFang'
 import NotificationItem from './NotificationItem'
-
+import { Actions } from 'react-native-router-flux'
+import { connect } from 'react-redux'
 import { USERS } from '../../network/Urls'
 import HttpUtils from '../../network/HttpUtils'
+import store from '../../redux/store'
+import { fetchPartnerSuccess, fetchProfileSuccess } from '../../redux/modules/partner'
+
 import JPushModule from 'jpush-react-native'
 
+function mapStateToProps(state) {
+  return {
+    user: state.user,
+    partner: state.partner
+  }
+}
+
+@connect(mapStateToProps)
 export default class Notification extends Component {
 
   state = {
@@ -40,15 +52,35 @@ export default class Notification extends Component {
 
     JPushModule.clearAllNotifications()
 
-    DeviceEventEmitter.addListener('flash_notification', async (v) => {
+    // 刷新通知、刷新日记、刷新用户
+    DeviceEventEmitter.addListener('flush_data', async (v) => {
+      // 1. 刷新通知
       const res = await HttpUtils.get(USERS.notification, {})
       if (res.code === 0) {
         this.setState({
           notificationList: res.data
         })
       }
-    })
 
+      // 2. 刷新用户
+      HttpUtils.get(USERS.user, { user_id: this.props.user.id }).then(res => {
+        if (res.code === 0) {
+          store.dispatch(fetchProfileSuccess(res.data))
+          if (res.data.user_other_id !== -1) {
+            HttpUtils.get(USERS.user, { user_id: res.data.user_other_id }).then(res => {
+              if (res.code === 0) {
+                store.dispatch(fetchPartnerSuccess(res.data))
+              }
+            })
+          } else {
+            store.dispatch(fetchPartnerSuccess({}))
+          }
+        }
+      })
+
+
+      // 3. 刷新日记
+    })
   }
 
   _renderItem({ item }) {
@@ -80,8 +112,8 @@ export default class Notification extends Component {
           />
         </View>
         <WebView
-          style={{width: 200, height: 200, backgroundColor: 'red'}}
-          source={{uri: 'https://www.baidu.com'}}
+          style={{ width: 200, height: 200, backgroundColor: 'red' }}
+          source={{ uri: 'https://me.ursb.me' }}
         />
       </Container>
     )

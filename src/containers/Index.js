@@ -35,12 +35,12 @@ export default class Index extends Component {
 
   componentDidMount() {
 
-    // 极光推送：添加事件角标，并触发强制刷新通知
+    // 极光推送：添加事件角标，并触发强制刷新通知和用户、日记数据
     JPushModule.addReceiveCustomMsgListener((message) => {
       console.log(message)
       JPushModule.setBadge(1, success => {
       })
-      DeviceEventEmitter.emit('flash_notification', {})
+      DeviceEventEmitter.emit('flush_data', {})
     })
 
     JPushModule.addReceiveNotificationListener(message => {
