@@ -82,7 +82,7 @@ export default class MatchResult extends Component {
       message = '要开启匹配功能才能进行匹配哦'
       break
     case 601:
-      message = '你已经有匹配对象了哦'
+      message = '你的对象已经有匹配对象了哦'
       break
     }
     return message
@@ -199,7 +199,7 @@ export default class MatchResult extends Component {
     if (res.code === 0) {
       updateReduxUser(this.props.user.id)
       store.dispatch(fetchPartnerSuccess({ id: null }))
-      DeviceEventEmitter.emit('flash_note', {})
+      DeviceEventEmitter.emit('flush_note', {})
       Actions.pop()
     }
   }

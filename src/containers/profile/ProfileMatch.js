@@ -60,13 +60,6 @@ export default class ProfileMatch extends Component {
     productList: []
   }
 
-
-  // TODO: 该页面有2种状态
-  // 1 未匹配：根据 status 加载页面
-  // 2 已匹配
-
-  // TODO: 返回时保存配置的状态，第一次会提醒
-
   async componentDidMount() {
     this.showTips()
 

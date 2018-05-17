@@ -14,6 +14,12 @@ import { connect } from 'react-redux'
 
 import JPushModule from 'jpush-react-native'
 
+import { USERS } from '../network/Urls'
+import HttpUtils from '../network/HttpUtils'
+import store from '../redux/store'
+import { fetchPartnerSuccess } from '../redux/modules/partner'
+import { fetchProfileSuccess } from '../redux/modules/user'
+
 function mapStateToProps(state) {
   return {
     user: state.user,
@@ -36,11 +42,19 @@ export default class Index extends Component {
   componentDidMount() {
 
     // 极光推送：添加事件角标，并触发强制刷新通知和用户、日记数据
-    JPushModule.addReceiveCustomMsgListener((message) => {
+    JPushModule.addReceiveCustomMsgListener(async (message) => {
       console.log(message)
       JPushModule.setBadge(1, success => {
       })
-      DeviceEventEmitter.emit('flush_data', {})
+      // 刷新通知、刷新日记、刷新用户
+      DeviceEventEmitter.emit('flush_notification', {})
+
+      const res = await HttpUtils.get(USERS.user, { user_id: this.props.user.id })
+      if (res.code === 0) {
+        store.dispatch(fetchProfileSuccess(res.data))
+        store.dispatch(fetchPartnerSuccess(res.partner))
+        DeviceEventEmitter.emit('flush_note', {})
+      }
     })
 
     JPushModule.addReceiveNotificationListener(message => {
@@ -94,7 +108,10 @@ export default class Index extends Component {
             selectedTitleStyle={styles.text_title_selected}
             renderIcon={() => this.icons.notification.default}
             renderSelectedIcon={() => this.icons.notification.selected}
-            onPress={() => this.setState({ selectedTab: 'notification', unread: 0 })}
+            onPress={() => {
+              JPushModule.clearAllNotifications()
+              this.setState({ selectedTab: 'notification', unread: 0 })
+            }}
           >
             <Notification />
           </TabNavigator.Item>

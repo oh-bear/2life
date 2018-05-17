@@ -83,7 +83,7 @@ export default class ProfileReward extends Component {
         this.setState({
           showPopup: true,
           popupBgColor: '#2DC3A6',
-          pupupIcon: require('../../../res/images/home/icon_happy.png'),
+          pupupIcon: require('../../../res/images/profile/icon-popup-reward.png'),
           popupTitle: '打赏成功',
           popupContent: '感谢您对作者的支持，我们一定会更用心做好产品😊',
         })

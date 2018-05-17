@@ -42,7 +42,6 @@ export default class Notification extends Component {
   }
 
   async componentDidMount() {
-
     const res = await HttpUtils.get(USERS.notification, {})
     if (res.code === 0) {
       this.setState({
@@ -52,34 +51,13 @@ export default class Notification extends Component {
 
     JPushModule.clearAllNotifications()
 
-    // 刷新通知、刷新日记、刷新用户
-    DeviceEventEmitter.addListener('flush_data', async (v) => {
-      // 1. 刷新通知
+    DeviceEventEmitter.addListener('flush_notification', async (v) => {
       const res = await HttpUtils.get(USERS.notification, {})
       if (res.code === 0) {
         this.setState({
           notificationList: res.data
         })
       }
-
-      // 2. 刷新用户
-      HttpUtils.get(USERS.user, { user_id: this.props.user.id }).then(res => {
-        if (res.code === 0) {
-          store.dispatch(fetchProfileSuccess(res.data))
-          if (res.data.user_other_id !== -1) {
-            HttpUtils.get(USERS.user, { user_id: res.data.user_other_id }).then(res => {
-              if (res.code === 0) {
-                store.dispatch(fetchPartnerSuccess(res.data))
-              }
-            })
-          } else {
-            store.dispatch(fetchPartnerSuccess({}))
-          }
-        }
-      })
-
-
-      // 3. 刷新日记
     })
   }
 

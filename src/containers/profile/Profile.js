@@ -4,7 +4,8 @@ import {
   StyleSheet,
   ScrollView,
   TouchableOpacity,
-  Image
+  Image,
+  DeviceEventEmitter
 } from 'react-native'
 import { ifIphoneX } from 'react-native-iphone-x-helper'
 import { connect } from 'react-redux'
@@ -12,6 +13,12 @@ import { Actions } from 'react-native-router-flux'
 
 import Container from '../../components/Container'
 import TextPingFang from '../../components/TextPingFang'
+
+import { USERS } from '../../network/Urls'
+import HttpUtils from '../../network/HttpUtils'
+import store from '../../redux/store'
+import { fetchPartnerSuccess } from '../../redux/modules/partner'
+import { fetchProfileSuccess } from '../../redux/modules/user'
 
 import {
   WIDTH,
@@ -44,12 +51,7 @@ export default class Profile extends Component {
     is_scroll: true
   }
 
-  componentDidMount() {
-    // 低于iPhone6机型，则滚动屏幕
-    // if (HEIGHT < 650) {
-    //   this.setState({is_scroll: false})
-    // }
-  }
+  componentDidMount() {}
 
   renderPartner() {
     if (!this.props.partner.id) return
@@ -238,7 +240,7 @@ export default class Profile extends Component {
             <TouchableOpacity
               style={[styles.row, styles.row_top, styles.row_border_bottom]}
               onPress={() => {
-                if (this.props.user.status !== 1000) {
+                if (this.props.user.user_other_id === -1) {
                   Actions.jump(SCENE_PROFILE_MATCH, { user: this.props.user })
                 } else {
                   Actions.jump(SCENE_MATCH_RESULT, { user: this.props.user })

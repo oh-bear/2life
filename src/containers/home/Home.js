@@ -81,17 +81,17 @@ export default class Home extends Component {
     this._getWeather()
     this._fetchDiary()
 
-    DeviceEventEmitter.addListener('flash_note', () => this._fetchDiary())
+    DeviceEventEmitter.addListener('flush_note', () => this._fetchDiary())
   }
 
   async _fetchDiary() {
-    this.setState({isRefreshing: true})
+    this.setState({ isRefreshing: true })
     const res = await HttpUtils.get(URL_list)
     if (res.code === 0) {
       const { partner, recommend, user } = res.data
       let diaryList = [...partner, ...user]
       // 判断是否空对象
-      if (recommend.id) diaryList.push(recommend)
+      // if (recommend.id) diaryList.push(recommend)
       diaryList.sort((a, b) => b.date - a.date)
       diaryList = diaryClassify(diaryList, 'date')
 
@@ -140,7 +140,7 @@ export default class Home extends Component {
 
   _updateUser() {
     if (this.props.user.total_notes && this.props.user.status === 502) {
-      updateUser(this.props.user, {status: 101})
+      updateUser(this.props.user, { status: 101 })
     }
   }
 
@@ -166,7 +166,7 @@ export default class Home extends Component {
 
         await updateReduxUser(this.props.user.id)
         // 更新用户经纬度
-        await updateUser(this.props.user, {latitude, longitude})
+        await updateUser(this.props.user, { latitude, longitude })
         this._updateUser()
 
         // 获取用户地理位置和天气信息
@@ -225,13 +225,14 @@ export default class Home extends Component {
 
         let exchange_icon = this.props.partner.sex ? require('../../../res/images/home/icon_exchange_female.png') : require('../../../res/images/home/icon_exchange_male.png')
 
-        this.setState({ weather_text,
+        this.setState({
+          weather_text,
           weather_icon,
           showMe: false,
           showWeather: true,
           exchange_icon
         })
-      } catch(e) {
+      } catch (e) {
         let exchange_icon = this.props.partner.sex ? require('../../../res/images/home/icon_exchange_female.png') : require('../../../res/images/home/icon_exchange_male.png')
 
         this.setState({
@@ -256,7 +257,7 @@ export default class Home extends Component {
     let user = this.props.user
     let partner = this.props.partner
     let mode_icon, mode_text
-    
+
     if (this.state.showMe) {
       if (this.state.showWeather) {
         mode_text = user.mode ? `${user.mode ? user.mode : ''} 情绪值` : '还没有情绪值'
@@ -326,7 +327,7 @@ export default class Home extends Component {
               showMe: false,
               showWeather: true
             })
-          } catch(e) {
+          } catch (e) {
             this.setState({
               weather_text: 'ta在的地方一定是晴天吧',
               weather_icon: require('../../../res/images/home/icon_sunny.png'),
@@ -419,11 +420,11 @@ export default class Home extends Component {
             >
               <Image style={styles.weather_icon} source={this.state.weather_icon}/>
               <TextPingFang
-                style={[styles.text_weather, { color: this.state.showMe ? '#aaa' : '#000' }]}>{this.state.weather_text}</TextPingFang>
+                style={[styles.text_weather, { color: this.state.showMe ? '#aaa' : '#aaa' }]}>{this.state.weather_text}</TextPingFang>
             </TouchableOpacity>
 
             <TouchableOpacity
-              style={[styles.weather_exchange, {display: this.props.partner.id ? 'flex' : 'none'}]}
+              style={[styles.weather_exchange, { display: this.props.partner.id ? 'flex' : 'none' }]}
               onPress={() => this.exchangeWeather()}
             >
               <Image source={this.state.exchange_icon}/>
@@ -431,12 +432,12 @@ export default class Home extends Component {
           </View>
 
           {/* <View
-            style={[styles.tip_container, { display: this.state.showWeatherTip ? 'flex' : 'none' }]}
-            animation='bounceIn'
-          >
-            <TextPingFang style={styles.text_tip}>点击这里可以看到对方天气哦</TextPingFang>
-            <View style={styles.triangle}/>
-          </View> */}
+           style={[styles.tip_container, { display: this.state.showWeatherTip ? 'flex' : 'none' }]}
+           animation='bounceIn'
+           >
+           <TextPingFang style={styles.text_tip}>点击这里可以看到对方天气哦</TextPingFang>
+           <View style={styles.triangle}/>
+           </View> */}
         </View>
 
         <FlatList
