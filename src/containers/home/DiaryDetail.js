@@ -129,7 +129,10 @@ export default class DiaryDetail extends Component {
 
   likeNote() {
     HttpUtils.post(NOTES.like, {note_id: this.props.diary.id}).then(res => {
-      if (res.code === 0) this.renderlikeComponent(true)
+      if (res.code === 0) {
+        DeviceEventEmitter.emit('flash_note', {})
+        this.renderlikeComponent(true)
+      }
     })
   }
 

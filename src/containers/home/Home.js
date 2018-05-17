@@ -60,6 +60,7 @@ export default class Home extends Component {
     showCalendar: false,
     weather_text: '你在的地方一定是晴天吧',
     weather_icon: require('../../../res/images/home/icon_sunny.png'),
+    exchange_icon: require('../../../res/images/common/icon_exchange.png'),
     my_weather_text: '',
     my_weather_icon: null,
     other_weather_text: '',
@@ -221,20 +222,32 @@ export default class Home extends Component {
         // const location = await getLocation(113.387061, 23.053829)
         const weather = await getWeather(location.city)
         const { weather_text, weather_icon } = getWeatherDesc(weather)
-        this.setState({ weather_text, weather_icon, showMe: false, showWeather: true })
+
+        let exchange_icon = this.props.partner.sex ? require('../../../res/images/home/icon_exchange_female.png') : require('../../../res/images/home/icon_exchange_male.png')
+
+        this.setState({ weather_text,
+          weather_icon,
+          showMe: false,
+          showWeather: true,
+          exchange_icon
+        })
       } catch(e) {
+        let exchange_icon = this.props.partner.sex ? require('../../../res/images/home/icon_exchange_female.png') : require('../../../res/images/home/icon_exchange_male.png')
+
         this.setState({
           weather_text: 'ta在的地方一定是晴天吧',
           weather_icon: require('../../../res/images/home/icon_sunny.png'),
           showMe: false,
-          showWeather: true
+          showWeather: true,
+          exchange_icon
         })
       }
     } else {
       this._getWeather()
       this.setState({
         showMe: true,
-        showWeather: true
+        showWeather: true,
+        exchange_icon: require('../../../res/images/common/icon_exchange.png')
       })
     }
   }
@@ -413,7 +426,7 @@ export default class Home extends Component {
               style={[styles.weather_exchange, {display: this.props.partner.id ? 'flex' : 'none'}]}
               onPress={() => this.exchangeWeather()}
             >
-              <Image source={require('../../../res/images/common/icon_exchange.png')}/>
+              <Image source={this.state.exchange_icon}/>
             </TouchableOpacity>
           </View>
 

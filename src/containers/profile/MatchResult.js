@@ -6,7 +6,8 @@ import {
   TouchableOpacity,
   Image,
   ImageBackground,
-  Animated
+  Animated,
+  DeviceEventEmitter
 } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import { connect } from 'react-redux'
@@ -197,7 +198,8 @@ export default class MatchResult extends Component {
     const res = await HttpUtils.get(USERS.disconnect)
     if (res.code === 0) {
       updateReduxUser(this.props.user.id)
-      store.dispatch(fetchPartnerSuccess({ id: 0 }))
+      store.dispatch(fetchPartnerSuccess({ id: null }))
+      DeviceEventEmitter.emit('flash_note', {})
       Actions.pop()
     }
   }

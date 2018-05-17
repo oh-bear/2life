@@ -32,7 +32,8 @@ import { USERS } from '../../network/Urls'
 export default class ProfileEdit extends Component {
 
   state = {
-    user: this.props.user,
+    user: {},
+    name: ''
   }
 
   componentDidMount() {
@@ -71,13 +72,13 @@ export default class ProfileEdit extends Component {
   async updateUser() {
     const data = {
       sex: this.state.user.sex,
-      name: this.state.user.name,
+      name: this.state.name,
       face: this.state.user.face
     }
     try {
       const res = await updateUser(this.state.user, data)
       if (res.code === 0) {
-        store.dispatch(fetchProfileSuccess(this.state.user))
+        store.dispatch(fetchProfileSuccess(Object.assign({}, this.state.user, { name: this.state.name })))
         Alert.alert('', '修改成功')
       }
     } catch (e) {
@@ -112,7 +113,7 @@ export default class ProfileEdit extends Component {
                 maxLength={48}
                 returnKeyType='done'
                 enablesReturnKeyAutomatically
-                onChangeText={name => this.setState({ user: Object.assign({}, this.state.user, { name }) })}
+                onChangeText={name => this.setState({ name })}
                 onSubmitEditing={() => this.updateUser()}
               />
               <TouchableOpacity
