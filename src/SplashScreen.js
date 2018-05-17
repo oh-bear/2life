@@ -46,7 +46,12 @@ class SplashScreen extends Component {
         setToken({uid, token, timestamp})
 
         store.dispatch(fetchProfileSuccess(res.data.user))
-        store.dispatch(fetchPartnerSuccess(res.data.partner))
+
+        if (res.data.partner.id) {
+          store.dispatch(fetchPartnerSuccess(res.data.partner))
+        } else {
+          store.dispatch(fetchPartnerSuccess({id: null}))
+        }
         Actions[SCENE_INDEX]({user: res.data.user, partner: res.data.partner})
       } else {
         Toast.fail('自动登录失败', 1.5)

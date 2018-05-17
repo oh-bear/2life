@@ -48,6 +48,7 @@ export default class NewDiary extends Component {
     base64List: [],
     keyboardHeight: 0,
     savingDiary: false,
+    showPopup: false,
     firstEntryDiary: false,
     popupContent: '写完日记点击返回键就能自动保存哦'
   }
@@ -76,7 +77,7 @@ export default class NewDiary extends Component {
 
   async _firstIn() {
     const firstEntryDiary = await Storage.get('firstEntryDiary', true)
-    this.setState({ firstEntryDiary })
+    this.setState({ firstEntryDiary, showPopup: firstEntryDiary })
   }
 
   _getLocation() {
@@ -115,11 +116,15 @@ export default class NewDiary extends Component {
     const res = await HttpUtils.post(URL_publish, data)
     if (res.code === 0) {
       updateReduxUser(this.props.user.id)
-
-      this.setState({
-        firstEntryDiary: true,
-        popupContent: '你的日记已经自动保存并同步，放心退出吧'
-      })
+      
+      if (this.state.firstEntryDiary) {
+        this.setState({
+          showPopup: true,
+          popupContent: '你的日记已经自动保存并同步，放心退出吧'
+        })
+      } else {
+        Actions.reset(SCENE_INDEX)
+      }
     }
   }
 
@@ -178,12 +183,12 @@ export default class NewDiary extends Component {
         </KeyboardAwareScrollView>
 
         <Popup
-          showPopup={this.state.firstEntryDiary}
+          showPopup={this.state.showPopup}
           popupBgColor='#2DC3A6'
           icon={require('../../../res/images/home/icon_save.png')}
           content={this.state.popupContent}
           onPressLeft={() => {
-            this.setState({ firstEntryDiary: false })
+            this.setState({ showPopup: false })
             if (this.state.content) Actions.reset(SCENE_INDEX)
           }}
           textBtnLeft='我明白了'

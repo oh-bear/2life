@@ -52,7 +52,6 @@ export default class Nickname extends Component {
             <TextInput
               style={styles.input}
               onChangeText={nickname => this.setState({ nickname })}
-              value={this.state.nickname}
               clearButtonMode='while-editing'
               placeholder='输入昵称'
               placeholderTextColor='#aaa'

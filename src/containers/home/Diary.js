@@ -7,6 +7,7 @@ import {
 } from 'react-native'
 import PropTypes from 'prop-types'
 import { Actions } from 'react-native-router-flux'
+import { connect } from 'react-redux'
 
 import TextPingFang from '../../components/TextPingFang'
 
@@ -21,6 +22,14 @@ import {
 
 import { SCENE_DIARY_DETAIL } from '../../constants/scene'
 
+function mapStateToProps(state) {
+  return {
+    user: state.user,
+    partner: state.partner
+  }
+}
+
+@connect(mapStateToProps)
 class SingleDiary extends Component {
   static propTypes = {
     diary: PropTypes.object
@@ -29,6 +38,14 @@ class SingleDiary extends Component {
   render() {
     const diary = this.props.diary
 
+    let other_note_color = '#444'
+    if (diary.user_id === this.props.partner.id && this.props.partner.sex === 0) {
+      other_note_color = '#4590F8'
+    }
+    if (diary.user_id === this.props.partner.id && this.props.partner.sex === 1) {
+      other_note_color = '#F83AC1'
+    }
+
     return (
       <TouchableOpacity
         style={styles.diary_container}
@@ -36,7 +53,7 @@ class SingleDiary extends Component {
       >
         <View style={styles.diary_top}>
           <View style={styles.diary_top_text}>
-            <TextPingFang style={styles.text_diary_title} numberOfLines={1}>{diary.title}</TextPingFang>
+            <TextPingFang style={[styles.text_diary_title, { color: other_note_color }]} numberOfLines={1}>{diary.title}</TextPingFang>
             <TextPingFang style={styles.text_diary_content} numberOfLines={2}>{diary.content}</TextPingFang>
           </View>
           {
