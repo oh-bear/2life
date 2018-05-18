@@ -12,12 +12,13 @@ import { connect } from 'react-redux'
 import TextPingFang from '../../components/TextPingFang'
 
 import {
-  getResponsiveWidth
+  getResponsiveWidth,
+  getResponsiveHeight
 } from '../../common/styles'
 import {
   getDay,
   getTime,
-  getLocation,
+  getMonthDay
 } from '../../common/util'
 
 import { SCENE_DIARY_DETAIL } from '../../constants/scene'
@@ -85,8 +86,13 @@ export default class Diary extends Component {
 
   render() {
     let date = ''
+    console.log(this.props)
     if (this.props.data.length !== 0) {
-      date = getDay(this.props.data[0].date)
+      if (this.props.isProfileNote) {
+        date = getMonthDay(this.props.data[0].date)
+      } else {
+        date = getDay(this.props.data[0].date)
+      }
     }
 
     return (
@@ -118,6 +124,7 @@ const styles = StyleSheet.create({
     paddingTop: getResponsiveWidth(16),
     color: '#aaa',
     fontSize: 14,
+    fontWeight: 'bold',
   },
   main_container: {
     flex: 1
@@ -130,7 +137,6 @@ const styles = StyleSheet.create({
     borderBottomColor: '#f1f1f1'
   },
   diary_top: {
-    // height: getResponsiveHeight(80),
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
@@ -147,6 +153,7 @@ const styles = StyleSheet.create({
   text_diary_content: {
     color: '#666',
     fontSize: 12,
+    paddingTop: getResponsiveHeight(8),
   },
   img_diary: {
     width: getResponsiveWidth(72),

@@ -109,6 +109,17 @@ export function getDay(timestamp) {
 }
 
 /**
+ * 获取几号,几月
+ * @param {Number} timestamp
+ */
+export function getMonthDay(timestamp) {
+  const date = new Date(timestamp)
+  const day = date.getDate() < 10 ? `0${date.getDate()}` : date.getDate()
+  const chinese_month = getMonth(date.getMonth())
+  return `${day}\n${chinese_month}`
+}
+
+/**
  * 获取 hh:mm
  * @param {Number} timestamp
  * @returns {String} // hh:mm

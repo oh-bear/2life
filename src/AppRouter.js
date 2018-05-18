@@ -23,6 +23,7 @@ import ProfileMatch from './containers/profile/ProfileMatch'
 import ProfileMode from './containers/profile/ProfileMode'
 import ProfileSync from './containers/profile/ProfileSync'
 import ProfileReward from './containers/profile/ProfileReward'
+import ProfileNote from './containers/profile/ProfileNote'
 import MatchResult from './containers/profile/MatchResult'
 
 import { Scene, Router, ActionConst } from 'react-native-router-flux'
@@ -156,6 +157,13 @@ export default class AppRouter extends Component {
               key={scenes.SCENE_PROFILE_SYNC}
               component={ProfileSync}
               title='同步'
+              hideNavBar
+              duration={0}
+            />
+            <Scene
+              key={scenes.SCENE_PROFILE_NOTE}
+              component={ProfileNote}
+              title='日记'
               hideNavBar
               duration={0}
             />

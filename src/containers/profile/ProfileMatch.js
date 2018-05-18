@@ -146,7 +146,7 @@ export default class ProfileMatch extends Component {
     const { matchGender, beMatched, character, matchUserId } = this.state
     let { sex, status } = this.props.user
 
-    if (status === 1000) {
+    if (status === 1000 || this.props.user.user_other_id !== -1) {
       return
     }
 

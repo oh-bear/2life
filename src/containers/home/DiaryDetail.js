@@ -130,7 +130,7 @@ export default class DiaryDetail extends Component {
   likeNote() {
     HttpUtils.post(NOTES.like, {note_id: this.props.diary.id}).then(res => {
       if (res.code === 0) {
-        DeviceEventEmitter.emit('flash_note', {})
+        DeviceEventEmitter.emit('flush_note', {})
         this.renderlikeComponent(true)
       }
     })
@@ -193,6 +193,11 @@ export default class DiaryDetail extends Component {
           <View style={[styles.partner_container, { display: this.props.diary.user_id !== this.props.user.id ? 'flex' : 'none'}]}>
             <Image style={styles.partner_face} source={{uri: this.props.partner.face}}/>
             <TextPingFang style={styles.text_name}>{this.props.partner.name}</TextPingFang>
+          </View>
+
+          <View style={[styles.partner_container, { display: this.props.diary.user_id !== this.props.user.id ? 'none' : 'flex'}]}>
+            <Image style={styles.partner_face} source={{uri: this.props.user.face}}/>
+            <TextPingFang style={styles.text_name}>{this.props.user.name}</TextPingFang>
           </View>
 
           <View style={styles.line}/>

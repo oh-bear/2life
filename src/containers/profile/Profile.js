@@ -4,8 +4,7 @@ import {
   StyleSheet,
   ScrollView,
   TouchableOpacity,
-  Image,
-  DeviceEventEmitter
+  Image
 } from 'react-native'
 import { ifIphoneX } from 'react-native-iphone-x-helper'
 import { connect } from 'react-redux'
@@ -13,12 +12,6 @@ import { Actions } from 'react-native-router-flux'
 
 import Container from '../../components/Container'
 import TextPingFang from '../../components/TextPingFang'
-
-import { USERS } from '../../network/Urls'
-import HttpUtils from '../../network/HttpUtils'
-import store from '../../redux/store'
-import { fetchPartnerSuccess } from '../../redux/modules/partner'
-import { fetchProfileSuccess } from '../../redux/modules/user'
 
 import {
   WIDTH,
@@ -33,6 +26,7 @@ import {
   SCENE_PROFILE_BADGE,
   SCENE_PROFILE_MATCH,
   SCENE_PROFILE_SYNC,
+  SCENE_PROFILE_NOTE,
   SCENE_PROFILE_REWARD,
   SCENE_MATCH_RESULT
 } from '../../constants/scene'
@@ -51,7 +45,8 @@ export default class Profile extends Component {
     is_scroll: true
   }
 
-  componentDidMount() {}
+  componentDidMount() {
+  }
 
   renderPartner() {
     if (!this.props.partner.id) return
@@ -102,7 +97,11 @@ export default class Profile extends Component {
           <TextPingFang style={styles.text_row_desc}>平均情绪值</TextPingFang>
         </TouchableOpacity>
 
-        <TouchableOpacity style={[styles.row]} activeOpacity={1}>
+        <TouchableOpacity
+          style={[styles.row]}
+          onPress={() => {
+            Actions.jump(SCENE_PROFILE_NOTE, { isMe: false })
+          }}>
           {
             (() => {
               if (this.props.partner.sex === 0) {
@@ -177,6 +176,9 @@ export default class Profile extends Component {
 
             <TouchableOpacity
               style={styles.row}
+              onPress={() => {
+                Actions.jump(SCENE_PROFILE_NOTE, { isMe: true })
+              }}
             >
               {
                 (() => {

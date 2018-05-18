@@ -79,10 +79,10 @@ export default class MatchResult extends Component {
       message = '你目前没有匹配权限'
       break
     case 600:
-      message = '要开启匹配功能才能进行匹配哦'
+      message = 'TA关闭了匹配功能 QAQ'
       break
     case 601:
-      message = '你的对象已经有匹配对象了哦'
+      message = 'TA已经有匹配对象了哦'
       break
     }
     return message

@@ -73,7 +73,8 @@ export default class Home extends Component {
     showWeatherFlag: false,
     showMe: true,
     showWeather: true,
-    isRefreshing: false
+    isRefreshing: false,
+    profileNote: false
   }
 
   async componentDidMount() {
@@ -139,9 +140,10 @@ export default class Home extends Component {
   }
 
   _updateUser() {
-    if (this.props.user.total_notes && this.props.user.status === 502) {
+    if (this.props.user.total_notes && this.props.user.status === 502 && !this.props.user.sex) {
       updateUser(this.props.user, { status: 101 })
     }
+
   }
 
   async _showTips() {
@@ -342,7 +344,7 @@ export default class Home extends Component {
   }
 
   _renderItem({ item }) {
-    return ( <Diary data={item}/> )
+    return <Diary data={item} isProfileNote={false}/>
   }
 
   _emptyDiary() {

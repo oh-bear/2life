@@ -5,9 +5,10 @@ import {
   ScrollView,
   TouchableOpacity,
   Image,
-  TextInput,
-  Alert
+  TextInput
 } from 'react-native'
+
+import { Toast } from 'antd-mobile'
 
 import ImagePicker from 'react-native-image-picker'
 
@@ -21,13 +22,8 @@ import { fetchProfileSuccess } from '../../redux/modules/user'
 import {
   getResponsiveWidth,
 } from '../../common/styles'
-import {
-  updateUser
-} from '../../common/util'
 
-import { postImgToQiniu } from '../../common/util'
-import HttpUtils from '../../network/HttpUtils'
-import { USERS } from '../../network/Urls'
+import { updateUser, postImgToQiniu } from '../../common/util'
 
 export default class ProfileEdit extends Component {
 
@@ -79,13 +75,14 @@ export default class ProfileEdit extends Component {
       const res = await updateUser(this.state.user, data)
       if (res.code === 0) {
         store.dispatch(fetchProfileSuccess(Object.assign({}, this.state.user, { name: this.state.name })))
-        Alert.alert('', '修改成功')
+        Toast.success('修改成功')
       }
     } catch (e) {
-      Alert.alert('', '出错了，等会再试试')
+      Toast.fail('出错了，等会再试试')
     }
   }
 
+  // TODO: 缺少获取徽章接口
   render() {
     return (
       <Container>
@@ -130,17 +127,17 @@ export default class ProfileEdit extends Component {
             </View>
 
             {/* <View style={styles.badge}>
-              <TextPingFang style={styles.text_badge_title}>展示徽章</TextPingFang>
-              {
-                (() => {
-                  if (!this.props.user.badges) {
-                    return <TextPingFang style={styles.text_badge_content}>你还没有获得任何徽章</TextPingFang>
-                  } else {
-                    // todo: 缺少获取徽章接口
-                  }
-                })()
-              }
-            </View> */}
+             <TextPingFang style={styles.text_badge_title}>展示徽章</TextPingFang>
+             {
+             (() => {
+             if (!this.props.user.badges) {
+             return <TextPingFang style={styles.text_badge_content}>你还没有获得任何徽章</TextPingFang>
+             } else {
+             // TODO: 缺少获取徽章接口
+             }
+             })()
+             }
+             </View> */}
           </ScrollView>
         </View>
       </Container>
