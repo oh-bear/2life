@@ -124,6 +124,7 @@ export default class Signup extends Component {
                 value={this.state.account}
                 keyboardType='numeric'
                 maxLength={11}
+                underlineColorAndroid='transparent'
                 clearButtonMode='while-editing'
                 placeholder='请输入手机号码'
                 placeholderTextColor='#aaa'
@@ -137,6 +138,7 @@ export default class Signup extends Component {
                   onChangeText={code => this.setState({ code, showCodeTip: false })}
                   value={this.state.code}
                   keyboardType='numeric'
+                  underlineColorAndroid='transparent'
                   placeholder='请输入验证码'
                   placeholderTextColor='#aaa'
                   multiline={false}
@@ -157,6 +159,7 @@ export default class Signup extends Component {
                 onChangeText={password => this.setState({ password, showPswTip: false })}
                 value={this.state.password}
                 clearButtonMode='while-editing'
+                underlineColorAndroid='transparent'
                 placeholder='请输入密码'
                 placeholderTextColor='#aaa'
                 multiline={false}

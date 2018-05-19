@@ -64,6 +64,7 @@ export default class Signin extends Component {
       store.dispatch(fetchPartnerSuccess(res.data.partner))
 
       JPushModule.setAlias(res.data.user.id.toString(), success => {
+        alert(success)
         console.log(success)
       })
 
@@ -90,6 +91,7 @@ export default class Signin extends Component {
               value={this.state.account}
               keyboardType='numeric'
               maxLength={11}
+              underlineColorAndroid='transparent'
               clearButtonMode='while-editing'
               placeholder='请输入手机号码'
               placeholderTextColor='#aaa'
@@ -101,6 +103,7 @@ export default class Signin extends Component {
               value={this.state.password}
               clearButtonMode='while-editing'
               placeholder='请输入密码'
+              underlineColorAndroid='transparent'
               placeholderTextColor='#aaa'
               multiline={false}
               secureTextEntry

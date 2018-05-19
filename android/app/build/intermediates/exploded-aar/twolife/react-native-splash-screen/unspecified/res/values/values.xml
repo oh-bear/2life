@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="primary_dark" type="color">
+        @color/primary_dark
+    </item>
+    <item name="launch_screen" type="layout">
+        @layout/launch_screen
+    </item>
+    <string name="app_name">SplashScreen</string>
+    <style name="SplashScreen_Fullscreen" parent="SplashScreen_SplashTheme">
+        <item name="android:windowFullscreen">true</item>
+    </style>
+    <style name="SplashScreen_SplashAnimation">
+        <item name="android:windowExitAnimation">@android:anim/fade_out</item>
+    </style>
+    <style name="SplashScreen_SplashTheme" parent="Theme.AppCompat.NoActionBar">
+        <item name="android:windowAnimationStyle">@style/SplashScreen_SplashAnimation</item>
+        <item name="colorPrimaryDark">@color/primary_dark</item>
+    </style>
+</resources>

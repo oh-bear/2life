@@ -66,7 +66,7 @@ export default class NewDiary extends Component {
         keyboardHeight: 0
       })
     })
-    
+
     this._firstIn()
     this._getLocation()
   }
@@ -116,7 +116,7 @@ export default class NewDiary extends Component {
     const res = await HttpUtils.post(URL_publish, data)
     if (res.code === 0) {
       updateReduxUser(this.props.user.id)
-      
+
       if (this.state.firstEntryDiary) {
         this.setState({
           showPopup: true,
@@ -159,6 +159,7 @@ export default class NewDiary extends Component {
             style={styles.text_title}
             onChangeText={title => this.setState({ title })}
             placeholder='标题'
+            underlineColorAndroid='transparent'
             placeholderTextColor='#aaa'
           />
 
@@ -168,6 +169,7 @@ export default class NewDiary extends Component {
             style={styles.text_content}
             onChangeText={content => this.setState({ content })}
             placeholder='请输入正文'
+            underlineColorAndroid='transparent'
             placeholderTextColor='#aaa'
             multiline
           />
@@ -188,7 +190,9 @@ export default class NewDiary extends Component {
           icon={require('../../../res/images/home/icon_save.png')}
           content={this.state.popupContent}
           onPressLeft={() => {
+
             this.setState({ showPopup: false })
+            alert(this.state.showPopup)
             if (this.state.content) Actions.reset(SCENE_INDEX)
           }}
           textBtnLeft='我明白了'

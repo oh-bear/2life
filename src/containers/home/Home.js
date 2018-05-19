@@ -390,13 +390,14 @@ export default class Home extends Component {
             </ImageBackground>
           </TouchableOpacity>
 
-          <View
-            style={[styles.tip_container, { display: this.state.showDayTip ? 'flex' : 'none' }]}
-            animation='bounceIn'
-          >
-            <TextPingFang style={styles.text_tip}>点击这里回到当天日期哦</TextPingFang>
-            <View style={styles.triangle}/>
-          </View>
+
+        </View>
+        <View
+          style={[styles.tip_container, { display: this.state.showDayTip ? 'flex' : 'none',position:this.state.showDayTip?'absolute':'relative' }]}
+          animation='bounceIn'
+        >
+          <TextPingFang style={styles.text_tip}>点击这里回到当天日期哦</TextPingFang>
+          <View style={styles.triangle}/>
         </View>
 
         <CalendarList
@@ -507,16 +508,18 @@ const styles = StyleSheet.create({
     fontSize: 10,
   },
   tip_container: {
+    display:'flex',
     width: getResponsiveWidth(164),
     height: getResponsiveWidth(37),
     position: 'absolute',
     right: getResponsiveWidth(8),
-    bottom: getResponsiveWidth(-35),
+    top:getResponsiveWidth(90),
+    //bottom: getResponsiveWidth(-35),
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#2DC3A6',
     borderRadius: getResponsiveWidth(8),
-    zIndex: 10
+    zIndex: 99
   },
   triangle: {
     position: 'absolute',

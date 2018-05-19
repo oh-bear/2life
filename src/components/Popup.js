@@ -32,7 +32,7 @@ export default class Popup extends Component {
 
   render() {
     return (
-      <View style={[styles.container, { display: this.props.showPopup ? 'flex' : 'none' }]}>
+      <View style={[styles.container, { display: this.props.showPopup ? 'flex' : 'none',position:this.props.showPopup?'absolute':'relative' }]}>
         <View style={[styles.popup_container, { backgroundColor: this.props.popupBgColor }]} animation='bounceIn'>
           <Image style={styles.icon} source={this.props.icon}/>
           <TextPingFang style={styles.text_title}>{this.props.title}</TextPingFang>
