@@ -54,7 +54,7 @@ typings/
 # Yarn Integrity file
 .yarn-integrity
 
-# dotenv environment variables file
+# dotenv environment variables filegit 
 .env
 
 # iOS build
@@ -63,6 +63,7 @@ ios/build/
 # android
 android/.idea/
 android/build/
+# android/app/build/
 android/.gradle/
 android/gradle/
 
