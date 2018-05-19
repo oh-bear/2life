@@ -143,7 +143,9 @@ export default class Home extends Component {
     if (this.props.user.total_notes && this.props.user.status === 502 && !this.props.user.sex) {
       updateUser(this.props.user, { status: 101 })
     }
-
+    if (this.props.user.total_notes && this.props.user.status === 502 && this.props.user.sex) {
+      updateUser(this.props.user, { status: 103 })
+    }
   }
 
   async _showTips() {
