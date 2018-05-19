@@ -63,7 +63,7 @@ ios/build/
 # android
 android/.idea/
 android/build/
-# android/app/build/
+android/app/build/
 android/.gradle/
 android/gradle/
 
