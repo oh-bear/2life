@@ -86,7 +86,6 @@ export default class Diary extends Component {
 
   render() {
     let date = ''
-    console.log(this.props)
     if (this.props.data.length !== 0) {
       if (this.props.isProfileNote) {
         date = getMonthDay(this.props.data[0].date)
