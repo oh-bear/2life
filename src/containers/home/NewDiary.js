@@ -114,7 +114,7 @@ export default class NewDiary extends Component {
   async saveDiary() {
     Keyboard.dismiss()
 
-    if (this.state.savingDiary) return
+  //  if (this.state.savingDiary) return
 
     this.setState({ savingDiary: true })
 
@@ -124,10 +124,12 @@ export default class NewDiary extends Component {
     if (!title) return Alert.alert('', '给日记起个标题吧')
     if (!content) return Alert.alert('', '日记内容不能为空哦')
 
+
     const images = await postImgToQiniu(this.state.base64List, {
       type: 'note',
       user_id: this.props.user.id
     })
+
 
     const data = { title, content, images, latitude, longitude, location }
     const res = await HttpUtils.post(URL_publish, data)
@@ -210,7 +212,6 @@ export default class NewDiary extends Component {
           onPressLeft={() => {
 
             this.setState({ showPopup: false })
-            alert(this.state.showPopup)
             if (this.state.content) Actions.reset(SCENE_INDEX)
           }}
           textBtnLeft='我明白了'

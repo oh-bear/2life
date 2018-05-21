@@ -105,6 +105,7 @@ export default class Index extends Component {
             title='通知'
             titleStyle={styles.text_title}
             badgeText={this.state.unread}
+            //badgeText='11'
             selectedTitleStyle={styles.text_title_selected}
             renderIcon={() => this.icons.notification.default}
             renderSelectedIcon={() => this.icons.notification.selected}
@@ -138,6 +139,7 @@ const styles = StyleSheet.create({
   },
   tabbar: {
     backgroundColor: 'rgba(255,255,255,.9)',
+    height:56,
     ...ifIphoneX({
       height: 84,
       paddingBottom: 34

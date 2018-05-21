@@ -53,6 +53,7 @@ export default class Nickname extends Component {
               style={styles.input}
               onChangeText={nickname => this.setState({ nickname })}
               clearButtonMode='while-editing'
+              underlineColorAndroid='transparent'
               placeholder='输入昵称'
               placeholderTextColor='#aaa'
             />

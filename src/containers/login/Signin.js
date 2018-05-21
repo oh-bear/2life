@@ -64,7 +64,6 @@ export default class Signin extends Component {
       store.dispatch(fetchPartnerSuccess(res.data.partner))
 
       JPushModule.setAlias(res.data.user.id.toString(), success => {
-        alert(success)
         console.log(success)
       })
 

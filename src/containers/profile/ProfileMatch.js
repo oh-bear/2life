@@ -24,6 +24,7 @@ import {
   WIDTH,
   HEIGHT,
   getResponsiveWidth,
+  getResponsiveHeight,
 } from '../../common/styles'
 import { updateUser, updateReduxUser } from '../../common/util'
 import Storage from '../../common/storage'
@@ -310,17 +311,21 @@ export default class ProfileMatch extends Component {
                 value={this.state.matchUserId}
                 placeholder='Example: 071512'
                 keyboardType='numeric'
+                underlineColorAndroid='transparent'
                 onChangeText={id => this.setState({ matchUserId: id })}
               />
             </View>
           </ScrollableTabView>
 
-          <TouchableOpacity
-            style={[styles.start_btn, this.state.beMatched ? null : styles.no_show]}
-            onPress={() => this.startMatch()}
-          >
-            <TextPingFang style={styles.text_start_btn}>开始匹配</TextPingFang>
-          </TouchableOpacity>
+          <View style={styles.start_btn_box}>
+            <TouchableOpacity
+              style={[styles.start_btn, this.state.beMatched ? null : styles.no_show]}
+              onPress={() => this.startMatch()}
+            >
+              <TextPingFang style={styles.text_start_btn}>开始匹配</TextPingFang>
+            </TouchableOpacity>
+          </View>
+
 
         </ScrollView>
 
@@ -366,6 +371,7 @@ const styles = StyleSheet.create({
   tabview: {
     marginLeft: getResponsiveWidth(24),
     marginRight: getResponsiveWidth(24),
+    height:getResponsiveHeight(365),
   },
   tab_container: {
     marginTop: getResponsiveWidth(32),
@@ -413,13 +419,20 @@ const styles = StyleSheet.create({
     borderBottomWidth: getResponsiveWidth(1),
     borderBottomColor: '#2DC3A6'
   },
+  start_btn_box:{
+    width:WIDTH-getResponsiveWidth(48),
+    marginLeft: getResponsiveWidth(24),
+    marginRight: getResponsiveWidth(24),
+    display:'flex',
+    alignItems:'flex-end',
+  },
   start_btn: {
     width: getResponsiveWidth(112),
     height: getResponsiveWidth(48),
     justifyContent: 'center',
     alignItems: 'center',
     marginTop: getResponsiveWidth(50),
-    marginLeft: WIDTH - getResponsiveWidth(136),
+  //  marginLeft: WIDTH - getResponsiveWidth(136),
     backgroundColor: '#2DC3A6',
     borderRadius: getResponsiveWidth(24)
   },

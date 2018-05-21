@@ -359,7 +359,7 @@ export default class Home extends Component {
 
   _listFooter() {
     return (
-      <View style={[styles.list_footer, { display: this.state.diaryList.length === 0 ? 'none' : 'flex' }]}/>
+      <View style={[styles.list_footer, { display: this.state.diaryList.length === 0 ? 'none' : 'flex',position: this.state.diaryList.length === 0 ? 'relative' : 'absolute' }]}/>
     )
   }
 
@@ -405,9 +405,10 @@ export default class Home extends Component {
         <CalendarList
           horizontal={true}
           pagingEnabled={true}
-          style={[styles.calendar, { display: this.state.showCalendar ? 'flex' : 'none' }]}
+          style={[styles.calendar, { display: this.state.showCalendar ? 'flex' : 'none'}]}
           theme={{
             calendarBackground: 'rgb(250,250,250)',
+        //    calendarBackground: 'red',
             textDayFontSize: 14,
           }}
           maxDate={new Date()}
@@ -429,7 +430,7 @@ export default class Home extends Component {
             </TouchableOpacity>
 
             <TouchableOpacity
-              style={[styles.weather_exchange, { display: this.props.partner.id ? 'flex' : 'none' }]}
+              style={[styles.weather_exchange, { display: this.props.partner.id ? 'flex' : 'none',position: this.props.partner.id ? 'absolute' : 'relative' }]}
               onPress={() => this.exchangeWeather()}
             >
               <Image source={this.state.exchange_icon}/>
@@ -455,6 +456,7 @@ export default class Home extends Component {
           ListEmptyComponent={() => this._emptyDiary()}
           ListFooterComponent={() => this._listFooter()}
           onRefresh={() => this._fetchDiary()}
+          contentContainerStyle={styles.diary_item}
           refreshing={this.state.isRefreshing}
         />
 
@@ -585,10 +587,15 @@ const styles = StyleSheet.create({
       if (HEIGHT === 812) return 500 // iphone X
     })(),
     width: WIDTH,
-    paddingLeft: getResponsiveWidth(24),
-    paddingRight: getResponsiveWidth(24),
+    //paddingLeft: getResponsiveWidth(24),
+    //paddingRight: getResponsiveWidth(24),
     backgroundColor: 'transparent',
     zIndex: -10
+  },
+  diary_item:{
+    display:'flex',
+    alignItems:'center',
+    justifyContent:'center'
   },
   none_container: {
     alignItems: 'center',

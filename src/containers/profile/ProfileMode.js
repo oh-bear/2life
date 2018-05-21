@@ -15,6 +15,7 @@ import ModeCharts from './components/ModeCharts'
 
 import {
   getResponsiveWidth,
+   getResponsiveHeight
 } from '../../common/styles'
 
 import HttpUtils from '../../network/HttpUtils'
@@ -149,7 +150,7 @@ export default class ProfileMode extends Component {
             title='情绪图表'
             // rightButton={this.renderRightButton()}
           />
-          <ScrollView>
+          <ScrollView style={styles.scrollView_style}>
             <ScrollableTabView
               style={styles.tabview}
               renderTabBar={() => <TabBar tabNames={['一周', '一月', '一年', '全部']}/>}
@@ -182,5 +183,9 @@ const styles = StyleSheet.create({
   tabview: {
     marginLeft: getResponsiveWidth(24),
     marginRight: getResponsiveWidth(24),
+    height: getResponsiveHeight(400),
+  },
+  scrollView_style:{
+    height:"100%",
   }
 })

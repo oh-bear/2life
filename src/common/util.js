@@ -231,6 +231,8 @@ export async function postImgToQiniu(base64List, obj) {
   const { type, user_id } = obj
   if (!type && !user_id) return
 
+
+
   // 并发上传图片
   const qiniuPromises = base64List.map(async (base64, index) => {
     let filename
@@ -245,23 +247,23 @@ export async function postImgToQiniu(base64List, obj) {
 
     if (res_token.code === 0) {
       const qiniu_token = res_token.data // 七牛token
-
       const res_qiniu = await fetch(URL_qiniu_host + key_base64, {
         method: 'post',
         headers: {
           'Content-Type': 'application/octet-stream',
           'Authorization': 'UpToken ' + qiniu_token
         },
-        body: base64List[index]
+        body:base64List[index]
       })
-
+      alert(JSON.stringify(res_qiniu))
+      console.log(res_qiniu);
       return res_qiniu
     }
   })
-
   let imgUrls = []
   for (let i = 0; i < qiniuPromises.length; i++) {
     const res = await qiniuPromises[i]
+      alert(JSON.stringify(res))
     if (res.status === 200) {
       const body = JSON.parse(res._bodyText)
       imgUrls.push(BASE_IMG_URL + body.key)

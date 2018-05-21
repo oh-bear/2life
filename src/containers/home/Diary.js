@@ -114,6 +114,8 @@ export default class Diary extends Component {
 const styles = StyleSheet.create({
   container: {
     width: '100%',
+    paddingLeft: getResponsiveWidth(24),
+    paddingRight: getResponsiveWidth(24),
     flexDirection: 'row',
     paddingBottom: getResponsiveWidth(16),
     backgroundColor: '#fff'
@@ -129,6 +131,7 @@ const styles = StyleSheet.create({
     flex: 1
   },
   diary_container: {
+    display:'flex',
     paddingTop: getResponsiveWidth(16),
     paddingBottom: getResponsiveWidth(16),
     justifyContent: 'space-between',

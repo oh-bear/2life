@@ -190,12 +190,12 @@ export default class DiaryDetail extends Component {
 
           <TextPingFang style={styles.text_title}>{this.props.diary.title}</TextPingFang>
 
-          <View style={[styles.partner_container, { display: this.props.diary.user_id !== this.props.user.id ? 'flex' : 'none'}]}>
+          <View style={[styles.partner_container, { display: this.props.diary.user_id !== this.props.user.id ? 'flex' : 'none',position:this.props.user.id !== this.props.diary.user_id?'absolute':'relative' }]}>
             <Image style={styles.partner_face} source={{uri: this.props.partner.face}}/>
             <TextPingFang style={styles.text_name}>{this.props.partner.name}</TextPingFang>
           </View>
 
-          <View style={[styles.partner_container, { display: this.props.diary.user_id !== this.props.user.id ? 'none' : 'flex'}]}>
+          <View style={[styles.partner_container, { display: this.props.diary.user_id !== this.props.user.id ? 'none' : 'flex',position:this.props.user.id !== this.props.diary.user_id?'absolute':'relative'}]}>
             <Image style={styles.partner_face} source={{uri: this.props.user.face}}/>
             <TextPingFang style={styles.text_name}>{this.props.user.name}</TextPingFang>
           </View>
@@ -214,19 +214,19 @@ export default class DiaryDetail extends Component {
             <TextPingFang style={styles.text_mode}>{this.state.mode}</TextPingFang>
             <TextPingFang style={styles.text_value}>情绪值</TextPingFang>
             <TouchableOpacity
-              style={[styles.update_container, { display: this.props.user.id === this.props.diary.user_id ? 'flex' : 'none' }]}
+              style={[styles.update_container, { display: this.props.user.id === this.props.diary.user_id ? 'flex' : 'none',position:this.props.user.id !== this.props.diary.user_id?'absolute':'relative' }]}
               onPress={() => this.setState({changeMode: !this.state.changeMode})}
             >
               <TextPingFang style={styles.text_update}>更正</TextPingFang>
             </TouchableOpacity>
 
             <TouchableOpacity
-              style={[styles.btn_container, { display: this.props.user.id !== this.props.diary.user_id ? 'flex' : 'none' }]}
+              style={[styles.btn_container, { display: this.props.user.id !== this.props.diary.user_id ? 'flex' : 'none',position:this.props.user.id !== this.props.diary.user_id?'absolute':'relative'  }]}
             >
               {this.state.likeComponent}
             </TouchableOpacity>
 
-            <View style={[styles.choose_mode, {display: this.state.changeMode ? 'flex' : 'none'}]}>
+            <View style={[styles.choose_mode, {display: this.state.changeMode ? 'flex' : 'none',position: this.state.changeMode?'absolute':'relative'}]}>
               <TouchableOpacity
                 style={styles.mode_item}
                 onPress={() => this.updateNote(0, require('../../../res/images/home/icon_very_sad_male.png'))}

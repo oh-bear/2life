@@ -108,6 +108,7 @@ export default class ProfileEdit extends Component {
                 style={styles.text_row_right}
                 value={this.state.user.name}
                 maxLength={48}
+                underlineColorAndroid='transparent'
                 returnKeyType='done'
                 enablesReturnKeyAutomatically
                 onChangeText={name => this.setState({ name })}
