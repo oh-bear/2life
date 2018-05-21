@@ -19,7 +19,15 @@ import {
   WIDTH,
   getResponsiveWidth,
 } from '../../common/styles'
-import { getMonth, postImgToQiniu, getLocation, updateReduxUser } from '../../common/util'
+
+import {
+  getMonth,
+  postImgToQiniu,
+  getLocation,
+  updateUser,
+  updateReduxUser
+} from '../../common/util'
+
 import Storage from '../../common/storage'
 import { SCENE_INDEX } from '../../constants/scene'
 
@@ -94,12 +102,21 @@ export default class NewDiary extends Component {
     })
   }
 
+  _updateUser() {
+    if (this.props.user.status === 502 && !this.props.user.sex) {
+      updateUser(this.props.user, { status: 103 })
+    }
+    if (this.props.user.status === 502 && this.props.user.sex) {
+      updateUser(this.props.user, { status: 113 })
+    }
+  }
+
   async saveDiary() {
     Keyboard.dismiss()
 
     if (this.state.savingDiary) return
 
-    this.setState({savingDiary: true})
+    this.setState({ savingDiary: true })
 
     const { title, content, latitude, longitude, location } = this.state
 
@@ -115,6 +132,7 @@ export default class NewDiary extends Component {
     const data = { title, content, images, latitude, longitude, location }
     const res = await HttpUtils.post(URL_publish, data)
     if (res.code === 0) {
+      this._updateUser()
       updateReduxUser(this.props.user.id)
 
       if (this.state.firstEntryDiary) {
