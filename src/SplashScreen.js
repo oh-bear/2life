@@ -27,6 +27,7 @@ function mapStateToProps(state) {
 class SplashScreen extends Component {
   async componentDidMount() {
     const user = await Storage.get('user', {})
+
     if (!user.account || !user.password) {
       Actions[SCENE_LOGIN_OPTIONS]()
       RNSplashScreen.hide()
@@ -40,7 +41,6 @@ class SplashScreen extends Component {
       }
 
       const res = await HttpUtils.post(USERS.login, data)
-      
       if (res.code === 0) {
         const {uid, token, timestamp} = res.data.key
         setToken({uid, token, timestamp})

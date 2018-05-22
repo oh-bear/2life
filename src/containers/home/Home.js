@@ -6,10 +6,12 @@ import {
   Image,
   FlatList,
   Alert,
+  Platform,
   DeviceEventEmitter
 } from 'react-native'
 import { View } from 'react-native-animatable'
 import { CalendarList } from '../../components/react-native-calendars/src'
+//import { CalendarList } from 'react-native-calendars/src'
 import { Actions } from 'react-native-router-flux'
 import { connect } from 'react-redux'
 
@@ -78,6 +80,7 @@ export default class Home extends Component {
   }
 
   async componentDidMount() {
+    //alert(HEIGHT)
     this._showTips()
     this._getWeather()
     this._fetchDiary()
@@ -371,7 +374,19 @@ export default class Home extends Component {
           <TouchableOpacity
             style={styles.header_left}
             activeOpacity={1}
-            onPress={() => this.setState({ showCalendar: !this.state.showCalendar })}
+            onPress={() => {
+                //this.setState({ showCalendar: !this.state.showCalendar })
+              this.setState({ showCalendar: !this.state.showCalendar },()=>{
+                if(Platform.OS === 'android'){
+                  if(this.state.showCalendar){
+                    setTimeout(()=>{
+                      this.state.calendar.scrollToDay(new Date().toLocaleDateString())
+                    },300)
+                  }
+                }
+              })
+            }
+          }
           >
             <TextPingFang style={styles.text_month}>{this.state.month}</TextPingFang>
             <TextPingFang style={styles.text_year}>{this.state.year}</TextPingFang>
@@ -405,6 +420,7 @@ export default class Home extends Component {
         <CalendarList
           horizontal={true}
           pagingEnabled={true}
+          ref={(c) => this.state.calendar = c}
           style={[styles.calendar, { display: this.state.showCalendar ? 'flex' : 'none'}]}
           theme={{
             calendarBackground: 'rgb(250,250,250)',
@@ -549,6 +565,8 @@ const styles = StyleSheet.create({
       if (HEIGHT === 667) return 190 // iphone 6/7/8
       if (HEIGHT === 736) return 335 // iphone 6P/7P/8P
       if (HEIGHT === 812) return 350 // iphone X
+      if (HEIGHT === 598) return 350
+      return 350
     })()
   },
   weather: {
@@ -585,6 +603,8 @@ const styles = StyleSheet.create({
       if (HEIGHT === 667) return 190 // iphone 6/7/8
       if (HEIGHT === 736) return 425 // iphone 6P/7P/8P
       if (HEIGHT === 812) return 500 // iphone X
+      if (HEIGHT === 598) return 310
+      if (HEIGHT >= 640) return 370
     })(),
     width: WIDTH,
     //paddingLeft: getResponsiveWidth(24),

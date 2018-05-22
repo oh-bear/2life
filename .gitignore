@@ -64,8 +64,10 @@ ios/build/
 android/.idea/
 android/build/
 android/app/build/
+android/app/twolife.jks
 android/.gradle/
 android/gradle/
+android/gradle.properties
 
 .idea/
 .DS_Store
