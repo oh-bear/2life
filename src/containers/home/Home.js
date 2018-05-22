@@ -362,7 +362,7 @@ export default class Home extends Component {
 
   _listFooter() {
     return (
-      <View style={[styles.list_footer, { display: this.state.diaryList.length === 0 ? 'none' : 'flex',position: this.state.diaryList.length === 0 ? 'relative' : 'absolute' }]}/>
+      <View style={[styles.list_footer, { display: this.state.diaryList.length === 0 ? 'none' : 'flex' }]}/>
     )
   }
 
@@ -604,7 +604,7 @@ const styles = StyleSheet.create({
       if (HEIGHT === 736) return 425 // iphone 6P/7P/8P
       if (HEIGHT === 812) return 500 // iphone X
       if (HEIGHT === 598) return 310
-      if (HEIGHT >= 640) return 370
+      if (HEIGHT >= 640) return 310
     })(),
     width: WIDTH,
     //paddingLeft: getResponsiveWidth(24),

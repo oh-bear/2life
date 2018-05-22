@@ -5,10 +5,12 @@ import {
   TouchableOpacity,
   Image,
   ActionSheetIOS,
+  Platform,
   TextInput,
   Alert,
   DeviceEventEmitter
 } from 'react-native'
+import { ActionSheet } from 'antd-mobile';
 import { connect } from 'react-redux'
 import { Actions } from 'react-native-router-flux'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
@@ -127,6 +129,48 @@ export default class DiaryDetail extends Component {
     })
   }
 
+
+  showActionSheet(){
+    const BUTTONS = ['修改日记', '删除日记', '取消'];
+    ActionSheet.showActionSheetWithOptions({
+      options: BUTTONS,
+      cancelButtonIndex: BUTTONS.length - 1,
+      destructiveButtonIndex: BUTTONS.length - 2,
+      // title: 'title',
+      //message: 'I am description, description, description',
+      maskClosable: true,
+      'data-seed': 'logId',
+      //wrapProps,
+    },
+    (index) => {
+      if (index === 0) Actions.jump(SCENE_UPDATE_DIARY, {diary: this.props.diary})
+      if (index === 1) {
+        Alert.alert(
+          '',
+          '确定要删除这篇日记吗？',
+          [
+            {
+              text: '取消',
+              onPress: () => {}
+            },
+            {
+              text: '确定',
+              onPress: () => {
+                HttpUtils.get(NOTES.delete, {note_id: this.props.diary.id}).then(res => {
+                  if (res.code === 0) {
+                    updateReduxUser(this.props.user.id)
+                    Actions.reset(SCENE_INDEX)
+                  }
+                })
+              }
+            },
+          ]
+        )
+      }
+      if (index === 3) return
+    });
+  }
+
   likeNote() {
     HttpUtils.post(NOTES.like, {note_id: this.props.diary.id}).then(res => {
       if (res.code === 0) {
@@ -139,7 +183,14 @@ export default class DiaryDetail extends Component {
   renderRightButton() {
     if (this.props.user.id === this.props.diary.user_id) {
       return (
-        <TouchableOpacity onPress={() => this.showOptions()}>
+        <TouchableOpacity onPress={() =>{
+          if(Platform.OS === 'android'){
+            this.showActionSheet();
+          }else {
+            this.showOptions()
+          }
+
+        }}>
           <Image source={require('../../../res/images/common/icon_more_black.png')}/>
         </TouchableOpacity>
       )
@@ -214,7 +265,7 @@ export default class DiaryDetail extends Component {
             <TextPingFang style={styles.text_mode}>{this.state.mode}</TextPingFang>
             <TextPingFang style={styles.text_value}>情绪值</TextPingFang>
             <TouchableOpacity
-              style={[styles.update_container, { display: this.props.user.id === this.props.diary.user_id ? 'flex' : 'none',position:this.props.user.id !== this.props.diary.user_id?'absolute':'relative' }]}
+              style={[styles.update_container, { display: this.props.user.id === this.props.diary.user_id ? 'flex' : 'none',position:this.props.user.id === this.props.diary.user_id?'absolute':'relative' }]}
               onPress={() => this.setState({changeMode: !this.state.changeMode})}
             >
               <TextPingFang style={styles.text_update}>更正</TextPingFang>

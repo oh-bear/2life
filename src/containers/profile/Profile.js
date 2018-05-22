@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import {
   View,
   StyleSheet,
+  Platform,
   ScrollView,
   TouchableOpacity,
   Image
@@ -254,14 +255,17 @@ export default class Profile extends Component {
               <Image style={styles.row_indicator} source={require('../../../res/images/common/icon_indicator.png')}/>
             </TouchableOpacity>
 
+            {Platform.OS==='ios'?
             <TouchableOpacity
-              style={[styles.row, styles.row_border_bottom]}
-              onPress={() => Actions.jump(SCENE_PROFILE_REWARD)}
-            >
-              <Image source={require('../../../res/images/profile/icon_reward.png')}/>
-              <TextPingFang style={styles.text_row_left}>打赏</TextPingFang>
-              <Image style={styles.row_indicator} source={require('../../../res/images/common/icon_indicator.png')}/>
-            </TouchableOpacity>
+                style={[styles.row, styles.row_border_bottom]}
+                onPress={() => Actions.jump(SCENE_PROFILE_REWARD)}
+              >
+                <Image source={require('../../../res/images/profile/icon_reward.png')}/>
+                <TextPingFang style={styles.text_row_left}>打赏</TextPingFang>
+                <Image style={styles.row_indicator} source={require('../../../res/images/common/icon_indicator.png')}/>
+              </TouchableOpacity>
+             :null}
+
 
           </ScrollView>
 

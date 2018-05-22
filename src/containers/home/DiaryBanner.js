@@ -150,7 +150,7 @@ export default class DiaryBanner extends Component {
     return (
       <View style={[styles.container, { display: this.props.showBanner ? 'flex' : 'none' }]} animation='fadeIn'>
         <CommonNav
-          navStyle={[styles.nav_style, { display: this.props.showNav ? 'flex' : 'none' }]}
+          navStyle={[styles.nav_style, { display: this.props.showNav ? 'flex' : 'none'}]}
           navBarStyle={styles.navbar_style}
           onPressBack={this.props.onPressBack}
           rightButton={this.props.rightButton}
@@ -172,7 +172,8 @@ export default class DiaryBanner extends Component {
         </Swiper>
 
         <View
-          style={[styles.bottom_bar, { display: this.props.showBottomBar ? 'flex' : 'none' }]}>
+          style={[styles.bottom_bar, { display: this.props.showBottomBar ? 'flex' : 'none',
+          position: this.props.showBottomBar ? 'absolute' : 'relative'  }]}>
           <TouchableOpacity style={styles.icon_container} onPress={() => this._removeImg()}>
             <Image source={require('../../../res/images/home/icon_remove_photo.png')}/>
           </TouchableOpacity>
