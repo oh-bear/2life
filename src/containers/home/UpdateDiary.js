@@ -89,7 +89,7 @@ export default class UpdateDiary extends Component {
       note_id: this.props.diary.id,
       title,
       content,
-      images: [...imageList, ...(images.split(','))].join(','),
+      images: [...imageList, ...(images.length ? images.split(',') : [])].join(','),
       mode: this.props.diary.mode
     }
     const res = await HttpUtils.post(NOTES.update, data)
