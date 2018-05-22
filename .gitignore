@@ -69,6 +69,8 @@ android/.gradle/
 android/gradle/
 android/gradle.properties
 
+
+
 .idea/
 .DS_Store
 package-lock.json
