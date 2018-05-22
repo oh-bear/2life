@@ -4,7 +4,8 @@ import {
   StyleSheet,
   TextInput,
   Keyboard,
-  Alert
+  Alert,
+  BackHandler
 } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { connect } from 'react-redux'
@@ -59,12 +60,22 @@ export default class UpdateDiary extends Component {
         keyboardHeight: 0
       })
     })
+    BackHandler.addEventListener('hardwareBackPress', this.onBackAndroid);
 
     this.setState({
       title: this.props.diary.title,
       content: this.props.diary.content,
       imageList: this.props.diary.images ? this.props.diary.images.split(',') : []
     })
+  }
+  onBackAndroid = () => {
+    this.saveDiary()
+    return true;
+   };
+
+
+  componentWillUnmount() {
+      BackHandler.removeEventListener('hardwareBackPress',this.onBackAndroid);
   }
 
   async saveDiary() {

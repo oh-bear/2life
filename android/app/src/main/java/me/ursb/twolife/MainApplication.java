@@ -42,7 +42,7 @@ public class MainApplication extends Application implements ReactApplication {
             new SplashScreenReactPackage(),
             new ImagePickerPackage(),
             new RNIapPackage(),
-            new JPushPackage(false,false)
+            new JPushPackage(true,true)
       );
     }
   };
