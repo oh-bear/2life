@@ -68,6 +68,7 @@ android/app/twolife.jks
 android/.gradle/
 android/gradle/
 android/gradle.properties
+android/local.properties
 
 
 

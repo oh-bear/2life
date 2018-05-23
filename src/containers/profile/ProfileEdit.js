@@ -5,6 +5,7 @@ import {
   ScrollView,
   TouchableOpacity,
   Image,
+  Platform,
   TextInput
 } from 'react-native'
 
@@ -33,7 +34,7 @@ export default class ProfileEdit extends Component {
   }
 
   componentDidMount() {
-    this.setState({ user: this.props.user })
+    this.setState({ user: this.props.user,name:this.props.user.name })
   }
 
   async seleceFace() {
@@ -106,12 +107,20 @@ export default class ProfileEdit extends Component {
               <TextInput
                 ref={ref => this.name_ipt = ref}
                 style={styles.text_row_right}
-                value={this.state.user.name}
+                value={this.state.name}
                 maxLength={48}
                 underlineColorAndroid='transparent'
                 returnKeyType='done'
                 enablesReturnKeyAutomatically
-                onChangeText={name => this.setState({ name })}
+                onChangeText={name => {
+                  //if(Platform.OS === 'ios'){
+                      //  this.setState({ name })
+                  // }else{
+                  //   let user = this.state.user
+                  //   user.name = name
+                     this.setState({name:name})
+                  // }
+                }}
                 onSubmitEditing={() => this.updateUser()}
               />
               <TouchableOpacity
