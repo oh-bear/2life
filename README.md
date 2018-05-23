@@ -12,6 +12,8 @@
 
 * App Store 下载地址：[https://itunes.apple.com/cn/app/%E5%8F%8C%E7%94%9F/id1245100877?l=en&mt=8](https://itunes.apple.com/cn/app/%E5%8F%8C%E7%94%9F/id1245100877?l=en&mt=8)
 
+* Android 下载地址：[https://www.pgyer.com/2life](https://www.pgyer.com/2life)
+
 * 前端 GitHub 地址：[https://github.com/oh-bear/2life](https://github.com/oh-bear/2life)
 
 * 后端 GitHub 地址：[https://github.com/airingursb/2life-server](https://github.com/airingursb/2life-server)
@@ -151,8 +153,13 @@
 
 ## Contributors
 
+### Developers
 * @[Airing](https://github.com/airingursb)
 * @[lightnate](https://github.com/lightnate)
+* @[唐墨夏](https://github.com/csfwff)
+
+### Participants
 * @[LinDing](https://github.com/linding)
 * @[Jsonsnow](https://github.com/jsonsnow)
+* @[煜寒了](https://github.com/yuhanle)
 * @[mieruko0713](https://github.com/mieruko0713)
