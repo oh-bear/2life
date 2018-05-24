@@ -29,11 +29,11 @@ export default class ProfileEdit extends Component {
 
   state = {
     user: {},
-    name: this.props.user.name
+    name: ''
   }
 
   componentDidMount() {
-    this.setState({ user: this.props.user })
+    this.setState({ user: this.props.user, name: this.props.user.name })
   }
 
   async seleceFace() {
@@ -105,7 +105,7 @@ export default class ProfileEdit extends Component {
               <TextInput
                 ref={ref => this.name_ipt = ref}
                 style={styles.text_row_right}
-                value={this.state.name}
+                value={this.state.user.name}
                 maxLength={48}
                 returnKeyType='done'
                 enablesReturnKeyAutomatically
