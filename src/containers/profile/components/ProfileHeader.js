@@ -17,7 +17,7 @@ export default class ProfileHeader extends Component {
 
   render() {
     return (
-      <View style={styles.container}>
+      <View style={[styles.container, this.props.headerStyle]}>
         <CommonNav
           navBarStyle={styles.navbar}
           rightButton={this.props.rightButton}
@@ -42,7 +42,7 @@ const styles = StyleSheet.create({
     marginLeft: getResponsiveWidth(24),
     color: '#000',
     fontSize: 34,
-    fontWeight: 'bold'
+    fontWeight: '500'
   },
   text_desc: {
     marginLeft: getResponsiveWidth(24),

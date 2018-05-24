@@ -136,7 +136,7 @@ export default class UpdateDiary extends Component {
 
           <TextInput
             style={styles.text_title}
-            value={this.state.title}
+            value={this.props.diary.title}
             underlineColorAndroid='transparent'
             onChangeText={title => this.setState({ title })}
             placeholder='标题'
@@ -147,7 +147,7 @@ export default class UpdateDiary extends Component {
 
           <TextInput
             style={styles.text_content}
-            value={this.state.content}
+            value={this.props.diary.content}
             underlineColorAndroid='transparent'
             onChangeText={content => this.setState({ content })}
             placeholder='请输入正文'

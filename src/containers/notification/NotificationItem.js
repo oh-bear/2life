@@ -9,6 +9,7 @@ import {
 } from 'react-native'
 import PropTypes from 'prop-types'
 import { Actions } from 'react-native-router-flux'
+import Swipeout from 'react-native-swipeout'
 
 import {
   getResponsiveWidth,
@@ -70,25 +71,42 @@ export default class NotificationItem extends Component {
     }
 
     return (
-      <View style={styles.container}>
-        <Image
-          style={styles.icon}
-          source={source}/>
-        <TouchableOpacity
-          style={styles.content_container}
-          activeOpacity={1}
-          onPress={() => this._jumpWeb()}
-        >
-          <Text style={styles.title}>{this.props.data.title}</Text>
-          <Text style={styles.date}>{this._convertTime(this.props.data.date)}</Text>
-          <View style={styles.line}/>
-        </TouchableOpacity>
-      </View>
+      <Swipeout
+        style={styles.swipeout}
+        disabled={this.props.data.type === 0 || this.props.data.type === 101 || this.props.data.type === 102}
+        right={[
+          {
+            text: '删除',
+            backgroundColor: '#FF5757',
+            autoClose: true,
+            // TODO: 接入删除通知接口
+            onPress: () => {}
+          }
+        ]}
+      >
+        <View style={styles.container}>
+          <Image
+            style={styles.icon}
+            source={source}/>
+          <TouchableOpacity
+            style={styles.content_container}
+            activeOpacity={1}
+            onPress={() => this._jumpWeb()}
+          >
+            <Text style={styles.title}>{this.props.data.title}</Text>
+            <Text style={styles.date}>{this._convertTime(this.props.data.date)}</Text>
+            <View style={styles.line}/>
+          </TouchableOpacity>
+        </View>
+      </Swipeout>
     )
   }
 }
 
 const styles = StyleSheet.create({
+  swipeout: {
+    backgroundColor: '#fff'
+  },
   container: {
     width: WIDTH,
     flexDirection: 'row',
@@ -98,16 +116,17 @@ const styles = StyleSheet.create({
     width: getResponsiveWidth(279),
     marginLeft: getResponsiveWidth(30),
   },
-  icon: {},
+  icon: {
+  },
   title: {
     fontFamily: 'PingFang SC',
     fontSize: 20,
-    color: '#444',
+    color: '#000',
   },
   date: {
     fontFamily: 'PingFang SC',
     fontSize: 10,
-    color: '#AAA',
+    color: '#000',
     marginTop: getResponsiveHeight(16),
   },
   line: {
