@@ -4,7 +4,6 @@ import {
   StyleSheet,
   FlatList,
   DeviceEventEmitter,
-  WebView
 } from 'react-native'
 import { ifIphoneX } from 'react-native-iphone-x-helper'
 
@@ -89,10 +88,6 @@ export default class Notification extends Component {
             ListEmptyComponent={this._renderEmpty}
           />
         </View>
-        <WebView
-          style={{ width: 200, height: 200, backgroundColor: 'red' }}
-          source={{ uri: 'https://me.ursb.me' }}
-        />
       </Container>
     )
   }
@@ -114,7 +109,6 @@ const styles = StyleSheet.create({
   notification_container: {
     width: WIDTH,
     paddingLeft: getResponsiveWidth(24),
-    paddingRight: getResponsiveWidth(24),
     marginBottom: getResponsiveHeight(48),
     backgroundColor: '#fff',
   },
