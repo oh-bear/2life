@@ -34,7 +34,7 @@ export default class ProfileEdit extends Component {
   }
 
   componentDidMount() {
-    this.setState({ user: this.props.user,name:this.props.user.name })
+    this.setState({ user: this.props.user, name: this.props.user.name })
   }
 
   async seleceFace() {
@@ -68,7 +68,6 @@ export default class ProfileEdit extends Component {
 
   async updateUser() {
     const data = {
-      sex: this.state.user.sex,
       name: this.state.name,
       face: this.state.user.face
     }

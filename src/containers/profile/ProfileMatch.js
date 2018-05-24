@@ -379,7 +379,7 @@ const styles = StyleSheet.create({
   question_container: {
     height: getResponsiveWidth(63),
     justifyContent: 'space-between',
-    marginTop: getResponsiveWidth(24)
+    marginBottom: getResponsiveWidth(24)
   },
   text_question: {
     color: '#444',
@@ -396,7 +396,7 @@ const styles = StyleSheet.create({
     marginRight: getResponsiveWidth(24),
     borderWidth: getResponsiveWidth(1.3),
     borderColor: 'transparent',
-    borderRadius: getResponsiveWidth(8)
+    borderRadius: getResponsiveWidth(4)
   },
   active_btn: {
     borderColor: '#2DC3A6',
@@ -437,6 +437,7 @@ const styles = StyleSheet.create({
     borderRadius: getResponsiveWidth(24)
   },
   text_start_btn: {
-    color: '#fff'
+    color: '#fff',
+    fontSize: 20
   }
 })

@@ -96,7 +96,10 @@ export default class ProfileReward extends Component {
   render() {
     return (
       <Container>
-        <ProfileHeader title='打赏'/>
+        <ProfileHeader
+          title='打赏'
+          headerStyle={styles.header_style}
+        />
         <Image source={this.state.bg}/>
         <View style={styles.container}>
           <TouchableOpacity
@@ -168,6 +171,9 @@ export default class ProfileReward extends Component {
 }
 
 const styles = StyleSheet.create({
+  header_style: {
+    paddingBottom: 0,
+  },
   container: {
     width: WIDTH,
     flexDirection: 'row',

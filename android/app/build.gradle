@@ -81,6 +81,11 @@ def enableSeparateBuildPerCPUArchitecture = false
  * Run Proguard to shrink the Java bytecode in release builds.
  */
 def enableProguardInReleaseBuilds = true
+def releaseTime() {
+    return new Date().format("yyyy.MM.dd", TimeZone.getTimeZone("UTC"))
+}
+
+
 
 android {
     compileSdkVersion 23
@@ -90,15 +95,12 @@ android {
         applicationId "me.ursb.twolife"
         minSdkVersion 16
         targetSdkVersion 22
-        versionCode 3
+        versionCode 4
         versionName "2.0.3"
         manifestPlaceholders = [
                 JPUSH_APPKEY: "67fdf21f35e554cc0b985e4e",
                 APP_CHANNEL : "default"
         ]
-
-
-
         ndk {
             abiFilters "armeabi-v7a", "x86"
         }
@@ -125,6 +127,7 @@ android {
             signingConfig signingConfigs.release
             minifyEnabled enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
+
         }
     }
     // applicationVariants are e.g. debug, release
@@ -138,7 +141,18 @@ android {
                 output.versionCodeOverride =
                         versionCodes.get(abi) * 1048576 + defaultConfig.versionCode
             }
+            def outputFile = output.outputFile
+            if (outputFile != null && outputFile.name.endsWith('.apk')) {
+                //这里修改apk文件名
+                def fileName = outputFile.name.replace("app", "测试");
+                def fileName1 = "twolife-${variant.name}-${variant.versionName}-build${variant.versionCode}-${releaseTime()}.apk"
+                output.outputFile = new File(outputFile.parent, fileName1)
+            }
+
+
+//            outputFileName = "yundian-${variant.name}-${variant.versionName}-build${variant.versionCode}-${releaseTime()}.apk"
         }
+
     }
 }
 
