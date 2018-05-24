@@ -235,6 +235,7 @@ const styles = StyleSheet.create({
   text_title: {
     color: '#000',
     fontSize: 24,
+    fontWeight: '500',
     paddingLeft: getResponsiveWidth(24),
     paddingRight: getResponsiveWidth(24),
     paddingTop: getResponsiveWidth(48),

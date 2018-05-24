@@ -29,7 +29,7 @@ export default class ProfileEdit extends Component {
 
   state = {
     user: {},
-    name: ''
+    name: this.props.user.name
   }
 
   componentDidMount() {
@@ -67,7 +67,6 @@ export default class ProfileEdit extends Component {
 
   async updateUser() {
     const data = {
-      sex: this.state.user.sex,
       name: this.state.name,
       face: this.state.user.face
     }
@@ -106,7 +105,7 @@ export default class ProfileEdit extends Component {
               <TextInput
                 ref={ref => this.name_ipt = ref}
                 style={styles.text_row_right}
-                value={this.state.user.name}
+                value={this.state.name}
                 maxLength={48}
                 returnKeyType='done'
                 enablesReturnKeyAutomatically

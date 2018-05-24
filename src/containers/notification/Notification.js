@@ -107,7 +107,7 @@ const styles = StyleSheet.create({
     }, {
       paddingTop: getResponsiveHeight(28),
     }),
-    color: '#444',
+    color: '#000',
     fontSize: 34,
     fontWeight: '500',
   },

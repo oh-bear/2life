@@ -67,7 +67,7 @@ export function getMonth(month) {
     chinese_month = '十一月'
     break
   case 11:
-    chinese_month = '腊月'
+    chinese_month = '十二月'
     break
   }
   return chinese_month

@@ -98,16 +98,17 @@ const styles = StyleSheet.create({
     width: getResponsiveWidth(279),
     marginLeft: getResponsiveWidth(30),
   },
-  icon: {},
+  icon: {
+  },
   title: {
     fontFamily: 'PingFang SC',
     fontSize: 20,
-    color: '#444',
+    color: '#000',
   },
   date: {
     fontFamily: 'PingFang SC',
     fontSize: 10,
-    color: '#AAA',
+    color: '#000',
     marginTop: getResponsiveHeight(16),
   },
   line: {

@@ -280,7 +280,7 @@ const styles = StyleSheet.create({
     }, {
       paddingTop: getResponsiveHeight(28),
     }),
-    color: '#444',
+    color: '#000',
     fontSize: 34,
     fontWeight: '500',
   },
@@ -305,7 +305,7 @@ const styles = StyleSheet.create({
   },
   head_left_top: {},
   text_name: {
-    color: '#444',
+    color: '#000',
     fontSize: 24,
   },
   head_left_bottom: {
@@ -314,8 +314,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   text_check: {
-    color: '#aaa',
+    color: '#000',
     fontSize: 12,
+    fontWeight: '300'
   },
   head_right: {
     justifyContent: 'center',
@@ -344,15 +345,16 @@ const styles = StyleSheet.create({
   },
   text_row_left: {
     marginLeft: getResponsiveWidth(24),
-    color: '#444',
+    color: '#000',
     fontSize: 16,
     fontWeight: '500'
   },
   text_row_desc: {
     position: 'absolute',
     left: getResponsiveWidth(100),
-    color: '#aaa',
-    fontSize: 16
+    color: '#000',
+    fontSize: 16,
+    fontWeight: '300'
   },
   row_indicator: {
     position: 'absolute',

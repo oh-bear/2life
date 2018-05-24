@@ -96,13 +96,14 @@ const styles = StyleSheet.create({
     marginTop: getResponsiveWidth(215),
     color: '#000',
     fontSize: 24,
-    fontWeight: 'bold',
+    fontWeight: '500',
     textAlign: 'center'
   },
   text_stitle: {
     marginTop: getResponsiveWidth(8),
     color: '#000',
     fontSize: 16,
+    fontWeight: '400',
     textAlign: 'center'
   },
   btn: {

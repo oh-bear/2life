@@ -423,8 +423,7 @@ export default class Home extends Component {
               onPress={() => this.exchangeWM()}
             >
               <Image style={styles.weather_icon} source={this.state.weather_icon}/>
-              <TextPingFang
-                style={[styles.text_weather, { color: this.state.showMe ? '#aaa' : '#aaa' }]}>{this.state.weather_text}</TextPingFang>
+              <TextPingFang style={styles.text_weather}>{this.state.weather_text}</TextPingFang>
             </TouchableOpacity>
 
             <TouchableOpacity
@@ -482,12 +481,14 @@ const styles = StyleSheet.create({
     marginLeft: getResponsiveWidth(72)
   },
   text_month: {
-    color: '#444',
-    fontSize: 34
+    color: '#000',
+    fontSize: 34,
+    fontWeight: '500'
   },
   text_year: {
     color: '#000',
     fontSize: 34,
+    fontWeight: '300',
     marginLeft: getResponsiveWidth(4)
   },
   img_tri: {
@@ -567,8 +568,9 @@ const styles = StyleSheet.create({
   // },
   text_weather: {
     marginLeft: getResponsiveWidth(24),
-    color: '#aaa',
+    color: '#000',
     fontSize: 14,
+    fontWeight: '500'
   },
   weather_exchange: {
     position: 'absolute',

@@ -139,7 +139,10 @@ export default class DiaryDetail extends Component {
   renderRightButton() {
     if (this.props.user.id === this.props.diary.user_id) {
       return (
-        <TouchableOpacity onPress={() => this.showOptions()}>
+        <TouchableOpacity
+          style={styles.nav_right}
+          onPress={() => this.showOptions()}
+        >
           <Image source={require('../../../res/images/common/icon_more_black.png')}/>
         </TouchableOpacity>
       )
@@ -267,6 +270,10 @@ export default class DiaryDetail extends Component {
 }
 
 const styles = StyleSheet.create({
+  nav_right: {
+    justifyContent: 'center',
+    height: getResponsiveWidth(30)
+  },
   date_container: {
     width: WIDTH,
     flexDirection: 'row',
@@ -281,6 +288,7 @@ const styles = StyleSheet.create({
   text_title: {
     color: '#000',
     fontSize: 24,
+    fontWeight: '500',
     paddingLeft: getResponsiveWidth(24),
     paddingRight: getResponsiveWidth(24),
     paddingTop: getResponsiveWidth(48),
@@ -301,7 +309,7 @@ const styles = StyleSheet.create({
     marginLeft: getResponsiveWidth(8),
     color: '#000',
     fontSize: 14,
-    fontWeight: 'bold'
+    fontWeight: '500'
   },
   line: {
     width: getResponsiveWidth(40),
@@ -321,7 +329,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'flex-start',
     alignItems: 'center',
-    paddingLeft: getResponsiveWidth(24)
+    paddingLeft: getResponsiveWidth(24),
   },
   location_icon: {
     marginRight: getResponsiveWidth(8)
@@ -336,6 +344,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginLeft: getResponsiveWidth(24),
     marginRight: getResponsiveWidth(24),
+    marginTop: getResponsiveWidth(16),
     borderBottomWidth: getResponsiveWidth(1),
     borderBottomColor: '#f5f5f5'
   },

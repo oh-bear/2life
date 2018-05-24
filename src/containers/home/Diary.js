@@ -39,7 +39,7 @@ class SingleDiary extends Component {
   render() {
     const diary = this.props.diary
 
-    let other_note_color = '#444'
+    let other_note_color = '#000'
     if (diary.user_id === this.props.partner.id && this.props.partner.sex === 0) {
       other_note_color = '#4590F8'
     }
@@ -121,9 +121,9 @@ const styles = StyleSheet.create({
   date: {
     width: getResponsiveWidth(48),
     paddingTop: getResponsiveWidth(16),
-    color: '#aaa',
+    color: '#000',
     fontSize: 14,
-    fontWeight: 'bold',
+    fontWeight: '500'
   },
   main_container: {
     flex: 1
@@ -143,26 +143,26 @@ const styles = StyleSheet.create({
     flex: 1,
     height: getResponsiveWidth(72),
     paddingRight: getResponsiveWidth(10),
-    justifyContent: 'space-between',
   },
   text_diary_title: {
     color: '#444',
-    fontSize: 20
+    fontSize: 20,
   },
   text_diary_content: {
-    color: '#666',
+    color: '#000',
     fontSize: 12,
-    paddingTop: getResponsiveHeight(8),
+    fontWeight: '400',
+    marginTop: getResponsiveWidth(8),
   },
   img_diary: {
     width: getResponsiveWidth(72),
-    height: getResponsiveWidth(72)
+    height: getResponsiveWidth(72),
+    borderRadius: getResponsiveWidth(8)
   },
   diary_bottom: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     paddingTop: getResponsiveWidth(16),
-    paddingRight: getResponsiveWidth(10),
   },
   time: {
     color: '#aaa',
