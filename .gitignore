@@ -69,7 +69,7 @@ android/.gradle/
 android/gradle/
 android/gradle.properties
 android/local.properties
-
+android/app/app.iml
 
 
 .idea/
