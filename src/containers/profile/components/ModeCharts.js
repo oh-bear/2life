@@ -45,7 +45,7 @@ export default class ModeCharts extends Component {
             data={this.props.modeData}
             svg={{ stroke: '#2DC3A6', strokeWidth: 1.5 }}
             curve={ shape.curveNatural }
-            contentInset={{ top: 15, bottom: 15 }}
+            contentInset={{ top: 20, bottom: 20 }}
             animate={true}
             gridMin={0}
             gridMax={100}
