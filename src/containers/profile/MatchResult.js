@@ -44,7 +44,7 @@ export default class MatchResult extends Component {
     content: (
       <View style={styles.container}>
         <ImageBackground style={styles.bg_matching} source={require('../../../res/images/profile/matchAnimation.gif')}>
-          <Image style={styles.face_user} source={{ uri: this.props.user.face }}/>
+          <Image style={styles.face_user} source={{ uri: this.props.user.face }} />
         </ImageBackground>
       </View>
     ),
@@ -66,24 +66,24 @@ export default class MatchResult extends Component {
   _codeToMessage(code) {
     let message = ''
     switch (code) {
-    case 404:
-      message = '找不到合适的用户哦~请再等等吧！'
-      break
-    case 603:
-      message = '你本月已经没有匹配次数了'
-      break
-    case 604:
-      message = '你必要写过日记才能匹配哦'
-      break
-    case 602:
-      message = '你目前没有匹配权限'
-      break
-    case 600:
-      message = 'TA关闭了匹配功能 QAQ'
-      break
-    case 601:
-      message = 'TA已经有匹配对象了哦'
-      break
+      case 404:
+        message = '找不到合适的用户哦~请再等等吧！'
+        break
+      case 603:
+        message = '你本月已经没有匹配次数了'
+        break
+      case 604:
+        message = '你必要写过日记才能匹配哦'
+        break
+      case 602:
+        message = '你目前没有匹配权限'
+        break
+      case 600:
+        message = 'TA关闭了匹配功能 QAQ'
+        break
+      case 601:
+        message = 'TA已经有匹配对象了哦'
+        break
     }
     return message
   }
@@ -128,33 +128,37 @@ export default class MatchResult extends Component {
     let content = (
       <View style={styles.container}>
         <Animated.View
-          style={{
-            transform: [
-              { translateX: this.state.faceLeft.x },
-              { translateY: this.state.faceLeft.y },
-            ],
-            alignItems: 'center'
-          }}
+          style={[
+            {
+              transform: [
+                { translateX: this.state.faceLeft.x },
+                { translateY: this.state.faceLeft.y },
+              ]
+            },
+            styles.animate_style
+          ]}
         >
           <View style={styles.face_container}>
-            <Image style={styles.face} source={{ uri: this.props.user.face }}/>
+            <Image style={styles.face} source={{ uri: this.props.user.face }} />
           </View>
           <TextPingFang style={styles.text_name}>{this.props.user.name}</TextPingFang>
         </Animated.View>
 
-        <Image source={require('../../../res/images/profile/icon_link.png')}/>
+        <Image source={require('../../../res/images/profile/icon_link.png')} />
 
         <Animated.View
-          style={{
-            transform: [
-              { translateX: this.state.faceRight.x },
-              { translateY: this.state.faceRight.y },
-            ],
-            alignItems: 'center'
-          }}
+          style={[
+            {
+              transform: [
+                { translateX: this.state.faceRight.x },
+                { translateY: this.state.faceRight.y },
+              ]
+            },
+            styles.animate_style
+          ]}
         >
           <View style={styles.face_container}>
-            <Image style={styles.face} source={{ uri: this.state.partner.face }}/>
+            <Image style={styles.face} source={{ uri: this.state.partner.face }} />
           </View>
           <TextPingFang style={styles.text_name}>{this.state.partner.name}</TextPingFang>
         </Animated.View>
@@ -171,7 +175,7 @@ export default class MatchResult extends Component {
   matchFailed(message) {
     let content = (
       <View style={styles.fail_container}>
-        <Image style={styles.img_fail} source={require('../../../res/images/profile/bg_match_fail.png')}/>
+        <Image style={styles.img_fail} source={require('../../../res/images/profile/bg_match_fail.png')} />
         <TextPingFang style={styles.text_fail}>{message}</TextPingFang>
         <TouchableOpacity
           style={styles.start_btn}
@@ -266,10 +270,14 @@ const styles = StyleSheet.create({
     color: '#FF5757',
     fontSize: 16
   },
-  face_container: {
+  animate_style: {
     height: getResponsiveWidth(250),
     alignItems: 'center',
+  },
+  face_container: {
+    alignItems: 'center',
     justifyContent: 'center',
+    marginTop: getResponsiveWidth(80)
   },
   face: {
     width: getResponsiveWidth(88),
@@ -280,8 +288,11 @@ const styles = StyleSheet.create({
     width: WIDTH
   },
   text_name: {
-    color: '#444',
-    fontSize: 24
+    width: getResponsiveWidth(100),
+    textAlign: 'center',
+    color: '#000',
+    fontSize: 24,
+    marginTop: getResponsiveWidth(50)
   },
   text_fail: {
     marginTop: getResponsiveWidth(8),

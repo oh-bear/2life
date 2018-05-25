@@ -5,7 +5,8 @@ import {
   Text,
   Image,
   WebView,
-  TouchableOpacity
+  TouchableOpacity,
+  DeviceEventEmitter
 } from 'react-native'
 import PropTypes from 'prop-types'
 import { Actions } from 'react-native-router-flux'
@@ -18,10 +19,17 @@ import {
 } from '../../common/styles'
 import { SCENE_WEB } from '../../constants/scene'
 
+import HttpUtils from '../../network/HttpUtils'
+import { USERS } from '../../network/Urls'
+
 export default class NotificationItem extends Component {
 
   static propTypes = {
     data: PropTypes.object
+  }
+
+  state = {
+    closeSwiper: false
   }
 
   _convertTime = (ts) => {
@@ -38,6 +46,14 @@ export default class NotificationItem extends Component {
   _jumpWeb() {
     if (this.props.data.url) {
       Actions.jump(SCENE_WEB, { url: this.props.data.url })
+    }
+  }
+
+  async _delete() {
+    const res = await HttpUtils.get(USERS.delete_notification, { message_id: this.props.data.id })
+    if (res.code === 0) {
+      DeviceEventEmitter.emit('flush_notification', {})
+      this.setState({closeSwiper: true})
     }
   }
 
@@ -73,14 +89,14 @@ export default class NotificationItem extends Component {
     return (
       <Swipeout
         style={styles.swipeout}
+        close={this.state.closeSwiper}
         disabled={this.props.data.type === 0 || this.props.data.type === 101 || this.props.data.type === 102}
         right={[
           {
             text: '删除',
             backgroundColor: '#FF5757',
             autoClose: true,
-            // TODO: 接入删除通知接口
-            onPress: () => {}
+            onPress: () => this._delete()
           }
         ]}
       >
