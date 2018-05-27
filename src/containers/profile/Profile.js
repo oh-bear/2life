@@ -357,7 +357,7 @@ const styles = StyleSheet.create({
     marginLeft: getResponsiveWidth(24),
     color: '#000',
     fontSize: 16,
-    fontWeight: '500'
+    fontWeight: '400'
   },
   text_row_desc: {
     position: 'absolute',

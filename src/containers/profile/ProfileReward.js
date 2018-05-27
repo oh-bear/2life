@@ -108,13 +108,13 @@ export default class ProfileReward extends Component {
               this._select(1)
             }}
           >
-            <TextPingFang style={styles.text_top}>赏金</TextPingFang>
+            <TextPingFang style={[styles.text_top, this.state.selecting === 'award_small' ? styles.text_top_selecting : null]}>赏金</TextPingFang>
             <View style={styles.money_container}>
-              <TextPingFang style={styles.text_money}>￥</TextPingFang>
-              <TextPingFang style={[styles.text_money, styles.text_bold]}>6</TextPingFang>
-              <TextPingFang style={styles.text_money}>.00</TextPingFang>
+              <TextPingFang style={[styles.text_money, this.state.selecting === 'award_small' ? styles.text_money_selecting : null]}>￥</TextPingFang>
+              <TextPingFang style={[styles.text_money, styles.text_bold, this.state.selecting === 'award_small' ? styles.text_bold_selecting : null]}>6</TextPingFang>
+              <TextPingFang style={[styles.text_money, this.state.selecting === 'award_small' ? styles.text_money_selecting : null]}>.00</TextPingFang>
             </View>
-            <TextPingFang style={styles.text_bottom}>两罐可乐</TextPingFang>
+            <TextPingFang style={[styles.text_bottom, this.state.selecting === 'award_small' ? styles.text_bottom_selecting : null]}>两罐可乐</TextPingFang>
           </TouchableOpacity>
           <TouchableOpacity
             style={[styles.item, this.state.selecting === 'award_middle' ? styles.item_selecting : null]}
@@ -122,13 +122,13 @@ export default class ProfileReward extends Component {
               this._select(2)
             }}
           >
-            <TextPingFang style={styles.text_top}>赏金</TextPingFang>
+            <TextPingFang style={[styles.text_top, this.state.selecting === 'award_middle' ? styles.text_top_selecting : null]}>赏金</TextPingFang>
             <View style={styles.money_container}>
-              <TextPingFang style={styles.text_money}>￥</TextPingFang>
-              <TextPingFang style={[styles.text_money, styles.text_bold]}>12</TextPingFang>
-              <TextPingFang style={styles.text_money}>.00</TextPingFang>
+              <TextPingFang style={[styles.text_money, this.state.selecting === 'award_middle' ? styles.text_money_selecting : null]}>￥</TextPingFang>
+              <TextPingFang style={[styles.text_money, styles.text_bold, this.state.selecting === 'award_middle' ? styles.text_bold_selecting : null]}>12</TextPingFang>
+              <TextPingFang style={[styles.text_money, this.state.selecting === 'award_middle' ? styles.text_money_selecting : null]}>.00</TextPingFang>
             </View>
-            <TextPingFang style={styles.text_bottom}>一个汉堡</TextPingFang>
+            <TextPingFang style={[styles.text_bottom, this.state.selecting === 'award_middle' ? styles.text_bottom_selecting : null]}>一个汉堡</TextPingFang>
           </TouchableOpacity>
           <TouchableOpacity
             style={[styles.item, this.state.selecting === 'award_big' ? styles.item_selecting : null]}
@@ -136,13 +136,13 @@ export default class ProfileReward extends Component {
               this._select(3)
             }}
           >
-            <TextPingFang style={styles.text_top}>赏金</TextPingFang>
+            <TextPingFang style={[styles.text_top, this.state.selecting === 'award_big' ? styles.text_top_selecting : null]}>赏金</TextPingFang>
             <View style={styles.money_container}>
-              <TextPingFang style={styles.text_money}>￥</TextPingFang>
-              <TextPingFang style={[styles.text_money, styles.text_bold]}>30</TextPingFang>
-              <TextPingFang style={styles.text_money}>.00</TextPingFang>
+              <TextPingFang style={[styles.text_money, this.state.selecting === 'award_big' ? styles.text_money_selecting : null]}>￥</TextPingFang>
+              <TextPingFang style={[styles.text_money, styles.text_bold, this.state.selecting === 'award_big' ? styles.text_bold_selecting : null]}>30</TextPingFang>
+              <TextPingFang style={[styles.text_money, this.state.selecting === 'award_big' ? styles.text_money_selecting : null]}>.00</TextPingFang>
             </View>
-            <TextPingFang style={styles.text_bottom}>一杯咖啡</TextPingFang>
+            <TextPingFang style={[styles.text_bottom, this.state.selecting === 'award_big' ? styles.text_bottom_selecting : null]}>一杯咖啡</TextPingFang>
           </TouchableOpacity>
         </View>
 
@@ -194,8 +194,11 @@ const styles = StyleSheet.create({
     borderColor: '#2DC3A6',
   },
   text_top: {
-    color: '#000',
+    color: '#aaa',
     fontSize: 12
+  },
+  text_top_selecting: {
+    color: '#000'
   },
   money_container: {
     flexDirection: 'row',
@@ -203,19 +206,28 @@ const styles = StyleSheet.create({
     top: -8
   },
   text_money: {
-    color: '#000',
+    color: '#aaa',
     fontSize: 12,
-    fontWeight: 'bold',
+    fontWeight: '500',
+  },
+  text_money_selecting: {
+    color: '#2DC3A6',
   },
   text_bold: {
     fontSize: 32,
     textAlignVertical: 'bottom',
     top: 8
   },
+  text_bold_selecting: {
+    color: '#000'
+  },
   text_bottom: {
-    color: '#000',
+    color: '#aaa',
     fontSize: 12,
-    fontWeight: 'bold'
+    fontWeight: '500'
+  },
+  text_bottom_selecting: {
+    color: '#000',
   },
   btn: {
     width: getResponsiveWidth(112),
