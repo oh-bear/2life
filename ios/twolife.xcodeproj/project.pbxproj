@@ -396,13 +396,6 @@
 			remoteGlobalIDString = 86D238421BD0BB9E00C75D01;
 			remoteInfo = RCTWeChat;
 		};
-		A0FB14E920BA7DB500E71FFF /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 05901D607EDC466A94BCA43E /* RCTWeChat.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 10D6D7A41F160C250066F0F3;
-			remoteInfo = RCTWeChatTests;
-		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -878,7 +871,6 @@
 			isa = PBXGroup;
 			children = (
 				A0FB14E820BA7DB500E71FFF /* libRCTWeChat.a */,
-				A0FB14EA20BA7DB500E71FFF /* RCTWeChatTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1370,13 +1362,6 @@
 			fileType = archive.ar;
 			path = libRCTWeChat.a;
 			remoteRef = A0FB14E720BA7DB500E71FFF /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		A0FB14EA20BA7DB500E71FFF /* RCTWeChatTests.xctest */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.cfbundle;
-			path = RCTWeChatTests.xctest;
-			remoteRef = A0FB14E920BA7DB500E71FFF /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 /* End PBXReferenceProxy section */

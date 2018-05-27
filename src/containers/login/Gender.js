@@ -49,10 +49,11 @@ export default class Gender extends Component {
       badges: -1
     }
     const res = await updateUser(this.props.user, data)
-    
+    console.log(res)
     if (res.code === 0) {
+      console.log(res)
 
-      JPushModule.setAlias(this.props.user.id.toString(), success => {
+      JPushModule.setAlias(res.data.user.id.toString(), success => {
         console.log(success)
       })
 

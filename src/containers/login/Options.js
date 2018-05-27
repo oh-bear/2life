@@ -20,7 +20,7 @@ import {
   WIDTH,
   getResponsiveHeight,
 } from '../../common/styles'
-import { SCENE_LOGIN_SIGNIN, SCENE_LOGIN_SIGNUP, SCENE_LOGIN_NICKNAME } from '../../constants/scene'
+import { SCENE_LOGIN_SIGNIN, SCENE_LOGIN_SIGNUP, SCENE_LOGIN_NICKNAME, SCENE_INDEX } from '../../constants/scene'
 import Storage from '../../common/storage'
 
 import HttpUtils from '../../network/HttpUtils'
@@ -34,7 +34,7 @@ export default class Options extends Component {
   }
 
   componentDidMount() {
-    WeChat.isWXAppInstalled().then(isWXAppInstalled => this.setState({ isWXAppInstalled: true }))
+    WeChat.isWXAppInstalled().then(isWXAppInstalled => this.setState({ isWXAppInstalled }))
   }
 
   wechat_login() {
@@ -65,10 +65,10 @@ export default class Options extends Component {
           // 用户未绑定
           if (res.code === 404) {
             const openid = res.data
-            HttpUtils.post(USERS.bind_account, { account: openid,  openid}).then(res => {
-              if (res.code === 0) {
-                Actions.reset(SCENE_LOGIN_NICKNAME, { user: res.data })
-              }
+            HttpUtils.post(USERS.bind_account, { account: openid, openid }).then(res => {
+              const { uid, token, timestamp } = res.key
+              setToken({ uid, token, timestamp })
+              Actions.reset(SCENE_LOGIN_NICKNAME, { user: res.data })
             })
           }
         })
