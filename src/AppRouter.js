@@ -20,11 +20,12 @@ import Profile from './containers/profile/Profile'
 import ProfileBadge from './containers/profile/ProfileBadge'
 import ProfileEdit from './containers/profile/ProfileEdit'
 import ProfileMatch from './containers/profile/ProfileMatch'
+import MatchResult from './containers/profile/MatchResult'
 import ProfileMode from './containers/profile/ProfileMode'
 import ProfileSync from './containers/profile/ProfileSync'
 import ProfileReward from './containers/profile/ProfileReward'
 import ProfileNote from './containers/profile/ProfileNote'
-import MatchResult from './containers/profile/MatchResult'
+import ProfileFeedBack from './containers/profile/ProfileFeedBack'
 
 import { Scene, Router, ActionConst } from 'react-native-router-flux'
 import * as scenes from './constants/scene'
@@ -171,6 +172,13 @@ export default class AppRouter extends Component {
               key={scenes.SCENE_PROFILE_REWARD}
               component={ProfileReward}
               title='打赏'
+              hideNavBar
+              duration={0}
+            />
+            <Scene
+              key={scenes.SCENE_PROFILE_FEEDBACK}
+              component={ProfileFeedBack}
+              title='反馈'
               hideNavBar
               duration={0}
             />
