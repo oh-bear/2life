@@ -16,11 +16,27 @@
 
 #import <React/RCTBundleURLProvider.h>
 #import <React/RCTRootView.h>
+#import <React/RCTLinkingManager.h>
 
 @interface AppDelegate ()<JPUSHRegisterDelegate>
 @end
 
 @implementation AppDelegate
+
+// ios 8.x or older
+- (BOOL)application:(UIApplication *)application openURL:(NSURL *)url
+  sourceApplication:(NSString *)sourceApplication annotation:(id)annotation
+{
+  return [RCTLinkingManager application:application openURL:url
+                      sourceApplication:sourceApplication annotation:annotation];
+}
+
+// ios 9.0+
+- (BOOL)application:(UIApplication *)application openURL:(NSURL *)url
+            options:(NSDictionary<NSString*, id> *)options
+{
+  return [RCTLinkingManager application:application openURL:url options:options];
+}
 
 - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken
 {

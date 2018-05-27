@@ -41,7 +41,7 @@ export default class Gender extends Component {
     const data = {
       sex: this.state.gender,
       name: this.props.user.name,
-      face: this.props.user.face,
+      face: this.state.gender ? 'https://airing.ursb.me/image/twolife/female.png' : 'https://airing.ursb.me/image/twolife/male.png',
       status: 502,
       latitude: 0,
       longitude: 0,
@@ -51,17 +51,13 @@ export default class Gender extends Component {
     const res = await updateUser(this.props.user, data)
     
     if (res.code === 0) {
-      const res = await HttpUtils.get(URL_user, { user_id: this.props.user.id })
 
-      if (res.code === 0) {
+      JPushModule.setAlias(this.props.user.id.toString(), success => {
+        console.log(success)
+      })
 
-        JPushModule.setAlias(this.props.user.id.toString(), success => {
-          console.log(success)
-        })
-
-        store.dispatch(fetchProfileSuccess(res.data))
-        Actions.reset(SCENE_INDEX, { user: res.data })
-      }
+      store.dispatch(fetchProfileSuccess(res.data.user))
+      Actions.reset(SCENE_INDEX, { user: res.data.user })
     }
   }
 

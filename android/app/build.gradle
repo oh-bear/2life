@@ -131,6 +131,7 @@ android {
 }
 
 dependencies {
+    compile project(':react-native-wechat')
     compile project(':react-native-iap')
     compile project(':react-native-svg')
     compile project(':react-native-vector-icons')

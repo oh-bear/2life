@@ -3,22 +3,78 @@ import {
   StyleSheet,
   TouchableOpacity,
 } from 'react-native'
+import * as WeChat from 'react-native-wechat'
+import JPushModule from 'jpush-react-native'
 
 import { View } from 'react-native-animatable'
-import { Actions } from 'react-native-router-flux'
+import { Actions, Scene } from 'react-native-router-flux'
 
 import TextPingFang from '../../components/TextPingFang'
 import Banner from './Banner'
+import store from '../../redux/store'
+import { fetchProfileSuccess } from '../../redux/modules/user'
+import { fetchPartnerSuccess } from '../../redux/modules/partner'
 
 import {
   HEIGHT,
   WIDTH,
   getResponsiveHeight,
 } from '../../common/styles'
+import { SCENE_LOGIN_SIGNIN, SCENE_LOGIN_SIGNUP, SCENE_LOGIN_NICKNAME } from '../../constants/scene'
+import Storage from '../../common/storage'
 
-import { SCENE_LOGIN_SIGNIN, SCENE_LOGIN_SIGNUP } from '../../constants/scene'
+import HttpUtils from '../../network/HttpUtils'
+import { setToken } from '../../network/HttpUtils'
+import { USERS } from '../../network/Urls'
 
 export default class Options extends Component {
+
+  state = {
+    isWXAppInstalled: false
+  }
+
+  componentDidMount() {
+    WeChat.isWXAppInstalled().then(isWXAppInstalled => this.setState({ isWXAppInstalled: true }))
+  }
+
+  wechat_login() {
+    const scope = 'snsapi_userinfo'
+    WeChat.sendAuthRequest(scope).then(res => {
+      if (res.errCode === 0) {
+        const { code } = res
+        HttpUtils.post(USERS.oauth_login, { code, type: 'app' }).then(res => {
+          // 用户已绑定，直接登陆
+          if (res.code === 0) {
+            const { uid, token, timestamp } = res.data.key
+            setToken({ uid, token, timestamp })
+
+            // TODO: 返回的用户密码为0，需要更改登陆机制
+            const { account, password } = res.data.user
+            Storage.set('user', { account, password })
+
+            store.dispatch(fetchProfileSuccess(res.data.user))
+            store.dispatch(fetchPartnerSuccess(res.data.partner))
+
+            JPushModule.setAlias(res.data.user.id.toString(), success => {
+              console.log(success)
+            })
+
+            Actions.reset(SCENE_INDEX, { user: res.data.user, partner: res.data.partner })
+          }
+
+          // 用户未绑定
+          if (res.code === 404) {
+            const openid = res.data
+            HttpUtils.post(USERS.bind_account, { account: openid,  openid}).then(res => {
+              if (res.code === 0) {
+                Actions.reset(SCENE_LOGIN_NICKNAME, { user: res.data })
+              }
+            })
+          }
+        })
+      }
+    })
+  }
 
   render() {
     return (
@@ -27,15 +83,16 @@ export default class Options extends Component {
           bg={require('../../../res/images/login/bg_signin.png')}
           title={['Hi', '欢迎来到双生！']}
           showNavLeft={false}
-          // showNavRight={true}
+          showNavRight={false}
         />
 
         <View style={styles.options_container}>
-          {/* <TouchableOpacity
-            style={styles.option}
+          <TouchableOpacity
+            style={[styles.option, { display: this.state.isWXAppInstalled ? 'flex' : 'none' }]}
+            onPress={() => this.wechat_login()}
           >
             <TextPingFang style={styles.text_option}>微信注册并登录</TextPingFang>
-          </TouchableOpacity> */}
+          </TouchableOpacity>
           <TouchableOpacity
             style={styles.option}
             onPress={() => Actions[SCENE_LOGIN_SIGNIN]()}

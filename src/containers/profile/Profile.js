@@ -268,7 +268,7 @@ export default class Profile extends Component {
               style={[styles.row, styles.row_border_bottom]}
               onPress={() => Actions.jump(SCENE_PROFILE_FEEDBACK)}
             >
-              <Image source={require('../../../res/images/profile/icon_reward.png')}/>
+              <Image source={require('../../../res/images/profile/icon_feedback.png')}/>
               <TextPingFang style={styles.text_row_left}>反馈</TextPingFang>
               <Image style={styles.row_indicator} source={require('../../../res/images/common/icon_indicator.png')}/>
             </TouchableOpacity>

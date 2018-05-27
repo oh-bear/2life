@@ -73,7 +73,8 @@ export default class ProfileEdit extends Component {
     try {
       const res = await updateUser(this.state.user, data)
       if (res.code === 0) {
-        store.dispatch(fetchProfileSuccess(Object.assign({}, this.state.user, { name: this.state.name })))
+        store.dispatch(fetchProfileSuccess(res.data.user))
+        // store.dispatch(fetchProfileSuccess(Object.assign({}, this.state.user, { name: this.state.name })))
         Toast.success('修改成功')
       }
     } catch (e) {

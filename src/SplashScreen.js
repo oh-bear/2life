@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View } from 'react-native'
+import { View, NetInfo } from 'react-native'
 import RNSplashScreen from 'react-native-splash-screen'
 import { Actions } from 'react-native-router-flux'
 import { SCENE_INDEX, SCENE_LOGIN_OPTIONS } from './constants/scene'
@@ -15,6 +15,7 @@ import { USERS } from './network/Urls'
 import HttpUtils from './network/HttpUtils'
 import { fetchProfileSuccess } from './redux/modules/user'
 import { fetchPartnerSuccess } from './redux/modules/partner'
+import * as WeChat from 'react-native-wechat'
 
 function mapStateToProps(state) {
   return {
@@ -26,6 +27,13 @@ function mapStateToProps(state) {
 @connect(mapStateToProps)
 class SplashScreen extends Component {
   async componentDidMount() {
+
+    WeChat.registerApp('wxbf371b0ab61d3873')
+
+    NetInfo.addEventListener('connectionChange', connectionInfo => {
+      console.log(connectionInfo.type)
+    })
+
     const user = await Storage.get('user', {})
     if (!user.account || !user.password) {
       Actions[SCENE_LOGIN_OPTIONS]()
