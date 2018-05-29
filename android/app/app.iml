@@ -120,6 +120,7 @@
     <orderEntry type="module" module-name="jcore-react-native" exported="" />
     <orderEntry type="module" module-name="react-native-splash-screen" exported="" />
     <orderEntry type="module" module-name="react-native-iap" exported="" />
+    <orderEntry type="module" module-name="react-native-wechat" exported="" />
     <orderEntry type="module" module-name="react-native-vector-icons" exported="" />
     <orderEntry type="module" module-name="react-native-svg" exported="" />
     <orderEntry type="module" module-name="jpush-react-native" exported="" />

@@ -144,14 +144,12 @@ android {
             def outputFile = output.outputFile
             if (outputFile != null && outputFile.name.endsWith('.apk')) {
                 //这里修改apk文件名
-                def fileName = outputFile.name.replace("app", "测试");
                 def fileName1 = "twolife_${variant.name}_v${variant.versionName}_b${variant.versionCode}_${releaseTime()}.apk"
                 output.outputFile = new File(outputFile.parent, fileName1)
             }
 
 
-//            outputFileName = "yundian-${variant.name}-${variant.versionName}-build${variant.versionCode}-${releaseTime()}.apk"
-        }
+       }
 
     }
 }
