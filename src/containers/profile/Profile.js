@@ -29,7 +29,8 @@ import {
   SCENE_PROFILE_SYNC,
   SCENE_PROFILE_NOTE,
   SCENE_PROFILE_REWARD,
-  SCENE_MATCH_RESULT
+  SCENE_MATCH_RESULT,
+  SCENE_PROFILE_FEEDBACK
 } from '../../constants/scene'
 
 function mapStateToProps(state) {
@@ -267,6 +268,15 @@ export default class Profile extends Component {
              :null}
 
 
+            <TouchableOpacity
+              style={[styles.row, styles.row_border_bottom]}
+              onPress={() => Actions.jump(SCENE_PROFILE_FEEDBACK)}
+            >
+              <Image source={require('../../../res/images/profile/icon_feedback.png')}/>
+              <TextPingFang style={styles.text_row_left}>反馈</TextPingFang>
+              <Image style={styles.row_indicator} source={require('../../../res/images/common/icon_indicator.png')}/>
+            </TouchableOpacity>
+
           </ScrollView>
 
         </View>
@@ -351,7 +361,7 @@ const styles = StyleSheet.create({
     marginLeft: getResponsiveWidth(24),
     color: '#000',
     fontSize: 16,
-    fontWeight: '500'
+    fontWeight: '400'
   },
   text_row_desc: {
     position: 'absolute',

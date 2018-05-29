@@ -12,6 +12,10 @@ export const USERS = {
   update_rate: '/users/update_rate',
   add_last_times: '/users/add_last_times',
   close_connection: '/users/close_connection',
+  delete_notification: '/users/delete_notification', // get {message_id}
+  feedback: '/users/feedback', // post {title, content, type}
+  oauth_login: '/users/oauth_login', // post {code, type}
+  bind_account: '/users/bind_account', // post {account, openid}
 }
 
 export const NOTES = {

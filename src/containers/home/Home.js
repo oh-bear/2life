@@ -593,7 +593,7 @@ const styles = StyleSheet.create({
     marginLeft: getResponsiveWidth(24),
     color: '#000',
     fontSize: 14,
-    fontWeight: '500'
+    fontWeight: '400'
   },
   weather_exchange: {
     position: 'absolute',

@@ -395,21 +395,22 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginRight: getResponsiveWidth(24),
     borderWidth: getResponsiveWidth(1.3),
-    borderColor: 'transparent',
+    borderColor: '#2DC3A6',
     borderRadius: getResponsiveWidth(4)
   },
   active_btn: {
-    borderColor: '#2DC3A6',
+    backgroundColor: '#2DC3A6'
   },
   no_show: {
     display: 'none'
   },
   text_btn: {
-    color: '#aaa',
-    fontSize: 16
+    color: '#000',
+    fontSize: 16,
+    fontWeight: '300'
   },
   active_text: {
-    color: '#2DC3A6'
+    color: '#000'
   },
   input: {
     height: getResponsiveWidth(44),
@@ -437,7 +438,8 @@ const styles = StyleSheet.create({
     borderRadius: getResponsiveWidth(24)
   },
   text_start_btn: {
-    color: '#fff',
-    fontSize: 20
+    color: '#000',
+    fontSize: 20,
+    fontWeight: '300'
   }
 })

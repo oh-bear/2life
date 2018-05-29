@@ -337,7 +337,7 @@ const styles = StyleSheet.create({
   text_title: {
     color: '#000',
     fontSize: 24,
-    fontWeight: '500',
+    fontWeight: '400',
     paddingLeft: getResponsiveWidth(24),
     paddingRight: getResponsiveWidth(24),
     paddingTop: getResponsiveWidth(48),
@@ -358,7 +358,7 @@ const styles = StyleSheet.create({
     marginLeft: getResponsiveWidth(8),
     color: '#000',
     fontSize: 14,
-    fontWeight: '500'
+    fontWeight: '400'
   },
   line: {
     width: getResponsiveWidth(40),
@@ -384,8 +384,9 @@ const styles = StyleSheet.create({
     marginRight: getResponsiveWidth(8)
   },
   text_location: {
-    color: '#aaa',
-    fontSize: 10
+    color: '#000',
+    fontSize: 10,
+    fontWeight: '300'
   },
   mode_container: {
     height: getResponsiveWidth(88),
@@ -400,14 +401,15 @@ const styles = StyleSheet.create({
   text_mode: {
     width: getResponsiveWidth(30),
     marginLeft: getResponsiveWidth(15),
-    color: '#444',
+    color: '#000',
     fontSize: 16,
     fontWeight: 'bold'
   },
   text_value: {
     marginLeft: getResponsiveWidth(8),
-    color: '#aaa',
-    fontSize: 16
+    color: '#000',
+    fontSize: 16,
+    fontWeight: '300'
   },
   update_container: {
     position: 'absolute',

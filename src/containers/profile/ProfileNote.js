@@ -31,7 +31,6 @@ import {
   getWeather,
   diaryClassify,
   getWeatherDesc,
-  updateUser,
   updateReduxUser
 } from '../../common/util'
 

@@ -7,8 +7,9 @@ import {
   Image,
   Platform,
   TextInput
+  Alert
 } from 'react-native'
-
+import { Actions } from 'react-native-router-flux'
 import { Toast } from 'antd-mobile'
 
 import ImagePicker from 'react-native-image-picker'
@@ -23,6 +24,8 @@ import { fetchProfileSuccess } from '../../redux/modules/user'
 import {
   getResponsiveWidth,
 } from '../../common/styles'
+import Storage from '../../common/storage'
+import { SCENE_LOGIN_OPTIONS } from '../../constants/scene'
 
 import { updateUser, postImgToQiniu } from '../../common/util'
 
@@ -74,7 +77,8 @@ export default class ProfileEdit extends Component {
     try {
       const res = await updateUser(this.state.user, data)
       if (res.code === 0) {
-        store.dispatch(fetchProfileSuccess(Object.assign({}, this.state.user, { name: this.state.name })))
+        store.dispatch(fetchProfileSuccess(res.data.user))
+        // store.dispatch(fetchProfileSuccess(Object.assign({}, this.state.user, { name: this.state.name })))
         Toast.success('修改成功')
       }
     } catch (e) {
@@ -82,12 +86,27 @@ export default class ProfileEdit extends Component {
     }
   }
 
+  _logout() {
+    Alert.alert('确定要退出登录吗?', '', [
+      {
+        text: '取消'
+      },
+      {
+        text: '确定',
+        onPress: async () => {
+          await Storage.remove('user')
+          Actions.reset(SCENE_LOGIN_OPTIONS)
+        }
+      }
+    ])
+  }
+
   // TODO: 缺少获取徽章接口
   render() {
     return (
       <Container>
         <View>
-          <ProfileHeader title='个人信息'/>
+          <ProfileHeader title='个人信息' />
 
           <ScrollView scrollEnabled={true} contentContainerStyle={styles.main_container}>
             <TouchableOpacity
@@ -95,8 +114,8 @@ export default class ProfileEdit extends Component {
               onPress={() => this.seleceFace()}
             >
               <TextPingFang style={styles.text_row_left}>头像</TextPingFang>
-              <Image style={styles.row_face} source={{ uri: this.state.user.face }}/>
-              <Image style={styles.row_indicator} source={require('../../../res/images/common/icon_indicator.png')}/>
+              <Image style={styles.row_face} source={{ uri: this.state.user.face }} />
+              <Image style={styles.row_indicator} source={require('../../../res/images/common/icon_indicator.png')} />
             </TouchableOpacity>
 
             <View
@@ -126,7 +145,7 @@ export default class ProfileEdit extends Component {
                 style={styles.row_indicator}
                 onPress={() => this.name_ipt.focus()}
               >
-                <Image source={require('../../../res/images/profile/icon_edit.png')}/>
+                <Image source={require('../../../res/images/profile/icon_edit.png')} />
               </TouchableOpacity>
             </View>
 
@@ -148,6 +167,10 @@ export default class ProfileEdit extends Component {
              }
              </View> */}
           </ScrollView>
+
+          <TouchableOpacity style={styles.btn} onPress={() => this._logout()}>
+            <TextPingFang style={styles.text_btn}>退出登录</TextPingFang>
+          </TouchableOpacity>
         </View>
       </Container>
     )
@@ -202,5 +225,18 @@ const styles = StyleSheet.create({
     marginTop: getResponsiveWidth(16),
     color: '#000',
     fontSize: 16
+  },
+  btn: {
+    position: 'absolute',
+    left: getResponsiveWidth(24),
+    bottom: getResponsiveWidth(80),
+    height: getResponsiveWidth(48),
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  text_btn: {
+    color: '#f00',
+    fontSize: 20,
+    fontWeight: '300'
   }
 })
