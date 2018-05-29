@@ -74,6 +74,8 @@ export default class Options extends Component {
           }
         })
       }
+    }).catch((error)=>{
+      alert(JSON.stringifg(error))
     })
   }
 
