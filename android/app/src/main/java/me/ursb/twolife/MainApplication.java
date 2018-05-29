@@ -33,7 +33,14 @@ public class MainApplication extends Application implements ReactApplication {
 
         @Override
         protected List<ReactPackage> getPackages() {
-            return Arrays.<ReactPackage>asList(new MainReactPackage(), new VectorIconsPackage(), new SvgPackage(), new SplashScreenReactPackage(), new ImagePickerPackage(), new RNIapPackage(), new WeChatPackage(), new JPushPackage(true, true));
+            return Arrays.<ReactPackage>asList(new MainReactPackage(),
+                    new VectorIconsPackage(),
+                    new SvgPackage(),
+                    new SplashScreenReactPackage(),
+                    new ImagePickerPackage(),
+                    new RNIapPackage(),
+                    new WeChatPackage(),
+                    new JPushPackage(true, true));
         }
     };
 

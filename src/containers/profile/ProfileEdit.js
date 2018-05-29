@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
   Image,
   Platform,
-  TextInput
+  TextInput,
   Alert
 } from 'react-native'
 import { Actions } from 'react-native-router-flux'
