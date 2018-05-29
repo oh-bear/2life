@@ -80,6 +80,8 @@ export default class ProfileEdit extends Component {
         store.dispatch(fetchProfileSuccess(res.data.user))
         // store.dispatch(fetchProfileSuccess(Object.assign({}, this.state.user, { name: this.state.name })))
         Toast.success('修改成功')
+      }else {
+        Toast.fail('出错了，等会再试试')
       }
     } catch (e) {
       Toast.fail('出错了，等会再试试')
@@ -140,6 +142,7 @@ export default class ProfileEdit extends Component {
                   // }
                 }}
                 onSubmitEditing={() => this.updateUser()}
+                //onBlur={()=>this.updateUser()}
               />
               <TouchableOpacity
                 style={styles.row_indicator}

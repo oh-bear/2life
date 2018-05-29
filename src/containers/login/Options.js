@@ -40,7 +40,6 @@ export default class Options extends Component {
   wechat_login() {
     const scope = 'snsapi_userinfo'
     WeChat.sendAuthRequest(scope).then(res => {
-      alert(JSON.stringifg(res))
       if (res.errCode === 0) {
         const { code } = res
         HttpUtils.post(USERS.oauth_login, { code, type: 'app' }).then(res => {
@@ -75,7 +74,6 @@ export default class Options extends Component {
         })
       }
     }).catch((error)=>{
-      alert(JSON.stringifg(error))
     })
   }
 
