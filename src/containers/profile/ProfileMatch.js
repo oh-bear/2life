@@ -404,7 +404,7 @@ const styles = StyleSheet.create({
     fontWeight: '300'
   },
   active_text: {
-    color: '#000'
+    color: '#fff'
   },
   input: {
     height: getResponsiveWidth(44),
@@ -425,7 +425,7 @@ const styles = StyleSheet.create({
     borderRadius: getResponsiveWidth(24)
   },
   text_start_btn: {
-    color: '#000',
+    color: '#fff',
     fontSize: 20,
     fontWeight: '300'
   }

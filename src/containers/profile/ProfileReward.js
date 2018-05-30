@@ -241,7 +241,7 @@ const styles = StyleSheet.create({
     borderRadius: getResponsiveWidth(24)
   },
   text_btn: {
-    color: '#000',
+    color: '#fff',
     fontSize: 20,
     fontWeight: '300'
   }

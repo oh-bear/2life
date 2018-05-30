@@ -486,7 +486,7 @@ const styles = StyleSheet.create({
     fontWeight: '500'
   },
   text_year: {
-    color: '#000',
+    color: '#aaa',
     fontSize: 34,
     fontWeight: '300',
     marginLeft: getResponsiveWidth(4)
@@ -568,7 +568,7 @@ const styles = StyleSheet.create({
   // },
   text_weather: {
     marginLeft: getResponsiveWidth(24),
-    color: '#000',
+    color: '#aaa',
     fontSize: 14,
     fontWeight: '400'
   },

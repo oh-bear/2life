@@ -1,11 +1,11 @@
 import React, { Component } from 'react'
 import {
-	View,
-	StyleSheet,
-	TouchableOpacity,
-	ScrollView,
-	Platform,
-	TextInput
+  View,
+  StyleSheet,
+  TouchableOpacity,
+  ScrollView,
+  Platform,
+  TextInput
 } from 'react-native'
 import Toast from 'antd-mobile/lib/toast'
 
@@ -15,8 +15,8 @@ import Popup from '../../components/Popup'
 import ProfileHeader from './components/ProfileHeader'
 
 import {
-	WIDTH,
-	getResponsiveWidth,
+  WIDTH,
+  getResponsiveWidth,
 } from '../../common/styles'
 
 import HttpUtils from '../../network/HttpUtils'
@@ -24,129 +24,130 @@ import { USERS } from '../../network/Urls'
 
 export default class ProfileFeedBack extends Component {
 
-	state = {
-		type: null,
-		content: ''
-	}
+  state = {
+    type: null,
+    content: ''
+  }
 
-	_setType(type) {
-		
-		if (!type && Platform.OS === 'ios') {
-			return this.setState({ type: 101 })
-		}
+  _setType(type) {
 
-		if (!type && Platform.OS === 'android') {
-			return this.setState({ type: 102 })
-		}
+    if (!type && Platform.OS === 'ios') {
+      return this.setState({ type: 101 })
+    }
 
-		this.setState({ type })
-	}
+    if (!type && Platform.OS === 'android') {
+      return this.setState({ type: 102 })
+    }
 
-	_submit() {
-		if (!this.state.type) return Toast.info('请先选择反馈类型', 1.5)
+    this.setState({ type })
+  }
 
-		if (!this.state.content) return Toast.info('你什么都没写哦', 1.5)
+  _submit() {
+    if (!this.state.type) return Toast.info('请先选择反馈类型', 1.5)
 
-		const data = {
-			title: this.state.content.slice(0, 15),
-			content: this.state.content,
-			type: this.state.type
-		}
-		HttpUtils.post(USERS.feedback, data).then(res => {
-			Toast.success('感谢您的反馈', 1.5)
-		})
-	}
+    if (!this.state.content) return Toast.info('你什么都没写哦', 1.5)
 
-	render() {
-		return (
-			<Container>
-				<ScrollView scrollEnabled={false}>
-					<ProfileHeader title='反馈' />
+    const data = {
+      title: this.state.content.slice(0, 15),
+      content: this.state.content,
+      type: this.state.type
+    }
+    HttpUtils.post(USERS.feedback, data).then(res => {
+      Toast.success('感谢您的反馈', 1.5)
+    })
+  }
 
-					<View style={styles.btns_container}>
-						<TouchableOpacity
-							style={[styles.btn, (this.state.type === 101 || this.state.type === 102) ? styles.active_btn : null]}
-							onPress={() => this._setType()}
-						>
-							<TextPingFang style={styles.text_btn}>Bug反馈</TextPingFang>
-						</TouchableOpacity>
+  render() {
+    return (
+      <Container>
+        <ScrollView scrollEnabled={false}>
+          <ProfileHeader title='反馈'/>
 
-						<TouchableOpacity
-							style={[styles.btn, this.state.type === 200 ? styles.active_btn : null]}
-							onPress={() => this._setType(200)}
-						>
-							<TextPingFang style={styles.text_btn}>功能需求</TextPingFang>
-						</TouchableOpacity>
+          <View style={styles.btns_container}>
+            <TouchableOpacity
+              style={[styles.btn, (this.state.type === 101 || this.state.type === 102) ? styles.active_btn : null]}
+              onPress={() => this._setType()}
+            >
+              <TextPingFang style={styles.text_btn}>Bug反馈</TextPingFang>
+            </TouchableOpacity>
 
-						<TouchableOpacity
-							style={[styles.btn, this.state.type === 300 ? styles.active_btn : null]}
-							onPress={() => this._setType(300)}
-						>
-							<TextPingFang style={styles.text_btn}>吐槽</TextPingFang>
-						</TouchableOpacity>
-					</View>
+            <TouchableOpacity
+              style={[styles.btn, this.state.type === 200 ? styles.active_btn : null]}
+              onPress={() => this._setType(200)}
+            >
+              <TextPingFang style={styles.text_btn}>功能需求</TextPingFang>
+            </TouchableOpacity>
 
-					<TextInput
-						style={styles.input}
-						onChangeText={content => this.setState({content})}
-						multiline={true}
-						placeholder='写下你想告诉我们的吧~'
-						placeholderTextColor='#000'
-					/>
+            <TouchableOpacity
+              style={[styles.btn, this.state.type === 300 ? styles.active_btn : null]}
+              onPress={() => this._setType(300)}
+            >
+              <TextPingFang style={styles.text_btn}>吐槽</TextPingFang>
+            </TouchableOpacity>
+          </View>
 
-					<TouchableOpacity
+          <TextInput
+            style={styles.input}
+            onChangeText={content => this.setState({ content })}
+            multiline={true}
+            placeholder='写下你想告诉我们的吧~'
+            placeholderTextColor='#000'
+          />
+
+          <TouchableOpacity
             style={styles.submit_btn}
             onPress={() => this._submit()}
           >
             <TextPingFang style={styles.text_submit_btn}>提交反馈</TextPingFang>
           </TouchableOpacity>
-				</ScrollView>
-			</Container>
-		)
-	}
+        </ScrollView>
+      </Container>
+    )
+  }
 }
 
 const styles = StyleSheet.create({
-	btns_container: {
-		flexDirection: 'row',
-		paddingLeft: getResponsiveWidth(24),
-		paddingRight: getResponsiveWidth(24),
-	},
-	btn: {
-		height: getResponsiveWidth(30),
-		justifyContent: 'center',
-		alignItems: 'center',
-		paddingLeft: getResponsiveWidth(12),
-		paddingRight: getResponsiveWidth(12),
-		marginRight: getResponsiveWidth(16),
-		borderWidth: getResponsiveWidth(1),
-		borderColor: '#2DC3A6',
-		borderRadius: getResponsiveWidth(4)
-	},
-	text_btn: {
-		color: '#000',
-		fontSize: 16,
-		fontWeight: '300'
-	},
-	active_btn: {
-		backgroundColor: '#2DC3A6'
-	},
-	input: {
-		height: getResponsiveWidth(176),
-		paddingLeft: getResponsiveWidth(16),
-		paddingRight: getResponsiveWidth(16),
-		paddingTop: getResponsiveWidth(16),
-		marginLeft: getResponsiveWidth(24),
-		marginRight: getResponsiveWidth(24),
-		marginTop: getResponsiveWidth(32),
-		color: '#000',
-		fontSize: 16,
-		fontWeight: '300',
-		borderWidth: getResponsiveWidth(1),
-		borderColor: '#2DC3A6',
-		borderRadius: getResponsiveWidth(8)
-	},
-	submit_btn: {
+  btns_container: {
+    flexDirection: 'row',
+    paddingLeft: getResponsiveWidth(24),
+    paddingRight: getResponsiveWidth(24),
+  },
+  btn: {
+    height: getResponsiveWidth(30),
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingLeft: getResponsiveWidth(12),
+    paddingRight: getResponsiveWidth(12),
+    marginRight: getResponsiveWidth(16),
+    borderWidth: getResponsiveWidth(1),
+    borderColor: '#2DC3A6',
+    borderRadius: getResponsiveWidth(4)
+  },
+  text_btn: {
+    color: '#000',
+    fontSize: 16,
+    fontWeight: '300'
+  },
+  active_btn: {
+    backgroundColor: '#2DC3A6',
+    color: '#fff',
+  },
+  input: {
+    height: getResponsiveWidth(176),
+    paddingLeft: getResponsiveWidth(16),
+    paddingRight: getResponsiveWidth(16),
+    paddingTop: getResponsiveWidth(16),
+    marginLeft: getResponsiveWidth(24),
+    marginRight: getResponsiveWidth(24),
+    marginTop: getResponsiveWidth(32),
+    color: '#000',
+    fontSize: 16,
+    fontWeight: '300',
+    borderWidth: getResponsiveWidth(1),
+    borderColor: '#2DC3A6',
+    borderRadius: getResponsiveWidth(8)
+  },
+  submit_btn: {
     width: getResponsiveWidth(112),
     height: getResponsiveWidth(48),
     justifyContent: 'center',
@@ -157,7 +158,7 @@ const styles = StyleSheet.create({
     borderRadius: getResponsiveWidth(24)
   },
   text_submit_btn: {
-    color: '#000',
+    color: '#fff',
     fontSize: 20,
     fontWeight: '300'
   }
