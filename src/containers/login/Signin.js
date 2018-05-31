@@ -9,6 +9,7 @@ import {
 import dismissKeyboard from 'dismissKeyboard'
 import { View } from 'react-native-animatable'
 import { Actions } from 'react-native-router-flux'
+import Toast from 'antd-mobile/lib/toast'
 
 import TextPingFang from '../../components/TextPingFang'
 import Banner from './Banner'
@@ -22,6 +23,7 @@ import {
   getResponsiveHeight,
   getResponsiveWidth
 } from '../../common/styles'
+import { sleep } from '../../common/util'
 import Storage from '../../common/storage'
 import { SCENE_INDEX } from '../../constants/scene'
 
@@ -43,6 +45,10 @@ export default class Signin extends Component {
   }
 
   async login() {
+    Toast.loading('正在登录', 0)
+
+    await sleep(300)
+
     const data = {
       account: this.state.account,
       password: this.state.password
@@ -69,6 +75,8 @@ export default class Signin extends Component {
 
       Actions.reset(SCENE_INDEX, { user: res.data.user, partner: res.data.partner })
     }
+
+    Toast.hide()
   }
 
   render() {
