@@ -122,7 +122,7 @@ export default class Profile extends Component {
 
   render() {
     return (
-      <Container>
+      <Container showNetStatus={true}>
         <View>
           <TextPingFang style={styles.title}>关于我</TextPingFang>
           <ScrollView scrollEnabled={this.state.is_scroll} contentContainerStyle={styles.profile_container}>

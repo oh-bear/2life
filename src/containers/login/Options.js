@@ -10,6 +10,7 @@ import { View } from 'react-native-animatable'
 import { Actions, Scene } from 'react-native-router-flux'
 
 import TextPingFang from '../../components/TextPingFang'
+import NetStatus from '../../components/NetStatus'
 import Banner from './Banner'
 import store from '../../redux/store'
 import { fetchProfileSuccess } from '../../redux/modules/user'
@@ -79,6 +80,7 @@ export default class Options extends Component {
   render() {
     return (
       <View style={styles.container} animation='fadeIn'>
+        <NetStatus showNetStatus={true}/>
         <Banner
           bg={require('../../../res/images/login/bg_signin.png')}
           title={['Hi', '欢迎来到双生！']}
