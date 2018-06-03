@@ -366,7 +366,7 @@ export default class Home extends Component {
   render() {
 
     return (
-      <Container>
+      <Container showNetStatus={true}>
         <View style={styles.header_container}>
           <TouchableOpacity
             style={styles.header_left}

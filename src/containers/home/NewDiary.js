@@ -9,6 +9,7 @@ import {
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { connect } from 'react-redux'
 import { Actions } from 'react-native-router-flux'
+import Toast from 'antd-mobile/lib/toast'
 
 import Container from '../../components/Container'
 import TextPingFang from '../../components/TextPingFang'
@@ -25,7 +26,8 @@ import {
   postImgToQiniu,
   getLocation,
   updateUser,
-  updateReduxUser
+  updateReduxUser,
+  sleep
 } from '../../common/util'
 
 import Storage from '../../common/storage'
@@ -124,6 +126,10 @@ export default class NewDiary extends Component {
     if (!title) return Alert.alert('', '给日记起个标题吧')
     if (!content) return Alert.alert('', '日记内容不能为空哦')
 
+    Toast.loading('正在保存', 0)
+
+    await sleep(300)
+
     const images = await postImgToQiniu(this.state.base64List, {
       type: 'note',
       user_id: this.props.user.id
@@ -144,6 +150,8 @@ export default class NewDiary extends Component {
         Actions.reset(SCENE_INDEX)
       }
     }
+
+    Toast.hide()
   }
 
   getBase64List(base64List) {

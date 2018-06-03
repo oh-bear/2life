@@ -9,6 +9,7 @@ import {
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { connect } from 'react-redux'
 import { Actions } from 'react-native-router-flux'
+import Toast from 'antd-mobile/lib/toast'
 
 import Container from '../../components/Container'
 import TextPingFang from '../../components/TextPingFang'
@@ -19,7 +20,7 @@ import {
   WIDTH,
   getResponsiveWidth,
 } from '../../common/styles'
-import { getMonth, postImgToQiniu } from '../../common/util'
+import { getMonth, postImgToQiniu, sleep } from '../../common/util'
 import { SCENE_INDEX } from '../../constants/scene'
 
 import HttpUtils from '../../network/HttpUtils'
@@ -80,6 +81,10 @@ export default class UpdateDiary extends Component {
     if (!title) return Alert.alert('', '给日记起个标题吧')
     if (!content) return Alert.alert('', '日记内容不能为空哦')
 
+    Toast.loading('正在保存', 0)
+
+    await sleep(300)
+
     const images = await postImgToQiniu(base64List, {
       type: 'note',
       user_id: this.props.user.id
@@ -94,8 +99,10 @@ export default class UpdateDiary extends Component {
     }
     const res = await HttpUtils.post(NOTES.update, data)
     if (res.code === 0) {
-      this.setState({ showPopup: true })
+      Actions.reset(SCENE_INDEX)
     }
+
+    Toast.hide()
   }
 
   getBase64List(base64List, imageList) {
@@ -163,17 +170,6 @@ export default class UpdateDiary extends Component {
 
         </KeyboardAwareScrollView>
 
-        <Popup
-          showPopup={this.state.showPopup}
-          popupBgColor='#2DC3A6'
-          icon={require('../../../res/images/home/icon_save.png')}
-          content='你的日记已经自动保存并同步，放心退出吧'
-          onPressLeft={() => {
-            this.setState({ showPopup: false })
-            Actions.reset(SCENE_INDEX)
-          }}
-          textBtnLeft='我明白了'
-        />
       </Container>
     )
   }
