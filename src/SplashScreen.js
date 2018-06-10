@@ -30,10 +30,6 @@ class SplashScreen extends Component {
 
     WeChat.registerApp('wxbf371b0ab61d3873')
 
-    NetInfo.addEventListener('connectionChange', connectionInfo => {
-      console.log(connectionInfo.type)
-    })
-
     const user = await Storage.get('user', {})
 
     if (!user.account || !user.password) {

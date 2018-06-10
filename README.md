@@ -8,15 +8,14 @@
 
 双生 app 是一款与众不同的写日记软件，很多朋友写日记坚持不下去是因为太枯燥乏味，没有兴趣感，而这款软件可以在你写日记的同时匹配更多同类型心情的日记主人，让你们一起分享彼此的心情，共建友谊。欢迎下载体验。
 
-* 产品主页：[https://two-life.github.io](https://two-life.github.io)
+宣传视频：[https://www.bilibili.com/video/av24289205](https://www.bilibili.com/video/av24289205)
 
-* App Store 下载地址：[https://itunes.apple.com/cn/app/%E5%8F%8C%E7%94%9F/id1245100877?l=en&mt=8](https://itunes.apple.com/cn/app/%E5%8F%8C%E7%94%9F/id1245100877?l=en&mt=8)
-
+* App Store 下载地址：搜索“双生日记”即可
 * Android 下载地址：[https://www.pgyer.com/2life](https://www.pgyer.com/2life)
-
 * 前端 GitHub 地址：[https://github.com/oh-bear/2life](https://github.com/oh-bear/2life)
-
 * 后端 GitHub 地址：[https://github.com/airingursb/2life-server](https://github.com/airingursb/2life-server)
+* 小程序端：搜索“双生小日记”即可
+
 
 ## Screenshots
 

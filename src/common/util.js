@@ -356,3 +356,10 @@ export async function updateReduxUser(user_id) {
     store.dispatch(fetchProfileSuccess(res.data))
   }
 }
+
+/**
+ * @param {Number} ms 等待时间
+ */
+export function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms))
+}

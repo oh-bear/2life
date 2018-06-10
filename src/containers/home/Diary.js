@@ -123,7 +123,7 @@ const styles = StyleSheet.create({
   date: {
     width: getResponsiveWidth(48),
     paddingTop: getResponsiveWidth(16),
-    color: '#000',
+    color: '#aaa',
     fontSize: 14,
     fontWeight: '400'
   },
@@ -152,7 +152,7 @@ const styles = StyleSheet.create({
     fontWeight: '400',
   },
   text_diary_content: {
-    color: '#000',
+    color: '#666',
     fontSize: 12,
     fontWeight: '300',
     marginTop: getResponsiveWidth(8),
@@ -168,7 +168,7 @@ const styles = StyleSheet.create({
     paddingTop: getResponsiveWidth(16),
   },
   time: {
-    color: '#000',
+    color: '#aaa',
     fontSize: 12,
   },
   location_container: {
@@ -180,7 +180,7 @@ const styles = StyleSheet.create({
     marginRight: getResponsiveWidth(8)
   },
   text_location: {
-    color: '#000',
+    color: '#aaa',
     fontSize: 10
   }
 })

@@ -76,7 +76,7 @@ export default class Notification extends Component {
 
   render() {
     return (
-      <Container>
+      <Container showNetStatus={true}>
         <View>
           <TextPingFang style={styles.title}>通知</TextPingFang>
           <FlatList

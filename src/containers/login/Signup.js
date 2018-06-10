@@ -13,6 +13,7 @@ import { Actions } from 'react-native-router-flux'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
 import TextPingFang from '../../components/TextPingFang'
+import NetStatus from '../../components/NetStatus'
 import Banner from './Banner'
 import Storage from '../../common/storage'
 import store from '../../redux/store'
@@ -108,6 +109,7 @@ export default class Signup extends Component {
     return (
       <TouchableWithoutFeedback onPress={dismissKeyboard}>
         <View style={styles.container} animation='fadeIn'>
+          <NetStatus showNetStatus={true}/>
           <Banner
             bg={require('../../../res/images/login/bg_signup.png')}
             title={['Wow', '欢迎成为新成员！']}

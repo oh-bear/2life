@@ -6,6 +6,8 @@ import {
 import { isIphoneX } from 'react-native-iphone-x-helper'
 import PropTypes from 'prop-types'
 
+import NetStatus from './NetStatus'
+
 import {
   WIDTH,
   HEIGHT,
@@ -13,7 +15,8 @@ import {
 
 export default class Container extends Component {
   static propTypes = {
-    hidePadding: PropTypes.bool
+    hidePadding: PropTypes.bool,
+    showNetStatus: PropTypes.bool
   }
 
   render() {
@@ -28,6 +31,7 @@ export default class Container extends Component {
           }
         ]}
       >
+        <NetStatus showNetStatus={this.props.showNetStatus}/>
         {this.props.children}
       </View>
     )
