@@ -21,18 +21,19 @@ export default class NetStatus extends Component {
 		isConnected: true
 	}
 
-	componentDidMount() {		
+	componentDidMount() {
 		NetInfo.isConnected.addEventListener('connectionChange', isConnected => {
 			this.setState({isConnected})
 		})
 	}
-	
+
 
 	render() {
 		return (
 			<View style={[
 					styles.container,
-					{ display: !this.state.isConnected && this.props.showNetStatus ? 'flex' : 'none' },
+					{ display: !this.state.isConnected && this.props.showNetStatus ? 'flex' : 'none',
+				position: !this.state.isConnected && this.props.showNetStatus ? 'absolute' : 'relative' },
 				]}>
 				<TextPingFang style={styles.text_net}>似乎从网络断开了～</TextPingFang>
 			</View>
