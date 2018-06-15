@@ -128,30 +128,34 @@ export default class NewDiary extends Component {
 
     Toast.loading('正在保存', 0)
 
-    await sleep(300)
+    await sleep(100)
 
-    const images = await postImgToQiniu(this.state.base64List, {
-      type: 'note',
-      user_id: this.props.user.id
-    })
-
-    const data = { title, content, images, latitude, longitude, location }
-    const res = await HttpUtils.post(URL_publish, data)
-    if (res.code === 0) {
-      this._updateUser()
-      updateReduxUser(this.props.user.id)
-
-      if (this.state.firstEntryDiary) {
-        this.setState({
-          showPopup: true,
-          popupContent: '你的日记已经自动保存并同步，放心退出吧'
-        })
-      } else {
-        Actions.reset(SCENE_INDEX)
+    try{
+      const images = await postImgToQiniu(this.state.base64List, {
+        type: 'note',
+        user_id: this.props.user.id
+      })
+  
+      const data = { title, content, images, latitude, longitude, location }
+      const res = await HttpUtils.post(URL_publish, data)
+      if (res.code === 0) {
+        this._updateUser()
+        updateReduxUser(this.props.user.id)
+  
+        if (this.state.firstEntryDiary) {
+          this.setState({
+            showPopup: true,
+            popupContent: '你的日记已经自动保存并同步，放心退出吧'
+          })
+        } else {
+          Actions.reset(SCENE_INDEX)
+        }
       }
+  
+      Toast.hide()
+    } catch(e) {
+      Toast.fail('保存失败，请稍后再试', 2)
     }
-
-    Toast.hide()
   }
 
   getBase64List(base64List) {
