@@ -30,33 +30,33 @@ class SplashScreen extends Component {
 
     WeChat.registerApp('wxbf371b0ab61d3873')
 
-    const user = await Storage.get('user', {})
-    if (!user.account || !user.password) {
+    const key = await Storage.get('key', {})
+    if (!key.uid || !key.token || !key.timestamp) {
       Actions[SCENE_LOGIN_OPTIONS]()
       RNSplashScreen.hide()
       return
     }
 
     try {
-      const data = {
-        account: user.account,
-        password: user.password
-      }
+      const { uid, token, timestamp } = key
 
-      const res = await HttpUtils.post(USERS.login, data)
+      const res = await HttpUtils.get(USERS.check_token, key)
       
       if (res.code === 0) {
-        const {uid, token, timestamp} = res.data.key
         setToken({uid, token, timestamp})
 
-        store.dispatch(fetchProfileSuccess(res.data.user))
+        const res = await HttpUtils.get(USERS.user, { user_id: uid })
 
-        if (res.data.partner.id) {
-          store.dispatch(fetchPartnerSuccess(res.data.partner))
-        } else {
-          store.dispatch(fetchPartnerSuccess({id: null}))
+        if (res.code === 0) {
+          store.dispatch(fetchProfileSuccess(res.data))
+  
+          if (res.partner.id) {
+            store.dispatch(fetchPartnerSuccess(res.partner))
+          } else {
+            store.dispatch(fetchPartnerSuccess({id: null}))
+          }
+          Actions[SCENE_INDEX]({user: res.data.user, partner: res.data.partner})
         }
-        Actions[SCENE_INDEX]({user: res.data.user, partner: res.data.partner})
       } else {
         Toast.fail('自动登录失败', 1.5)
         Actions[SCENE_LOGIN_OPTIONS]()

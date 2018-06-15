@@ -59,13 +59,10 @@ export default class Signin extends Component {
     if (res.code === 404) this.setState({ showAccountTip: true })
     if (res.code === 300) this.setState({ showPswTip: true })
     if (res.code === 0) {
-      Storage.set('user', {
-        account: this.state.account,
-        password: this.state.password
-      })
 
       const { uid, token, timestamp } = res.data.key
       setToken({ uid, token, timestamp })
+      Storage.set('key', { uid, token, timestamp })
 
       store.dispatch(fetchProfileSuccess(res.data.user))
       store.dispatch(fetchPartnerSuccess(res.data.partner))
