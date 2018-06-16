@@ -35,7 +35,7 @@ export default class NetStatus extends Component {
 					{ display: !this.state.isConnected && this.props.showNetStatus ? 'flex' : 'none',
 				position: !this.state.isConnected && this.props.showNetStatus ? 'absolute' : 'relative' },
 				]}>
-				<TextPingFang style={styles.text_net}>似乎从网络断开了～</TextPingFang>
+				<TextPingFang style={styles.text_net}>网络好像出了点问题～</TextPingFang>
 			</View>
 		)
 	}
@@ -52,7 +52,7 @@ const styles = StyleSheet.create({
 			marginTop: 30
 		}),
 		borderRadius: getResponsiveWidth(12),
-		backgroundColor: 'rgba(155,155,155,.5)',
+		backgroundColor: 'rgba(155,155,155,.2)',
 		justifyContent: 'center',
 		alignItems: 'center',
 		zIndex: 100

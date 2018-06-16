@@ -78,7 +78,6 @@ export default class ProfileEdit extends Component {
       const res = await updateUser(this.state.user, data)
       if (res.code === 0) {
         store.dispatch(fetchProfileSuccess(res.data.user))
-        // store.dispatch(fetchProfileSuccess(Object.assign({}, this.state.user, { name: this.state.name })))
         Toast.success('修改成功')
       }else {
         Toast.fail('出错了，等会再试试')
@@ -96,7 +95,7 @@ export default class ProfileEdit extends Component {
       {
         text: '确定',
         onPress: async () => {
-          await Storage.remove('user')
+          await Storage.remove('key')
           Actions.reset(SCENE_LOGIN_OPTIONS)
         }
       }

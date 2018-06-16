@@ -49,9 +49,7 @@ export default class Options extends Component {
             const { uid, token, timestamp } = res.data.key
             setToken({ uid, token, timestamp })
 
-            // TODO: 返回的用户密码为0，需要更改登陆机制
-            const { account, password } = res.data.user
-            Storage.set('user', { account, password })
+            Storage.set('key', { uid, token, timestamp })
 
             store.dispatch(fetchProfileSuccess(res.data.user))
             store.dispatch(fetchPartnerSuccess(res.data.partner))

@@ -48,36 +48,38 @@ export default class Signin extends Component {
   async login() {
     Toast.loading('正在登录', 0)
 
-    await sleep(300)
+    await sleep(150)
 
-    const data = {
-      account: this.state.account,
-      password: this.state.password
-    }
-    const res = await HttpUtils.post(URL_login, data)
-
-    if (res.code === 404) this.setState({ showAccountTip: true })
-    if (res.code === 300) this.setState({ showPswTip: true })
-    if (res.code === 0) {
-      Storage.set('user', {
+    try {
+      const data = {
         account: this.state.account,
         password: this.state.password
-      })
-
-      const { uid, token, timestamp } = res.data.key
-      setToken({ uid, token, timestamp })
-
-      store.dispatch(fetchProfileSuccess(res.data.user))
-      store.dispatch(fetchPartnerSuccess(res.data.partner))
-
-      JPushModule.setAlias(res.data.user.id.toString(), success => {
-        console.log(success)
-      })
-
-      Actions.reset(SCENE_INDEX, { user: res.data.user, partner: res.data.partner })
+      }
+      const res = await HttpUtils.post(URL_login, data)
+  
+      if (res.code === 404) this.setState({ showAccountTip: true })
+      if (res.code === 300) this.setState({ showPswTip: true })
+      if (res.code === 0) {
+  
+        const { uid, token, timestamp } = res.data.key
+        setToken({ uid, token, timestamp })
+        Storage.set('key', { uid, token, timestamp })
+  
+        store.dispatch(fetchProfileSuccess(res.data.user))
+        store.dispatch(fetchPartnerSuccess(res.data.partner))
+  
+        JPushModule.setAlias(res.data.user.id.toString(), success => {
+          console.log(success)
+        })
+  
+        Actions.reset(SCENE_INDEX, { user: res.data.user, partner: res.data.partner })
+      }
+  
+      Toast.hide()
+    } catch (e) {
+      console.log(e)
+      Toast.fail('登录失败，请稍后再试', 2)
     }
-
-    Toast.hide()
   }
 
   render() {
