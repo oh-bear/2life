@@ -89,14 +89,14 @@ def releaseTime() {
 
 android {
     compileSdkVersion 23
-    buildToolsVersion "23.0.1"
+    buildToolsVersion "23.0.3"
 
     defaultConfig {
         applicationId "me.ursb.twolife"
         minSdkVersion 16
         targetSdkVersion 22
-        versionCode 5
-        versionName "2.0.4"
+        versionCode 6
+        versionName "2.0.5"
         manifestPlaceholders = [
                 JPUSH_APPKEY: "67fdf21f35e554cc0b985e4e",
                 APP_CHANNEL : "default"
@@ -130,7 +130,11 @@ android {
             signingConfig signingConfigs.release
             minifyEnabled enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
-
+            applicationVariants.all { variant ->
+                variant.outputs.all {
+                    outputFileName = "twolife_${variant.name}_v${variant.versionName}_b${variant.versionCode}_${releaseTime()}.apk"
+                }
+            }
         }
     }
     // applicationVariants are e.g. debug, release
@@ -148,7 +152,7 @@ android {
             if (outputFile != null && outputFile.name.endsWith('.apk')) {
                 //这里修改apk文件名
                 def fileName1 = "twolife_${variant.name}_v${variant.versionName}_b${variant.versionCode}_${releaseTime()}.apk"
-                output.outputFile = new File(outputFile.parent, fileName1)
+       //         output.outputFile = new File(outputFile.parent, fileName1)
             }
 
 
