@@ -16,6 +16,7 @@ export const USERS = {
   feedback: '/users/feedback', // post {title, content, type}
   oauth_login: '/users/oauth_login', // post {code, type}
   bind_account: '/users/bind_account', // post {account, openid}
+  check_token: '/users/check_token'  // get {uid, token, timestamp}
 }
 
 export const NOTES = {
