@@ -202,21 +202,16 @@ export async function getLocation(longitude, latitude) {
  * @returns {Object}
  */
 export async function getWeather(region) {
-  const url = 'https://ali-weather.showapi.com/hour24'
-  const APPCODE = '0d769b31ca454261919def4f08864cf6'
-  const params = { area: region }
-  const config = {
-    url,
-    params,
-    headers: {
-      Authorization: `APPCODE ${APPCODE}`
-    }
+  const url = 'http://restapi.amap.com/v3/weather/weatherInfo'
+  const params = {
+    key: '9d6935d546e2b3ec1ee3b872c1ee9bbe',
+    city: region
   }
   try {
-    const res = await axios(config)
-    return res.data.showapi_res_body.hourList[0]
+    const res = await axios.get(url, { params })
+    return res.data.lives[0]
   } catch (e) {
-    return e
+    console.log(e)
   }
 }
 
@@ -276,11 +271,11 @@ export async function postImgToQiniu(base64List, obj) {
  */
 export function getWeatherDesc(weather) {
   let weather_text, weather_icon
-  if (weather.weather_code === '00') {
+  if (weather.weather.includes('晴')) {
     weather_text = `${weather.weather} ${weather.temperature}℃`
     weather_icon = require('../../res/images/home/icon_sunny.png')
   }
-  if (weather.weather_code === '01' || weather.weather_code === '02') {
+  if (weather.weather.includes('多云') || weather.weather.includes('阴')) {
     weather_text = `${weather.weather} ${weather.temperature}℃`
     weather_icon = require('../../res/images/home/icon_cloud.png')
   }
