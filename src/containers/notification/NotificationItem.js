@@ -142,7 +142,7 @@ const styles = StyleSheet.create({
   date: {
     fontFamily: 'PingFang SC',
     fontSize: 10,
-    color: '#000',
+    color: '#aaa',
     marginTop: getResponsiveHeight(16),
   },
   line: {
