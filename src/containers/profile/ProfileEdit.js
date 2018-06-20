@@ -19,7 +19,8 @@ import Container from '../../components/Container'
 import ProfileHeader from './components/ProfileHeader'
 
 import store from '../../redux/store'
-import { fetchProfileSuccess } from '../../redux/modules/user'
+import { fetchProfileSuccess, cleanUser } from '../../redux/modules/user'
+import { cleanPartner } from '../../redux/modules/partner'
 
 import {
   getResponsiveWidth,
@@ -95,6 +96,8 @@ export default class ProfileEdit extends Component {
       {
         text: '确定',
         onPress: async () => {
+          store.dispatch(cleanUser())
+          store.dispatch(cleanPartner())
           await Storage.remove('key')
           Actions.reset(SCENE_LOGIN_OPTIONS)
         }

@@ -52,10 +52,8 @@ class SplashScreen extends Component {
 
           if (res.partner.id) {
             store.dispatch(fetchPartnerSuccess(res.partner))
-          } else {
-            store.dispatch(fetchPartnerSuccess({id: null}))
           }
-          Actions[SCENE_INDEX]({user: res.data.user, partner: res.data.partner})
+          Actions[SCENE_INDEX]()
         }
       } else {
         Toast.fail('自动登录失败', 1.5)
