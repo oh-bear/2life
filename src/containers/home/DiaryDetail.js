@@ -5,13 +5,14 @@ import {
   TouchableOpacity,
   Image,
   ActionSheetIOS,
-  TextInput,
   Alert,
-  DeviceEventEmitter
+  DeviceEventEmitter,
+  Modal
 } from 'react-native'
 import { connect } from 'react-redux'
 import { Actions } from 'react-native-router-flux'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import ImageViewer from 'react-native-image-zoom-viewer'
 
 import Container from '../../components/Container'
 import TextPingFang from '../../components/TextPingFang'
@@ -44,14 +45,15 @@ export default class DiaryDetail extends Component {
     likeComponent: null,
     mode: '',
     mode_face: require('../../../res/images/home/icon_happy.png'),
-    changeMode: false
+    changeMode: false,
+    showImgPreview: false,
   }
 
   async componentWillMount() {
     const diary = this.props.diary
 
     if (diary.images) {
-      let imageList = diary.images.split(',')
+      let imageList = diary.images.split(',').filter(url => !!url)
       this.setState({ imageList, showBanner: true })
     } else {
       this.setState({ showBanner: false })
@@ -171,12 +173,14 @@ export default class DiaryDetail extends Component {
     return (
       <Container hidePadding={this.state.showBanner}>
         <KeyboardAwareScrollView>
-          <DiaryBanner
-            showBanner={this.state.showBanner}
-            imageList={this.state.imageList}
-            showNav={true}
-            rightButton={this.renderRightButton()}
-          />
+          <TouchableOpacity onPress={() => this.setState({showImgPreview: true})}>
+            <DiaryBanner
+              showBanner={this.state.showBanner}
+              imageList={this.state.imageList}
+              showNav={true}
+              rightButton={this.renderRightButton()}
+            />
+          </TouchableOpacity>
 
           <CommonNav
             navStyle={[styles.nav_style, { display: this.state.showBanner ? 'none' : 'flex' }]}
@@ -263,6 +267,21 @@ export default class DiaryDetail extends Component {
             </View>
           </View>
         </KeyboardAwareScrollView>
+
+        <Modal
+          visible={this.state.showImgPreview}
+          transparent={false}
+          animationType={'fade'}
+        >
+          <ImageViewer
+            imageUrls={this.state.imageList.map(url => {
+              return {url: url}
+            })}
+            enableSwipeDown={true}
+            onSwipeDown={() => this.setState({showImgPreview: false})}
+            onClick={() => this.setState({showImgPreview: false})}
+          />
+        </Modal>
 
       </Container>
     )
