@@ -7,6 +7,7 @@ import Signin from './containers/login/Signin'
 import Signup from './containers/login/Signup'
 import Nickname from './containers/login/Nickname'
 import Gender from './containers/login/Gender'
+import Area from './containers/login/Area'
 
 // home
 import NewDiary from './containers/home/NewDiary'
@@ -66,6 +67,13 @@ export default class AppRouter extends Component {
               key={scenes.SCENE_LOGIN_SIGNUP}
               component={Signup}
               title='注册'
+              duration={0}
+              hideNavBar
+            />
+            <Scene
+              key={scenes.SCENE_LOGIN_AREA}
+              component={Area}
+              title='选择地区'
               duration={0}
               hideNavBar
             />
