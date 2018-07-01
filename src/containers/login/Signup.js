@@ -82,7 +82,7 @@ export default class Signup extends Component {
     }
 
     const data = {
-      account: this.state.accountArea + this.state.account,
+      account: this.state.account,
       password: this.state.password,
       code: this.state.code,
       timestamp: this.state.timestamp
