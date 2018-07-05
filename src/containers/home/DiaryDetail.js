@@ -7,7 +7,8 @@ import {
   ActionSheetIOS,
   Alert,
   DeviceEventEmitter,
-  Modal
+  Modal,
+  Animated
 } from 'react-native'
 import { connect } from 'react-redux'
 import { Actions } from 'react-native-router-flux'
@@ -47,6 +48,8 @@ export default class DiaryDetail extends Component {
     mode_face: require('../../../res/images/home/icon_happy.png'),
     changeMode: false,
     showImgPreview: false,
+    modeWidth: new Animated.Value(0),
+    modeOpacity: new Animated.Value(0)
   }
 
   async componentWillMount() {
@@ -82,13 +85,14 @@ export default class DiaryDetail extends Component {
       if (res.code === 0) {
         updateReduxUser(this.props.user.id)
 
-        Alert.alert('', '修改成功')
-
+        // Alert.alert('', '修改成功')
+        
         this.setState({
           changeMode: false,
           mode,
           mode_face
         })
+        this.toggleChooseMode()
         DeviceEventEmitter.emit('flash_note', {})
       }
     })
@@ -169,6 +173,26 @@ export default class DiaryDetail extends Component {
     this.setState({ likeComponent })
   }
 
+  toggleChooseMode() {
+    this.setState({changeMode: !this.state.changeMode})
+    Animated.parallel([
+      Animated.spring(
+        this.state.modeWidth,
+        {
+          toValue: this.state.changeMode ? 0 : getResponsiveWidth(250),
+          duration: 300
+        }
+      ),
+      Animated.timing(
+        this.state.modeOpacity,
+        {
+          toValue: this.state.changeMode ? 0 : 1,
+          duration: 300
+        }
+      )
+    ]).start()
+  }
+
   render() {
     return (
       <Container hidePadding={this.state.showBanner}>
@@ -222,7 +246,7 @@ export default class DiaryDetail extends Component {
             <TextPingFang style={styles.text_value}>情绪值</TextPingFang>
             <TouchableOpacity
               style={[styles.update_container, { display: this.props.user.id === this.props.diary.user_id ? 'flex' : 'none' }]}
-              onPress={() => this.setState({changeMode: !this.state.changeMode})}
+              onPress={() => this.toggleChooseMode()}
             >
               <TextPingFang style={styles.text_update}>更正</TextPingFang>
             </TouchableOpacity>
@@ -233,7 +257,13 @@ export default class DiaryDetail extends Component {
               {this.state.likeComponent}
             </TouchableOpacity>
 
-            <View style={[styles.choose_mode, {display: this.state.changeMode ? 'flex' : 'none'}]}>
+            <Animated.View style={[
+              styles.choose_mode,
+              {
+                width: this.state.modeWidth,
+                opacity: this.state.modeOpacity
+              }
+            ]}>
               <TouchableOpacity
                 style={styles.mode_item}
                 onPress={() => this.updateNote(0, require('../../../res/images/home/icon_very_sad_male.png'))}
@@ -264,7 +294,7 @@ export default class DiaryDetail extends Component {
               >
                 <Image source={require('../../../res/images/home/icon_very_happy_male.png')}/>
               </TouchableOpacity>
-            </View>
+            </Animated.View>
           </View>
         </KeyboardAwareScrollView>
 
@@ -399,7 +429,6 @@ const styles = StyleSheet.create({
     height: getResponsiveWidth(64)
   },
   choose_mode: {
-    width: getResponsiveWidth(250),
     position: 'absolute',
     left: 0,
     flexDirection: 'row',

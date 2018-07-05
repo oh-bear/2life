@@ -5,8 +5,8 @@ import {
   ImageBackground,
   Image,
   FlatList,
-  Alert,
-  DeviceEventEmitter
+  DeviceEventEmitter,
+  Animated
 } from 'react-native'
 import { View } from 'react-native-animatable'
 import { CalendarList } from '../../components/react-native-calendars/src'
@@ -74,7 +74,8 @@ export default class Home extends Component {
     showMe: true,
     showWeather: true,
     isRefreshing: false,
-    profileNote: false
+    profileNote: false,
+    calendarHeight: new Animated.Value(0)
   }
 
   async componentDidMount() {
@@ -363,6 +364,17 @@ export default class Home extends Component {
     )
   }
 
+  _toggleCalendar() {
+    this.setState({ showCalendar: !this.state.showCalendar })
+    Animated.spring(
+      this.state.calendarHeight,
+      {
+        toValue: this.state.showCalendar ? 0 : 250,
+        duration: 300
+      }
+    ).start()
+  }
+
   render() {
 
     return (
@@ -371,7 +383,7 @@ export default class Home extends Component {
           <TouchableOpacity
             style={styles.header_left}
             activeOpacity={1}
-            onPress={() => this.setState({ showCalendar: !this.state.showCalendar })}
+            onPress={() => this._toggleCalendar()}
           >
             <TextPingFang style={styles.text_month}>{this.state.month}</TextPingFang>
             <TextPingFang style={styles.text_year}>{this.state.year}</TextPingFang>
@@ -400,21 +412,28 @@ export default class Home extends Component {
             <View style={styles.triangle}/>
           </View>
         </View>
-
-        <CalendarList
-          horizontal={true}
-          pagingEnabled={true}
-          style={[styles.calendar, { display: this.state.showCalendar ? 'flex' : 'none' }]}
-          theme={{
-            calendarBackground: 'rgb(250,250,250)',
-            textDayFontSize: 14,
-          }}
-          maxDate={new Date()}
-          onDayPress={day => this.onDayPress(day)}
-          onVisibleMonthsChange={months => this.setDate(months)}
-          markedDates={this.state.markedDates}
-          markingType={'multi-dot'}
-        />
+            
+        <Animated.View
+          style={[
+            {
+              maxHeight: this.state.calendarHeight
+            }
+          ]}
+        >
+          <CalendarList
+            horizontal={true}
+            pagingEnabled={true}
+            theme={{
+              calendarBackground: 'rgb(250,250,250)',
+              textDayFontSize: 14,
+            }}
+            maxDate={new Date()}
+            onDayPress={day => this.onDayPress(day)}
+            onVisibleMonthsChange={months => this.setDate(months)}
+            markedDates={this.state.markedDates}
+            markingType={'multi-dot'}
+          />
+        </Animated.View>
 
         <View style={styles.weather}>
           <View style={styles.weather_inner}>
