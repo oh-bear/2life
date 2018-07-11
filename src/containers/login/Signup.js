@@ -136,11 +136,12 @@ export default class Signup extends Component {
                   <TextPingFang style={styles.text_area}>{this.state.accountArea}</TextPingFang>
                 </TouchableOpacity>
                 <TextInput
-                  style={styles.input}
+                  style={styles.input_phone}
                   onChangeText={account => this.setState({ account, showAccountTip: false })}
                   value={this.state.account}
                   keyboardType='numeric'
                   maxLength={11}
+                  underlineColorAndroid='transparent'
                   clearButtonMode='while-editing'
                   placeholder='请输入手机号码'
                   placeholderTextColor='#aaa'
@@ -237,6 +238,13 @@ const styles = StyleSheet.create({
     fontSize: 16,
     borderBottomWidth: .5,
     borderBottomColor: '#2DC3A6',
+  },
+  input_phone:{
+    width: getResponsiveWidth(240),
+    height: getResponsiveHeight(50),
+    marginTop: getResponsiveHeight(24),
+    color: '#444',
+    fontSize: 16,
   },
   code_container: {
     flexDirection: 'row',
