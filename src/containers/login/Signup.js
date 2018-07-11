@@ -4,7 +4,8 @@ import {
   TouchableOpacity,
   TextInput,
   TouchableWithoutFeedback,
-  Alert
+  Alert,
+  DeviceEventEmitter
 } from 'react-native'
 
 import dismissKeyboard from 'dismissKeyboard'
@@ -26,7 +27,7 @@ import {
   getResponsiveHeight,
   getResponsiveWidth
 } from '../../common/styles'
-import { SCENE_LOGIN_NICKNAME } from '../../constants/scene'
+import { SCENE_LOGIN_NICKNAME, SCENE_LOGIN_AREA } from '../../constants/scene'
 
 import { USERS } from '../../network/Urls'
 import HttpUtils from '../../network/HttpUtils'
@@ -39,6 +40,7 @@ const URL_login = USERS.login
 export default class Signup extends Component {
 
   state = {
+    accountArea: '+86',
     account: '',
     password: '',
     code: '',
@@ -50,14 +52,20 @@ export default class Signup extends Component {
     showPswTip: false,
   }
 
-  async getCode() {
-    if (/^1(3|4|5|7|8)\d{9}$/.test(this.state.account)) {
-      this.setState({ showAccountTip: false })
-    } else {
-      return this.setState({ showAccountTip: true, accountTip: '手机格式错误' })
-    }
+  componentDidMount() {
+    DeviceEventEmitter.addListener('select_area', area => {
+      this.setState({accountArea: area})
+    })
+  }
 
-    const res = await HttpUtils.post(URL_code, { account: this.state.account })
+  async getCode() {
+    // if (/^1(3|4|5|7|8)\d{9}$/.test(this.state.account)) {
+    //   this.setState({ showAccountTip: false })
+    // } else {
+    //   return this.setState({ showAccountTip: true, accountTip: '手机格式错误' })
+    // }
+
+    const res = await HttpUtils.post(URL_code, { account: this.state.accountArea + this.state.account })
     if (res.code === 0) {
       this.setState({ timestamp: res.data.timestamp })
       Alert.alert('', '验证码已发送')
@@ -120,19 +128,25 @@ export default class Signup extends Component {
 
           <KeyboardAwareScrollView>
             <View style={styles.inputs_container}>
-              <TextInput
-                style={styles.input}
-                onChangeText={account => this.setState({ account, showAccountTip: false })}
-                value={this.state.account}
-                keyboardType='numeric'
-                maxLength={11}
-                underlineColorAndroid='transparent'
-                clearButtonMode='while-editing'
-                placeholder='请输入手机号码'
-                placeholderTextColor='#aaa'
-              />
-              <TextPingFang
-                style={[styles.text_tip, { color: this.state.showAccountTip ? '#F43C56' : 'transparent' }]}>{this.state.accountTip}</TextPingFang>
+              <View style={styles.account_container}>
+                <TouchableOpacity
+                  style={styles.account_area}
+                  onPress={() => Actions.jump(SCENE_LOGIN_AREA, {area: this.state.accountArea})}
+                >
+                  <TextPingFang style={styles.text_area}>{this.state.accountArea}</TextPingFang>
+                </TouchableOpacity>
+                <TextInput
+                  style={styles.input}
+                  onChangeText={account => this.setState({ account, showAccountTip: false })}
+                  value={this.state.account}
+                  keyboardType='numeric'
+                  maxLength={11}
+                  clearButtonMode='while-editing'
+                  placeholder='请输入手机号码'
+                  placeholderTextColor='#aaa'
+                />
+              </View>
+              <TextPingFang style={[styles.text_tip, { color: this.state.showAccountTip ? '#F43C56' : 'transparent' }]}>{this.state.accountTip}</TextPingFang>
 
               <View style={styles.code_container}>
                 <TextInput
@@ -147,9 +161,7 @@ export default class Signup extends Component {
                 />
                 <TouchableOpacity
                   style={styles.text_code_container}
-                  onPress={() => {
-                    this.getCode()
-                  }}
+                  onPress={() => {this.getCode()}}
                 >
                   <TextPingFang style={styles.text_code}>{this.state.text_code}</TextPingFang>
                 </TouchableOpacity>
@@ -193,6 +205,29 @@ const styles = StyleSheet.create({
   },
   inputs_container: {
     flex: 1,
+  },
+  account_container: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    width: getResponsiveWidth(240),
+    borderBottomWidth: .5,
+    borderBottomColor: '#2DC3A6',
+  },
+  account_area: {
+    width: getResponsiveWidth(40),
+    height: getResponsiveWidth(24),
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: getResponsiveHeight(24),
+    marginRight: getResponsiveWidth(10),
+    marginLeft: getResponsiveWidth(2),
+    borderWidth: 1,
+    borderColor: '#2DC3A6',
+    borderRadius: 4
+  },
+  text_area: {
+    color: '#2DC3A6',
+    textAlign: 'center',
   },
   input: {
     width: getResponsiveWidth(240),
