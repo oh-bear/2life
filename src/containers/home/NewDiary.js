@@ -33,10 +33,10 @@ import {
 import Storage from '../../common/storage'
 import { SCENE_INDEX } from '../../constants/scene'
 
+import store from '../../redux/store'
+import { saveDiaryToLocal } from '../../redux/modules/diary'
 import HttpUtils from '../../network/HttpUtils'
 import { NOTES } from '../../network/Urls'
-
-const URL_publish = NOTES.publish
 
 function mapStateToProps(state) {
   return {
@@ -56,6 +56,7 @@ export default class NewDiary extends Component {
     location: '',
     showKeyboard: false,
     base64List: [],
+    imgSources: [],
     keyboardHeight: 0,
     savingDiary: false,
     showPopup: false,
@@ -120,7 +121,7 @@ export default class NewDiary extends Component {
 
     this.setState({ savingDiary: true })
 
-    const { title, content, latitude, longitude, location } = this.state
+    const { title, content, latitude, longitude, location, base64List, imgSources } = this.state
 
     if (!title && !content) return Actions.pop()
     if (!title) return Alert.alert('', '给日记起个标题吧')
@@ -130,25 +131,43 @@ export default class NewDiary extends Component {
 
     await sleep(100)
 
-    try{
-      const images = await postImgToQiniu(this.state.base64List, {
-        type: 'note',
+    try {
+      let images = ''
+      // TODO: VIP
+      const vip = false
+      if (vip) {
+        images = await postImgToQiniu(this.state.base64List, {
+          type: 'note',
+          user_id: this.props.user.id
+        })
+      }
+  
+      const data = { title, content, images, latitude, longitude, location, base64List, imgSources }
+
+      console.log(data)
+      // 将日记保存到本地redux
+      store.dispatch(saveDiaryToLocal({
+        ...data,
+        date: Date.now(),
         user_id: this.props.user.id
-      })
-  
-      const data = { title, content, images, latitude, longitude, location }
-      const res = await HttpUtils.post(URL_publish, data)
-      if (res.code === 0) {
-        this._updateUser()
-        updateReduxUser(this.props.user.id)
-  
-        if (this.state.firstEntryDiary) {
-          this.setState({
-            showPopup: true,
-            popupContent: '你的日记已经自动保存并同步，放心退出吧'
-          })
-        } else {
-          Actions.reset(SCENE_INDEX)
+      }))
+
+      if (this.state.firstEntryDiary) {
+        this.setState({
+          showPopup: true,
+          popupContent: '你的日记已经自动保存，放心退出吧'
+        })
+      } else {
+        Actions.reset(SCENE_INDEX)
+      }
+
+      // TODO: 是否为付费VIP用户
+      if (vip) {
+        const res = await HttpUtils.post(NOTES.publish, data)
+
+        if (res.code === 0) {
+          this._updateUser()
+          updateReduxUser(this.props.user.id)
         }
       }
   
@@ -160,6 +179,10 @@ export default class NewDiary extends Component {
 
   getBase64List(base64List) {
     this.setState({ base64List })
+  }
+
+  getImgSources(imgSources) {
+    this.setState({ imgSources })
   }
 
   render() {
@@ -176,6 +199,7 @@ export default class NewDiary extends Component {
             showNav={true}
             showBottomBar={true}
             getBase64List={this.getBase64List.bind(this)}
+            getImgSources={this.getImgSources.bind(this)}
             onPressBack={() => this.saveDiary()}
           />
 

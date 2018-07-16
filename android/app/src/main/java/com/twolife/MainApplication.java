@@ -3,6 +3,7 @@ package com.twolife;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.RNFetchBlob.RNFetchBlobPackage;
 import com.theweflex.react.WeChatPackage;
 import com.dooboolab.RNIap.RNIapPackage;
 import com.horcrux.svg.SvgPackage;
@@ -47,6 +48,7 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new RNFetchBlobPackage(),
             new WeChatPackage(),
             new RNIapPackage(),
             new SvgPackage(),

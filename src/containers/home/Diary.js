@@ -59,9 +59,17 @@ class SingleDiary extends Component {
           </View>
           {
             (() => {
-              if (diary.images) {
+              // let uri =
+              //   diary.imgSources && diary.imgSources.length ?
+              //   diary.imgSources[0].uri :
+              //   diary.images ?
+              //   diary.images.split(',')[0] :
+              //   ''
+              let uri = 'data:image/jpeg;base64,' + (diary.base64List[0] || '')
+
+              if (diary.base64List.length) {
                 return (
-                  <Image style={styles.img_diary} source={{ uri: diary.images ? diary.images.split(',')[0] : '' }} />
+                  <Image style={styles.img_diary} source={{uri}} />
                 )
               }
             })()
@@ -87,11 +95,9 @@ export default class Diary extends Component {
   render() {
     let date = ''
     if (this.props.data.length !== 0) {
-      if (this.props.isProfileNote) {
-        date = getMonthDay(this.props.data[0].date)
-      } else {
-        date = getDay(this.props.data[0].date)
-      }
+      date = this.props.isProfileNote ?
+             getMonthDay(this.props.data[0].date) :
+             getDay(this.props.data[0].date)
     }
 
     return (

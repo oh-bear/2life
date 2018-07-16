@@ -42,7 +42,8 @@
     "redux-actions": "^2.2.1",
     "redux-persist": "^4.9.1",
     "redux-saga": "^0.15.6",
-    "redux-thunk": "^2.2.0"
+    "redux-thunk": "^2.2.0",
+    "rn-fetch-blob": "^0.10.11"
   },
   "devDependencies": {
     "babel-eslint": "^8.0.2",

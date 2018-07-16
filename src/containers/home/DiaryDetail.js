@@ -27,6 +27,8 @@ import {
 import { SCENE_INDEX, SCENE_UPDATE_DIARY } from '../../constants/scene'
 import { getMonth, getLocation, updateReduxUser } from '../../common/util'
 
+import store from '../../redux/store'
+import { deleteDiaryToLocal } from '../../redux/modules/diary'
 import HttpUtils from '../../network/HttpUtils'
 import { NOTES } from '../../network/Urls'
 
@@ -43,6 +45,8 @@ export default class DiaryDetail extends Component {
   state = {
     showBanner: false,
     imageList: [],
+    imgSources: [],
+    base64List: [],
     likeComponent: null,
     mode: '',
     mode_face: require('../../../res/images/home/icon_happy.png'),
@@ -55,9 +59,14 @@ export default class DiaryDetail extends Component {
   async componentWillMount() {
     const diary = this.props.diary
 
-    if (diary.images) {
-      let imageList = diary.images.split(',').filter(url => !!url)
-      this.setState({ imageList, showBanner: true })
+    if (diary.images || diary.base64List.length) {
+      // let imageList = diary.images.split(',').filter(url => !!url)
+      this.setState({
+        // imageList,
+        base64List: diary.base64List,
+        imgSources: diary.imgSources,
+        showBanner: true
+      })
     } else {
       this.setState({ showBanner: false })
     }
@@ -68,34 +77,36 @@ export default class DiaryDetail extends Component {
     if (diary.mode > 60 && diary.mode <= 80) this.setState({mode_face: require('../../../res/images/home/icon_happy_male.png')})
     if (diary.mode > 80 && diary.mode <= 100) this.setState({mode_face: require('../../../res/images/home/icon_very_happy_male.png')})
 
-    this.setState({mode: diary.mode.toString()})
+    this.setState({mode: diary.mode ? diary.mode : 0})
 
     this.renderlikeComponent(diary.is_liked)
   }
 
   updateNote(mode, mode_face) {
-    const data = {
-      note_id: this.props.diary.id,
-      title: this.props.diary.title,
-      content: this.props.diary.content,
-      images: this.props.diary.images,
-      mode
-    }
-    HttpUtils.post(NOTES.update, data).then(res => {
-      if (res.code === 0) {
-        updateReduxUser(this.props.user.id)
-
-        // Alert.alert('', '修改成功')
-        
-        this.setState({
-          changeMode: false,
-          mode,
-          mode_face
-        })
-        this.toggleChooseMode()
-        DeviceEventEmitter.emit('flash_note', {})
+    // TODO: VIP
+    const vip = false
+    if (vip) {
+      const data = {
+        note_id: this.props.diary.id,
+        title: this.props.diary.title,
+        content: this.props.diary.content,
+        images: this.props.diary.images,
+        mode
       }
-    })
+      HttpUtils.post(NOTES.update, data).then(res => {
+        if (res.code === 0) {
+          updateReduxUser(this.props.user.id)
+            
+          this.setState({
+            changeMode: false,
+            mode,
+            mode_face
+          })
+          this.toggleChooseMode()
+          DeviceEventEmitter.emit('flash_note', {})
+        }
+      })
+    }
   }
 
   showOptions() {
@@ -118,12 +129,19 @@ export default class DiaryDetail extends Component {
             {
               text: '确定',
               onPress: () => {
-                HttpUtils.get(NOTES.delete, {note_id: this.props.diary.id}).then(res => {
-                  if (res.code === 0) {
-                    updateReduxUser(this.props.user.id)
-                    Actions.reset(SCENE_INDEX)
-                  }
-                })
+                // 删除本地日记
+                store.dispatch(deleteDiaryToLocal(this.props.diary.date))
+                Actions.reset(SCENE_INDEX)
+
+                // TODO: Vip
+                const vip = false
+                if (vip) {
+                  HttpUtils.get(NOTES.delete, {note_id: this.props.diary.id}).then(res => {
+                    if (res.code === 0) {
+                      updateReduxUser(this.props.user.id)
+                    }
+                  })
+                }
               }
             },
           ]
@@ -143,7 +161,7 @@ export default class DiaryDetail extends Component {
   }
 
   renderRightButton() {
-    if (this.props.user.id === this.props.diary.user_id) {
+    if (!this.props.partner.id || this.props.user.id === this.props.diary.user_id) {
       return (
         <TouchableOpacity
           style={styles.nav_right}
@@ -197,15 +215,21 @@ export default class DiaryDetail extends Component {
     return (
       <Container hidePadding={this.state.showBanner}>
         <KeyboardAwareScrollView>
-          <TouchableOpacity onPress={() => this.setState({showImgPreview: true})}>
+          <TouchableOpacity
+            onPress={() => this.setState({showImgPreview: true})}
+            activeOpacity={1}
+          >
             <DiaryBanner
               showBanner={this.state.showBanner}
               imageList={this.state.imageList}
+              // imgSources={this.state.imgSources}
+              base64List={this.state.base64List}
               showNav={true}
               rightButton={this.renderRightButton()}
             />
           </TouchableOpacity>
 
+          {/* 在无图片日记下的顶部导航 */}
           <CommonNav
             navStyle={[styles.nav_style, { display: this.state.showBanner ? 'none' : 'flex' }]}
             navBarStyle={styles.navbar_style}
@@ -252,7 +276,7 @@ export default class DiaryDetail extends Component {
             </TouchableOpacity>
 
             <TouchableOpacity
-              style={[styles.btn_container, { display: this.props.user.id !== this.props.diary.user_id ? 'flex' : 'none' }]}
+              style={[styles.btn_container, { display: this.props.user.id !== this.props.diary.user_id && this.props.partner.id ? 'flex' : 'none' }]}
             >
               {this.state.likeComponent}
             </TouchableOpacity>
@@ -304,8 +328,8 @@ export default class DiaryDetail extends Component {
           animationType={'fade'}
         >
           <ImageViewer
-            imageUrls={this.state.imageList.map(url => {
-              return {url: url}
+            imageUrls={this.state.base64List.map(base64 => {
+              return {url: 'data:image/jpeg;base64,' + base64}
             })}
             enableSwipeDown={true}
             onSwipeDown={() => this.setState({showImgPreview: false})}

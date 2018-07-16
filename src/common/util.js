@@ -1,5 +1,6 @@
 import axios from 'axios'
 import { Buffer } from 'buffer'
+import RNFetchBlob from 'rn-fetch-blob'
 import HttpUtils from '../network/HttpUtils'
 import { UTILS, USERS } from '../network/Urls'
 import store from '../redux/store'
@@ -328,4 +329,13 @@ export async function updateReduxUser(user_id) {
  */
 export function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms))
+}
+
+/**
+ * 将网络图片转换base64
+ * @param {String} url 网络图片URL
+ */
+export async function transformNetImgToBase64(url) {
+  const res = await RNFetchBlob.fetch('get', url)
+  return res.base64()
 }

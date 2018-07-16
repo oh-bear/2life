@@ -13,7 +13,6 @@ import Toast from 'antd-mobile/lib/toast'
 
 import Container from '../../components/Container'
 import TextPingFang from '../../components/TextPingFang'
-import Popup from '../../components/Popup'
 import DiaryBanner from './DiaryBanner'
 
 import {
@@ -23,6 +22,8 @@ import {
 import { getMonth, postImgToQiniu, sleep } from '../../common/util'
 import { SCENE_INDEX } from '../../constants/scene'
 
+import store from '../../redux/store'
+import { saveDiaryToLocal, deleteDiaryToLocal } from '../../redux/modules/diary'
 import HttpUtils from '../../network/HttpUtils'
 import { NOTES } from '../../network/Urls'
 
@@ -39,32 +40,21 @@ export default class UpdateDiary extends Component {
     date: new Date(),
     title: '',
     content: '',
-    showKeyboard: false,
     base64List: [],
-    keyboardHeight: 0,
     showPopup: false,
     imageList: [],
+    imgSources: [],
     savingDiary: false
   }
 
   componentWillMount() {
-    Keyboard.addListener('keyboardDidShow', (e) => {
-      this.setState({
-        showKeyboard: true,
-        keyboardHeight: e.endCoordinates.height
-      })
-    })
-    Keyboard.addListener('keyboardDidHide', () => {
-      this.setState({
-        showKeyboard: false,
-        keyboardHeight: 0
-      })
-    })
-
+    const diary = this.props.diary
     this.setState({
-      title: this.props.diary.title,
-      content: this.props.diary.content,
-      imageList: this.props.diary.images ? this.props.diary.images.split(',') : []
+      title: diary.title,
+      content: diary.content,
+      imageList: diary.images ? diary.images.split(',') : [],
+      imgSources: diary.imgSources,
+      base64List: diary.base64List
     })
   }
 
@@ -75,7 +65,7 @@ export default class UpdateDiary extends Component {
 
     this.setState({savingDiary: true})
 
-    const { title, content, base64List, imageList } = this.state
+    const { title, content, base64List, imageList, imgSources } = this.state
 
     if (!title && !content) return Actions.pop()
     if (!title) return Alert.alert('', '给日记起个标题吧')
@@ -83,36 +73,51 @@ export default class UpdateDiary extends Component {
 
     Toast.loading('正在保存', 0)
 
-    await sleep(300)
+    await sleep(100)
 
-    const images = await postImgToQiniu(base64List, {
-      type: 'note',
-      user_id: this.props.user.id
-    })
+    // 修改本地日记
+    const newDiary = {...this.props.diary, title, content, base64List, imgSources}
+    store.dispatch(deleteDiaryToLocal(this.props.diary.date))
+    store.dispatch(saveDiaryToLocal(newDiary))
 
-    const data = {
-      note_id: this.props.diary.id,
-      title,
-      content,
-      images: [...imageList, ...(images.length ? images.split(',') : [])].join(','),
-      mode: this.props.diary.mode
+    let images = ''
+    // TODO: VIP
+    const vip = false
+    if (vip) {
+      images = await postImgToQiniu(base64List, {
+        type: 'note',
+        user_id: this.props.user.id
+      })
+
+      const data = {
+        note_id: this.props.diary.id,
+        title,
+        content,
+        images: [...imageList, ...(images.length ? images.split(',') : [])].join(','),
+        mode: this.props.diary.mode
+      }
+      const res = await HttpUtils.post(NOTES.update, data)
+      // if (res.code === 0) {
+      // }
     }
-    const res = await HttpUtils.post(NOTES.update, data)
-    if (res.code === 0) {
-      Actions.reset(SCENE_INDEX)
-    }
+
+    Actions.reset(SCENE_INDEX)
 
     Toast.hide()
   }
 
   getBase64List(base64List, imageList) {
     base64List = base64List.filter(item => typeof item === 'string')
-    imageList = imageList.filter(item => typeof item === 'string')
+    // imageList = imageList.filter(item => typeof item === 'string')
 
     this.setState({
       base64List,
-      imageList
+      // imageList
     })
+  }
+
+  getImgSources(imgSources) {
+    this.setState({imgSources})
   }
 
   render() {
@@ -129,8 +134,11 @@ export default class UpdateDiary extends Component {
             showNav={true}
             showBottomBar={true}
             getBase64List={this.getBase64List.bind(this)}
+            getImgSources={this.getImgSources.bind(this)}
             onPressBack={() => this.saveDiary()}
             imageList={this.state.imageList}
+            base64List={this.state.base64List}
+            imgSources={this.state.imgSources}
             updateDiary={true}
           />
 
