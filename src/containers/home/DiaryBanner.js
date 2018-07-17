@@ -22,22 +22,15 @@ export default class DiaryBanner extends Component {
   static propTypes = {}
 
   state = {
-    imgSources: [], // 本地图片资源链接
-    base64List: [], // 图片base64列表
-    imageList: [], // 网络图片链接
+    imgPathList: [], // 本地图片资源链接
     imgIndex: 0,
     imgListComponent: [],
-    updateDiary: false,
   }
 
   componentDidMount() {
-    if (this.props.updateDiary) {
-      this.setState({
-        updateDiary: true,
-        imageList: this.props.imageList,
-        base64List: this.props.base64List
-      })
-    }
+    this.setState({
+      imgPathList: this.props.imgPathList || [],
+    })
     this._setImgList()
   }
 
@@ -61,108 +54,39 @@ export default class DiaryBanner extends Component {
     }
     ImagePicker.showImagePicker(options, res => {
       if (!res.didCancel) {
-        let source = { uri: res.uri }
+        let { imgPathList } = this.state
+        imgPathList.push(res.uri)
+        this.setState({ imgPathList })
+        this._setImgList()
 
-        // 更新日记页面
-        if (this.state.updateDiary) {
-          let { base64List } = this.state
-          base64List[base64List.length] = res.data
-          this.setState({ base64List })
-          this._setImgList()
-          this.props.getBase64List(base64List)
-        } else {
-          // 新日记页面
-          let { imgSources, base64List } = this.state
-          imgSources.push(source)
-          base64List.push(res.data)
-          this.setState({ imgSources, base64List })
-          this._setImgList()
-
-          // 传递base64列表到父页面，进行图片上传
-          this.props.getBase64List(base64List)
-
-          // 传递本地uri到父页面，保存到本地redux
-          this.props.getImgSources(imgSources)
-        }
+        // 传递原图uri到父页面
+        this.props.getImgPathList(imgPathList)
       }
     })
   }
 
   _removeImg() {
-    // if (this.state.updateDiary) {
-    //   let { base64List, imgIndex } = this.state
-    //   base64List.splice(imgIndex, 1)
-    //   this.setState({ base64List })
-    //   this._setImgList()
-    //   this.props.getBase64List(base64List)
-    // } else {
-      let { imgSources, base64List, imgIndex } = this.state
-      imgSources.splice(imgIndex, 1)
-      base64List.splice(imgIndex, 1)
-      this.setState({ imgSources, base64List })
-      this._setImgList()
-      this.props.getBase64List(base64List)
-      this.props.getImgSources(imgSources)
-    // }
+    let { imgPathList, imgIndex } = this.state
+    imgPathList.splice(imgIndex, 1)
+    this.setState({ imgPathList })
+    this._setImgList()
+    this.props.getImgPathList(imgPathList)
   }
 
   _setImgList() {
     let imgListComponent = []
 
-    // 更新日记页
-    if (this.state.updateDiary && this.state.base64List.length) {
-      imgListComponent = this.state.base64List.map((item, index) => {
-        let uri = 'data:image/jpeg;base64,' + item
+    // 日记图片
+    if (this.props.imgPathList && this.props.imgPathList.length) {
+      imgListComponent = this.props.imgPathList.map((path, index) => {
         return (
-          <Image key={index} style={styles.img} resizeMode='cover' source={{uri}}/>
-        )
-      })
-      return this.setState({ imgListComponent })
-    } else if (this.state.updateDiary && this.state.base64List.length){
-      imgListComponent[0] = (
-        <TouchableOpacity
-          style={[styles.img_container, { display: this.state.source ? 'none' : 'flex' }]}
-          onPress={() => this._addImg()}
-          key={0}
-        >
-          <Image source={require('../../../res/images/home/icon_add_photo.png')}/>
-        </TouchableOpacity>
-      )
-      return this.setState({ imgListComponent })
-    }
-
-    // 日记详情页，网络访问
-    if (this.props.imageList && this.props.imageList.length !== 0) {
-      imgListComponent = this.props.imageList.map((item, index) => {
-        return (
-          <Image key={index} style={styles.img} resizeMode='cover' source={{ uri: item }}/>
-        )
-      })
-      return this.setState({ imgListComponent })
-    }
-
-    // 日记详情页，本地redux访问
-    if (this.props.base64List && this.props.base64List.length) {
-      imgListComponent = this.props.base64List.map((item, index) => {
-        let uri = 'data:image/jpeg;base64,' + item
-        return (
-          <Image key={index} style={styles.img} resizeMode='cover' source={{uri}}/>
-        )
-      })
-      return this.setState({ imgListComponent })
-    }
-
-    // 创建新日记
-    if (this.state.imgSources.length !== 0) {
-      imgListComponent = this.state.imgSources.map((item, index) => {
-        return (
-          <Image key={index} style={styles.img} resizeMode='cover' source={item}/>
+          <Image key={index} style={styles.img} resizeMode='cover' source={{uri: path}}/>
         )
       })
     } else {
       imgListComponent[0] = (
         <TouchableOpacity
-          style={[styles.img_container, { display: this.state.source ? 'none' : 'flex' }]}
+          style={[styles.img_container, { display: this.props.source ? 'none' : 'flex' }]}
           onPress={() => this._addImg()}
           key={0}
         >
@@ -193,7 +117,6 @@ export default class DiaryBanner extends Component {
           height={getResponsiveWidth(282)}
           style={styles.swiper}
           loop={false}
-          autoplay
           dot={<View style={styles.swiper_dot}></View>}
           activeDot={<View style={[styles.swiper_dot, styles.swiper_active_dot]}></View>}
           bounces={true}

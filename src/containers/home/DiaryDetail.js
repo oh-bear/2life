@@ -24,8 +24,8 @@ import {
   WIDTH,
   getResponsiveWidth,
 } from '../../common/styles'
+import { getMonth, getLocation, updateReduxUser, deleteFile} from '../../common/util'
 import { SCENE_INDEX, SCENE_UPDATE_DIARY } from '../../constants/scene'
-import { getMonth, getLocation, updateReduxUser } from '../../common/util'
 
 import store from '../../redux/store'
 import { deleteDiaryToLocal } from '../../redux/modules/diary'
@@ -44,9 +44,7 @@ export default class DiaryDetail extends Component {
 
   state = {
     showBanner: false,
-    imageList: [],
-    imgSources: [],
-    base64List: [],
+    imgPathList: [],
     likeComponent: null,
     mode: '',
     mode_face: require('../../../res/images/home/icon_happy.png'),
@@ -59,12 +57,9 @@ export default class DiaryDetail extends Component {
   async componentWillMount() {
     const diary = this.props.diary
 
-    if (diary.images || diary.base64List.length) {
-      // let imageList = diary.images.split(',').filter(url => !!url)
+    if (diary.imgPathList.length) {
       this.setState({
-        // imageList,
-        base64List: diary.base64List,
-        imgSources: diary.imgSources,
+        imgPathList: diary.imgPathList,
         showBanner: true
       })
     } else {
@@ -130,6 +125,9 @@ export default class DiaryDetail extends Component {
               text: '确定',
               onPress: () => {
                 // 删除本地日记
+                this.props.diary.imgPathList.forEach(path => {
+                  deleteFile(path)
+                })
                 store.dispatch(deleteDiaryToLocal(this.props.diary.date))
                 Actions.reset(SCENE_INDEX)
 
@@ -220,11 +218,9 @@ export default class DiaryDetail extends Component {
             activeOpacity={1}
           >
             <DiaryBanner
-              showBanner={this.state.showBanner}
-              imageList={this.state.imageList}
-              // imgSources={this.state.imgSources}
-              base64List={this.state.base64List}
               showNav={true}
+              showBanner={this.state.showBanner}
+              imgPathList={this.state.imgPathList}
               rightButton={this.renderRightButton()}
             />
           </TouchableOpacity>
@@ -328,8 +324,8 @@ export default class DiaryDetail extends Component {
           animationType={'fade'}
         >
           <ImageViewer
-            imageUrls={this.state.base64List.map(base64 => {
-              return {url: 'data:image/jpeg;base64,' + base64}
+            imageUrls={this.state.imgPathList.map(path => {
+              return {url: path}
             })}
             enableSwipeDown={true}
             onSwipeDown={() => this.setState({showImgPreview: false})}

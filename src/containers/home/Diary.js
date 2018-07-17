@@ -59,17 +59,9 @@ class SingleDiary extends Component {
           </View>
           {
             (() => {
-              // let uri =
-              //   diary.imgSources && diary.imgSources.length ?
-              //   diary.imgSources[0].uri :
-              //   diary.images ?
-              //   diary.images.split(',')[0] :
-              //   ''
-              let uri = 'data:image/jpeg;base64,' + (diary.base64List[0] || '')
-
-              if (diary.base64List.length) {
+              if (diary.imgPathList.length) {
                 return (
-                  <Image style={styles.img_diary} source={{uri}} />
+                  <Image style={styles.img_diary} source={{uri: ''+diary.imgPathList[0]}} />
                 )
               }
             })()

@@ -332,10 +332,24 @@ export function sleep(ms) {
 }
 
 /**
- * 将网络图片转换base64
+ * 下载or复制图片到本地
  * @param {String} url 网络图片URL
+ * @returns {String} 图片保存路径
  */
-export async function transformNetImgToBase64(url) {
-  const res = await RNFetchBlob.fetch('get', url)
-  return res.base64()
+export async function downloadImg(url) {
+  const config = {
+    fileCache: true,
+    appendExt : 'jpg'
+  }
+  const res = await RNFetchBlob.config(config).fetch('get', url)
+  return res.path()
+}
+
+/**
+ * 删除文件
+ * @param {String} path 文件路径
+ */
+export async function deleteFile(path) {
+  RNFetchBlob.fs.unlink(path)
+  .then(res => console.log(res))
 }

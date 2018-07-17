@@ -27,7 +27,8 @@ import {
   getLocation,
   updateUser,
   updateReduxUser,
-  sleep
+  sleep,
+  downloadImg
 } from '../../common/util'
 
 import Storage from '../../common/storage'
@@ -56,7 +57,7 @@ export default class NewDiary extends Component {
     location: '',
     showKeyboard: false,
     base64List: [],
-    imgSources: [],
+    imgPathList: [],
     keyboardHeight: 0,
     savingDiary: false,
     showPopup: false,
@@ -121,7 +122,7 @@ export default class NewDiary extends Component {
 
     this.setState({ savingDiary: true })
 
-    const { title, content, latitude, longitude, location, base64List, imgSources } = this.state
+    const { title, content, latitude, longitude, location, base64List, imgPathList } = this.state
 
     if (!title && !content) return Actions.pop()
     if (!title) return Alert.alert('', '给日记起个标题吧')
@@ -142,12 +143,20 @@ export default class NewDiary extends Component {
         })
       }
   
-      const data = { title, content, images, latitude, longitude, location, base64List, imgSources }
-
-      console.log(data)
+      const data = { title, content, images, latitude, longitude, location, base64List, imgPathList }
+      
+      // 复制图片文件
+      let newPathListPromises = imgPathList.map(async path => {
+        return await downloadImg(path)
+      })
+      let newImgPathList = []
+      for (let newPathListPromise of newPathListPromises) {
+        newImgPathList.push(await newPathListPromise)
+      }
       // 将日记保存到本地redux
       store.dispatch(saveDiaryToLocal({
         ...data,
+        imgPathList: newImgPathList,
         date: Date.now(),
         user_id: this.props.user.id
       }))
@@ -177,12 +186,9 @@ export default class NewDiary extends Component {
     }
   }
 
-  getBase64List(base64List) {
-    this.setState({ base64List })
-  }
 
-  getImgSources(imgSources) {
-    this.setState({ imgSources })
+  getImgPathList(imgPathList) {
+    this.setState({ imgPathList })
   }
 
   render() {
@@ -198,8 +204,8 @@ export default class NewDiary extends Component {
             showBanner={true}
             showNav={true}
             showBottomBar={true}
-            getBase64List={this.getBase64List.bind(this)}
-            getImgSources={this.getImgSources.bind(this)}
+            imgPathList={this.state.imgPathList}
+            getImgPathList={this.getImgPathList.bind(this)}
             onPressBack={() => this.saveDiary()}
           />
 

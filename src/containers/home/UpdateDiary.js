@@ -19,7 +19,7 @@ import {
   WIDTH,
   getResponsiveWidth,
 } from '../../common/styles'
-import { getMonth, postImgToQiniu, sleep } from '../../common/util'
+import { getMonth, postImgToQiniu, sleep, downloadImg, deleteFile } from '../../common/util'
 import { SCENE_INDEX } from '../../constants/scene'
 
 import store from '../../redux/store'
@@ -42,8 +42,9 @@ export default class UpdateDiary extends Component {
     content: '',
     base64List: [],
     showPopup: false,
-    imageList: [],
-    imgSources: [],
+    // imageList: [],
+    imgPathList: [],
+    oldImgPathList: [],
     savingDiary: false
   }
 
@@ -52,8 +53,9 @@ export default class UpdateDiary extends Component {
     this.setState({
       title: diary.title,
       content: diary.content,
-      imageList: diary.images ? diary.images.split(',') : [],
-      imgSources: diary.imgSources,
+      // imageList: diary.images ? diary.images.split(',') : [],
+      imgPathList: diary.imgPathList,
+      oldImgPathList : [...diary.imgPathList],
       base64List: diary.base64List
     })
   }
@@ -65,7 +67,7 @@ export default class UpdateDiary extends Component {
 
     this.setState({savingDiary: true})
 
-    const { title, content, base64List, imageList, imgSources } = this.state
+    const { title, content, base64List, imgPathList } = this.state
 
     if (!title && !content) return Actions.pop()
     if (!title) return Alert.alert('', '给日记起个标题吧')
@@ -75,8 +77,38 @@ export default class UpdateDiary extends Component {
 
     await sleep(100)
 
+    // 过滤已存在的图片
+    let newImgPathList = [] // 新的未缓存图片
+    let oldUseingImgPathList = [] // 更新日记继续使用的已缓存图片
+    for(let i = 0; i < imgPathList.length; i++) {
+      for(let j = 0; j < this.state.oldImgPathList.length; j++) {
+        if (imgPathList[i] === this.state.oldImgPathList[j]) {
+          oldUseingImgPathList.push(imgPathList[i])
+          break
+        }
+        if (j === this.state.oldImgPathList.length - 1) {
+          newImgPathList.push(imgPathList[i])
+        }
+      }
+    }
+    // 复制图片文件
+    let newPathListPromises = newImgPathList.map(async path => {
+      return await downloadImg(path)
+    })
+    let newUsingImgPathList = []
+    for (let newPathListPromise of newPathListPromises) {
+      newUsingImgPathList.push(await newPathListPromise)
+    }
+
     // 修改本地日记
-    const newDiary = {...this.props.diary, title, content, base64List, imgSources}
+    const newDiary = {
+      ...this.props.diary,
+      title,
+      content,
+      base64List,
+      imgPathList: [...newUsingImgPathList, ...oldUseingImgPathList]
+    }
+    console.log({newDiary})
     store.dispatch(deleteDiaryToLocal(this.props.diary.date))
     store.dispatch(saveDiaryToLocal(newDiary))
 
@@ -106,18 +138,12 @@ export default class UpdateDiary extends Component {
     Toast.hide()
   }
 
-  getBase64List(base64List, imageList) {
-    base64List = base64List.filter(item => typeof item === 'string')
-    // imageList = imageList.filter(item => typeof item === 'string')
-
-    this.setState({
-      base64List,
-      // imageList
-    })
+  getBase64List(base64List) {
+    this.setState({base64List})
   }
 
-  getImgSources(imgSources) {
-    this.setState({imgSources})
+  getImgPathList(imgPathList) {
+    this.setState({imgPathList})
   }
 
   render() {
@@ -130,16 +156,15 @@ export default class UpdateDiary extends Component {
           enableResetScrollToCoords
         >
           <DiaryBanner
-            showBanner={true}
             showNav={true}
+            showBanner={true}
             showBottomBar={true}
-            getBase64List={this.getBase64List.bind(this)}
-            getImgSources={this.getImgSources.bind(this)}
             onPressBack={() => this.saveDiary()}
-            imageList={this.state.imageList}
-            base64List={this.state.base64List}
-            imgSources={this.state.imgSources}
-            updateDiary={true}
+            imgPathList={this.state.imgPathList}
+            // getBase64List={this.getBase64List.bind(this)}
+            getImgPathList={this.getImgPathList.bind(this)}
+            // base64List={this.state.base64List}
+            // updateDiary={true}
           />
 
           <View style={styles.date_container}>
