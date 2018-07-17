@@ -131,6 +131,7 @@ android {
 }
 
 dependencies {
+    compile project(':react-native-randombytes')
     compile project(':rn-fetch-blob')
     compile project(':react-native-wechat')
     compile project(':react-native-iap')

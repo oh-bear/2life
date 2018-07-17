@@ -1,10 +1,13 @@
 import { Platform } from 'react-native'
 import axios from 'axios'
 import { Buffer } from 'buffer'
+import shim from '../../shim'
+import crypto from 'crypto'
 import RNFetchBlob from 'rn-fetch-blob'
 import HttpUtils from '../network/HttpUtils'
 import { UTILS, USERS } from '../network/Urls'
 import store from '../redux/store'
+import Storage from './storage'
 import { fetchProfileSuccess } from '../redux/modules/user'
 
 const URL_qiniu_token = UTILS.qiniu_token
@@ -35,42 +38,42 @@ export function getFormDay(timestamp) {
 export function getMonth(month) {
   let chinese_month = ''
   switch (month) {
-  case 0:
-    chinese_month = '一月'
-    break
-  case 1:
-    chinese_month = '二月'
-    break
-  case 2:
-    chinese_month = '三月'
-    break
-  case 3:
-    chinese_month = '四月'
-    break
-  case 4:
-    chinese_month = '五月'
-    break
-  case 5:
-    chinese_month = '六月'
-    break
-  case 6:
-    chinese_month = '七月'
-    break
-  case 7:
-    chinese_month = '八月'
-    break
-  case 8:
-    chinese_month = '九月'
-    break
-  case 9:
-    chinese_month = '十月'
-    break
-  case 10:
-    chinese_month = '十一月'
-    break
-  case 11:
-    chinese_month = '十二月'
-    break
+    case 0:
+      chinese_month = '一月'
+      break
+    case 1:
+      chinese_month = '二月'
+      break
+    case 2:
+      chinese_month = '三月'
+      break
+    case 3:
+      chinese_month = '四月'
+      break
+    case 4:
+      chinese_month = '五月'
+      break
+    case 5:
+      chinese_month = '六月'
+      break
+    case 6:
+      chinese_month = '七月'
+      break
+    case 7:
+      chinese_month = '八月'
+      break
+    case 8:
+      chinese_month = '九月'
+      break
+    case 9:
+      chinese_month = '十月'
+      break
+    case 10:
+      chinese_month = '十一月'
+      break
+    case 11:
+      chinese_month = '十二月'
+      break
   }
   return chinese_month
 }
@@ -85,27 +88,27 @@ export function getDay(timestamp) {
   const weekDay = date.getDay()
   let EngWeekDay = ''
   switch (weekDay) {
-  case 0:
-    EngWeekDay = 'Sun'
-    break
-  case 1:
-    EngWeekDay = 'Mon'
-    break
-  case 2:
-    EngWeekDay = 'Tue'
-    break
-  case 3:
-    EngWeekDay = 'Wed'
-    break
-  case 4:
-    EngWeekDay = 'Thu'
-    break
-  case 5:
-    EngWeekDay = 'Fri'
-    break
-  case 6:
-    EngWeekDay = 'Sat'
-    break
+    case 0:
+      EngWeekDay = 'Sun'
+      break
+    case 1:
+      EngWeekDay = 'Mon'
+      break
+    case 2:
+      EngWeekDay = 'Tue'
+      break
+    case 3:
+      EngWeekDay = 'Wed'
+      break
+    case 4:
+      EngWeekDay = 'Thu'
+      break
+    case 5:
+      EngWeekDay = 'Fri'
+      break
+    case 6:
+      EngWeekDay = 'Sat'
+      break
   }
   return `${day}\n${EngWeekDay}`
 }
@@ -217,6 +220,17 @@ export async function getWeather(region) {
   }
 }
 
+// ios文件路径每次访问后都会变化，需要特别处理
+export function getPath(uri) {
+  let filePath = uri
+  if (Platform.OS === 'ios') {
+    let arr = uri.split('/')
+    const dirs = RNFetchBlob.fs.dirs
+    filePath = `${dirs.DocumentDir}/${arr[arr.length - 1]}`
+  }
+  return filePath
+}
+
 /**
  * 上传图片至七牛
  * @param {Array of String} 图片链接数组
@@ -229,13 +243,7 @@ export async function postImgToQiniu(uriList, obj) {
   if (!type && !user_id) return
 
   const uriBase64ListPromises = uriList.map(async uri => {
-    let filePath = uri
-    // ios绝对路径每次都会变化，需要特别处理
-    if (Platform.OS === 'ios' && type === 'profile') {
-      let arr = uri.split('/')
-      const dirs = RNFetchBlob.fs.dirs
-      filePath = `${dirs.DocumentDir}/${arr[arr.length - 1]}`
-    }
+    let filePath  = getPath(uri)
     return await RNFetchBlob.fs.readFile(filePath, 'base64')
   })
 
@@ -358,9 +366,10 @@ export function sleep(ms) {
  * @returns {String} 图片保存路径
  */
 export async function downloadImg(url) {
+  console.log(RNFetchBlob.fs.dirs.DocumentDir)
   const config = {
     fileCache: true,
-    appendExt : 'jpg'
+    path: RNFetchBlob.fs.dirs.DocumentDir + '/' + Math.round(Math.random() * 10 ** 10) +'.jpg'
   }
   const res = await RNFetchBlob.config(config).fetch('get', url)
   return res.path()
@@ -372,5 +381,43 @@ export async function downloadImg(url) {
  */
 export async function deleteFile(path) {
   RNFetchBlob.fs.unlink(path)
-  .then(res => console.log(res))
+    .then(res => console.log(res))
+}
+
+function getOCRSign() {
+  const appid = ''
+  const secret_id = ''
+  const secret_key = ''
+  const currentTime = Math.round(Date.now() / 1000)
+  const expiredTime = currentTime + 1 * 30 * 24 * 60 * 60
+  const rand = Math.round(Math.random() * (2 ** 32))
+  const origin = `a=${appid}&k=${secret_id}&e=${expiredTime}&t=${currentTime}&r=${rand}`
+
+  const data = Buffer.from(origin, 'utf8')
+  const signTmp = crypto.createHmac('sha1', secret_key).update(data).digest()
+  const bin = Buffer.concat([signTmp, data])
+  const sign = Buffer.from(bin).toString('base64')
+
+  Storage.set('ocr_authorization', sign)
+  return sign
+}
+
+export async function OCR(base64) {
+  const url = 'https://recognition.image.myqcloud.com/ocr/handwriting'
+  const sign = await Storage.get('ocr_authorization', '') || getOCRSign()
+
+  const data = {
+    appid: '',
+    image: base64
+  }
+  const res = await fetch(url, {
+    method: 'post',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': sign
+    },
+    body: JSON.stringify(data)
+  })
+
+  console.log(await res)
 }

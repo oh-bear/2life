@@ -27,7 +27,7 @@ import {
 import Storage from '../../common/storage'
 import { SCENE_LOGIN_OPTIONS } from '../../constants/scene'
 
-import { updateUser, postImgToQiniu } from '../../common/util'
+import { updateUser, postImgToQiniu, OCR } from '../../common/util'
 
 export default class ProfileEdit extends Component {
 
@@ -64,6 +64,8 @@ export default class ProfileEdit extends Component {
         this.setState({ user: Object.assign({}, this.state.user, { face: images }) }, () => {
           this.updateUser()
         })
+
+        // OCR(res.data)
       }
     })
   }

@@ -160,10 +160,7 @@ export default class UpdateDiary extends Component {
             showBottomBar={true}
             onPressBack={() => this.saveDiary()}
             imgPathList={this.state.imgPathList}
-            // getBase64List={this.getBase64List.bind(this)}
             getImgPathList={this.getImgPathList.bind(this)}
-            // base64List={this.state.base64List}
-            // updateDiary={true}
           />
 
           <View style={styles.date_container}>
