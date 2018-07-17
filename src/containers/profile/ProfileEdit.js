@@ -60,8 +60,7 @@ export default class ProfileEdit extends Component {
     }
     ImagePicker.showImagePicker(options, async res => {
       if (!res.didCancel) {
-        const base64 = res.data
-        const images = await postImgToQiniu([base64], { type: 'profile', user_id: this.state.user.id })
+        const images = await postImgToQiniu([res.uri], { type: 'profile', user_id: this.state.user.id })
         this.setState({ user: Object.assign({}, this.state.user, { face: images }) }, () => {
           this.updateUser()
         })

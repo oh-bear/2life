@@ -1,3 +1,4 @@
+import { Platform } from 'react-native'
 import axios from 'axios'
 import { Buffer } from 'buffer'
 import RNFetchBlob from 'rn-fetch-blob'
@@ -217,18 +218,34 @@ export async function getWeather(region) {
 }
 
 /**
- * 上传base64至七牛
- * @param {Array of String} base64List
- * @param {Object} obj
+ * 上传图片至七牛
+ * @param {Array of String} 图片链接数组
+ * @param {Object}
  * @returns {String} 图片链接 img_url,img_url...
  */
-export async function postImgToQiniu(base64List, obj) {
-  if (base64List.length === 0) return ''
+export async function postImgToQiniu(uriList, obj) {
+  if (uriList.length === 0) return ''
   const { type, user_id } = obj
   if (!type && !user_id) return
 
+  const uriBase64ListPromises = uriList.map(async uri => {
+    let filePath = uri
+    // ios绝对路径每次都会变化，需要特别处理
+    if (Platform.OS === 'ios' && type === 'profile') {
+      let arr = uri.split('/')
+      const dirs = RNFetchBlob.fs.dirs
+      filePath = `${dirs.DocumentDir}/${arr[arr.length - 1]}`
+    }
+    return await RNFetchBlob.fs.readFile(filePath, 'base64')
+  })
+
+  let uriBase64List = []
+  for (let uriBase64ListPromise of uriBase64ListPromises) {
+    uriBase64List.push(await uriBase64ListPromise)
+  }
+
   // 并发上传图片
-  const qiniuPromises = base64List.map(async (base64, index) => {
+  const qiniuPromises = uriBase64List.map(async (base64) => {
     let filename
     if (type === 'note') {
       filename = `2life/user/${user_id}/img_${Date.now()}.png-2life_note.jpg`
@@ -236,19 +253,23 @@ export async function postImgToQiniu(base64List, obj) {
     if (type === 'profile') {
       filename = `2life/user/${user_id}/profile_${Date.now()}.png-2life_face.jpg`
     }
+
+    // 向后台获取七牛token
     const res_token = await HttpUtils.get(URL_qiniu_token, { filename })
+    // 图片名称转base64
     const key_base64 = Buffer.from(filename).toString('base64')
 
     if (res_token.code === 0) {
       const qiniu_token = res_token.data // 七牛token
 
+      // 上传到七牛
       const res_qiniu = await fetch(URL_qiniu_host + key_base64, {
         method: 'post',
         headers: {
           'Content-Type': 'application/octet-stream',
           'Authorization': 'UpToken ' + qiniu_token
         },
-        body: base64List[index]
+        body: base64
       })
 
       return res_qiniu

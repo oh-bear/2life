@@ -108,7 +108,6 @@ export default class UpdateDiary extends Component {
       base64List,
       imgPathList: [...newUsingImgPathList, ...oldUseingImgPathList]
     }
-    console.log({newDiary})
     store.dispatch(deleteDiaryToLocal(this.props.diary.date))
     store.dispatch(saveDiaryToLocal(newDiary))
 
