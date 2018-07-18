@@ -57,7 +57,6 @@ export default class ProfileMode extends Component {
   }
 
   mergeData(modeData) {
-    console.log(modeData)
 
     let newModeData = []
     let sameDayModes = []

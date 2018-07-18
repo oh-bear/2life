@@ -22,21 +22,15 @@ export default class DiaryBanner extends Component {
   static propTypes = {}
 
   state = {
-    sources: [],
-    base64List: [],
+    imgPathList: [], // 本地图片资源链接
     imgIndex: 0,
     imgListComponent: [],
-    updateDiary: false,
-    imageList: []
   }
 
   componentDidMount() {
-    if (this.props.updateDiary) {
-      this.setState({
-        updateDiary: true,
-        imageList: this.props.imageList
-      })
-    }
+    this.setState({
+      imgPathList: this.props.imgPathList || [],
+    })
     this._setImgList()
   }
 
@@ -60,82 +54,39 @@ export default class DiaryBanner extends Component {
     }
     ImagePicker.showImagePicker(options, res => {
       if (!res.didCancel) {
-        let source = { uri: res.uri }
+        let { imgPathList } = this.state
+        imgPathList.push(res.uri)
+        this.setState({ imgPathList })
+        this._setImgList()
 
-        if (this.state.updateDiary) {
-          let { imageList, base64List } = this.state
-          base64List[imageList.length] = res.data
-          imageList.push(source)
-          this.setState({ imageList, base64List })
-          this._setImgList()
-          this.props.getBase64List(base64List, imageList)
-        } else {
-          let { sources, base64List } = this.state
-          sources.push(source)
-          base64List.push(res.data)
-          this.setState({ sources, base64List })
-          this._setImgList()
-          this.props.getBase64List(base64List)
-        }
+        // 传递原图uri到父页面
+        this.props.getImgPathList(imgPathList)
       }
     })
   }
 
   _removeImg() {
-    if (this.state.updateDiary) {
-      let { imageList, base64List, imgIndex } = this.state
-      imageList.splice(imgIndex, 1)
-      base64List.splice(imgIndex, 1)
-      this.setState({ imageList, base64List })
-      this._setImgList()
-      this.props.getBase64List(base64List, imageList)
-    } else {
-      let { sources, base64List, imgIndex } = this.state
-      sources.splice(imgIndex, 1)
-      base64List.splice(imgIndex, 1)
-      this.setState({ sources, base64List })
-      this._setImgList()
-      this.props.getBase64List(base64List)
-    }
+    let { imgPathList, imgIndex } = this.state
+    imgPathList.splice(imgIndex, 1)
+    this.setState({ imgPathList })
+    this._setImgList()
+    this.props.getImgPathList(imgPathList)
   }
 
   _setImgList() {
     let imgListComponent = []
 
-    if (this.state.updateDiary) {
-      imgListComponent = this.state.imageList.map((item, index) => {
-        if (typeof item === 'string') {
-          return (
-            <Image key={index} style={styles.img} resizeMode='cover' source={{ uri: item }}/>
-          )
-        } else {
-          return (
-            <Image key={index} style={styles.img} resizeMode='cover' source={item}/>
-          )
-        }
-      })
-      return this.setState({ imgListComponent })
-    }
-
-    if (this.props.imageList && this.props.imageList.length !== 0) {
-      imgListComponent = this.props.imageList.map((item, index) => {
+    // 日记图片
+    if (this.props.imgPathList && this.props.imgPathList.length) {
+      imgListComponent = this.props.imgPathList.map((path, index) => {
         return (
-          <Image key={index} style={styles.img} resizeMode='cover' source={{ uri: item }}/>
-        )
-      })
-      return this.setState({ imgListComponent })
-    }
-
-    if (this.state.sources.length !== 0) {
-      imgListComponent = this.state.sources.map((item, index) => {
-        return (
-          <Image key={index} style={styles.img} resizeMode='cover' source={item}/>
+          <Image key={index} style={styles.img} resizeMode='cover' source={{uri: path}}/>
         )
       })
     } else {
       imgListComponent[0] = (
         <TouchableOpacity
-          style={[styles.img_container, { display: this.state.source ? 'none' : 'flex' }]}
+          style={[styles.img_container, { display: this.props.source ? 'none' : 'flex' }]}
           onPress={() => this._addImg()}
           key={0}
         >
@@ -144,6 +95,11 @@ export default class DiaryBanner extends Component {
       )
     }
     this.setState({ imgListComponent })
+  }
+
+  _onImgChanged(index) {
+    this.setState({imgIndex: index})
+    console.log(index)
   }
 
   render() {
@@ -164,9 +120,7 @@ export default class DiaryBanner extends Component {
           dot={<View style={styles.swiper_dot}></View>}
           activeDot={<View style={[styles.swiper_dot, styles.swiper_active_dot]}></View>}
           bounces={true}
-          onIndexChanged={(index) => {
-            this.setState({ imgIndex: index })
-          }}
+          onIndexChanged={this._onImgChanged.bind(this)}
         >
           {this.state.imgListComponent}
         </Swiper>

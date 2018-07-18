@@ -162,8 +162,10 @@ android {
 }
 
 dependencies {
+    compile project(':react-native-randombytes')
     compile project(':react-native-vector-icons')
     compile project(':react-native-svg')
+    compile project(':rn-fetch-blob')
     compile project(':react-native-splash-screen')
     compile project(':react-native-image-picker')
     compile project(':react-native-iap')

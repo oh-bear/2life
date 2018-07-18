@@ -35,13 +35,16 @@ import {
   diaryClassify,
   getWeatherDesc,
   updateUser,
-  updateReduxUser
+  updateReduxUser,
+  downloadImg
 } from '../../common/util'
 
 import { SCENE_NEW_DIARY } from '../../constants/scene'
 
+import store from '../../redux/store'
+import { saveDiaryToLocal, cleanDiary } from '../../redux/modules/diary'
 import HttpUtils from '../../network/HttpUtils'
-import { NOTES, USERS } from '../../network/Urls'
+import { NOTES } from '../../network/Urls'
 
 const URL_list = NOTES.list
 
@@ -84,7 +87,7 @@ export default class Home extends Component {
     //alert(HEIGHT)
     this._showTips()
     this._getWeather()
-    this._fetchDiary()
+    await this._fetchDiary()
 
     DeviceEventEmitter.addListener('flush_note', () => this._fetchDiary())
   }
@@ -95,52 +98,80 @@ export default class Home extends Component {
     if (res.code === 0) {
       const { partner, recommend, user } = res.data
       let diaryList = [...partner, ...user]
-      // 判断是否空对象
-      // if (recommend.id) diaryList.push(recommend)
-      diaryList.sort((a, b) => b.date - a.date)
-      diaryList = diaryClassify(diaryList, 'date')
 
-      let markedDates = {}
-      const boy = { key: 'boy', color: '#4590F8' }
-      const girl = { key: 'girl', color: 'pink' }
-      const otherBoy = { key: 'otherBoy', color: '#2DC3A6' }
-      const otherGirl = { key: 'otherGirl', color: '#F83AC1' }
+      // 版本过渡：保存网络日记到本地
+      store.dispatch(cleanDiary())
+      let localDiaryList = store.getState().diary
+      if (localDiaryList.length === 0) {
+        const diaryListPromises = diaryList.map(async diary => {
+          diary.imgPathList = diary.imgPathList || []
+          // 缓存图片
+          let pathPromises = []
+          if (diary.images) {
+            let urlList = diary.images.split(',')
+            for (let url of urlList) {
+              pathPromises.push(await downloadImg(url))
+            }
+          }
 
-      diaryList.forEach(dayDiary => {
-        markedDates[getFormDay(dayDiary[0].date)] = { dots: [] }
-        let hasBoyDiary = false
-        let hasGirlDiary = false
-        let hasOtherBoyDiary = false
-        let hasOtherGirlDiary = false
-
-        dayDiary.forEach(diary => {
-          if ((diary.user_id === this.props.user.id) && (this.props.user.sex === 0)) {
-            hasBoyDiary = true
+          for (let pathPromise of pathPromises) {
+            diary.imgPathList.push(await pathPromise)
           }
-          if ((diary.user_id === this.props.user.id) && (this.props.user.sex === 1)) {
-            hasGirlDiary = true
-          }
-          if ((diary.user_id !== this.props.user.id) && (this.props.partner.sex === 0)) {
-            hasOtherBoyDiary = true
-          }
-          if ((diary.user_id !== this.props.user.id) && (this.props.partner.sex === 1)) {
-            hasOtherGirlDiary = true
-          }
+          return diary
         })
+        for (let diaryListPromise of diaryListPromises) {
+          store.dispatch(saveDiaryToLocal(await diaryListPromise))
+        }
+      }
 
-        if (hasBoyDiary) markedDates[getFormDay(dayDiary[0].date)].dots.push(boy)
-        if (hasGirlDiary) markedDates[getFormDay(dayDiary[0].date)].dots.push(girl)
-        if (hasOtherBoyDiary) markedDates[getFormDay(dayDiary[0].date)].dots.push(otherBoy)
-        if (hasOtherGirlDiary) markedDates[getFormDay(dayDiary[0].date)].dots.push(otherGirl)
-      })
-
-      this.setState({
-        diaryList,
-        markedDates,
-        filterDiaryList: diaryList,
-        isRefreshing: false
-      })
+      this._formDiaryList(store.getState().diary)
     }
+  }
+
+  _formDiaryList(diaryList) {
+    diaryList.sort((a, b) => b.date - a.date)
+    diaryList = diaryClassify(diaryList)
+
+    let markedDates = {}
+    const boy = { key: 'boy', color: '#4590F8' }
+    const girl = { key: 'girl', color: 'pink' }
+    const otherBoy = { key: 'otherBoy', color: '#2DC3A6' }
+    const otherGirl = { key: 'otherGirl', color: '#F83AC1' }
+
+    diaryList.forEach(dayDiary => {
+      markedDates[getFormDay(dayDiary[0].date)] = { dots: [] }
+      let hasBoyDiary = false
+      let hasGirlDiary = false
+      let hasOtherBoyDiary = false
+      let hasOtherGirlDiary = false
+
+      dayDiary.forEach(diary => {
+        if ((diary.user_id === this.props.user.id) && (this.props.user.sex === 0)) {
+          hasBoyDiary = true
+        }
+        if ((diary.user_id === this.props.user.id) && (this.props.user.sex === 1)) {
+          hasGirlDiary = true
+        }
+        if ((diary.user_id !== this.props.user.id) && (this.props.partner.sex === 0)) {
+          hasOtherBoyDiary = true
+        }
+        if ((diary.user_id !== this.props.user.id) && (this.props.partner.sex === 1)) {
+          hasOtherGirlDiary = true
+        }
+      })
+
+      if (hasBoyDiary) markedDates[getFormDay(dayDiary[0].date)].dots.push(boy)
+      if (hasGirlDiary) markedDates[getFormDay(dayDiary[0].date)].dots.push(girl)
+      if (hasOtherBoyDiary) markedDates[getFormDay(dayDiary[0].date)].dots.push(otherBoy)
+      if (hasOtherGirlDiary) markedDates[getFormDay(dayDiary[0].date)].dots.push(otherGirl)
+    })
+
+    this.setState({
+      diaryList,
+      markedDates,
+      filterDiaryList: diaryList,
+      isRefreshing: false
+    })
   }
 
   _updateUser() {
@@ -467,7 +498,7 @@ export default class Home extends Component {
         </View>
 
         <FlatList
-          showsVerticalScrollIndicator={false}
+          showsVerticalScrollIndicator={true}
           ref={ref => this.fl = ref}
           style={styles.diary_container}
           data={this.state.filterDiaryList}
@@ -475,8 +506,7 @@ export default class Home extends Component {
           renderItem={this._renderItem}
           ListEmptyComponent={() => this._emptyDiary()}
           ListFooterComponent={() => this._listFooter()}
-          onRefresh={() => this._fetchDiary()}
-          contentContainerStyle={styles.diary_item}
+          onRefresh={() => this._formDiaryList(store.getState().diary)}
           refreshing={this.state.isRefreshing}
         />
 

@@ -18,7 +18,8 @@ import {
 import {
   getDay,
   getTime,
-  getMonthDay
+  getMonthDay,
+  getPath
 } from '../../common/util'
 
 import { SCENE_DIARY_DETAIL } from '../../constants/scene'
@@ -59,9 +60,9 @@ class SingleDiary extends Component {
           </View>
           {
             (() => {
-              if (diary.images) {
+              if (diary.imgPathList.length) {
                 return (
-                  <Image style={styles.img_diary} source={{ uri: diary.images ? diary.images.split(',')[0] : '' }} />
+                  <Image style={styles.img_diary} source={{uri: getPath(diary.imgPathList[0])}} />
                 )
               }
             })()
@@ -87,11 +88,9 @@ export default class Diary extends Component {
   render() {
     let date = ''
     if (this.props.data.length !== 0) {
-      if (this.props.isProfileNote) {
-        date = getMonthDay(this.props.data[0].date)
-      } else {
-        date = getDay(this.props.data[0].date)
-      }
+      date = this.props.isProfileNote ?
+             getMonthDay(this.props.data[0].date) :
+             getDay(this.props.data[0].date)
     }
 
     return (

@@ -28,7 +28,7 @@ import {
 import Storage from '../../common/storage'
 import { SCENE_LOGIN_OPTIONS } from '../../constants/scene'
 
-import { updateUser, postImgToQiniu } from '../../common/util'
+import { updateUser, postImgToQiniu, OCR } from '../../common/util'
 
 export default class ProfileEdit extends Component {
 
@@ -61,11 +61,12 @@ export default class ProfileEdit extends Component {
     }
     ImagePicker.showImagePicker(options, async res => {
       if (!res.didCancel) {
-        const base64 = res.data
-        const images = await postImgToQiniu([base64], { type: 'profile', user_id: this.state.user.id })
+        const images = await postImgToQiniu([res.uri], { type: 'profile', user_id: this.state.user.id })
         this.setState({ user: Object.assign({}, this.state.user, { face: images }) }, () => {
           this.updateUser()
         })
+
+        // OCR(res.data)
       }
     })
   }
