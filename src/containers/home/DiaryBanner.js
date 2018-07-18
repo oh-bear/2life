@@ -109,6 +109,7 @@ export default class DiaryBanner extends Component {
           navStyle={[styles.nav_style, { display: this.props.showNav ? 'flex' : 'none' }]}
           navBarStyle={styles.navbar_style}
           onPressBack={this.props.onPressBack}
+          leftButton={this.props.leftButton}
           rightButton={this.props.rightButton}
         />
 

@@ -231,6 +231,24 @@ export default class NewDiary extends Component {
     })
   }
 
+  _selectDate() {}
+
+  _renderLeftButton() {
+    return (
+      <TouchableOpacity onPress={this.saveDiary.bind(this)}>
+        <Image source={require('../../../res/images/home/diary/icon_back_black.png')}/>
+      </TouchableOpacity>
+    )
+  }
+
+  _renderRightButton() {
+    return (
+      <TouchableOpacity onPress={this._callImgPicker.bind(this)}>
+        <Image source={require('../../../res/images/home/diary/icon_ocr_black.png')}/>
+      </TouchableOpacity>
+    )
+  }
+
   render() {
     return (
       <Container hidePadding={true}>
@@ -246,7 +264,8 @@ export default class NewDiary extends Component {
             showBottomBar={true}
             imgPathList={this.state.imgPathList}
             getImgPathList={this.getImgPathList.bind(this)}
-            onPressBack={() => this.saveDiary()}
+            leftButton={this._renderLeftButton()}
+            rightButton={this._renderRightButton()}
           />
 
           <View style={styles.date_container}>
@@ -254,10 +273,10 @@ export default class NewDiary extends Component {
             <TextPingFang style={styles.text_date}>{this.state.date.getDate()}，</TextPingFang>
             <TextPingFang style={styles.text_date}>{this.state.date.getFullYear()}</TextPingFang>
             <TouchableOpacity
-              style={styles.btn_ocr}
-              onPress={this._callImgPicker.bind(this)}
+              style={styles.small_calendar}
+              onPress={this._selectDate.bind(this)}
             >
-              <Image source={require('../../../res/images/home/icon_cloud.png')}/>
+              <Image source={require('../../../res/images/home/diary/icon_calendar_small.png')}/>
             </TouchableOpacity>
           </View>
 
@@ -325,10 +344,8 @@ const styles = StyleSheet.create({
     color: '#aaa',
     fontSize: 12
   },
-  btn_ocr: {
-    position: 'absolute',
-    height: getResponsiveWidth(24),
-    right: getResponsiveWidth(24)
+  small_calendar: {
+    marginLeft: getResponsiveWidth(8)
   },
   text_title: {
     color: '#000',

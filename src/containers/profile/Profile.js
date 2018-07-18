@@ -12,6 +12,7 @@ import { Actions } from 'react-native-router-flux'
 
 import Container from '../../components/Container'
 import TextPingFang from '../../components/TextPingFang'
+import PrivacyAgreement from '../../components/PrivacyAgreement'
 
 import {
   WIDTH,
@@ -44,7 +45,8 @@ function mapStateToProps(state) {
 export default class Profile extends Component {
 
   state = {
-    is_scroll: true
+    is_scroll: true,
+    showPrivacy: false
   }
 
   componentDidMount() {
@@ -53,6 +55,12 @@ export default class Profile extends Component {
   renderUnlogin() {
     return (
       <Container showNetStatus={true}>
+        <PrivacyAgreement
+          showPopup={this.state.showPrivacy}
+          onAgree={() => Actions.jump(SCENE_LOGIN_OPTIONS)}
+          onCancel={() => this.setState({showPrivacy: false})}
+        />
+
         <View>
           <TextPingFang style={styles.title}>未登录</TextPingFang>
           <TextPingFang style={styles.text_login}>登录后可享受情绪管理、匹配日记对象等更多好玩功能！赶紧登录吧</TextPingFang>
@@ -60,7 +68,7 @@ export default class Profile extends Component {
 
         <TouchableOpacity
           style={styles.login_btn}
-          onPress={() => Actions.jump(SCENE_LOGIN_OPTIONS)}
+          onPress={() => this.setState({showPrivacy: true})}
         >
           <TextPingFang style={styles.text_login_btn}>现在登录</TextPingFang>
         </TouchableOpacity>
@@ -72,9 +80,7 @@ export default class Profile extends Component {
     if (!this.props.partner.id) return
     return (
       <View>
-        <View
-          style={styles.head_container}
-        >
+        <View style={styles.head_container}>
           <View style={styles.head_left}>
             <View style={styles.head_left_top}>
               <TextPingFang style={styles.text_name}>{this.props.partner.name}</TextPingFang>
@@ -333,6 +339,7 @@ const styles = StyleSheet.create({
     }, {
       bottom: getResponsiveWidth(80),
     }),
+
     width: getResponsiveWidth(112),
     height: getResponsiveWidth(48),
     justifyContent: 'center',

@@ -98,7 +98,7 @@ export default class Home extends Component {
       let diaryList = [...partner, ...user]
 
       // 版本过渡：保存网络日记到本地
-      store.dispatch(cleanDiary())
+      // store.dispatch(cleanDiary())
       let localDiaryList = store.getState().diary
       if (localDiaryList.length === 0) {
         const diaryListPromises = diaryList.map(async diary => {

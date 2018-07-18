@@ -12,6 +12,17 @@ import { Actions } from 'react-native-router-flux'
 
 export default class CommonNav extends Component {
 
+  renderLeftButton() {
+    return (
+      <TouchableOpacity
+        style={styles.left_btn}
+        onPress={this.props.onPressBack ? this.props.onPressBack : () => Actions.pop()}
+      >
+        <Image source={require('../../res/images/common/icon_back_black.png')}/>
+      </TouchableOpacity>
+    )
+  }
+
   render() {
     return (
       <NavigationBar
@@ -19,14 +30,7 @@ export default class CommonNav extends Component {
         navStyle={this.props.navStyle}
         title={this.props.title}
         titleStyle={this.props.titleStyle}
-        leftButton={
-          <TouchableOpacity
-            style={styles.left_btn}
-            onPress={this.props.onPressBack ? this.props.onPressBack : () => Actions.pop()}
-          >
-            <Image source={require('../../res/images/common/icon_back_black.png')}/>
-          </TouchableOpacity>
-        }
+        leftButton={this.props.leftButton || this.renderLeftButton()}
         rightButton={this.props.rightButton}
       />
     )
