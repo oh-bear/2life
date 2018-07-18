@@ -36,7 +36,7 @@ export default class DiaryBanner extends Component {
 
   async _addImg() {
     const options = {
-      title: '',
+      title: '添加日记图片',
       cancelButtonTitle: '取消',
       takePhotoButtonTitle: '拍摄',
       chooseFromLibraryButtonTitle: '从相册选择',

@@ -84,7 +84,8 @@ export default class Home extends Component {
   async componentDidMount() {
     this._showTips()
     this._getWeather()
-    await this._fetchDiary()
+
+    this.props.user.id ? await this._fetchDiary() : this._formDiaryList(store.getState().diary)
 
     DeviceEventEmitter.addListener('flush_note', () => this._fetchDiary())
   }
@@ -200,10 +201,12 @@ export default class Home extends Component {
       try {
         const { latitude, longitude } = res.coords
 
-        await updateReduxUser(this.props.user.id)
         // 更新用户经纬度
-        await updateUser(this.props.user, { latitude, longitude })
-        this._updateUser()
+        if(this.props.user.id) {
+          await updateReduxUser(this.props.user.id)
+          await updateUser(this.props.user, { latitude, longitude })
+          this._updateUser()
+        }
 
         // 获取用户地理位置和天气信息
         const location = await getLocation(longitude, latitude)

@@ -4,12 +4,15 @@ import {
   StyleSheet,
   TextInput,
   Keyboard,
-  Alert
+  Alert,
+  TouchableOpacity,
+  Image
 } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { connect } from 'react-redux'
 import { Actions } from 'react-native-router-flux'
 import Toast from 'antd-mobile/lib/toast'
+import ImagePicker from 'react-native-image-picker'
 
 import Container from '../../components/Container'
 import TextPingFang from '../../components/TextPingFang'
@@ -28,7 +31,8 @@ import {
   updateUser,
   updateReduxUser,
   sleep,
-  downloadImg
+  downloadImg,
+  OCR
 } from '../../common/util'
 
 import Storage from '../../common/storage'
@@ -51,7 +55,9 @@ export default class NewDiary extends Component {
   state = {
     date: new Date(),
     title: '',
+    title_2: '', //解决TextInput 无法输入中文
     content: '',
+    content_2: '',
     latitude: 0,
     longitude: 0,
     location: '',
@@ -135,9 +141,9 @@ export default class NewDiary extends Component {
     try {
       let images = ''
       // TODO: VIP
-      const vip = false
+      const vip = 0
       if (vip) {
-        images = await postImgToQiniu(this.state.base64List, {
+        images = await postImgToQiniu(imgPathList, {
           type: 'note',
           user_id: this.props.user.id
         })
@@ -158,7 +164,7 @@ export default class NewDiary extends Component {
         ...data,
         imgPathList: newImgPathList,
         date: Date.now(),
-        user_id: this.props.user.id
+        user_id: this.props.user.id || 0
       }))
 
       if (this.state.firstEntryDiary) {
@@ -186,9 +192,43 @@ export default class NewDiary extends Component {
     }
   }
 
-
   getImgPathList(imgPathList) {
     this.setState({ imgPathList })
+  }
+
+  _callImgPicker() {
+    const options = {
+      title: '手写日记识别',
+      cancelButtonTitle: '取消',
+      takePhotoButtonTitle: '拍摄',
+      chooseFromLibraryButtonTitle: '从相册选择',
+      cameraType: 'back',
+      mediaType: 'photo',
+      maxWidth: 375,
+      maxHeight: 282,
+      quality: 1,
+      allowsEditing: true,
+      storageOptions: {
+        skipBackup: true,
+        cameraRoll: false,
+        waitUntilSaved: false
+      }
+    }
+    ImagePicker.showImagePicker(options, async res => {
+      if (!res.didCancel) {
+        Toast.loading('正在识别中', 0)
+
+        const { title, content, message } = await OCR(res.data)
+
+        Toast.hide()
+
+        if(!message) {
+          this.setState({title, content})
+        } else {
+          Toast.fail(message, 1.5)
+        }
+      }
+    })
   }
 
   render() {
@@ -213,11 +253,19 @@ export default class NewDiary extends Component {
             <TextPingFang style={styles.text_date}>{getMonth(this.state.date.getMonth())} </TextPingFang>
             <TextPingFang style={styles.text_date}>{this.state.date.getDate()}，</TextPingFang>
             <TextPingFang style={styles.text_date}>{this.state.date.getFullYear()}</TextPingFang>
+            <TouchableOpacity
+              style={styles.btn_ocr}
+              onPress={this._callImgPicker.bind(this)}
+            >
+              <Image source={require('../../../res/images/home/icon_cloud.png')}/>
+            </TouchableOpacity>
           </View>
 
           <TextInput
             style={styles.text_title}
-            onChangeText={title => this.setState({ title })}
+            value={this.state.title}
+            onChangeText={title => this.setState({ title_2: title })}
+            onBlur={() => this.setState({ title: this.state.title_2 })}
             placeholder='标题'
             placeholderTextColor='#aaa'
           />
@@ -226,7 +274,9 @@ export default class NewDiary extends Component {
 
           <TextInput
             style={styles.text_content}
-            onChangeText={content => this.setState({ content })}
+            value={this.state.content}
+            onChangeText={content => this.setState({ content_2: content })}
+            onBlur={() => this.setState({ content: this.state.content_2 })}
             placeholder='请输入正文'
             placeholderTextColor='#aaa'
             multiline
@@ -262,9 +312,10 @@ const styles = StyleSheet.create({
   date_container: {
     width: WIDTH,
     flexDirection: 'row',
+    alignItems: 'center',
     paddingLeft: getResponsiveWidth(24),
-    paddingTop: getResponsiveWidth(24),
-    paddingBottom: getResponsiveWidth(24),
+    marginTop: getResponsiveWidth(24),
+    marginBottom: getResponsiveWidth(24),
   },
   scroll_style: {
     // height: HEIGHT,
@@ -273,6 +324,11 @@ const styles = StyleSheet.create({
   text_date: {
     color: '#aaa',
     fontSize: 12
+  },
+  btn_ocr: {
+    position: 'absolute',
+    height: getResponsiveWidth(24),
+    right: getResponsiveWidth(24)
   },
   text_title: {
     color: '#000',

@@ -29,7 +29,8 @@ import {
   SCENE_PROFILE_NOTE,
   SCENE_PROFILE_REWARD,
   SCENE_MATCH_RESULT,
-  SCENE_PROFILE_FEEDBACK
+  SCENE_PROFILE_FEEDBACK,
+  SCENE_LOGIN_OPTIONS
 } from '../../constants/scene'
 
 function mapStateToProps(state) {
@@ -47,6 +48,24 @@ export default class Profile extends Component {
   }
 
   componentDidMount() {
+  }
+
+  renderUnlogin() {
+    return (
+      <Container showNetStatus={true}>
+        <View>
+          <TextPingFang style={styles.title}>未登录</TextPingFang>
+          <TextPingFang style={styles.text_login}>登录后可享受情绪管理、匹配日记对象等更多好玩功能！赶紧登录吧</TextPingFang>
+        </View>
+
+        <TouchableOpacity
+          style={styles.login_btn}
+          onPress={() => Actions.jump(SCENE_LOGIN_OPTIONS)}
+        >
+          <TextPingFang style={styles.text_login_btn}>现在登录</TextPingFang>
+        </TouchableOpacity>
+      </Container>
+    )
   }
 
   renderPartner() {
@@ -121,6 +140,10 @@ export default class Profile extends Component {
   }
 
   render() {
+    if(!this.props.user.id) {
+      return this.renderUnlogin()
+    }
+
     return (
       <Container showNetStatus={true}>
         <View>
@@ -293,6 +316,34 @@ const styles = StyleSheet.create({
     color: '#000',
     fontSize: 34,
     fontWeight: '500',
+  },
+  text_login: {
+    marginTop: getResponsiveWidth(16),
+    paddingLeft: getResponsiveWidth(70),
+    paddingRight: getResponsiveWidth(32),
+    color: '#aaa',
+    fontSize: 16,
+    fontWeight: '500',
+  },
+  login_btn: {
+    position: 'absolute',
+    right: getResponsiveWidth(32),
+    ...ifIphoneX({
+      bottom: getResponsiveWidth(120),
+    }, {
+      bottom: getResponsiveWidth(80),
+    }),
+    width: getResponsiveWidth(112),
+    height: getResponsiveWidth(48),
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#2DC3A6',
+    borderRadius: getResponsiveWidth(24)
+  },
+  text_login_btn: {
+    color: '#fff',
+    fontSize: 20,
+    fontWeight: '300'
   },
   profile_container: {
     paddingLeft: getResponsiveWidth(24),
