@@ -13,6 +13,7 @@ import { Actions } from 'react-native-router-flux'
 
 import Container from '../../components/Container'
 import TextPingFang from '../../components/TextPingFang'
+import PrivacyAgreement from '../../components/PrivacyAgreement'
 
 import {
   WIDTH,
@@ -30,7 +31,8 @@ import {
   SCENE_PROFILE_NOTE,
   SCENE_PROFILE_REWARD,
   SCENE_MATCH_RESULT,
-  SCENE_PROFILE_FEEDBACK
+  SCENE_PROFILE_FEEDBACK,
+  SCENE_LOGIN_OPTIONS
 } from '../../constants/scene'
 
 function mapStateToProps(state) {
@@ -44,19 +46,42 @@ function mapStateToProps(state) {
 export default class Profile extends Component {
 
   state = {
-    is_scroll: true
+    is_scroll: true,
+    showPrivacy: false
   }
 
   componentDidMount() {
+  }
+
+  renderUnlogin() {
+    return (
+      <Container showNetStatus={true}>
+        <PrivacyAgreement
+          showPopup={this.state.showPrivacy}
+          onAgree={() => Actions.jump(SCENE_LOGIN_OPTIONS)}
+          onCancel={() => this.setState({showPrivacy: false})}
+        />
+
+        <View>
+          <TextPingFang style={styles.title}>未登录</TextPingFang>
+          <TextPingFang style={styles.text_login}>登录后可享受情绪管理、匹配日记对象等更多好玩功能！赶紧登录吧</TextPingFang>
+        </View>
+
+        <TouchableOpacity
+          style={styles.login_btn}
+          onPress={() => this.setState({showPrivacy: true})}
+        >
+          <TextPingFang style={styles.text_login_btn}>现在登录</TextPingFang>
+        </TouchableOpacity>
+      </Container>
+    )
   }
 
   renderPartner() {
     if (!this.props.partner.id) return
     return (
       <View>
-        <View
-          style={styles.head_container}
-        >
+        <View style={styles.head_container}>
           <View style={styles.head_left}>
             <View style={styles.head_left_top}>
               <TextPingFang style={styles.text_name}>{this.props.partner.name}</TextPingFang>
@@ -122,6 +147,10 @@ export default class Profile extends Component {
   }
 
   render() {
+    if(!this.props.user.id) {
+      return this.renderUnlogin()
+    }
+
     return (
       <Container showNetStatus={true}>
         <View>
@@ -297,6 +326,35 @@ const styles = StyleSheet.create({
     color: '#000',
     fontSize: 34,
     fontWeight: '500',
+  },
+  text_login: {
+    marginTop: getResponsiveWidth(16),
+    paddingLeft: getResponsiveWidth(70),
+    paddingRight: getResponsiveWidth(32),
+    color: '#aaa',
+    fontSize: 16,
+    fontWeight: '500',
+  },
+  login_btn: {
+    position: 'absolute',
+    right: getResponsiveWidth(32),
+    ...ifIphoneX({
+      bottom: getResponsiveWidth(120),
+    }, {
+      bottom: getResponsiveWidth(80),
+    }),
+
+    width: getResponsiveWidth(112),
+    height: getResponsiveWidth(48),
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#2DC3A6',
+    borderRadius: getResponsiveWidth(24)
+  },
+  text_login_btn: {
+    color: '#fff',
+    fontSize: 20,
+    fontWeight: '300'
   },
   profile_container: {
     paddingLeft: getResponsiveWidth(24),

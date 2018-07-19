@@ -428,7 +428,7 @@ export async function downloadImg(url) {
  * @param {String} path 文件路径
  */
 export async function deleteFile(path) {
-  RNFetchBlob.fs.unlink(path)
+  RNFetchBlob.fs.unlink(getPath(path))
     .then(res => console.log(res))
 }
 
@@ -450,22 +450,57 @@ function getOCRSign() {
   return sign
 }
 
+
+/**
+ * 手写日记识别
+ * @param {String} base64 图片base64
+ */
 export async function OCR(base64) {
   const url = 'https://recognition.image.myqcloud.com/ocr/handwriting'
   const sign = await Storage.get('ocr_authorization', '') || getOCRSign()
 
   const data = {
     appid: '',
-    image: base64
+    image: base64,
+    // url: 'http://s10.sinaimg.cn/middle/520bb492t97963822a349&690'
   }
-  const res = await fetch(url, {
-    method: 'post',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': sign
-    },
-    body: JSON.stringify(data)
-  })
 
-  console.log(await res)
+  try {
+    let res = await axios.post(url, data, {
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': sign
+      }
+    })
+
+    res = res.data
+
+    let title = '',
+        content = '',
+        message = ''
+
+    if (res.code === 0 && res.data.items.length) {
+      const itemsString = res.data.items
+  
+      title = itemsString[0].itemstring
+  
+      content = itemsString.reduce((accu, curr, idx) => {
+        if (idx === 0)
+          return ''
+  
+        return accu += curr.itemstring
+      }, '')
+    } else {
+      message = '识别失败 (╯﹏╰）'
+    }
+
+    return { title, content, message }
+  } catch (err) {
+    console.log(err)
+    return {
+      title: '',
+      content: '',
+      message: '发生了错误，等下再试试吧>_<'
+    }
+  }
 }

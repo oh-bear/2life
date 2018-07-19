@@ -40,7 +40,7 @@ export default class Index extends Component {
   }
 
   componentDidMount() {
-
+    
     // 极光推送：添加事件角标，并触发强制刷新通知和用户、日记数据
     JPushModule.addReceiveCustomMsgListener(async (message) => {
       console.log(message)

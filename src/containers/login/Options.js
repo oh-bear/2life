@@ -84,7 +84,8 @@ export default class Options extends Component {
           bg={require('../../../res/images/login/bg_signin.png')}
           title={['Hi', '欢迎来到双生！']}
           showNavLeft={false}
-          showNavRight={false}
+          showNavRight={true}
+          onNavRightPress={() => Actions.reset(SCENE_INDEX)}
         />
 
         <View style={styles.options_container}>

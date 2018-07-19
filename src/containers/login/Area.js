@@ -51,7 +51,7 @@ export default class Signup extends Component {
 	}
 
 	componentWillMount() {
-		this.setState({selectArea: this.props.area})
+		this.setState({ selectArea: this.props.area })
 	}
 
 	_renderItem({ item }) {
@@ -60,7 +60,7 @@ export default class Signup extends Component {
 				key={item.num}
 				style={styles.item}
 				onPress={() => {
-					this.setState({selectArea: item.num}, () => {
+					this.setState({ selectArea: item.num }, () => {
 						DeviceEventEmitter.emit('select_area', this.state.selectArea)
 					})
 					Actions.pop()
@@ -69,7 +69,7 @@ export default class Signup extends Component {
 				<TextPingFang style={styles.text_item}>{item.name}</TextPingFang>
 				<Image
 					source={require('../../../res/images/login/icon_checked.png')}
-					style={{display: this.state.selectArea === item.num ? 'flex' : 'none'}}
+					style={{ display: this.state.selectArea === item.num ? 'flex' : 'none' }}
 				/>
 			</TouchableOpacity>
 		)
@@ -78,7 +78,7 @@ export default class Signup extends Component {
 	render() {
 		return (
 			<Container>
-				<ProfileHeader title='选择地区'/>
+				<ProfileHeader title='选择地区' />
 
 				<FlatList
 					data={this.state.area}
