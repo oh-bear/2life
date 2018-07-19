@@ -4,7 +4,9 @@ import {
   StyleSheet,
   TextInput,
   Keyboard,
-  Alert
+  Alert,
+  TouchableOpacity,
+  Image
 } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { connect } from 'react-redux'
@@ -19,7 +21,13 @@ import {
   WIDTH,
   getResponsiveWidth,
 } from '../../common/styles'
-import { getMonth, postImgToQiniu, sleep, downloadImg, deleteFile } from '../../common/util'
+import {
+  getMonth,
+  postImgToQiniu,
+  sleep,
+  downloadImg,
+  updateFile
+} from '../../common/util'
 import { SCENE_INDEX } from '../../constants/scene'
 
 import store from '../../redux/store'
@@ -91,25 +99,42 @@ export default class UpdateDiary extends Component {
         }
       }
     }
+    if(!this.state.oldImgPathList.length) {
+      newImgPathList = imgPathList
+    }
     // 复制图片文件
     let newPathListPromises = newImgPathList.map(async path => {
-      return await downloadImg(path)
+      return await downloadImg(path, this.props.user.id)
     })
     let newUsingImgPathList = []
     for (let newPathListPromise of newPathListPromises) {
       newUsingImgPathList.push(await newPathListPromise)
     }
 
+    console.log([...newUsingImgPathList, ...oldUseingImgPathList])
+    // 更新配置文件
+    await updateFile({
+      user_id: this.props.user.id || 0,
+      action: 'update',
+      data: {
+        ...this.props.diary,
+        title,
+        content,
+        base64List,
+        imgPathList: [...newUsingImgPathList, ...oldUseingImgPathList]
+      }
+    })
+
     // 修改本地日记
-    const newDiary = {
-      ...this.props.diary,
-      title,
-      content,
-      base64List,
-      imgPathList: [...newUsingImgPathList, ...oldUseingImgPathList]
-    }
-    store.dispatch(deleteDiaryToLocal(this.props.diary.date))
-    store.dispatch(saveDiaryToLocal(newDiary))
+    // const newDiary = {
+    //   ...this.props.diary,
+    //   title,
+    //   content,
+    //   base64List,
+    //   imgPathList: [...newUsingImgPathList, ...oldUseingImgPathList]
+    // }
+    // store.dispatch(deleteDiaryToLocal(this.props.diary.date))
+    // store.dispatch(saveDiaryToLocal(newDiary))
 
     let images = ''
     // TODO: VIP
@@ -145,6 +170,14 @@ export default class UpdateDiary extends Component {
     this.setState({imgPathList})
   }
 
+  _renderLeftButton() {
+    return (
+      <TouchableOpacity onPress={this.saveDiary.bind(this)}>
+        <Image source={require('../../../res/images/home/diary/icon_back_black.png')}/>
+      </TouchableOpacity>
+    )
+  }
+
   render() {
     return (
       <Container hidePadding={true}>
@@ -158,6 +191,7 @@ export default class UpdateDiary extends Component {
             showNav={true}
             showBanner={true}
             showBottomBar={true}
+            leftButton={this._renderLeftButton()}
             onPressBack={() => this.saveDiary()}
             imgPathList={this.state.imgPathList}
             getImgPathList={this.getImgPathList.bind(this)}

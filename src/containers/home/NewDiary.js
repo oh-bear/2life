@@ -32,6 +32,7 @@ import {
   updateReduxUser,
   sleep,
   downloadImg,
+  updateFile,
   OCR
 } from '../../common/util'
 
@@ -122,17 +123,22 @@ export default class NewDiary extends Component {
   }
 
   async saveDiary() {
-    Keyboard.dismiss()
 
     if (this.state.savingDiary) return
 
     this.setState({ savingDiary: true })
 
-    const { title, content, latitude, longitude, location, base64List, imgPathList } = this.state
+    const { title, content, latitude, longitude, location, imgPathList } = this.state
 
     if (!title && !content) return Actions.pop()
-    if (!title) return Alert.alert('', '给日记起个标题吧')
-    if (!content) return Alert.alert('', '日记内容不能为空哦')
+    if (!title) {
+      this.setState({savingDiary: false})
+      return Alert.alert('', '给日记起个标题吧')
+    }
+    if (!content) {
+      this.setState({savingDiary: false})
+      return Alert.alert('', '日记内容不能为空哦')
+    }
 
     Toast.loading('正在保存', 0)
 
@@ -149,23 +155,35 @@ export default class NewDiary extends Component {
         })
       }
   
-      const data = { title, content, images, latitude, longitude, location, base64List, imgPathList }
+      const data = { title, content, images, latitude, longitude, location, imgPathList }
       
       // 复制图片文件
       let newPathListPromises = imgPathList.map(async path => {
-        return await downloadImg(path)
+        return await downloadImg(path, this.props.user.id)
       })
       let newImgPathList = []
       for (let newPathListPromise of newPathListPromises) {
         newImgPathList.push(await newPathListPromise)
       }
+
+      // 更新配置文件
+      await updateFile({
+        user_id: this.props.user.id || 0,
+        action: 'add',
+        data: {
+          ...data,
+          imgPathList: newImgPathList,
+          date: Date.now(),
+        }
+      })
+
       // 将日记保存到本地redux
-      store.dispatch(saveDiaryToLocal({
-        ...data,
-        imgPathList: newImgPathList,
-        date: Date.now(),
-        user_id: this.props.user.id || 0
-      }))
+      // store.dispatch(saveDiaryToLocal({
+      //   ...data,
+      //   imgPathList: newImgPathList,
+      //   date: Date.now(),
+      //   user_id: this.props.user.id || 0
+      // }))
 
       if (this.state.firstEntryDiary) {
         this.setState({
@@ -204,8 +222,6 @@ export default class NewDiary extends Component {
       chooseFromLibraryButtonTitle: '从相册选择',
       cameraType: 'back',
       mediaType: 'photo',
-      maxWidth: 375,
-      maxHeight: 282,
       quality: 1,
       allowsEditing: true,
       storageOptions: {

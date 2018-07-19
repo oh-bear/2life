@@ -34,7 +34,9 @@ import {
   getWeatherDesc,
   updateUser,
   updateReduxUser,
-  downloadImg
+  downloadImg,
+  updateFile,
+  readFile
 } from '../../common/util'
 
 import { SCENE_NEW_DIARY } from '../../constants/scene'
@@ -85,7 +87,8 @@ export default class Home extends Component {
     this._showTips()
     this._getWeather()
 
-    this.props.user.id ? await this._fetchDiary() : this._formDiaryList(store.getState().diary)
+    // 读取日记配置文件
+    this.props.user.id ? await this._fetchDiary() : this._formDiaryList(await readFile(this.props.user.id))
 
     DeviceEventEmitter.addListener('flush_note', () => this._fetchDiary())
   }
@@ -97,32 +100,36 @@ export default class Home extends Component {
       const { partner, recommend, user } = res.data
       let diaryList = [...partner, ...user]
 
-      // 版本过渡：保存网络日记到本地
-      // store.dispatch(cleanDiary())
-      let localDiaryList = store.getState().diary
-      if (localDiaryList.length === 0) {
-        const diaryListPromises = diaryList.map(async diary => {
-          diary.imgPathList = diary.imgPathList || []
-          // 缓存图片
-          let pathPromises = []
-          if (diary.images) {
-            let urlList = diary.images.split(',')
-            for (let url of urlList) {
-              pathPromises.push(await downloadImg(url))
-            }
+      // 版本过渡：保存网络日记到本地配置文件
+      const diaryListPromises = diaryList.map(async diary => {
+        diary.imgPathList = diary.imgPathList || []
+        // 缓存图片
+        let pathPromises = []
+        if (diary.images) {
+          let urlList = diary.images.split(',')
+          for (let url of urlList) {
+            pathPromises.push(await downloadImg(url, this.props.user.id))
           }
-
-          for (let pathPromise of pathPromises) {
-            diary.imgPathList.push(await pathPromise)
-          }
-          return diary
-        })
-        for (let diaryListPromise of diaryListPromises) {
-          store.dispatch(saveDiaryToLocal(await diaryListPromise))
         }
+
+        for (let pathPromise of pathPromises) {
+          diary.imgPathList.push(await pathPromise)
+        }
+        return diary
+      })
+
+      let newDiaryList = []
+      for (let diaryListPromise of diaryListPromises) {
+        newDiaryList.push(await diaryListPromise)
       }
       
-      this._formDiaryList(store.getState().diary)
+      this._formDiaryList(newDiaryList)
+      // 更新配置文件
+      updateFile({
+        user_id: this.props.user.id || 0,
+        action: 'add',
+        data: newDiaryList
+      })
     }
   }
 
@@ -373,7 +380,6 @@ export default class Home extends Component {
               showMe: false,
               showWeather: true
             })
-
           }
         }
       }
@@ -505,7 +511,7 @@ export default class Home extends Component {
           renderItem={this._renderItem}
           ListEmptyComponent={() => this._emptyDiary()}
           ListFooterComponent={() => this._listFooter()}
-          onRefresh={() => this._formDiaryList(store.getState().diary)}
+          onRefresh={async () => this._formDiaryList(await readFile(this.props.user.id))}
           refreshing={this.state.isRefreshing}
         />
 
