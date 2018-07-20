@@ -6,6 +6,8 @@ import android.app.Application;
 import com.facebook.react.ReactApplication;
 import com.oblador.vectoricons.VectorIconsPackage;
 import com.horcrux.svg.SvgPackage;
+import com.bitgo.randombytes.RandomBytesPackage;
+import com.RNFetchBlob.RNFetchBlobPackage;
 
 import org.devio.rn.splashscreen.SplashScreenReactPackage;
 
@@ -34,6 +36,8 @@ public class MainApplication extends Application implements ReactApplication {
         @Override
         protected List<ReactPackage> getPackages() {
             return Arrays.<ReactPackage>asList(new MainReactPackage(),
+                    new RandomBytesPackage(),
+                    new RNFetchBlobPackage(),
                     new VectorIconsPackage(),
                     new SvgPackage(),
                     new SplashScreenReactPackage(),

@@ -230,6 +230,9 @@ export function getPath(uri) {
     const dirs = RNFetchBlob.fs.dirs
     filePath = `${dirs.DocumentDir}/${arr[arr.length - 1]}`
   }
+  if(Platform.OS == 'android'){
+    filePath = 'file://'+filePath;
+  }
   return filePath
 }
 
@@ -525,11 +528,11 @@ export async function OCR(base64) {
   try {
     let res = await axios.post(url, data, {
       headers: {
+        'host':'recognition.image.myqcloud.com',
         'Content-Type': 'application/json',
         'Authorization': sign
       }
     })
-
     res = res.data
 
     let title = '',

@@ -138,7 +138,7 @@ export default class DiaryDetail extends Component {
                 //   deleteFile(path)
                 // })
                 // store.dispatch(deleteDiaryToLocal(this.props.diary.date))
-                
+
                 Actions.reset(SCENE_INDEX)
 
                 // TODO: Vip
@@ -379,9 +379,11 @@ export default class DiaryDetail extends Component {
           visible={this.state.showImgPreview}
           transparent={false}
           animationType={'fade'}
+          onRequestClose={() => {}}
         >
           <ImageViewer
             imageUrls={this.state.imgPathList.map(path => {
+              if(path.indexOf('http')!=0&&path.indexOf('file://')!=0) path = 'file://'+path;
               return {url: path}
             })}
             enableSwipeDown={true}

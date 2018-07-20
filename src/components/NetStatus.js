@@ -32,7 +32,7 @@ export default class NetStatus extends Component {
 		return (
 			<View style={[
 				styles.container,
-				{ display: !this.state.isConnected && this.props.showNetStatus ? 'none' : 'none' },
+				{ display: !this.state.isConnected && this.props.showNetStatus ? 'none' : 'none',position:'relative' },
 			]}>
 				<TextPingFang style={styles.text_net}>网络好像出了点问题～</TextPingFang>
 			</View>
