@@ -7,11 +7,7 @@ import RNFetchBlob from 'rn-fetch-blob'
 import HttpUtils from '../network/HttpUtils'
 import { UTILS, USERS } from '../network/Urls'
 import store from '../redux/store'
-<<<<<<< HEAD
-import { Platform } from 'react-native'
-=======
 import Storage from './storage'
->>>>>>> upstream/master
 import { fetchProfileSuccess } from '../redux/modules/user'
 import { saveDiaryToLocal, cleanDiary } from '../redux/modules/diary'
 
@@ -248,9 +244,7 @@ export async function postImgToQiniu(uriList, obj) {
   const { type, user_id } = obj
   if (!type && !user_id) return
 
-<<<<<<< HEAD
 
-=======
   const uriBase64ListPromises = uriList.map(async uri => {
     let filePath  = getPath(uri)
     return await RNFetchBlob.fs.readFile(filePath, 'base64')
@@ -260,7 +254,7 @@ export async function postImgToQiniu(uriList, obj) {
   for (let uriBase64ListPromise of uriBase64ListPromises) {
     uriBase64List.push(await uriBase64ListPromise)
   }
->>>>>>> upstream/master
+
 
   // 并发上传图片
   const qiniuPromises = uriBase64List.map(async (base64) => {
@@ -279,7 +273,7 @@ export async function postImgToQiniu(uriList, obj) {
 
     if (res_token.code === 0) {
       const qiniu_token = res_token.data // 七牛token
-<<<<<<< HEAD
+
       if(Platform.OS === 'android'){
         var xmlPromise = new Promise(function(resolve,reject){
           var request = new XMLHttpRequest();
@@ -287,7 +281,7 @@ export async function postImgToQiniu(uriList, obj) {
           request.open('POST', URL_qiniu_host + key_base64,true);
           request.setRequestHeader("Content-Type", "application/octet-stream");
           request.setRequestHeader("Authorization", 'UpToken ' + qiniu_token);
-          request.send(base64List[index]);
+          request.send(base64);
           function handler(){
             if (request.readyState !== 4) {
               return;
@@ -311,24 +305,23 @@ export async function postImgToQiniu(uriList, obj) {
             'Content-Type': 'application/octet-stream',
             'Authorization': 'UpToken ' + qiniu_token
           },
-          body:base64List[index]
+          body:base64
         })
         return res_qiniu
       }
-=======
 
-      // 上传到七牛
-      const res_qiniu = await fetch(URL_qiniu_host + key_base64, {
-        method: 'post',
-        headers: {
-          'Content-Type': 'application/octet-stream',
-          'Authorization': 'UpToken ' + qiniu_token
-        },
-        body: base64
-      })
+      // // 上传到七牛
+      // const res_qiniu = await fetch(URL_qiniu_host + key_base64, {
+      //   method: 'post',
+      //   headers: {
+      //     'Content-Type': 'application/octet-stream',
+      //     'Authorization': 'UpToken ' + qiniu_token
+      //   },
+      //   body: base64
+      // })
+      //
+      // return res_qiniu
 
-      return res_qiniu
->>>>>>> upstream/master
     }
   })
   let imgUrls = []
@@ -415,9 +408,12 @@ export function sleep(ms) {
  * @returns {String} 图片保存路径
  */
 export async function downloadImg(url, user_id = 0) {
+  if(url.indexOf('file://')==0){
+    return url;
+  }
   const config = {
     fileCache: true,
-    path: `${RNFetchBlob.fs.dirs.DocumentDir}/id_${user_id}_${Math.round(Math.random() * 10 ** 10)}.jpg`
+    path: `${RNFetchBlob.fs.dirs.DocumentDir}/id_${user_id}_${Math.round(Math.pow(Math.random() * 10 , 10))}.jpg`
   }
   const res = await RNFetchBlob.config(config).fetch('get', url)
   return res.path()
@@ -500,7 +496,7 @@ function getOCRSign() {
   const secret_key = ''
   const currentTime = Math.round(Date.now() / 1000)
   const expiredTime = currentTime + 1 * 30 * 24 * 60 * 60
-  const rand = Math.round(Math.random() * (2 ** 32))
+  const rand = Math.round(Math.random() * (Math.pow(2 , 32)))
   const origin = `a=${appid}&k=${secret_id}&e=${expiredTime}&t=${currentTime}&r=${rand}`
 
   const data = Buffer.from(origin, 'utf8')
@@ -542,13 +538,13 @@ export async function OCR(base64) {
 
     if (res.code === 0 && res.data.items.length) {
       const itemsString = res.data.items
-  
+
       title = itemsString[0].itemstring
-  
+
       content = itemsString.reduce((accu, curr, idx) => {
         if (idx === 0)
           return ''
-  
+
         return accu += curr.itemstring
       }, '')
     } else if(res.code === 9) {
