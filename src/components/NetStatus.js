@@ -23,7 +23,7 @@ export default class NetStatus extends Component {
 
 	componentDidMount() {
 		NetInfo.isConnected.addEventListener('connectionChange', isConnected => {
-			this.setState({isConnected})
+			this.setState({ isConnected })
 		})
 	}
 
@@ -31,10 +31,9 @@ export default class NetStatus extends Component {
 	render() {
 		return (
 			<View style={[
-					styles.container,
-					{ display: !this.state.isConnected && this.props.showNetStatus ? 'flex' : 'none',
-				position: !this.state.isConnected && this.props.showNetStatus ? 'absolute' : 'relative' },
-				]}>
+				styles.container,
+				{ display: !this.state.isConnected && this.props.showNetStatus ? 'none' : 'none' },
+			]}>
 				<TextPingFang style={styles.text_net}>网络好像出了点问题～</TextPingFang>
 			</View>
 		)
@@ -49,8 +48,8 @@ const styles = StyleSheet.create({
 		...ifIphoneX({
 			marginTop: 54
 		}, {
-			marginTop: 30
-		}),
+				marginTop: 30
+			}),
 		borderRadius: getResponsiveWidth(12),
 		backgroundColor: 'rgba(155,155,155,.2)',
 		justifyContent: 'center',

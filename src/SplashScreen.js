@@ -1,21 +1,22 @@
 import React, { Component } from 'react'
-import { View, NetInfo } from 'react-native'
-import RNSplashScreen from 'react-native-splash-screen'
+import { View } from 'react-native'
+import { connect } from 'react-redux'
+import Toast from 'antd-mobile/lib/toast'
+import * as WeChat from 'react-native-wechat'
 import { Actions } from 'react-native-router-flux'
+import RNSplashScreen from 'react-native-splash-screen'
+
 import { SCENE_INDEX, SCENE_LOGIN_OPTIONS } from './constants/scene'
 import Storage from './common/storage'
-import { setApiBaseUrl, setToken } from './network/HttpUtils'
-import Toast from 'antd-mobile/lib/toast'
-import { connect } from 'react-redux'
-import store from './redux/store'
-import { delay } from 'redux-saga'
-import initApp from './redux/modules/init'
 import { isDev } from './common/util'
-import { USERS } from './network/Urls'
-import HttpUtils from './network/HttpUtils'
+
+import store from './redux/store'
 import { fetchProfileSuccess } from './redux/modules/user'
 import { fetchPartnerSuccess } from './redux/modules/partner'
-import * as WeChat from 'react-native-wechat'
+
+import HttpUtils from './network/HttpUtils'
+import { setToken } from './network/HttpUtils'
+import { USERS } from './network/Urls'
 
 function mapStateToProps(state) {
   return {
@@ -30,6 +31,10 @@ class SplashScreen extends Component {
 
     WeChat.registerApp('wxbf371b0ab61d3873')
 
+    this._autoLogin()
+  }
+
+  async _autoLogin() {
     const key = await Storage.get('key', {})
     if (!key.uid || !key.token || !key.timestamp) {
       Actions[SCENE_LOGIN_OPTIONS]()

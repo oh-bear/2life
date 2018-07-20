@@ -26,7 +26,7 @@ import {
   WIDTH,
   getResponsiveWidth,
 } from '../../common/styles'
-import { getMonth, getLocation, updateReduxUser, deleteFile} from '../../common/util'
+import { getMonth, getLocation, updateReduxUser, deleteFile, updateFile} from '../../common/util'
 import { SCENE_INDEX, SCENE_UPDATE_DIARY } from '../../constants/scene'
 
 import store from '../../redux/store'
@@ -125,12 +125,20 @@ export default class DiaryDetail extends Component {
             },
             {
               text: '确定',
-              onPress: () => {
-                // 删除本地日记
-                this.props.diary.imgPathList.forEach(path => {
-                  deleteFile(path)
+              onPress: async () => {
+                // 更新配置文件
+                await updateFile({
+                  user_id: this.props.user.id || 0,
+                  action: 'delete',
+                  date: this.props.diary.date
                 })
-                store.dispatch(deleteDiaryToLocal(this.props.diary.date))
+
+                // 删除本地日记
+                // this.props.diary.imgPathList.forEach(path => {
+                //   deleteFile(path)
+                // })
+                // store.dispatch(deleteDiaryToLocal(this.props.diary.date))
+                
                 Actions.reset(SCENE_INDEX)
 
                 // TODO: Vip

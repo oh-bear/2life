@@ -13,6 +13,7 @@ import { Platform } from 'react-native'
 import Storage from './storage'
 >>>>>>> upstream/master
 import { fetchProfileSuccess } from '../redux/modules/user'
+import { saveDiaryToLocal, cleanDiary } from '../redux/modules/diary'
 
 
 const URL_qiniu_token = UTILS.qiniu_token
@@ -413,11 +414,10 @@ export function sleep(ms) {
  * @param {String} url 网络图片URL
  * @returns {String} 图片保存路径
  */
-export async function downloadImg(url) {
-  console.log(RNFetchBlob.fs.dirs.DocumentDir)
+export async function downloadImg(url, user_id = 0) {
   const config = {
     fileCache: true,
-    path: RNFetchBlob.fs.dirs.DocumentDir + '/' + Math.round(Math.random() * 10 ** 10) +'.jpg'
+    path: `${RNFetchBlob.fs.dirs.DocumentDir}/id_${user_id}_${Math.round(Math.random() * 10 ** 10)}.jpg`
   }
   const res = await RNFetchBlob.config(config).fetch('get', url)
   return res.path()
@@ -430,6 +430,68 @@ export async function downloadImg(url) {
 export async function deleteFile(path) {
   RNFetchBlob.fs.unlink(getPath(path))
     .then(res => console.log(res))
+}
+
+export async function createFile(obj) {
+  const fs = RNFetchBlob.fs
+  const FILE_PATH = fs.dirs.DocumentDir + `/user_${obj.user_id}_config.json`
+
+  const isExist = await fs.exists(FILE_PATH)
+  if (!isExist) {
+    await fs.createFile(FILE_PATH, JSON.stringify(obj.data), 'utf8')
+  }
+}
+
+export async function readFile(user_id = 0) {
+  const fs = RNFetchBlob.fs
+  const FILE_PATH = fs.dirs.DocumentDir + `/user_${user_id}_config.json`
+
+  // 读取配置文件内容
+  const content = JSON.parse(await fs.readFile(FILE_PATH, 'utf8'))
+  return content.diaryList
+}
+
+/**
+ * 日记配置文件的增删改
+ * @param {Object} obj
+ */
+// obj 参数说明
+// user_id: Number, 用户ID，用于查找配置文件名称
+// action: String, 操作类型，有 add, delete, update 三种
+// date: Number, 日记创建的时间戳，在delete操作时传入，用于删除操作
+// data: Array | Object, 日记内容，add 或 update操作
+export async function updateFile(obj) {
+  const fs = RNFetchBlob.fs
+  const FILE_PATH = fs.dirs.DocumentDir + `/user_${obj.user_id}_config.json`
+
+  // 读取配置文件内容
+  const content = JSON.parse(await fs.readFile(FILE_PATH, 'utf8'))
+  let { diaryList } = content
+
+  if(obj.action === 'add') {
+    if(obj.data instanceof Array) {
+      diaryList = [...diaryList, ...obj.data]
+    } else {
+      diaryList.push(obj.data)
+    }
+  }
+
+  if(obj.action === 'delete') {
+    diaryList = diaryList.filter(diary => diary.date !== obj.date)
+  }
+
+  if(obj.action === 'update') {
+    diaryList = diaryList.filter(diary => diary.date !== obj.data.date)
+    diaryList.push(obj.data)
+  }
+
+  const newContent = {
+    ...content,
+    lastModified: Date.now(),
+    diaryList
+  }
+
+  fs.writeFile(FILE_PATH, JSON.stringify(newContent), 'utf8')
 }
 
 function getOCRSign() {
@@ -449,7 +511,6 @@ function getOCRSign() {
   Storage.set('ocr_authorization', sign)
   return sign
 }
-
 
 /**
  * 手写日记识别
@@ -490,6 +551,10 @@ export async function OCR(base64) {
   
         return accu += curr.itemstring
       }, '')
+    } else if(res.code === 9) {
+      // 签名过期，重新生成
+      getOCRSign()
+      message = '识别失败 (╯﹏╰）'
     } else {
       message = '识别失败 (╯﹏╰）'
     }

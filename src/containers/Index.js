@@ -3,7 +3,8 @@ import {
   View,
   StyleSheet,
   Image,
-  DeviceEventEmitter
+  DeviceEventEmitter,
+  Alert
 } from 'react-native'
 import Home from './home/Home'
 import Notification from './notification/Notification'
@@ -14,6 +15,7 @@ import { connect } from 'react-redux'
 
 import JPushModule from 'jpush-react-native'
 
+import { createFile, readFile, updateFile, deleteFile, getPath } from '../common/util'
 import { USERS } from '../network/Urls'
 import HttpUtils from '../network/HttpUtils'
 import store from '../redux/store'
@@ -40,6 +42,8 @@ export default class Index extends Component {
   }
 
   componentDidMount() {
+    this._initFile()
+    this._mergeData()
     
     // 极光推送：添加事件角标，并触发强制刷新通知和用户、日记数据
     JPushModule.addReceiveCustomMsgListener(async (message) => {
@@ -60,6 +64,49 @@ export default class Index extends Component {
     JPushModule.addReceiveNotificationListener(message => {
       console.log(message)
     })
+  }
+
+  // 日记配置文件初始化
+  async _initFile() {
+    const data = {
+      user_id: this.props.user.id || 0,
+      lastModified: Date.now(),
+      diaryList: []
+    }
+    await createFile({
+      user_id: this.props.user.id || 0,
+      data
+    })
+  }
+
+  // 本地日记文件数据，询问是否进行合并
+  async _mergeData() {
+    if(this.props.user.id) {
+      const diaryList = await readFile()
+      if(diaryList.length) {
+        Alert.alert(
+          '数据合并',
+          '是否将未登录的日记数据合并到此账号上',
+          [
+            {
+              text: '不合并',
+            },
+            {
+              text: '合并',
+              onPress: async () => {
+                await updateFile({
+                  user_id: this.props.user.id,
+                  action: 'add',
+                  data: diaryList
+                })
+                // 删除未登录配置文件
+                deleteFile(getPath('user_0_config.json'))
+              }
+            }
+          ]
+        )
+      }
+    }
   }
 
   icons = {
