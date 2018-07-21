@@ -119,7 +119,7 @@ export default class Profile extends Component {
             })()
           }
           <TextPingFang
-            style={styles.text_row_left}>{this.props.partner.mode ? this.props.partner.mode : '暂无'}</TextPingFang>
+            style={styles.text_row_left}>{this.props.partner.mode || '暂无'}</TextPingFang>
           <TextPingFang style={styles.text_row_desc}>平均情绪值</TextPingFang>
         </TouchableOpacity>
 
@@ -138,7 +138,7 @@ export default class Profile extends Component {
             })()
           }
           <TextPingFang
-            style={styles.text_row_left}>{this.props.partner.total_notes ? this.props.partner.total_notes : 0}</TextPingFang>
+            style={styles.text_row_left}>{this.props.partner.total_notes || 0}</TextPingFang>
           <TextPingFang style={styles.text_row_desc}>日记数量</TextPingFang>
         </TouchableOpacity>
       </View>
@@ -200,7 +200,7 @@ export default class Profile extends Component {
                 })()
               }
               <TextPingFang
-                style={styles.text_row_left}>{this.props.user.mode ? this.props.user.mode : '暂无'}</TextPingFang>
+                style={styles.text_row_left}>{this.props.user.mode || '暂无'}</TextPingFang>
               <TextPingFang style={styles.text_row_desc}>平均情绪值</TextPingFang>
             </TouchableOpacity>
 
@@ -220,7 +220,7 @@ export default class Profile extends Component {
                 })()
               }
               <TextPingFang
-                style={styles.text_row_left}>{this.props.user.total_notes ? this.props.user.total_notes : 0}</TextPingFang>
+                style={styles.text_row_left}>{this.props.user.total_notes || 0}</TextPingFang>
               <TextPingFang style={styles.text_row_desc}>日记数量</TextPingFang>
             </TouchableOpacity>
 

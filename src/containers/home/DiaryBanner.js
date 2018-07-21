@@ -17,6 +17,7 @@ import {
   WIDTH,
   getResponsiveWidth
 } from '../../common/styles'
+import { getPath } from '../../common/util'
 
 export default class DiaryBanner extends Component {
   static propTypes = {}
@@ -80,13 +81,19 @@ export default class DiaryBanner extends Component {
     if (this.props.imgPathList && this.props.imgPathList.length) {
       imgListComponent = this.props.imgPathList.map((path, index) => {
         return (
-          <Image key={index} style={styles.img} resizeMode='cover' source={{uri: path}}/>
+          <View
+            style={styles.img_container}
+            key={index}
+          >
+            <Image style={styles.img} resizeMode='cover' source={{uri: getPath(path)}}/>
+            <View style={styles.mask}></View>
+          </View>
         )
       })
     } else {
       imgListComponent[0] = (
         <TouchableOpacity
-          style={[styles.img_container, { display: this.props.source ? 'none' : 'flex' }]}
+          style={styles.img_container}
           onPress={() => this._addImg()}
           key={0}
         >
@@ -187,6 +194,12 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  mask: {
+    position: 'absolute',
+    width: '100%',
+    height: '100%',
+    backgroundColor: 'rgba(0, 0, 0, .08)'
   },
   img: {
     width: '100%',

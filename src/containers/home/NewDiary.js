@@ -69,7 +69,14 @@ export default class NewDiary extends Component {
     savingDiary: false,
     showPopup: false,
     firstEntryDiary: false,
-    popupContent: '写完日记点击返回键就能自动保存哦'
+    popupContent: '写完日记点击返回键就能自动保存哦',
+    leftButton: null,
+    rightButton: null,
+  }
+
+  componentWillMount() {
+    this._renderLeftButton()
+    this._renderRightButton()
   }
 
   componentDidMount() {
@@ -174,6 +181,7 @@ export default class NewDiary extends Component {
           ...data,
           imgPathList: newImgPathList,
           date: Date.now(),
+          user_id: this.props.user.id || 0
         }
       })
 
@@ -212,6 +220,8 @@ export default class NewDiary extends Component {
 
   getImgPathList(imgPathList) {
     this.setState({ imgPathList })
+    this._renderLeftButton()
+    this._renderRightButton()
   }
 
   _callImgPicker() {
@@ -232,14 +242,19 @@ export default class NewDiary extends Component {
     }
     ImagePicker.showImagePicker(options, async res => {
       if (!res.didCancel) {
-        Toast.loading('正在识别中', 0)
+        Toast.loading('正在识别', 0)
 
         const { title, content, message } = await OCR(res.data)
 
         Toast.hide()
 
         if(!message) {
-          this.setState({title, content})
+          this.setState({
+            title,
+            content,
+            title_2: title,
+            content_2: content
+          })
         } else {
           Toast.fail(message, 1.5)
         }
@@ -250,19 +265,31 @@ export default class NewDiary extends Component {
   _selectDate() {}
 
   _renderLeftButton() {
-    return (
+    let source = this.state.imgPathList.length ?
+      require('../../../res/images/home/diary/icon_back_white.png') :
+      require('../../../res/images/home/diary/icon_back_black.png')
+
+    const leftButton = (
       <TouchableOpacity onPress={this.saveDiary.bind(this)}>
-        <Image source={require('../../../res/images/home/diary/icon_back_black.png')}/>
+        <Image source={source}/>
       </TouchableOpacity>
     )
+
+    this.setState({ leftButton })
   }
 
   _renderRightButton() {
-    return (
+    let source = this.state.imgPathList.length ?
+      require('../../../res/images/home/diary/icon_ocr_white.png') :
+      require('../../../res/images/home/diary/icon_ocr_black.png')
+
+    const rightButton = (
       <TouchableOpacity onPress={this._callImgPicker.bind(this)}>
-        <Image source={require('../../../res/images/home/diary/icon_ocr_black.png')}/>
+        <Image source={source}/>
       </TouchableOpacity>
     )
+
+    this.setState({ rightButton })
   }
 
   render() {
@@ -280,8 +307,8 @@ export default class NewDiary extends Component {
             showBottomBar={true}
             imgPathList={this.state.imgPathList}
             getImgPathList={this.getImgPathList.bind(this)}
-            leftButton={this._renderLeftButton()}
-            rightButton={this._renderRightButton()}
+            leftButton={this.state.leftButton}
+            rightButton={this.state.rightButton}
           />
 
           <View style={styles.date_container}>

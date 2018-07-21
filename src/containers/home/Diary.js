@@ -11,10 +11,7 @@ import { connect } from 'react-redux'
 
 import TextPingFang from '../../components/TextPingFang'
 
-import {
-  getResponsiveWidth,
-  getResponsiveHeight
-} from '../../common/styles'
+import { getResponsiveWidth } from '../../common/styles'
 import {
   getDay,
   getTime,
