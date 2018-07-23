@@ -15,6 +15,7 @@ import { connect } from 'react-redux'
 
 import JPushModule from 'jpush-react-native'
 
+import Storage from '../common/storage'
 import { createFile, readFile, updateFile, deleteFile, getPath } from '../common/util'
 import { USERS } from '../network/Urls'
 import HttpUtils from '../network/HttpUtils'
@@ -81,9 +82,16 @@ export default class Index extends Component {
 
   // 本地日记文件数据，询问是否进行合并
   async _mergeData() {
+    // 询问周期一天一次
+    const lastAskMergeTime = await Storage.get('lastAskMergeTime')
+    const now = Date.now()
+    // if(now - lastAskMergeTime < 86400000) return
+
     if(this.props.user.id) {
       const diaryList = await readFile()
       if(diaryList.length) {
+        Storage.set('lastAskMergeTime', now)
+
         Alert.alert(
           '数据合并',
           '是否将未登录的日记数据合并到此账号上',
@@ -94,10 +102,16 @@ export default class Index extends Component {
             {
               text: '合并',
               onPress: async () => {
+                // 更改日记user_id
+                const newDiaryList = diaryList.map(diary => {
+                  diary.user_id = this.props.user.id
+                  return diary
+                })
+                console.log(newDiaryList)
                 await updateFile({
                   user_id: this.props.user.id,
                   action: 'add',
-                  data: diaryList
+                  data: newDiaryList
                 })
                 // 删除未登录配置文件
                 deleteFile(getPath('user_0_config.json'))

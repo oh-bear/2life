@@ -104,35 +104,41 @@ export default class Home extends Component {
       let diaryList = [...partner, ...user]
 
       // 版本过渡：保存网络日记到本地配置文件
-      const diaryListPromises = diaryList.map(async diary => {
-        diary.imgPathList = diary.imgPathList || []
-        // 缓存图片
-        let pathPromises = []
-        if (diary.images) {
-          let urlList = diary.images.split(',')
-          for (let url of urlList) {
-            pathPromises.push(await downloadImg(url, this.props.user.id))
+      const localDiaryList = await readFile(this.props.user.id)
+
+      if(!localDiaryList.length) {
+        const diaryListPromises = diaryList.map(async diary => {
+          diary.imgPathList = diary.imgPathList || []
+          // 缓存图片
+          let pathPromises = []
+          if (diary.images) {
+            let urlList = diary.images.split(',')
+            for (let url of urlList) {
+              pathPromises.push(await downloadImg(url, this.props.user.id))
+            }
           }
-        }
 
-        for (let pathPromise of pathPromises) {
-          diary.imgPathList.push(await pathPromise)
-        }
-        return diary
-      })
+          for (let pathPromise of pathPromises) {
+            diary.imgPathList.push(await pathPromise)
+          }
+          return diary
+        })
 
-      let newDiaryList = []
-      for (let diaryListPromise of diaryListPromises) {
-        newDiaryList.push(await diaryListPromise)
+        let newDiaryList = []
+        for (let diaryListPromise of diaryListPromises) {
+          newDiaryList.push(await diaryListPromise)
+        }
+        this._formDiaryList(newDiaryList)
+        // 更新配置文件
+        updateFile({
+          user_id: this.props.user.id || 0,
+          action: 'add',
+          data: newDiaryList
+        })
+
+      } else {
+        this._formDiaryList(localDiaryList)
       }
-
-      this._formDiaryList(newDiaryList)
-      // 更新配置文件
-      updateFile({
-        user_id: this.props.user.id || 0,
-        action: 'add',
-        data: newDiaryList
-      })
     }
   }
 

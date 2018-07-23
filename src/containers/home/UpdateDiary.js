@@ -54,7 +54,8 @@ export default class UpdateDiary extends Component {
     // imageList: [],
     imgPathList: [],
     oldImgPathList: [],
-    savingDiary: false
+    savingDiary: false,
+    leftButton: null
   }
 
   componentWillMount() {
@@ -67,7 +68,7 @@ export default class UpdateDiary extends Component {
       imgPathList: diary.imgPathList,
       oldImgPathList : [...diary.imgPathList],
       base64List: diary.base64List
-    })
+    }, () => this._renderLeftButton())
   }
   onBackAndroid = () => {
     this.saveDiary()
@@ -122,7 +123,6 @@ export default class UpdateDiary extends Component {
       newUsingImgPathList.push(await newPathListPromise)
     }
 
-    console.log([...newUsingImgPathList, ...oldUseingImgPathList])
     // 更新配置文件
     await updateFile({
       user_id: this.props.user.id || 0,
@@ -179,14 +179,21 @@ export default class UpdateDiary extends Component {
 
   getImgPathList(imgPathList) {
     this.setState({imgPathList})
+    this._renderLeftButton()
   }
 
   _renderLeftButton() {
-    return (
+    let source = this.state.imgPathList.length ?
+      require('../../../res/images/home/diary/icon_back_white.png') :
+      require('../../../res/images/home/diary/icon_back_black.png')
+
+    const leftButton = (
       <TouchableOpacity onPress={this.saveDiary.bind(this)}>
-        <Image source={require('../../../res/images/home/diary/icon_back_black.png')}/>
+        <Image source={source}/>
       </TouchableOpacity>
     )
+
+    this.setState({ leftButton })
   }
 
   render() {
@@ -202,7 +209,7 @@ export default class UpdateDiary extends Component {
             showNav={true}
             showBanner={true}
             showBottomBar={true}
-            leftButton={this._renderLeftButton()}
+            leftButton={this.state.leftButton}
             onPressBack={() => this.saveDiary()}
             imgPathList={this.state.imgPathList}
             getImgPathList={this.getImgPathList.bind(this)}

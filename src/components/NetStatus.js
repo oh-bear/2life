@@ -11,7 +11,6 @@ import TextPingFang from './TextPingFang'
 
 import {
 	WIDTH,
-	HEIGHT,
 	getResponsiveWidth,
 } from '../common/styles'
 

@@ -1,18 +1,13 @@
 import { Platform } from 'react-native'
 import axios from 'axios'
 import { Buffer } from 'buffer'
-import shim from '../../shim'
-import crypto from 'crypto'
 import RNFetchBlob from 'rn-fetch-blob'
 import HttpUtils from '../network/HttpUtils'
 import { UTILS, USERS } from '../network/Urls'
 import store from '../redux/store'
 import Storage from './storage'
 import { fetchProfileSuccess } from '../redux/modules/user'
-import { saveDiaryToLocal, cleanDiary } from '../redux/modules/diary'
 
-
-const URL_qiniu_token = UTILS.qiniu_token
 const URL_qiniu_host = 'http://upload.qiniu.com/putb64/-1/key/'
 const BASE_IMG_URL = 'https://airing.ursb.me/'
 // const URL_qiniu_host = 'http://upload-z2.qiniup.com/putb64/-1/key/'
@@ -267,7 +262,7 @@ export async function postImgToQiniu(uriList, obj) {
     }
 
     // 向后台获取七牛token
-    const res_token = await HttpUtils.get(URL_qiniu_token, { filename })
+    const res_token = await HttpUtils.get(UTILS.qiniu_token, { filename })
     // 图片名称转base64
     const key_base64 = Buffer.from(filename).toString('base64')
 
@@ -411,12 +406,13 @@ export async function downloadImg(url, user_id = 0) {
   if(url.indexOf('file://')==0){
     return url;
   }
+  const filename = `id_${user_id}_${Math.round(Math.pow(Math.random() * 10 , 10))}.jpg`
   const config = {
     fileCache: true,
-    path: `${RNFetchBlob.fs.dirs.DocumentDir}/id_${user_id}_${Math.round(Math.pow(Math.random() * 10 , 10))}.jpg`
+    path: `${RNFetchBlob.fs.dirs.DocumentDir}/${filename}`
   }
   const res = await RNFetchBlob.config(config).fetch('get', url)
-  return res.path()
+  return filename
 }
 
 /**
@@ -443,8 +439,12 @@ export async function readFile(user_id = 0) {
   const FILE_PATH = fs.dirs.DocumentDir + `/user_${user_id}_config.json`
 
   // 读取配置文件内容
-  const content = JSON.parse(await fs.readFile(FILE_PATH, 'utf8'))
-  return content.diaryList
+  try {
+    const content = JSON.parse(await fs.readFile(FILE_PATH, 'utf8'))
+    return content.diaryList
+  } catch (err) {
+    return []
+  }
 }
 
 /**
@@ -490,21 +490,17 @@ export async function updateFile(obj) {
   fs.writeFile(FILE_PATH, JSON.stringify(newContent), 'utf8')
 }
 
-function getOCRSign() {
-  const appid = ''
-  const secret_id = ''
-  const secret_key = ''
-  const currentTime = Math.round(Date.now() / 1000)
-  const expiredTime = currentTime + 1 * 30 * 24 * 60 * 60
-  const rand = Math.round(Math.random() * (Math.pow(2 , 32)))
-  const origin = `a=${appid}&k=${secret_id}&e=${expiredTime}&t=${currentTime}&r=${rand}`
+async function getOCRSign() {
+  let sign = await Storage.get('ocr_sign', '')
 
-  const data = Buffer.from(origin, 'utf8')
-  const signTmp = crypto.createHmac('sha1', secret_key).update(data).digest()
-  const bin = Buffer.concat([signTmp, data])
-  const sign = Buffer.from(bin).toString('base64')
+  if(!sign) {
+    const res = await HttpUtils.get(UTILS.get_ocr_sign)
 
-  Storage.set('ocr_authorization', sign)
+    if(res.code === 0) {
+      sign = res.data
+      Storage.set('ocr_sign', sign)
+    }
+  }
   return sign
 }
 
@@ -514,12 +510,12 @@ function getOCRSign() {
  */
 export async function OCR(base64) {
   const url = 'https://recognition.image.myqcloud.com/ocr/handwriting'
-  const sign = await Storage.get('ocr_authorization', '') || getOCRSign()
+  const sign = await getOCRSign()
 
   const data = {
     appid: '',
     image: base64,
-    // url: 'http://s10.sinaimg.cn/middle/520bb492t97963822a349&690'
+    url: 'http://s10.sinaimg.cn/middle/520bb492t97963822a349&690'
   }
 
   try {
@@ -548,7 +544,7 @@ export async function OCR(base64) {
         return accu += curr.itemstring
       }, '')
     } else if(res.code === 9) {
-      // 签名过期，重新生成
+      // 签名过期，重新获取
       getOCRSign()
       message = '识别失败 (╯﹏╰）'
     } else {

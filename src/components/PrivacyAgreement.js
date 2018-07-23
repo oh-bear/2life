@@ -32,7 +32,7 @@ export default class PrivacyAgreement extends Component {
 			>
 				<TextPingFang style={styles.big_title}>双生日记隐私协议</TextPingFang>
 				<TextPingFang style={styles.content}>双生日记尊重和保护用户的隐私，本隐私政策将告诉您我们如何收集和使用有关您的信息，以及我们如何保护这些信息的安全。您在注册用户之前请务必仔细阅读本隐私条款，如同意，本隐私政策条款在您注册成为双生日记的用户后立即生效。</TextPingFang>
-				
+
 				{
 					privacyItems.map(item => {
 						if(item.size === 'title') {
@@ -81,7 +81,7 @@ const styles = StyleSheet.create({
 		position: 'absolute',
 		justifyContent: 'center',
 		alignItems: 'center',
-		backgroundColor: 'rgba(0,0,0,.8)',
+		backgroundColor: 'rgba(0,0,0,.56)',
 		zIndex: 100
 	},
 	touch_view: {
