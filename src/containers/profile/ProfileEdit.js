@@ -25,6 +25,7 @@ import {
   getResponsiveWidth,
 } from '../../common/styles'
 import Storage from '../../common/storage'
+import { setToken } from '../../network/HttpUtils'
 import { SCENE_LOGIN_OPTIONS } from '../../constants/scene'
 
 import { updateUser, postImgToQiniu } from '../../common/util'
@@ -95,6 +96,11 @@ export default class ProfileEdit extends Component {
           store.dispatch(cleanUser())
           store.dispatch(cleanPartner())
           await Storage.remove('key')
+          setToken({
+            uid: '',
+            token: '',
+            timestamp: ''
+          })
           Actions.reset(SCENE_LOGIN_OPTIONS)
         }
       }

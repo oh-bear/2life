@@ -123,7 +123,7 @@ export default class Home extends Component {
   
         let newDiaryList = []
         for (let diaryListPromise of diaryListPromises) {
-          newDiaryList.push(await diaryListPromise)
+          newDiaryList.push({...await diaryListPromise, op: 0})
         }
         this._formDiaryList(newDiaryList)
         // 更新配置文件

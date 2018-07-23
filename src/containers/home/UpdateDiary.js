@@ -112,50 +112,42 @@ export default class UpdateDiary extends Component {
       newUsingImgPathList.push(await newPathListPromise)
     }
 
+    let images = ''
+    // TODO: VIP
+    const vip = 1
+    if (vip) {
+      images = await postImgToQiniu([...newUsingImgPathList, ...oldUseingImgPathList], {
+        type: 'note',
+        user_id: this.props.user.id || 0
+      })
+
+      // const data = {
+      //   note_id: this.props.diary.id,
+      //   title,
+      //   content,
+      //   images: [...imageList, ...(images.length ? images.split(',') : [])].join(','),
+      //   mode: this.props.diary.mode
+      // }
+      // const res = await HttpUtils.post(NOTES.update, data)
+      // if (res.code === 0) {
+      // }
+    }
+
     // 更新配置文件
     await updateFile({
       user_id: this.props.user.id || 0,
       action: 'update',
+      shouldSync: true,
       data: {
         ...this.props.diary,
+        images,
         title,
         content,
         base64List,
-        imgPathList: [...newUsingImgPathList, ...oldUseingImgPathList]
+        imgPathList: [...newUsingImgPathList, ...oldUseingImgPathList],
+        op: 2
       }
     })
-
-    // 修改本地日记
-    // const newDiary = {
-    //   ...this.props.diary,
-    //   title,
-    //   content,
-    //   base64List,
-    //   imgPathList: [...newUsingImgPathList, ...oldUseingImgPathList]
-    // }
-    // store.dispatch(deleteDiaryToLocal(this.props.diary.date))
-    // store.dispatch(saveDiaryToLocal(newDiary))
-
-    let images = ''
-    // TODO: VIP
-    const vip = false
-    if (vip) {
-      images = await postImgToQiniu(base64List, {
-        type: 'note',
-        user_id: this.props.user.id
-      })
-
-      const data = {
-        note_id: this.props.diary.id,
-        title,
-        content,
-        images: [...imageList, ...(images.length ? images.split(',') : [])].join(','),
-        mode: this.props.diary.mode
-      }
-      const res = await HttpUtils.post(NOTES.update, data)
-      // if (res.code === 0) {
-      // }
-    }
 
     Actions.reset(SCENE_INDEX)
 

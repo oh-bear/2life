@@ -24,11 +24,9 @@ import {
   WIDTH,
   getResponsiveWidth,
 } from '../../common/styles'
-import { getMonth, updateReduxUser, deleteFile, updateFile, getPath} from '../../common/util'
+import { getMonth, updateReduxUser, updateFile, getPath} from '../../common/util'
 import { SCENE_INDEX, SCENE_UPDATE_DIARY } from '../../constants/scene'
 
-import store from '../../redux/store'
-import { deleteDiaryToLocal } from '../../redux/modules/diary'
 import HttpUtils from '../../network/HttpUtils'
 import { NOTES } from '../../network/Urls'
 
@@ -90,7 +88,12 @@ export default class DiaryDetail extends Component {
     await updateFile({
       user_id: this.props.user.id || 0,
       action: 'update',
-      data: {...this.props.diary, mode}
+      shouldSync: true,
+      data: {
+        ...this.props.diary,
+        mode,
+        op: 2,
+      }
     })
 
     this.setState({
@@ -150,14 +153,12 @@ export default class DiaryDetail extends Component {
                 await updateFile({
                   user_id: this.props.user.id || 0,
                   action: 'delete',
-                  date: this.props.diary.date
+                  shouldSync: !!this.props.user.id,
+                  data: {
+                    ...this.props.diary,
+                    op: 3
+                  }
                 })
-
-                // 删除本地日记
-                // this.props.diary.imgPathList.forEach(path => {
-                //   deleteFile(path)
-                // })
-                // store.dispatch(deleteDiaryToLocal(this.props.diary.date))
 
                 Actions.reset(SCENE_INDEX)
 
@@ -241,7 +242,8 @@ export default class DiaryDetail extends Component {
   }
 
   _renderRightButton() {
-    if (!this.props.partner.id || this.props.user.id === this.props.diary.user_id) {
+    // 未登录日记和自己的日记才显示更多按钮
+    if (!this.props.user.id || this.props.user.id === this.props.diary.user_id) {
       let source = this.state.imgPathList.length ?
         require('../../../res/images/common/icon_more_white.png') :
         require('../../../res/images/common/icon_more_black.png')
