@@ -80,7 +80,7 @@ export default class DiaryBanner extends Component {
     // 日记图片
     if (this.props.imgPathList && this.props.imgPathList.length) {
       imgListComponent = this.props.imgPathList.map((path, index) => {
-        if(path.indexOf('http')!=0&&path.indexOf('file://')!=0) path = 'file://'+path;
+        //if(path.indexOf('http')!=0&&path.indexOf('file://')!=0) path = 'file://'+path;
         return (
           <View
             style={styles.img_container}

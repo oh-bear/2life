@@ -219,6 +219,7 @@ export async function getWeather(region) {
 
 // ios文件路径每次访问后都会变化，需要特别处理
 export function getPath(uri) {
+  console.log(uri);
   let filePath = uri
   if (Platform.OS === 'ios') {
     let arr = uri.split('/')
@@ -226,8 +227,13 @@ export function getPath(uri) {
     filePath = `${dirs.DocumentDir}/${arr[arr.length - 1]}`
   }
   if(Platform.OS == 'android'){
-    filePath = 'file://'+filePath;
+    if(filePath.indexOf("http")!=0&&filePath.indexOf("file")!=0){
+      let arr = uri.split('/')
+      const dirs = RNFetchBlob.fs.dirs
+      filePath = `file://${dirs.DocumentDir}/${arr[arr.length - 1]}`
+    }
   }
+  console.log(filePath);
   return filePath
 }
 

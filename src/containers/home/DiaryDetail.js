@@ -223,6 +223,9 @@ export default class DiaryDetail extends Component {
     });
   }
 
+
+
+
   likeNote() {
     HttpUtils.post(NOTES.like, {note_id: this.props.diary.id}).then(res => {
       if (res.code === 0) {
@@ -293,8 +296,14 @@ export default class DiaryDetail extends Component {
       const rightButton = (
         <TouchableOpacity
           style={styles.nav_right}
-          onPress={() => this.showOptions()}
-        >
+         onPress={() =>{
+           if (Platform.OS === 'android') {
+             this.showActionSheet()
+           } else {
+             this.showOptions()
+           }
+         }}
+         >
           <Image source={source}/>
         </TouchableOpacity>
       )
@@ -421,8 +430,8 @@ export default class DiaryDetail extends Component {
         >
           <ImageViewer
             imageUrls={this.state.imgPathList.map(path => {
-              if(path.indexOf('http')!=0&&path.indexOf('file://')!=0) path = 'file://'+path;
-              return {url: path}
+              //if(path.indexOf('http')!=0&&path.indexOf('file://')!=0) path = 'file://'+path;
+              return {url: getPath(path)}
             })}
             enableSwipeDown={true}
             onSwipeDown={() => this.setState({showImgPreview: false})}
