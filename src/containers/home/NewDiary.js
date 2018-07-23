@@ -133,8 +133,9 @@ export default class NewDiary extends Component {
 
     // this.setState({ savingDiary: true })
 
-    const { title, content, latitude, longitude, location, imgPathList } = this.state
-
+    const { title_2, content_2, latitude, longitude, location, imgPathList } = this.state
+    let title = title_2,
+        content = content_2
     if (!title && !content) return Actions.pop()
     if (!title) {
       this.setState({savingDiary: false})
@@ -199,7 +200,7 @@ export default class NewDiary extends Component {
       }
 
       // TODO: 是否为付费VIP用户
-      if (vip) {
+      if (false) {
         const res = await HttpUtils.post(NOTES.publish, data)
 
         if (res.code === 0) {
