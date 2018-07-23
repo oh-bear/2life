@@ -603,7 +603,7 @@ export async function OCR(base64) {
   const data = {
     appid: '',
     image: base64,
-    url: 'http://s10.sinaimg.cn/middle/520bb492t97963822a349&690'
+    // url: 'http://s10.sinaimg.cn/middle/520bb492t97963822a349&690'
   }
 
   try {
