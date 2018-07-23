@@ -33,4 +33,5 @@ export const MODES = {
 
 export const UTILS = {
   qiniu_token: '/utils/qiniu_token', // get {filename}
+  get_ocr_sign: '/utils/get_ocr_sign'
 }

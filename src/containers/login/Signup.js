@@ -50,6 +50,7 @@ export default class Signup extends Component {
     showAccountTip: false,
     showCodeTip: false,
     showPswTip: false,
+    hadSendCode: false
   }
 
   componentDidMount() {
@@ -59,15 +60,13 @@ export default class Signup extends Component {
   }
 
   async getCode() {
-    // if (/^1(3|4|5|7|8)\d{9}$/.test(this.state.account)) {
-    //   this.setState({ showAccountTip: false })
-    // } else {
-    //   return this.setState({ showAccountTip: true, accountTip: '手机格式错误' })
-    // }
 
     const res = await HttpUtils.post(URL_code, { account: this.state.accountArea + this.state.account })
     if (res.code === 0) {
-      this.setState({ timestamp: res.data.timestamp })
+      this.setState({
+        timestamp: res.data.timestamp,
+        hadSendCode: true
+      })
       Alert.alert('', '验证码已发送')
     }
     if (res.code === 501) Alert.alert('', '请求过于频繁，请稍后再试')
@@ -164,7 +163,7 @@ export default class Signup extends Component {
                   style={styles.text_code_container}
                   onPress={() => {this.getCode()}}
                 >
-                  <TextPingFang style={styles.text_code}>{this.state.text_code}</TextPingFang>
+                  <TextPingFang style={[styles.text_code, {color: this.state.hadSendCode ? '#aaa' : '#2DC3A6'}]}>{this.state.text_code}</TextPingFang>
                 </TouchableOpacity>
               </View>
               <TextPingFang style={[styles.text_tip, { color: this.state.showCodeTip ? '#F43C56' : 'transparent' }]}>验证码错误</TextPingFang>

@@ -26,7 +26,7 @@ import {
   WIDTH,
   getResponsiveWidth,
 } from '../../common/styles'
-import { getMonth, getLocation, updateReduxUser, deleteFile, updateFile} from '../../common/util'
+import { getMonth, updateReduxUser, deleteFile, updateFile, getPath} from '../../common/util'
 import { SCENE_INDEX, SCENE_UPDATE_DIARY } from '../../constants/scene'
 
 import store from '../../redux/store'
@@ -53,7 +53,9 @@ export default class DiaryDetail extends Component {
     changeMode: false,
     showImgPreview: false,
     modeWidth: new Animated.Value(0),
-    modeOpacity: new Animated.Value(0)
+    modeOpacity: new Animated.Value(0),
+    leftButton: null,
+    rightButton: null
   }
 
   async componentWillMount() {
@@ -63,9 +65,15 @@ export default class DiaryDetail extends Component {
       this.setState({
         imgPathList: diary.imgPathList,
         showBanner: true
+      }, () => {
+        this._renderLeftButton()
+        this._renderRightButton()
       })
     } else {
-      this.setState({ showBanner: false })
+      this.setState({ showBanner: false }, () => {
+        this._renderLeftButton()
+        this._renderRightButton()
+      })
     }
 
     if (diary.mode >= 0 && diary.mode <= 20) this.setState({mode_face: require('../../../res/images/home/icon_very_sad_male.png')})
@@ -79,7 +87,21 @@ export default class DiaryDetail extends Component {
     this.renderlikeComponent(diary.is_liked)
   }
 
-  updateNote(mode, mode_face) {
+  async updateMode(mode, mode_face) {
+    // 更新配置文件
+    await updateFile({
+      user_id: this.props.user.id || 0,
+      action: 'update',
+      data: {...this.props.diary, mode}
+    })
+
+    this.setState({
+      changeMode: false,
+      mode,
+      mode_face
+    })
+    this.toggleChooseMode()
+
     // TODO: VIP
     const vip = false
     if (vip) {
@@ -210,24 +232,6 @@ export default class DiaryDetail extends Component {
     })
   }
 
-  renderRightButton() {
-    if (!this.props.partner.id || this.props.user.id === this.props.diary.user_id) {
-      return (
-        <TouchableOpacity
-          style={styles.nav_right}
-          onPress={() =>{
-          if(Platform.OS === 'android'){
-            this.showActionSheet();
-          }else {
-            this.showOptions()
-          }
-        }}>
-          <Image source={require('../../../res/images/common/icon_more_black.png')}/>
-        </TouchableOpacity>
-      )
-    }
-  }
-
   renderlikeComponent(isLiked) {
     let likeComponent
     if (isLiked) {
@@ -266,6 +270,38 @@ export default class DiaryDetail extends Component {
     ]).start()
   }
 
+  _renderLeftButton() {
+    let source = this.state.imgPathList.length ?
+      require('../../../res/images/common/icon_back_white.png') :
+      require('../../../res/images/common/icon_back_black.png')
+
+    const leftButton = (
+      <TouchableOpacity onPress={() => Actions.pop()}>
+        <Image source={source}/>
+      </TouchableOpacity>
+    )
+
+    this.setState({ leftButton })
+  }
+
+  _renderRightButton() {
+    if (!this.props.partner.id || this.props.user.id === this.props.diary.user_id) {
+      let source = this.state.imgPathList.length ?
+        require('../../../res/images/common/icon_more_white.png') :
+        require('../../../res/images/common/icon_more_black.png')
+
+      const rightButton = (
+        <TouchableOpacity
+          style={styles.nav_right}
+          onPress={() => this.showOptions()}
+        >
+          <Image source={source}/>
+        </TouchableOpacity>
+      )
+      this.setState({ rightButton })
+    }
+  }
+
   render() {
     return (
       <Container hidePadding={this.state.showBanner}>
@@ -278,7 +314,8 @@ export default class DiaryDetail extends Component {
               showNav={true}
               showBanner={this.state.showBanner}
               imgPathList={this.state.imgPathList}
-              rightButton={this.renderRightButton()}
+              leftButton={this.state.leftButton}
+              rightButton={this.state.rightButton}
             />
           </TouchableOpacity>
 
@@ -286,7 +323,8 @@ export default class DiaryDetail extends Component {
           <CommonNav
             navStyle={[styles.nav_style, { display: this.state.showBanner ? 'none' : 'flex' }]}
             navBarStyle={styles.navbar_style}
-            rightButton={this.renderRightButton()}
+            leftButton={this.state.leftButton}
+            rightButton={this.state.rightButton}
           />
 
           <View style={styles.date_container}>
@@ -322,7 +360,7 @@ export default class DiaryDetail extends Component {
             <TextPingFang style={styles.text_mode}>{this.state.mode}</TextPingFang>
             <TextPingFang style={styles.text_value}>情绪值</TextPingFang>
             <TouchableOpacity
-              style={[styles.update_container, { display: this.props.user.id === this.props.diary.user_id ? 'flex' : 'none',position:this.props.user.id === this.props.diary.user_id?'absolute':'relative' }]}
+              style={[styles.update_container, { display: this.props.user.id === this.props.diary.user_id || this.props.diary.user_id === 0 ? 'flex' : 'none' ,position:this.props.user.id === this.props.diary.user_id || this.props.diary.user_id === 0?'absolute':'relative'}]}
               onPress={() => this.toggleChooseMode()}
             >
               <TextPingFang style={styles.text_update}>更正</TextPingFang>
@@ -343,31 +381,31 @@ export default class DiaryDetail extends Component {
             ]}>
               <TouchableOpacity
                 style={styles.mode_item}
-                onPress={() => this.updateNote(0, require('../../../res/images/home/icon_very_sad_male.png'))}
+                onPress={() => this.updateMode(0, require('../../../res/images/home/icon_very_sad_male.png'))}
               >
                 <Image source={require('../../../res/images/home/icon_very_sad_male.png')}/>
               </TouchableOpacity>
               <TouchableOpacity
                 style={styles.mode_item}
-                onPress={() => this.updateNote(25, require('../../../res/images/home/icon_sad_male.png'))}
+                onPress={() => this.updateMode(25, require('../../../res/images/home/icon_sad_male.png'))}
               >
                 <Image source={require('../../../res/images/home/icon_sad_male.png')}/>
               </TouchableOpacity>
               <TouchableOpacity
                 style={styles.mode_item}
-                onPress={() => this.updateNote(50, require('../../../res/images/home/icon_normal_male.png'))}
+                onPress={() => this.updateMode(50, require('../../../res/images/home/icon_normal_male.png'))}
               >
                 <Image source={require('../../../res/images/home/icon_normal_male.png')}/>
               </TouchableOpacity>
               <TouchableOpacity
                 style={styles.mode_item}
-                onPress={() => this.updateNote(75, require('../../../res/images/home/icon_happy_male.png'))}
+                onPress={() => this.updateMode(75, require('../../../res/images/home/icon_happy_male.png'))}
               >
                 <Image source={require('../../../res/images/home/icon_happy_male.png')}/>
               </TouchableOpacity>
               <TouchableOpacity
                 style={styles.mode_item}
-                onPress={() => this.updateNote(100, require('../../../res/images/home/icon_very_happy_male.png'))}
+                onPress={() => this.updateMode(100, require('../../../res/images/home/icon_very_happy_male.png'))}
               >
                 <Image source={require('../../../res/images/home/icon_very_happy_male.png')}/>
               </TouchableOpacity>
