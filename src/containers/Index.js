@@ -85,7 +85,7 @@ export default class Index extends Component {
     // 询问周期一天一次
     const lastAskMergeTime = await Storage.get('lastAskMergeTime')
     const now = Date.now()
-    // if(now - lastAskMergeTime < 86400000) return
+    if(now - lastAskMergeTime < 86400000) return
 
     if(this.props.user.id) {
       const diaryList = await readFile()
@@ -102,16 +102,20 @@ export default class Index extends Component {
             {
               text: '合并',
               onPress: async () => {
-                // 更改日记user_id
+                // 更改日记user_id, op, status
                 const newDiaryList = diaryList.map(diary => {
-                  diary.user_id = this.props.user.id
-                  return diary
+                  return {
+                    ...diary,
+                    user_id: this.props.user.id,
+                    op: 1,
+                    status: this.props.user.status
+                  }
                 })
-                console.log(newDiaryList)
                 await updateFile({
                   user_id: this.props.user.id,
                   action: 'add',
-                  data: newDiaryList
+                  data: newDiaryList,
+                  shouldSync: true
                 })
                 // 删除未登录配置文件
                 deleteFile(getPath('user_0_config.json'))

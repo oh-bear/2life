@@ -25,6 +25,7 @@ export const NOTES = {
   like: '/notes/like', // post {note_id}
   delete: '/notes/delete', // get {note_id}
   update: '/notes/update', // post {note_id, title, content, images, mode}
+  sync: '/notes/sync', // get {synctime}
 }
 
 export const MODES = {
@@ -33,5 +34,6 @@ export const MODES = {
 
 export const UTILS = {
   qiniu_token: '/utils/qiniu_token', // get {filename}
-  get_ocr_sign: '/utils/get_ocr_sign'
+  get_ocr_sign: '/utils/get_ocr_sign',
+  get_nlp_result: '/utils/get_nlp_result', // post {content}
 }

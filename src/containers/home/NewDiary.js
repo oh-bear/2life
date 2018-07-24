@@ -40,10 +40,8 @@ import {
 import Storage from '../../common/storage'
 import { SCENE_INDEX } from '../../constants/scene'
 
-import store from '../../redux/store'
-import { saveDiaryToLocal } from '../../redux/modules/diary'
 import HttpUtils from '../../network/HttpUtils'
-import { NOTES } from '../../network/Urls'
+import { NOTES, UTILS } from '../../network/Urls'
 
 function mapStateToProps(state) {
   return {
@@ -141,10 +139,11 @@ export default class NewDiary extends Component {
 
   //  if (this.state.savingDiary) return
 
-    this.setState({ savingDiary: true })
+    // this.setState({ savingDiary: true })
 
-    const { title, content, latitude, longitude, location, imgPathList } = this.state
-
+    const { title_2, content_2, latitude, longitude, location, imgPathList } = this.state
+    let title = title_2,
+        content = content_2
     if (!title && !content) return Actions.pop()
     if (!title) {
       this.setState({savingDiary: false})
@@ -162,15 +161,14 @@ export default class NewDiary extends Component {
     try {
       let images = ''
       // TODO: VIP
-      const vip = 0
+      const vip = 1
       if (vip) {
         images = await postImgToQiniu(imgPathList, {
           type: 'note',
-          user_id: this.props.user.id
+          user_id: this.props.user.id || 0
         })
       }
 
-      const data = { title, content, images, latitude, longitude, location, imgPathList }
 
       // 复制图片文件
       let newPathListPromises = imgPathList.map(async path => {
@@ -181,25 +179,24 @@ export default class NewDiary extends Component {
         newImgPathList.push(await newPathListPromise)
       }
 
+      // 情绪分析
+      const res = await HttpUtils.post(UTILS.get_nlp_result, { content })
+      let mode = res.code === 0 ? Math.floor(res.data * 100) : 50
+
+      const data = { title, content, mode, images, latitude, longitude, location, imgPathList }
       // 更新配置文件
       await updateFile({
         user_id: this.props.user.id || 0,
         action: 'add',
+        shouldSync: true,
         data: {
           ...data,
           imgPathList: newImgPathList,
           date: Date.now(),
-          user_id: this.props.user.id || 0
+          user_id: this.props.user.id || 0,
+          op: 1,
         }
       })
-
-      // 将日记保存到本地redux
-      // store.dispatch(saveDiaryToLocal({
-      //   ...data,
-      //   imgPathList: newImgPathList,
-      //   date: Date.now(),
-      //   user_id: this.props.user.id || 0
-      // }))
 
       if (this.state.firstEntryDiary) {
         this.setState({
@@ -211,7 +208,7 @@ export default class NewDiary extends Component {
       }
 
       // TODO: 是否为付费VIP用户
-      if (vip) {
+      if (false) {
         const res = await HttpUtils.post(NOTES.publish, data)
 
         if (res.code === 0) {

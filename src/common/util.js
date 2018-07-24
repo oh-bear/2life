@@ -3,14 +3,16 @@ import axios from 'axios'
 import { Buffer } from 'buffer'
 import RNFetchBlob from 'rn-fetch-blob'
 import HttpUtils from '../network/HttpUtils'
-import { UTILS, USERS } from '../network/Urls'
+import { UTILS, USERS, NOTES } from '../network/Urls'
 import store from '../redux/store'
 import Storage from './storage'
 import { fetchProfileSuccess } from '../redux/modules/user'
 
-const URL_qiniu_host = 'http://upload.qiniu.com/putb64/-1/key/'
+const URL_QINIU_BASE = 'http://upload.qiniu.com'
+const URL_QINIU_BASE64 = `${URL_QINIU_BASE}/putb64/-1/key/`
 const BASE_IMG_URL = 'https://airing.ursb.me/'
-// const URL_qiniu_host = 'http://upload-z2.qiniup.com/putb64/-1/key/'
+// const URL_QINIU_BASE = 'http://upload-z2.qiniup.com'
+// const URL_QINIU_BASE64 = `${URL_QINIU_BASE}/putb64/-1/key/`
 // const BASE_IMG_URL = 'http://p3nr2tlc4.bkt.clouddn.com/'
 
 export const isDev = global.process.env.NODE_ENV === 'development'
@@ -250,7 +252,7 @@ export async function postImgToQiniu(uriList, obj) {
 
 
   const uriBase64ListPromises = uriList.map(async uri => {
-    let filePath  = getPath(uri)
+    let filePath = getPath(uri)
     return await RNFetchBlob.fs.readFile(filePath, 'base64')
   })
 
@@ -339,6 +341,47 @@ export async function postImgToQiniu(uriList, obj) {
     }
   }
   return imgUrls.join(',')
+}
+
+/**
+ *
+ * @param {Number} user_id 用户ID
+ */
+export async function postFileToQiniu(user_id) {
+  const now = Date.now()
+  const filename = `2life/file/${user_id}_${now}.json`
+  // 向后台获取七牛token
+  const res_token = await HttpUtils.get(UTILS.qiniu_token, { filename })
+
+  if (res_token.code === 0) {
+    // 读取文件内容
+    const content = await RNFetchBlob.fs.readFile(getPath(`user_${user_id}_config.json`))
+
+    const res = await RNFetchBlob.fetch('POST', URL_QINIU_BASE, {
+      'Content-Type': 'multipart/form-data'
+    }, [
+        {
+          name: 'file',
+          data: content
+        },
+        {
+          name: 'token',
+          data: res_token.data
+        },
+        {
+          name: 'fileName',
+          data: `user_${user_id}_config.json`
+        },
+        {
+          name: 'key',
+          data: filename
+        },
+
+      ])
+    console.log(res.data)
+
+    return now
+  }
 }
 
 /**
@@ -450,7 +493,7 @@ export async function readFile(user_id = 0) {
   // 读取配置文件内容
   try {
     const content = JSON.parse(await fs.readFile(FILE_PATH, 'utf8'))
-    return content.diaryList
+    return content.diaryList.filter(diary => diary.op !== 3)
   } catch (err) {
     return []
   }
@@ -463,8 +506,8 @@ export async function readFile(user_id = 0) {
 // obj 参数说明
 // user_id: Number, 用户ID，用于查找配置文件名称
 // action: String, 操作类型，有 add, delete, update 三种
-// date: Number, 日记创建的时间戳，在delete操作时传入，用于删除操作
-// data: Array | Object, 日记内容，add 或 update操作
+// data: Array | Object, 日记内容
+// shouldSync: Boolean, 是否应该同步后台数据库
 export async function updateFile(obj) {
   const fs = RNFetchBlob.fs
   const FILE_PATH = fs.dirs.DocumentDir + `/user_${obj.user_id}_config.json`
@@ -473,21 +516,32 @@ export async function updateFile(obj) {
   const content = JSON.parse(await fs.readFile(FILE_PATH, 'utf8'))
   let { diaryList } = content
 
-  if(obj.action === 'add') {
-    if(obj.data instanceof Array) {
+  if (obj.action === 'add') {
+    if (obj.data instanceof Array) {
       diaryList = [...diaryList, ...obj.data]
     } else {
       diaryList.push(obj.data)
     }
   }
 
-  if(obj.action === 'delete') {
-    diaryList = diaryList.filter(diary => diary.date !== obj.date)
+  if (obj.action === 'update' || obj.action === 'delete') {
+    if (obj.data instanceof Array) {
+      for(let i = 0; i < obj.data.length; i++) {
+        for(let j = 0; j < diaryList.length; j++) {
+          if (obj.data[i].date === diaryList[j].date) {
+            diaryList[j] = obj.data[i]
+            break
+          }
+        }
+      }
+    } else {
+      diaryList = diaryList.filter(diary => diary.date !== obj.data.date)
+      diaryList.push(obj.data)
+    }
   }
 
-  if(obj.action === 'update') {
+  if (obj.action === 't_delete') {
     diaryList = diaryList.filter(diary => diary.date !== obj.data.date)
-    diaryList.push(obj.data)
   }
 
   const newContent = {
@@ -496,16 +550,93 @@ export async function updateFile(obj) {
     diaryList
   }
 
-  fs.writeFile(FILE_PATH, JSON.stringify(newContent), 'utf8')
+  await fs.writeFile(FILE_PATH, JSON.stringify(newContent), 'utf8')
+
+  if (obj.shouldSync) {
+    // 上传文件
+    const synctime = await postFileToQiniu(obj.user_id)
+
+    // 通知后台拉取文件更新
+    const res = await HttpUtils.get(NOTES.sync, { synctime })
+    if (res.code === 0) {
+      console.log(res.data)
+      // 更新返回的内容
+      if (obj.action === 'add') {
+        const resDiaryList = res.data
+
+        if (obj.data instanceof Array) {
+          let updateDiaryList = []
+          for (let i = 0; i < obj.data.length; i++) {
+            for (let j = 0; j < resDiaryList.length; j++) {
+              if (obj.data[i].date === resDiaryList[j].date) {
+                updateDiaryList.push({
+                  ...resDiaryList[j],
+                  ...obj.data[i],
+                  op: 0
+                })
+                break
+              }
+            }
+          }
+          console.log({updateDiaryList, resDiaryList, data: obj.data})
+          await updateFile({
+            user_id: obj.user_id,
+            action: 'update',
+            data: updateDiaryList
+          })
+        } else {
+          const resDiary = resDiaryList.filter(diary => diary.date === obj.data.date)
+          await updateFile({
+            user_id: obj.user_id,
+            action: 'update',
+            data: {
+              ...resDiary[0],
+              ...obj.data,
+              op: 0
+            }
+          })
+        }
+      }
+
+      if (obj.action === 'delete') {
+        await updateFile({
+          user_id: obj.user_id,
+          action: 't_delete',
+          data: obj.data
+        })
+      }
+
+      // 更新所有日记 op 为0
+      const content = JSON.parse(await fs.readFile(FILE_PATH, 'utf8'))
+      let { diaryList } = content
+      diaryList = diaryList.map(diary => {
+        diary.op = 0
+        return diary
+      })
+      await updateFile({
+        user_id: obj.user_id,
+        action: 'update',
+        data: diaryList
+      })
+    }
+  } else {
+    if (obj.action === 'delete') {
+      await updateFile({
+        user_id: obj.user_id,
+        action: 't_delete',
+        data: obj.data
+      })
+    }
+  }
 }
 
 async function getOCRSign() {
   let sign = await Storage.get('ocr_sign', '')
 
-  if(!sign) {
+  if (!sign) {
     const res = await HttpUtils.get(UTILS.get_ocr_sign)
 
-    if(res.code === 0) {
+    if (res.code === 0) {
       sign = res.data
       Storage.set('ocr_sign', sign)
     }
@@ -524,7 +655,7 @@ export async function OCR(base64) {
   const data = {
     appid: '',
     image: base64,
-    url: 'http://s10.sinaimg.cn/middle/520bb492t97963822a349&690'
+    // url: 'http://s10.sinaimg.cn/middle/520bb492t97963822a349&690'
   }
 
   try {
@@ -538,8 +669,8 @@ export async function OCR(base64) {
     res = res.data
 
     let title = '',
-        content = '',
-        message = ''
+      content = '',
+      message = ''
 
     if (res.code === 0 && res.data.items.length) {
       const itemsString = res.data.items
@@ -552,7 +683,7 @@ export async function OCR(base64) {
 
         return accu += curr.itemstring
       }, '')
-    } else if(res.code === 9) {
+    } else if (res.code === 9) {
       // 签名过期，重新获取
       getOCRSign()
       message = '识别失败 (╯﹏╰）'
