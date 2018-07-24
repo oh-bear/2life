@@ -219,6 +219,7 @@ export default class NewDiary extends Component {
 
       Toast.hide()
     } catch(e) {
+      console.log(e);
       Toast.fail('保存失败，请稍后再试', 2)
     }
   }

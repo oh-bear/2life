@@ -284,7 +284,7 @@ export async function postImgToQiniu(uriList, obj) {
         var xmlPromise = new Promise(function(resolve,reject){
           var request = new XMLHttpRequest();
           request.onreadystatechange = handler
-          request.open('POST', URL_qiniu_host + key_base64,true);
+          request.open('POST', URL_QINIU_BASE64 + key_base64,true);
           request.setRequestHeader("Content-Type", "application/octet-stream");
           request.setRequestHeader("Authorization", 'UpToken ' + qiniu_token);
           request.send(base64);
@@ -305,7 +305,7 @@ export async function postImgToQiniu(uriList, obj) {
         })
         return xmlPromise;
       }else {
-        const res_qiniu = await fetch(URL_qiniu_host + key_base64, {
+        const res_qiniu = await fetch(URL_QINIU_BASE64  + key_base64, {
           method: 'post',
           headers: {
             'Content-Type': 'application/octet-stream',
