@@ -91,10 +91,8 @@
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/incremental" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/javaPrecompile" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/jniLibs" />
-      <excludeFolder url="file://$MODULE_DIR$/build/intermediates/lint" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/manifests" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/prebuild" />
-      <excludeFolder url="file://$MODULE_DIR$/build/intermediates/proguard-rules" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/res" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/rs" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/shaders" />
@@ -102,10 +100,9 @@
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/symbols" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/transforms" />
       <excludeFolder url="file://$MODULE_DIR$/build/outputs" />
-      <excludeFolder url="file://$MODULE_DIR$/build/reports" />
       <excludeFolder url="file://$MODULE_DIR$/build/tmp" />
     </content>
-    <orderEntry type="jdk" jdkName="Android API 23 Platform" jdkType="Android SDK" />
+    <orderEntry type="jdk" jdkName="Android API 24 Platform" jdkType="Android SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="Gradle: com.android.support:support-annotations:25.0.0@jar" level="project" />
     <orderEntry type="library" name="Gradle: com.facebook.fresco:fbcore-1.3.0" level="project" />
@@ -134,9 +131,11 @@
     <orderEntry type="library" name="Gradle: com.facebook.fresco:imagepipeline-1.3.0" level="project" />
     <orderEntry type="library" name="Gradle: __local_aars__:E.\git\2life\node_modules\react-native-wechat\android\libs\libammsdk.jar:unspecified@jar" level="project" />
     <orderEntry type="module" module-name="jcore-react-native" />
+    <orderEntry type="module" module-name="rn-fetch-blob" />
     <orderEntry type="module" module-name="react-native-splash-screen" />
     <orderEntry type="module" module-name="react-native-iap" />
     <orderEntry type="module" module-name="react-native-wechat" />
+    <orderEntry type="module" module-name="react-native-randombytes" />
     <orderEntry type="module" module-name="react-native-vector-icons" />
     <orderEntry type="module" module-name="react-native-svg" />
     <orderEntry type="module" module-name="jpush-react-native" />
