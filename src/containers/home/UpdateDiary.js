@@ -23,17 +23,12 @@ import {
 } from '../../common/styles'
 import {
   getMonth,
-  postImgToQiniu,
   sleep,
   downloadImg,
-  updateFile
+  updateFile,
+  syncFile
 } from '../../common/util'
 import { SCENE_INDEX } from '../../constants/scene'
-
-import store from '../../redux/store'
-import { saveDiaryToLocal, deleteDiaryToLocal } from '../../redux/modules/diary'
-import HttpUtils from '../../network/HttpUtils'
-import { NOTES } from '../../network/Urls'
 
 function mapStateToProps(state) {
   return {
@@ -48,9 +43,7 @@ export default class UpdateDiary extends Component {
     date: new Date(),
     title: '',
     content: '',
-    base64List: [],
     showPopup: false,
-    // imageList: [],
     imgPathList: [],
     oldImgPathList: [],
     savingDiary: false,
@@ -62,21 +55,19 @@ export default class UpdateDiary extends Component {
     this.setState({
       title: diary.title,
       content: diary.content,
-      // imageList: diary.images ? diary.images.split(',') : [],
       imgPathList: diary.imgPathList,
       oldImgPathList : [...diary.imgPathList],
-      base64List: diary.base64List
     }, () => this._renderLeftButton())
   }
 
   async saveDiary() {
-    Keyboard.dismiss()
+    const isLogin = !!this.props.user.id
 
     if (this.state.savingDiary) return
 
     this.setState({savingDiary: true})
 
-    const { title, content, base64List, imgPathList } = this.state
+    const { title, content, imgPathList } = this.state
 
     if (!title && !content) return Actions.pop()
     if (!title) return Alert.alert('', '给日记起个标题吧')
@@ -112,50 +103,24 @@ export default class UpdateDiary extends Component {
       newUsingImgPathList.push(await newPathListPromise)
     }
 
-    let images = ''
-    // TODO: VIP
-    const vip = 1
-    if (vip) {
-      images = await postImgToQiniu([...newUsingImgPathList, ...oldUseingImgPathList], {
-        type: 'note',
-        user_id: this.props.user.id || 0
-      })
-
-      // const data = {
-      //   note_id: this.props.diary.id,
-      //   title,
-      //   content,
-      //   images: [...imageList, ...(images.length ? images.split(',') : [])].join(','),
-      //   mode: this.props.diary.mode
-      // }
-      // const res = await HttpUtils.post(NOTES.update, data)
-      // if (res.code === 0) {
-      // }
-    }
-
     // 更新配置文件
     await updateFile({
       user_id: this.props.user.id || 0,
       action: 'update',
-      shouldSync: true,
       data: {
         ...this.props.diary,
-        images,
         title,
         content,
-        base64List,
         imgPathList: [...newUsingImgPathList, ...oldUseingImgPathList],
-        op: 2
+        op: this.props.diary.id ? 2 : 1
       }
     })
+
+    isLogin && syncFile(this.props.user.id)
 
     Actions.reset(SCENE_INDEX)
 
     Toast.hide()
-  }
-
-  getBase64List(base64List) {
-    this.setState({base64List})
   }
 
   getImgPathList(imgPathList) {
@@ -222,14 +187,6 @@ export default class UpdateDiary extends Component {
             multiline
           />
 
-          {/* <TouchableOpacity
-           // style={[styles.hide_keyboard, {display: this.state.showKeyboard ? 'flex' : 'none'}]}
-           style={[styles.hide_keyboard]}
-           onPress={() => this.saveDiary()}
-           >
-           <TextPingFang style={styles.text_hide}>保存</TextPingFang>
-           </TouchableOpacity> */}
-
         </KeyboardAwareScrollView>
 
       </Container>
@@ -276,19 +233,4 @@ const styles = StyleSheet.create({
     marginTop: getResponsiveWidth(24),
     paddingBottom: getResponsiveWidth(24),
   },
-  hide_keyboard: {
-    // position: 'absolute',
-    width: getResponsiveWidth(50),
-    height: getResponsiveWidth(20),
-    // justifyContent: 'center',
-    // bottom: 0,
-    // right: 2,
-    backgroundColor: '#eee',
-    borderRadius: getResponsiveWidth(10)
-  },
-  text_hide: {
-    color: '#bbb',
-    fontSize: 12,
-    textAlign: 'center'
-  }
 })

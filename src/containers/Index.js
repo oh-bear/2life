@@ -16,8 +16,8 @@ import { connect } from 'react-redux'
 import JPushModule from 'jpush-react-native'
 
 import Storage from '../common/storage'
-import { createFile, readFile, updateFile, deleteFile, getPath } from '../common/util'
-import { USERS } from '../network/Urls'
+import { createFile, readFile, updateFile, deleteFile, syncFile, getPath } from '../common/util'
+import { USERS, UTILS } from '../network/Urls'
 import HttpUtils from '../network/HttpUtils'
 import store from '../redux/store'
 import { fetchPartnerSuccess } from '../redux/modules/partner'
@@ -102,21 +102,23 @@ export default class Index extends Component {
             {
               text: '合并',
               onPress: async () => {
-                // 更改日记user_id, op, status
-                const newDiaryList = diaryList.map(diary => {
-                  return {
-                    ...diary,
-                    user_id: this.props.user.id,
-                    op: 1,
-                    status: this.props.user.status
-                  }
-                })
+                // 更改日记user_id, op, status, mode
+                for (let diary of diaryList) {
+                  const res = await HttpUtils.post(UTILS.get_nlp_result, {content: diary.content})
+                  let mode = res.code === 0 ? Math.floor(res.data * 100) : 50
+
+                  diary.user_id = this.props.user.id
+                  diary.status = this.props.status
+                  diary.mode = mode
+                  diary.op = 1
+                }
+
                 await updateFile({
                   user_id: this.props.user.id,
                   action: 'add',
-                  data: newDiaryList,
-                  shouldSync: true
+                  data: diaryList,
                 })
+                syncFile(this.props.user.id)
                 // 删除未登录配置文件
                 deleteFile(getPath('user_0_config.json'))
               }

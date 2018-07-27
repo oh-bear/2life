@@ -24,7 +24,7 @@ import {
   WIDTH,
   getResponsiveWidth,
 } from '../../common/styles'
-import { getMonth, updateReduxUser, updateFile, getPath} from '../../common/util'
+import { getMonth, updateReduxUser, updateFile, syncFile, getPath} from '../../common/util'
 import { SCENE_INDEX, SCENE_UPDATE_DIARY } from '../../constants/scene'
 
 import HttpUtils from '../../network/HttpUtils'
@@ -88,13 +88,14 @@ export default class DiaryDetail extends Component {
     await updateFile({
       user_id: this.props.user.id || 0,
       action: 'update',
-      shouldSync: true,
       data: {
         ...this.props.diary,
         mode,
-        op: 2,
+        op: this.props.diary.id ? 2 : 1
       }
     })
+
+    !!this.props.user.id && syncFile(this.props.user.id)
 
     this.setState({
       changeMode: false,
@@ -104,29 +105,29 @@ export default class DiaryDetail extends Component {
     this.toggleChooseMode()
     
     // TODO: VIP
-    const vip = false
-    if (vip) {
-      const data = {
-        note_id: this.props.diary.id,
-        title: this.props.diary.title,
-        content: this.props.diary.content,
-        images: this.props.diary.images,
-        mode
-      }
-      HttpUtils.post(NOTES.update, data).then(res => {
-        if (res.code === 0) {
-          updateReduxUser(this.props.user.id)
+    // const vip = false
+    // if (vip) {
+    //   const data = {
+    //     note_id: this.props.diary.id,
+    //     title: this.props.diary.title,
+    //     content: this.props.diary.content,
+    //     images: this.props.diary.images,
+    //     mode
+    //   }
+    //   HttpUtils.post(NOTES.update, data).then(res => {
+    //     if (res.code === 0) {
+    //       updateReduxUser(this.props.user.id)
             
-          this.setState({
-            changeMode: false,
-            mode,
-            mode_face
-          })
-          this.toggleChooseMode()
-          DeviceEventEmitter.emit('flash_note', {})
-        }
-      })
-    }
+    //       this.setState({
+    //         changeMode: false,
+    //         mode,
+    //         mode_face
+    //       })
+    //       this.toggleChooseMode()
+    //       DeviceEventEmitter.emit('flash_note', {})
+    //     }
+    //   })
+    // }
   }
 
   showOptions() {
@@ -152,13 +153,14 @@ export default class DiaryDetail extends Component {
                 // 更新配置文件
                 await updateFile({
                   user_id: this.props.user.id || 0,
-                  action: 'delete',
-                  shouldSync: !!this.props.user.id,
+                  action: this.props.diary.id ? 'update' : 'delete',
                   data: {
                     ...this.props.diary,
                     op: 3
                   }
                 })
+
+                !!this.props.user.id && syncFile(this.props.user.id)
 
                 Actions.reset(SCENE_INDEX)
 

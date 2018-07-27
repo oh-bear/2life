@@ -41,8 +41,6 @@ import {
 
 import { SCENE_NEW_DIARY } from '../../constants/scene'
 
-import store from '../../redux/store'
-import { saveDiaryToLocal, cleanDiary } from '../../redux/modules/diary'
 import HttpUtils from '../../network/HttpUtils'
 import { NOTES } from '../../network/Urls'
 
@@ -88,13 +86,16 @@ export default class Home extends Component {
     this._getWeather()
 
     // 读取日记配置文件
-    this.props.user.id ? await this._fetchDiary() : this._formDiaryList(await readFile(this.props.user.id))
+    this._formDiaryList(await readFile(this.props.user.id))
+    this.props.user.id && await this._fetchDiary()
 
-    DeviceEventEmitter.addListener('flush_note', () => this._fetchDiary())
+    DeviceEventEmitter.addListener('flush_note', async () => {
+      this._formDiaryList(await readFile(this.props.user.id))
+    })
   }
 
   async _fetchDiary() {
-    this.setState({ isRefreshing: true })
+    // this.setState({ isRefreshing: true })
     const res = await HttpUtils.get(URL_list)
     if (res.code === 0) {
       const { partner, recommend, user } = res.data

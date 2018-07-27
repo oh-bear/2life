@@ -1,4 +1,4 @@
-import { Platform } from 'react-native'
+import { Platform, DeviceEventEmitter } from 'react-native'
 import axios from 'axios'
 import { Buffer } from 'buffer'
 import RNFetchBlob from 'rn-fetch-blob'
@@ -14,6 +14,8 @@ const BASE_IMG_URL = 'https://airing.ursb.me/'
 // const URL_QINIU_BASE = 'http://upload-z2.qiniup.com'
 // const URL_QINIU_BASE64 = `${URL_QINIU_BASE}/putb64/-1/key/`
 // const BASE_IMG_URL = 'http://p3nr2tlc4.bkt.clouddn.com/'
+
+let TIMEOUT_ID = null
 
 export const isDev = global.process.env.NODE_ENV === 'development'
 
@@ -455,7 +457,6 @@ export async function readFile(user_id = 0) {
 // user_id: Number, 用户ID，用于查找配置文件名称
 // action: String, 操作类型，有 add, delete, update 三种
 // data: Array | Object, 日记内容
-// shouldSync: Boolean, 是否应该同步后台数据库
 export async function updateFile(obj) {
   const fs = RNFetchBlob.fs
   const FILE_PATH = fs.dirs.DocumentDir + `/user_${obj.user_id}_config.json`
@@ -472,10 +473,11 @@ export async function updateFile(obj) {
     }
   }
 
-  if (obj.action === 'update' || obj.action === 'delete') {
+  // update: 更新日记新的内容
+  if (obj.action === 'update') {
     if (obj.data instanceof Array) {
-      for(let i = 0; i < obj.data.length; i++) {
-        for(let j = 0; j < diaryList.length; j++) {
+      for (let i = 0; i < obj.data.length; i++) {
+        for (let j = 0; j < diaryList.length; j++) {
           if (obj.data[i].date === diaryList[j].date) {
             diaryList[j] = obj.data[i]
             break
@@ -488,94 +490,106 @@ export async function updateFile(obj) {
     }
   }
 
-  if (obj.action === 't_delete') {
+  // 不用同步直接删除日记
+  if (obj.action === 'delete') {
     diaryList = diaryList.filter(diary => diary.date !== obj.data.date)
   }
-
+  
+  
   const newContent = {
     ...content,
     lastModified: Date.now(),
     diaryList
   }
-
+  
   await fs.writeFile(FILE_PATH, JSON.stringify(newContent), 'utf8')
 
-  if (obj.shouldSync) {
-    // 上传文件
-    const synctime = await postFileToQiniu(obj.user_id)
+  DeviceEventEmitter.emit('flush_note')
+}
 
-    // 通知后台拉取文件更新
-    const res = await HttpUtils.get(NOTES.sync, { synctime })
-    if (res.code === 0) {
-      console.log(res.data)
-      // 更新返回的内容
-      if (obj.action === 'add') {
-        const resDiaryList = res.data
+/**
+ * 上传文件到七牛，通知后台更新数据库
+ * @param {Number} user_id 用户ID
+ */
+export async function syncFile(user_id) {
+  const SYNC_PERIOD = 60000 // 同步周期1分钟
+
+  clearTimeout(TIMEOUT_ID)
+
+  TIMEOUT_ID = setTimeout(async () => {
+
+    const fs = RNFetchBlob.fs
+    const FILE_PATH = fs.dirs.DocumentDir + `/user_${user_id}_config.json`
   
-        if (obj.data instanceof Array) {
-          let updateDiaryList = []
-          for (let i = 0; i < obj.data.length; i++) {
-            for (let j = 0; j < resDiaryList.length; j++) {
-              if (obj.data[i].date === resDiaryList[j].date) {
-                updateDiaryList.push({
-                  ...resDiaryList[j],
-                  ...obj.data[i],
-                  op: 0
-                })
-                break
+    // 读取该用户配置文件内容
+    const content = JSON.parse(await fs.readFile(FILE_PATH, 'utf8'))
+    let diaryListAddUpdate = content.diaryList.filter(diary => {
+      return diary.user_id === user_id && (diary.op === 1 || diary.op === 2)
+    })
+  
+    // 上传图片
+    for (let diary of diaryListAddUpdate) {
+      const images = await postImgToQiniu(diary.imgPathList, {
+        user_id: user_id,
+        type: 'note'
+      })
+      diary.images = images
+    }
+  
+    // 更新配置文件
+    await updateFile({
+      user_id,
+      action: 'update',
+      data: diaryListAddUpdate
+    })
+  
+    // 上传文件到七牛
+    const synctime = await postFileToQiniu(user_id)
+  
+    // 通知后台拉取文件进行更新
+    const res = await HttpUtils.get(NOTES.sync, { synctime })
+  
+    if (res.code === 0) {
+      const resDiaryList = res.data
+  
+      // 如果是新增日记，需要遍历本地日记增加返回的ID字段等数据
+      const content = JSON.parse(await fs.readFile(FILE_PATH, 'utf8'))
+      let { diaryList } = content
+  
+      for (let i = 0; i < diaryList.length; i++) {
+        if (!diaryList[i].id) {
+          for (let j = 0; j < resDiaryList.length; j++) {
+            if (diaryList[i].date === resDiaryList[j].date) {
+              diaryList[i] = {
+                ...resDiaryList[j],
+                ...diaryList[i]
               }
             }
           }
-          console.log({updateDiaryList, resDiaryList, data: obj.data})
-          await updateFile({
-            user_id: obj.user_id,
-            action: 'update',
-            data: updateDiaryList
-          })
-        } else {
-          const resDiary = resDiaryList.filter(diary => diary.date === obj.data.date)
-          await updateFile({
-            user_id: obj.user_id,
-            action: 'update',
-            data: {
-              ...resDiary[0],
-              ...obj.data,
-              op: 0
-            }
-          })
         }
       }
-
-      if (obj.action === 'delete') {
-        await updateFile({
-          user_id: obj.user_id,
-          action: 't_delete',
-          data: obj.data
-        })
-      }
-
-      // 更新所有日记 op 为0
-      const content = JSON.parse(await fs.readFile(FILE_PATH, 'utf8'))
-      let { diaryList } = content
+  
+      // 过滤op为3的日记
+      diaryList = diaryList.filter(diary => diary.op !== 3)
+  
+      // 重置所有op为0
       diaryList = diaryList.map(diary => {
         diary.op = 0
         return diary
       })
-      await updateFile({
-        user_id: obj.user_id,
-        action: 'update',
-        data: diaryList
-      })
+
+      // 更新配置文件
+      const newContent = {
+        ...content,
+        lastModified: Date.now(),
+        diaryList
+      }
+      
+      await fs.writeFile(FILE_PATH, JSON.stringify(newContent), 'utf8')
+      DeviceEventEmitter.emit('flush_note')
     }
-  } else {
-    if (obj.action === 'delete') {
-      await updateFile({
-        user_id: obj.user_id,
-        action: 't_delete',
-        data: obj.data
-      })
-    }
-  }
+
+  }, SYNC_PERIOD)
 }
 
 async function getOCRSign() {
