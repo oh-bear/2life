@@ -34,15 +34,15 @@ export default class PrivacyAgreement extends Component {
 				<TextPingFang style={styles.content}>双生日记尊重和保护用户的隐私，本隐私政策将告诉您我们如何收集和使用有关您的信息，以及我们如何保护这些信息的安全。您在注册用户之前请务必仔细阅读本隐私条款，如同意，本隐私政策条款在您注册成为双生日记的用户后立即生效。</TextPingFang>
 
 				{
-					privacyItems.map(item => {
-						if(item.size === 'title') {
-							return <TextPingFang style={styles.title}>{item.text}</TextPingFang>
+					privacyItems.map((item, index) => {
+						if (item.size === 'title') {
+							return <TextPingFang key={index} style={styles.title}>{item.text}</TextPingFang>
 						}
-						if(item.size === 's_title') {
-							return <TextPingFang style={styles.small_title}>{item.text}</TextPingFang>
+						if (item.size === 's_title') {
+							return <TextPingFang key={index} style={styles.small_title}>{item.text}</TextPingFang>
 						}
-						if(item.size === 'content') {
-							return <TextPingFang style={styles.content}>{item.text}</TextPingFang>
+						if (item.size === 'content') {
+							return <TextPingFang key={index} style={styles.content}>{item.text}</TextPingFang>
 						}
 					})
 				}
