@@ -7,7 +7,8 @@ import {
   Alert,
   TouchableOpacity,
   BackHandler,
-  Image
+  Image,
+  NetInfo
 } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { connect } from 'react-redux'
@@ -34,6 +35,7 @@ import {
   sleep,
   downloadImg,
   updateFile,
+  syncFile,
   OCR
 } from '../../common/util'
 
@@ -71,11 +73,16 @@ export default class NewDiary extends Component {
     popupContent: '写完日记点击返回键就能自动保存哦',
     leftButton: null,
     rightButton: null,
+    isConnected: true
   }
 
   componentWillMount() {
     this._renderLeftButton()
     this._renderRightButton()
+
+    NetInfo.isConnected.addEventListener('connectionChange', isConnected => {
+			this.setState({ isConnected })
+		})
   }
 
   componentDidMount() {
@@ -136,14 +143,15 @@ export default class NewDiary extends Component {
   }
 
   async saveDiary() {
+    const isLogin = !!this.props.user.id
 
   //  if (this.state.savingDiary) return
 
     // this.setState({ savingDiary: true })
 
     const { title_2, content_2, latitude, longitude, location, imgPathList } = this.state
-    let title = title_2,
-        content = content_2
+    let title = title_2
+    let content = content_2
     if (!title && !content) return Actions.pop()
     if (!title) {
       this.setState({savingDiary: false})
@@ -160,15 +168,6 @@ export default class NewDiary extends Component {
 
     try {
       let images = ''
-      // TODO: VIP
-      const vip = 1
-      if (vip) {
-        images = await postImgToQiniu(imgPathList, {
-          type: 'note',
-          user_id: this.props.user.id || 0
-        })
-      }
-
 
       // 复制图片文件
       let newPathListPromises = imgPathList.map(async path => {
@@ -180,23 +179,29 @@ export default class NewDiary extends Component {
       }
 
       // 情绪分析
-      const res = await HttpUtils.post(UTILS.get_nlp_result, { content })
-      let mode = res.code === 0 ? Math.floor(res.data * 100) : 50
+      let mode = 50
+      if (isLogin && this.state.isConnected) {
+        const res = await HttpUtils.post(UTILS.get_nlp_result, { content })
+        mode = res.code === 0 ? Math.floor(res.data * 100) : 50
+      }
 
       const data = { title, content, mode, images, latitude, longitude, location, imgPathList }
       // 更新配置文件
       await updateFile({
         user_id: this.props.user.id || 0,
         action: 'add',
-        shouldSync: true,
         data: {
           ...data,
           imgPathList: newImgPathList,
           date: Date.now(),
           user_id: this.props.user.id || 0,
-          op: 1,
+          status: this.props.user.status || null,
+          op: 1
         }
       })
+
+      // 同步
+      isLogin && syncFile(this.props.user.id)
 
       if (this.state.firstEntryDiary) {
         this.setState({
