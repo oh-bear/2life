@@ -31,7 +31,8 @@ import {
   SCENE_PROFILE_REWARD,
   SCENE_MATCH_RESULT,
   SCENE_PROFILE_FEEDBACK,
-  SCENE_LOGIN_OPTIONS
+  SCENE_LOGIN_OPTIONS,
+  SCENE_PROFILE_TEST
 } from '../../constants/scene'
 
 function mapStateToProps(state) {
@@ -281,6 +282,15 @@ export default class Profile extends Component {
             >
               <Image source={require('../../../res/images/profile/icon_match.png')}/>
               <TextPingFang style={styles.text_row_left}>匹配</TextPingFang>
+              <Image style={styles.row_indicator} source={require('../../../res/images/common/icon_indicator.png')}/>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={[styles.row, styles.row_border_bottom]}
+              onPress={() => Actions.jump(SCENE_PROFILE_TEST)}
+            >
+              <Image source={require('../../../res/images/profile/icon_profile_scale.png')}/>
+              <TextPingFang style={styles.text_row_left}>测试</TextPingFang>
               <Image style={styles.row_indicator} source={require('../../../res/images/common/icon_indicator.png')}/>
             </TouchableOpacity>
 

@@ -36,7 +36,8 @@ import {
   updateReduxUser,
   downloadImg,
   updateFile,
-  readFile
+  readFile,
+  uuid
 } from '../../common/util'
 
 import { SCENE_NEW_DIARY } from '../../constants/scene'
@@ -124,7 +125,11 @@ export default class Home extends Component {
   
         let newDiaryList = []
         for (let diaryListPromise of diaryListPromises) {
-          newDiaryList.push({...await diaryListPromise, op: 0})
+          newDiaryList.push({
+            ...await diaryListPromise,
+            uuid: uuid(),
+            op: 0
+          })
         }
         this._formDiaryList(newDiaryList)
         // 更新配置文件

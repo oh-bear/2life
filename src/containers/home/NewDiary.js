@@ -27,7 +27,6 @@ import {
 
 import {
   getMonth,
-  postImgToQiniu,
   getLocation,
   updateUser,
   updateReduxUser,
@@ -35,7 +34,8 @@ import {
   downloadImg,
   updateFile,
   syncFile,
-  OCR
+  OCR,
+  uuid
 } from '../../common/util'
 
 import Storage from '../../common/storage'
@@ -184,6 +184,7 @@ export default class NewDiary extends Component {
         action: 'add',
         data: {
           ...data,
+          uuid: uuid(),
           imgPathList: newImgPathList,
           date: Date.now(),
           user_id: this.props.user.id || 0,

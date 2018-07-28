@@ -19,6 +19,13 @@ let TIMEOUT_ID = null
 
 export const isDev = global.process.env.NODE_ENV === 'development'
 
+export function uuid() {
+  function S4() {
+    return (((1+Math.random())*0x10000)|0).toString(16).substring(1);
+  }
+  return (S4()+S4()+"-"+S4()+"-"+S4()+"-"+S4()+"-"+S4()+S4()+S4());
+}
+
 /**
  * 返回 yyyy-mm-hh
  * @param {Number} timestamp 时间戳
@@ -478,21 +485,21 @@ export async function updateFile(obj) {
     if (obj.data instanceof Array) {
       for (let i = 0; i < obj.data.length; i++) {
         for (let j = 0; j < diaryList.length; j++) {
-          if (obj.data[i].date === diaryList[j].date) {
+          if (obj.data[i].uuid === diaryList[j].uuid) {
             diaryList[j] = obj.data[i]
             break
           }
         }
       }
     } else {
-      diaryList = diaryList.filter(diary => diary.date !== obj.data.date)
+      diaryList = diaryList.filter(diary => diary.uuid !== obj.data.uuid)
       diaryList.push(obj.data)
     }
   }
 
   // 不用同步直接删除日记
   if (obj.action === 'delete') {
-    diaryList = diaryList.filter(diary => diary.date !== obj.data.date)
+    diaryList = diaryList.filter(diary => diary.uuid !== obj.data.uuid)
   }
   
   
@@ -512,7 +519,7 @@ export async function updateFile(obj) {
  * @param {Number} user_id 用户ID
  */
 export async function syncFile(user_id) {
-  const SYNC_PERIOD = 60000 // 同步周期1分钟
+  const SYNC_PERIOD = 1000 // 同步周期1分钟
 
   clearTimeout(TIMEOUT_ID)
 
@@ -559,7 +566,7 @@ export async function syncFile(user_id) {
       for (let i = 0; i < diaryList.length; i++) {
         if (!diaryList[i].id) {
           for (let j = 0; j < resDiaryList.length; j++) {
-            if (diaryList[i].date === resDiaryList[j].date) {
+            if (diaryList[i].uuid === resDiaryList[j].uuid) {
               diaryList[i] = {
                 ...resDiaryList[j],
                 ...diaryList[i]

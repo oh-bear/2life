@@ -46,7 +46,7 @@ export default class DiaryDetail extends Component {
     likeComponent: null,
     mode: '',
     mode_face: require('../../../res/images/home/icon_happy.png'),
-    changeMode: false,
+    showChangeMode: false,
     showImgPreview: false,
     modeWidth: new Animated.Value(0),
     modeOpacity: new Animated.Value(0),
@@ -84,6 +84,8 @@ export default class DiaryDetail extends Component {
   }
 
   async updateMode(mode, mode_face) {
+    if (!this.state.showChangeMode) return
+
     // 更新配置文件
     await updateFile({
       user_id: this.props.user.id || 0,
@@ -98,36 +100,11 @@ export default class DiaryDetail extends Component {
     !!this.props.user.id && syncFile(this.props.user.id)
 
     this.setState({
-      changeMode: false,
+      showChangeMode: false,
       mode,
       mode_face
     })
     this.toggleChooseMode()
-    
-    // TODO: VIP
-    // const vip = false
-    // if (vip) {
-    //   const data = {
-    //     note_id: this.props.diary.id,
-    //     title: this.props.diary.title,
-    //     content: this.props.diary.content,
-    //     images: this.props.diary.images,
-    //     mode
-    //   }
-    //   HttpUtils.post(NOTES.update, data).then(res => {
-    //     if (res.code === 0) {
-    //       updateReduxUser(this.props.user.id)
-            
-    //       this.setState({
-    //         changeMode: false,
-    //         mode,
-    //         mode_face
-    //       })
-    //       this.toggleChooseMode()
-    //       DeviceEventEmitter.emit('flash_note', {})
-    //     }
-    //   })
-    // }
   }
 
   showOptions() {
@@ -210,19 +187,19 @@ export default class DiaryDetail extends Component {
   }
 
   toggleChooseMode() {
-    this.setState({changeMode: !this.state.changeMode})
+    this.setState({showChangeMode: !this.state.showChangeMode})
     Animated.parallel([
       Animated.spring(
         this.state.modeWidth,
         {
-          toValue: this.state.changeMode ? 0 : getResponsiveWidth(250),
+          toValue: this.state.showChangeMode ? 0 : getResponsiveWidth(250),
           duration: 300
         }
       ),
       Animated.timing(
         this.state.modeOpacity,
         {
-          toValue: this.state.changeMode ? 0 : 1,
+          toValue: this.state.showChangeMode ? 0 : 1,
           duration: 300
         }
       )
