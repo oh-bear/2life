@@ -7,7 +7,9 @@ import {
   Alert,
   TouchableOpacity,
   Image,
-  NetInfo
+  NetInfo,
+  DatePickerIOS,
+  Animated
 } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { connect } from 'react-redux'
@@ -23,6 +25,7 @@ import DiaryBanner from './DiaryBanner'
 import {
   WIDTH,
   getResponsiveWidth,
+  HEIGHT,
 } from '../../common/styles'
 
 import {
@@ -72,7 +75,9 @@ export default class NewDiary extends Component {
     popupContent: '写完日记点击返回键就能自动保存哦',
     leftButton: null,
     rightButton: null,
-    isConnected: true
+    isConnected: true,
+    datePickerY: new Animated.Value(-220),
+    showDatePicker: false
   }
 
   componentWillMount() {
@@ -141,7 +146,7 @@ export default class NewDiary extends Component {
 
     // this.setState({ savingDiary: true })
 
-    const { title_2, content_2, latitude, longitude, location, imgPathList } = this.state
+    const { title_2, content_2, latitude, longitude, location, imgPathList, date } = this.state
     let title = title_2
     let content = content_2
     if (!title && !content) return Actions.pop()
@@ -186,7 +191,7 @@ export default class NewDiary extends Component {
           ...data,
           uuid: uuid(),
           imgPathList: newImgPathList,
-          date: Date.now(),
+          date: date.getTime(),
           user_id: this.props.user.id || 0,
           status: this.props.user.status || null,
           op: 1
@@ -206,14 +211,14 @@ export default class NewDiary extends Component {
       }
 
       // TODO: 是否为付费VIP用户
-      if (false) {
-        const res = await HttpUtils.post(NOTES.publish, data)
+      // if (false) {
+      //   const res = await HttpUtils.post(NOTES.publish, data)
 
-        if (res.code === 0) {
-          this._updateUser()
-          updateReduxUser(this.props.user.id)
-        }
-      }
+      //   if (res.code === 0) {
+      //     this._updateUser()
+      //     updateReduxUser(this.props.user.id)
+      //   }
+      // }
   
       Toast.hide()
     } catch(e) {
@@ -265,7 +270,17 @@ export default class NewDiary extends Component {
     })
   }
 
-  _selectDate() {}
+  _selectDate() {
+    this.setState({ showDatePicker: !this.state.showDatePicker }, () => {
+      Animated.spring(
+        this.state.datePickerY,
+        {
+          toValue: this.state.showDatePicker ? 0 : -220,
+          duration: 300
+        }
+      ).start()
+    })
+  }
 
   _renderLeftButton() {
     let source = this.state.imgPathList.length ?
@@ -298,6 +313,29 @@ export default class NewDiary extends Component {
   render() {
     return (
       <Container hidePadding={true}>
+
+        <Animated.View
+          style={{
+            position: 'absolute',
+            bottom: this.state.datePickerY,
+            backgroundColor: '#fff',
+            zIndex: 100
+          }}
+        >
+          <DatePickerIOS
+            locale={'zh-Hans'}
+            style={styles.date_picker}
+            date={this.state.date}
+            maximumDate={new Date()}
+            mode={'datetime'}
+            onDateChange={date => this.setState({date})}
+          />
+        </Animated.View>
+        <TouchableOpacity
+          style={[styles.mask, {display: this.state.showDatePicker ? 'flex' : 'none'}]}
+          onPress={() => this._selectDate()}
+        >
+        </TouchableOpacity>
 
         <KeyboardAwareScrollView
           contentContainerStyle={styles.scroll_style}
@@ -374,6 +412,15 @@ export default class NewDiary extends Component {
 }
 
 const styles = StyleSheet.create({
+  mask: {
+    position: 'absolute',
+    width: WIDTH,
+    height: HEIGHT,
+    zIndex: 10
+  },
+  date_picker: {
+    width: WIDTH,
+  },
   date_container: {
     width: WIDTH,
     flexDirection: 'row',

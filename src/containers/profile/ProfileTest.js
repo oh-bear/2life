@@ -6,13 +6,13 @@ import {
 	TouchableOpacity,
 } from 'react-native'
 import { connect } from 'react-redux'
-import Echarts from 'native-echarts'
 import { ifIphoneX } from 'react-native-iphone-x-helper'
 import { Actions } from 'react-native-router-flux'
 
 import TextPingFang from '../../components/TextPingFang'
 import Container from '../../components/Container'
 import ProfileHeader from './components/ProfileHeader'
+import Radar from './components/Radar'
 
 import {
 	WIDTH,
@@ -35,7 +35,7 @@ function mapStateToProps(state) {
 export default class ProfileReward extends Component {
 
 	state = {
-		question: '欢迎来到我们的性格测试环节，这里有 15道题目，可以测出你的性格特征哦',
+		question: '欢迎来到我们的性格测试环节，这里有12道题目，可以测出你的性格特征哦',
 		answers: ['', ''],
 		questionIndex: 0,
 		content: [],
@@ -102,54 +102,9 @@ export default class ProfileReward extends Component {
 	}
 
 	_renderTestResult(data) {
-		const option = {
-			radar: {
-				shape: 'circle',
-				name: {
-					color: '#333',
-					fontSize: 14,
-					backgroundColor: 'red'
-				},
-				indicator: [
-					{ name: '喜悦', max: 2 },
-					{ name: '低落', max: 2 },
-					{ name: '厌恶', max: 2 },
-					{ name: '愤怒', max: 2 },
-				]
-			},
-			series: [{
-				name: '测试结果',
-				type: 'radar',
-				data: [
-					{
-						value: data
-					}
-				],
-				areaStyle: {
-					normal: {
-						opacity: 0.1,
-						color: 'rgba(45, 195, 166, 1)'
-					},
-				},
-				lineStyle: {
-					normal: {
-						color: 'rgba(45, 195, 166, 1)'
-					},
-				},
-				itemStyle: {
-					normal: {
-						color: 'rgba(45, 195, 166, 1)',
-					}
-				},
-			}]
-		};
-
 		let componentTestResult = (
 			<View style={styles.result_container}>
-				<View style={styles.radar_container}>
-					<Echarts option={option} height={getResponsiveWidth(240)} />
-					<TextPingFang style={styles.text_title}>• 四维情绪雷达图</TextPingFang>
-				</View>
+				<Radar data={data} height={getResponsiveWidth(240)}/>
 				<TextPingFang style={styles.text_result}>性格测试完成啦，但为了让结果更准确，你还需要多写几篇真情流露的日记呢</TextPingFang>
 			</View>
 		)
@@ -215,16 +170,6 @@ const styles = StyleSheet.create({
 	result_container: {
 		width: WIDTH - getResponsiveWidth(48),
 		alignItems: 'center'
-	},
-	radar_container: {
-		width: '100%',
-		alignItems: 'center'
-	},
-	text_title: {
-		color: '#aaa',
-		fontSize: 12,
-		fontWeight: '400',
-		marginTop: getResponsiveWidth(8)
 	},
 	text_result: {
 		paddingLeft: getResponsiveWidth(24),
