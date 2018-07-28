@@ -1,11 +1,15 @@
 import { Dimensions } from 'react-native'
+//import ExtraDimensions from 'react-native-extra-dimensions-android';
 
 export const WIDTH = Dimensions.get('window').width
+// export const HEIGHT = Platform.OS=='android'?
+//   ExtraDimensions.get('REAL_WINDOW_HEIGHT'):Dimensions.get('window').height
 export const HEIGHT = Dimensions.get('window').height
 export const INNERWIDTH = WIDTH - 16
 
 const iPhone6Width = 375
 const iPhone6Height = 667
+
 
 /**
  *获取响应式高度

@@ -14,6 +14,7 @@ import org.devio.rn.splashscreen.SplashScreenReactPackage;
 import com.imagepicker.ImagePickerPackage;
 import com.dooboolab.RNIap.RNIapPackage;
 
+//import ca.jaysoo.extradimensions.ExtraDimensionsPackage;
 import cn.jpush.reactnativejpush.JPushPackage;
 
 import com.facebook.react.ReactNativeHost;
@@ -36,6 +37,7 @@ public class MainApplication extends Application implements ReactApplication {
         @Override
         protected List<ReactPackage> getPackages() {
             return Arrays.<ReactPackage>asList(new MainReactPackage(),
+            //new ExtraDimensionsPackage(),
                     new RandomBytesPackage(),
                     new RNFetchBlobPackage(),
                     new VectorIconsPackage(),

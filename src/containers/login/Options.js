@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import {
   StyleSheet,
   TouchableOpacity,
+  Dimensions,
 } from 'react-native'
 import * as WeChat from 'react-native-wechat'
 import JPushModule from 'jpush-react-native'
@@ -117,8 +118,9 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: '#fff',
     width: WIDTH,
-    height: HEIGHT,
+    //height: HEIGHT,
     alignItems: 'center',
+    flex:1
   },
   options_container: {
     alignItems: 'center',

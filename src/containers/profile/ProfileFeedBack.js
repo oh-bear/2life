@@ -91,6 +91,7 @@ export default class ProfileFeedBack extends Component {
             onChangeText={content => this.setState({ content })}
             multiline={true}
             placeholder='写下你想告诉我们的吧~'
+            underlineColorAndroid='transparent'
             placeholderTextColor='#000'
           />
 

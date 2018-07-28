@@ -133,6 +133,7 @@
     <orderEntry type="module" module-name="jcore-react-native" />
     <orderEntry type="module" module-name="rn-fetch-blob" />
     <orderEntry type="module" module-name="react-native-splash-screen" />
+    <orderEntry type="module" module-name="react-native-extra-dimensions-android" />
     <orderEntry type="module" module-name="react-native-iap" />
     <orderEntry type="module" module-name="react-native-wechat" />
     <orderEntry type="module" module-name="react-native-randombytes" />

@@ -58,6 +58,9 @@
 		F4DB41B3C20847258E17BC9D /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F10A05898C9844D6B90702E3 /* UIKit.framework */; };
 		8753BFA3EA9549C3A4505E6C /* libRNFetchBlob.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3CA5914D62CA405D91AC8093 /* libRNFetchBlob.a */; };
 		6C309C80D9B544DC95026FC5 /* libRNRandomBytes.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 340DE058FF5A4D12BC218138 /* libRNRandomBytes.a */; };
+		FCCDE733453A49E887D2F369 /* libRNOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0FDC48EABE1440D6B73D1B59 /* libRNOS.a */; };
+		9B00C0ECCF7240E391F0C565 /* libTcpSockets.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9890FC9A8A2044E3BE8B826F /* libTcpSockets.a */; };
+		C5061D5B569F4E31954EA7D0 /* libUdpSockets.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D77B641C77DE4607A52E627D /* libUdpSockets.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -487,6 +490,12 @@
 		3CA5914D62CA405D91AC8093 /* libRNFetchBlob.a */ = {isa = PBXFileReference; name = "libRNFetchBlob.a"; path = "libRNFetchBlob.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
 		C59EA149FE56410FAE4A12F5 /* RNRandomBytes.xcodeproj */ = {isa = PBXFileReference; name = "RNRandomBytes.xcodeproj"; path = "../node_modules/react-native-randombytes/RNRandomBytes.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
 		340DE058FF5A4D12BC218138 /* libRNRandomBytes.a */ = {isa = PBXFileReference; name = "libRNRandomBytes.a"; path = "libRNRandomBytes.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
+		A62E8908A4A948199AA7C5FE /* RNOS.xcodeproj */ = {isa = PBXFileReference; name = "RNOS.xcodeproj"; path = "../node_modules/react-native-os/ios/RNOS.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
+		0FDC48EABE1440D6B73D1B59 /* libRNOS.a */ = {isa = PBXFileReference; name = "libRNOS.a"; path = "libRNOS.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
+		48BF0D4F9CF64A77BFB65A42 /* TcpSockets.xcodeproj */ = {isa = PBXFileReference; name = "TcpSockets.xcodeproj"; path = "../node_modules/react-native-tcp/ios/TcpSockets.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
+		9890FC9A8A2044E3BE8B826F /* libTcpSockets.a */ = {isa = PBXFileReference; name = "libTcpSockets.a"; path = "libTcpSockets.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
+		EB441ECD49FB4202817A6F9B /* UdpSockets.xcodeproj */ = {isa = PBXFileReference; name = "UdpSockets.xcodeproj"; path = "../node_modules/react-native-udp/ios/UdpSockets.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
+		D77B641C77DE4607A52E627D /* libUdpSockets.a */ = {isa = PBXFileReference; name = "libUdpSockets.a"; path = "libUdpSockets.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -531,6 +540,9 @@
 				61305C7114B34B5FA49EB341 /* RCTWeChatTests.xctest in Frameworks */,
 				8753BFA3EA9549C3A4505E6C /* libRNFetchBlob.a in Frameworks */,
 				6C309C80D9B544DC95026FC5 /* libRNRandomBytes.a in Frameworks */,
+				FCCDE733453A49E887D2F369 /* libRNOS.a in Frameworks */,
+				9B00C0ECCF7240E391F0C565 /* libTcpSockets.a in Frameworks */,
+				C5061D5B569F4E31954EA7D0 /* libUdpSockets.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -738,6 +750,9 @@
 				05901D607EDC466A94BCA43E /* RCTWeChat.xcodeproj */,
 				E0C2A9424E9D46B8B8D6E0E9 /* RNFetchBlob.xcodeproj */,
 				C59EA149FE56410FAE4A12F5 /* RNRandomBytes.xcodeproj */,
+				A62E8908A4A948199AA7C5FE /* RNOS.xcodeproj */,
+				48BF0D4F9CF64A77BFB65A42 /* TcpSockets.xcodeproj */,
+				EB441ECD49FB4202817A6F9B /* UdpSockets.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -1472,6 +1487,9 @@
 					"$(SRCROOT)/../node_modules/react-native-wechat/ios",
 					"$(SRCROOT)/../node_modules/rn-fetch-blob/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-randombytes",
+					"$(SRCROOT)\..\node_modules\react-native-os\ios",
+					"$(SRCROOT)\..\node_modules\react-native-tcp\ios/**",
+					"$(SRCROOT)\..\node_modules\react-native-udp\ios/**",
 				);
 				"HEADER_SEARCH_PATHS[arch=*]" = "$(SRCROOT)/../node_modules/jpush-react-native/ios/RCTJPushModule";
 				INFOPLIST_FILE = twolife/Info.plist;
@@ -1479,6 +1497,9 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/twolife\"",
+					"\"$(SRCROOT)/twolife\"",
+					"\"$(SRCROOT)/twolife\"",
 					"\"$(SRCROOT)/twolife\"",
 					"\"$(SRCROOT)/twolife\"",
 					"\"$(SRCROOT)/twolife\"",
@@ -1532,6 +1553,9 @@
 					"$(SRCROOT)/../node_modules/react-native-wechat/ios",
 					"$(SRCROOT)/../node_modules/rn-fetch-blob/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-randombytes",
+					"$(SRCROOT)\..\node_modules\react-native-os\ios",
+					"$(SRCROOT)\..\node_modules\react-native-tcp\ios/**",
+					"$(SRCROOT)\..\node_modules\react-native-udp\ios/**",
 				);
 				"HEADER_SEARCH_PATHS[arch=*]" = "$(SRCROOT)/../node_modules/jpush-react-native/ios/RCTJPushModule";
 				INFOPLIST_FILE = twolife/Info.plist;
@@ -1539,6 +1563,9 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/twolife\"",
+					"\"$(SRCROOT)/twolife\"",
+					"\"$(SRCROOT)/twolife\"",
 					"\"$(SRCROOT)/twolife\"",
 					"\"$(SRCROOT)/twolife\"",
 					"\"$(SRCROOT)/twolife\"",

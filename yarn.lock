@@ -5407,6 +5407,10 @@ react-native-drawer-layout@1.3.2, react-native-drawer-layout@~1.3.0:
   dependencies:
     react-native-dismiss-keyboard "1.0.0"
 
+react-native-extra-dimensions-android@^0.21.0:
+  version "0.21.0"
+  resolved "http://registry.npm.taobao.org/react-native-extra-dimensions-android/download/react-native-extra-dimensions-android-0.21.0.tgz#2992384a90df738cf678a452cadbf251052ce7bc"
+
 react-native-iap@^0.3.23:
   version "0.3.24"
   resolved "http://registry.npm.taobao.org/react-native-iap/download/react-native-iap-0.3.24.tgz#571050744ad01ea054694236bfc465120f860238"
