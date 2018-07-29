@@ -24,7 +24,7 @@ import {
   WIDTH,
   getResponsiveWidth,
 } from '../../common/styles'
-import { getMonth, updateReduxUser, updateFile, syncFile, getPath} from '../../common/util'
+import { getMonth, updateReduxUser, updateFile, syncFile, getPath } from '../../common/util'
 import { SCENE_INDEX, SCENE_UPDATE_DIARY } from '../../constants/scene'
 
 import HttpUtils from '../../network/HttpUtils'
@@ -72,13 +72,13 @@ export default class DiaryDetail extends Component {
       })
     }
 
-    if (diary.mode >= 0 && diary.mode <= 20) this.setState({mode_face: require('../../../res/images/home/icon_very_sad_male.png')})
-    if (diary.mode > 20 && diary.mode <= 40) this.setState({mode_face: require('../../../res/images/home/icon_sad_male.png')})
-    if (diary.mode > 40 && diary.mode <= 60) this.setState({mode_face: require('../../../res/images/home/icon_normal_male.png')})
-    if (diary.mode > 60 && diary.mode <= 80) this.setState({mode_face: require('../../../res/images/home/icon_happy_male.png')})
-    if (diary.mode > 80 && diary.mode <= 100) this.setState({mode_face: require('../../../res/images/home/icon_very_happy_male.png')})
+    if (diary.mode >= 0 && diary.mode <= 20) this.setState({ mode_face: require('../../../res/images/home/icon_very_sad_male.png') })
+    if (diary.mode > 20 && diary.mode <= 40) this.setState({ mode_face: require('../../../res/images/home/icon_sad_male.png') })
+    if (diary.mode > 40 && diary.mode <= 60) this.setState({ mode_face: require('../../../res/images/home/icon_normal_male.png') })
+    if (diary.mode > 60 && diary.mode <= 80) this.setState({ mode_face: require('../../../res/images/home/icon_happy_male.png') })
+    if (diary.mode > 80 && diary.mode <= 100) this.setState({ mode_face: require('../../../res/images/home/icon_very_happy_male.png') })
 
-    this.setState({mode: diary.mode ? diary.mode : 0})
+    this.setState({ mode: diary.mode ? diary.mode : 0 })
 
     this.renderlikeComponent(diary.is_liked)
   }
@@ -114,7 +114,7 @@ export default class DiaryDetail extends Component {
       destructiveButtonIndex: 1
     }
     ActionSheetIOS.showActionSheetWithOptions(options, index => {
-      if (index === 0) Actions.jump(SCENE_UPDATE_DIARY, {diary: this.props.diary})
+      if (index === 0) Actions.jump(SCENE_UPDATE_DIARY, { diary: this.props.diary })
       if (index === 1) {
         Alert.alert(
           '',
@@ -122,7 +122,7 @@ export default class DiaryDetail extends Component {
           [
             {
               text: '取消',
-              onPress: () => {}
+              onPress: () => { }
             },
             {
               text: '确定',
@@ -144,7 +144,7 @@ export default class DiaryDetail extends Component {
                 // TODO: Vip
                 const vip = false
                 if (vip) {
-                  HttpUtils.get(NOTES.delete, {note_id: this.props.diary.id}).then(res => {
+                  HttpUtils.get(NOTES.delete, { note_id: this.props.diary.id }).then(res => {
                     if (res.code === 0) {
                       updateReduxUser(this.props.user.id)
                     }
@@ -159,13 +159,25 @@ export default class DiaryDetail extends Component {
     })
   }
 
-  likeNote() {
-    HttpUtils.post(NOTES.like, {note_id: this.props.diary.id}).then(res => {
-      if (res.code === 0) {
-        DeviceEventEmitter.emit('flush_note', {})
-        this.renderlikeComponent(true)
-      }
-    })
+  async likeNote() {
+    const res = await HttpUtils.post(NOTES.like, { note_id: this.props.diary.id })
+
+    if (res.code === 0) {
+      // 更新配置文件
+      await updateFile({
+        user_id: this.props.user.id || 0,
+        action: 'update',
+        data: {
+          ...this.props.diary,
+          is_liked: true,
+          op: 0
+        }
+      })
+
+      DeviceEventEmitter.emit('flush_note', {})
+      this.renderlikeComponent(true)
+    }
+
   }
 
   renderlikeComponent(isLiked) {
@@ -173,13 +185,13 @@ export default class DiaryDetail extends Component {
     if (isLiked) {
       likeComponent = (
         <TouchableOpacity>
-          <Image style={styles.img_btn} source={require('../../../res/images/home/icon_liked.png')}/>
+          <Image style={styles.img_btn} source={require('../../../res/images/home/icon_liked.png')} />
         </TouchableOpacity>
       )
     } else {
       likeComponent = (
         <TouchableOpacity onPress={() => this.likeNote()}>
-          <Image style={styles.img_btn} source={require('../../../res/images/home/icon_like.png')}/>
+          <Image style={styles.img_btn} source={require('../../../res/images/home/icon_like.png')} />
         </TouchableOpacity>
       )
     }
@@ -187,7 +199,7 @@ export default class DiaryDetail extends Component {
   }
 
   toggleChooseMode() {
-    this.setState({showChangeMode: !this.state.showChangeMode})
+    this.setState({ showChangeMode: !this.state.showChangeMode })
     Animated.parallel([
       Animated.spring(
         this.state.modeWidth,
@@ -213,7 +225,7 @@ export default class DiaryDetail extends Component {
 
     const leftButton = (
       <TouchableOpacity onPress={() => Actions.pop()}>
-        <Image source={source}/>
+        <Image source={source} />
       </TouchableOpacity>
     )
 
@@ -232,7 +244,7 @@ export default class DiaryDetail extends Component {
           style={styles.nav_right}
           onPress={() => this.showOptions()}
         >
-          <Image source={source}/>
+          <Image source={source} />
         </TouchableOpacity>
       )
       this.setState({ rightButton })
@@ -244,7 +256,7 @@ export default class DiaryDetail extends Component {
       <Container hidePadding={this.state.showBanner}>
         <KeyboardAwareScrollView>
           <TouchableOpacity
-            onPress={() => this.setState({showImgPreview: true})}
+            onPress={() => this.setState({ showImgPreview: true })}
             activeOpacity={1}
           >
             <DiaryBanner
@@ -273,27 +285,27 @@ export default class DiaryDetail extends Component {
 
           <TextPingFang style={styles.text_title}>{this.props.diary.title}</TextPingFang>
 
-          <View style={[styles.partner_container, { display: this.props.diary.user_id !== this.props.user.id ? 'flex' : 'none'}]}>
-            <Image style={styles.partner_face} source={{uri: this.props.partner.face}}/>
+          <View style={[styles.partner_container, { display: this.props.diary.user_id !== this.props.user.id ? 'flex' : 'none' }]}>
+            <Image style={styles.partner_face} source={{ uri: this.props.partner.face }} />
             <TextPingFang style={styles.text_name}>{this.props.partner.name}</TextPingFang>
           </View>
 
-          <View style={[styles.partner_container, { display: this.props.diary.user_id !== this.props.user.id ? 'none' : 'flex'}]}>
-            <Image style={styles.partner_face} source={{uri: this.props.user.face}}/>
+          <View style={[styles.partner_container, { display: this.props.diary.user_id !== this.props.user.id ? 'none' : 'flex' }]}>
+            <Image style={styles.partner_face} source={{ uri: this.props.user.face }} />
             <TextPingFang style={styles.text_name}>{this.props.user.name}</TextPingFang>
           </View>
 
-          <View style={styles.line}/>
+          <View style={styles.line} />
 
           <TextPingFang style={styles.text_content}>{this.props.diary.content}</TextPingFang>
 
           <View style={styles.location_container}>
-            <Image style={styles.location_icon} source={require('../../../res/images/home/icon_location.png')}/>
+            <Image style={styles.location_icon} source={require('../../../res/images/home/icon_location.png')} />
             <TextPingFang style={styles.text_location}>{this.props.diary.location}</TextPingFang>
           </View>
 
           <View style={styles.mode_container}>
-            <Image style={styles.location_icon} source={this.state.mode_face}/>
+            <Image style={styles.location_icon} source={this.state.mode_face} />
             <TextPingFang style={styles.text_mode}>{this.state.mode}</TextPingFang>
             <TextPingFang style={styles.text_value}>情绪值</TextPingFang>
             <TouchableOpacity
@@ -320,31 +332,31 @@ export default class DiaryDetail extends Component {
                 style={styles.mode_item}
                 onPress={() => this.updateMode(0, require('../../../res/images/home/icon_very_sad_male.png'))}
               >
-                <Image source={require('../../../res/images/home/icon_very_sad_male.png')}/>
+                <Image source={require('../../../res/images/home/icon_very_sad_male.png')} />
               </TouchableOpacity>
               <TouchableOpacity
                 style={styles.mode_item}
                 onPress={() => this.updateMode(25, require('../../../res/images/home/icon_sad_male.png'))}
               >
-                <Image source={require('../../../res/images/home/icon_sad_male.png')}/>
+                <Image source={require('../../../res/images/home/icon_sad_male.png')} />
               </TouchableOpacity>
               <TouchableOpacity
                 style={styles.mode_item}
                 onPress={() => this.updateMode(50, require('../../../res/images/home/icon_normal_male.png'))}
               >
-                <Image source={require('../../../res/images/home/icon_normal_male.png')}/>
+                <Image source={require('../../../res/images/home/icon_normal_male.png')} />
               </TouchableOpacity>
               <TouchableOpacity
                 style={styles.mode_item}
                 onPress={() => this.updateMode(75, require('../../../res/images/home/icon_happy_male.png'))}
               >
-                <Image source={require('../../../res/images/home/icon_happy_male.png')}/>
+                <Image source={require('../../../res/images/home/icon_happy_male.png')} />
               </TouchableOpacity>
               <TouchableOpacity
                 style={styles.mode_item}
                 onPress={() => this.updateMode(100, require('../../../res/images/home/icon_very_happy_male.png'))}
               >
-                <Image source={require('../../../res/images/home/icon_very_happy_male.png')}/>
+                <Image source={require('../../../res/images/home/icon_very_happy_male.png')} />
               </TouchableOpacity>
             </Animated.View>
           </View>
@@ -357,11 +369,11 @@ export default class DiaryDetail extends Component {
         >
           <ImageViewer
             imageUrls={this.state.imgPathList.map(path => {
-              return {url: getPath(path)}
+              return { url: getPath(path) }
             })}
             enableSwipeDown={true}
-            onSwipeDown={() => this.setState({showImgPreview: false})}
-            onClick={() => this.setState({showImgPreview: false})}
+            onSwipeDown={() => this.setState({ showImgPreview: false })}
+            onClick={() => this.setState({ showImgPreview: false })}
           />
         </Modal>
 

@@ -30,10 +30,16 @@ export default class Radar extends Component {
 					backgroundColor: 'red'
 				},
 				indicator: [
-					{ name: '喜悦', max },
-					{ name: '低落', max },
-					{ name: '厌恶', max },
-					{ name: '愤怒', max },
+					// { name: '喜悦', max },
+					// { name: '低落', max },
+					// { name: '厌恶', max },
+					// { name: '愤怒', max },
+
+					{ name: 'e喜悦', max },
+					{ name: 'c厌恶', max },
+					{ name: 'o低落', max },
+					{ name: 'a', max },
+					{ name: 'n愤怒', max }
 				]
 			},
 			series: [{
@@ -66,7 +72,7 @@ export default class Radar extends Component {
 		return (
 			<View style={styles.container}>
 				<Echarts option={option} height={this.props.height} />
-				<TextPingFang style={styles.text_title}>• 四维情绪雷达图</TextPingFang>
+				<TextPingFang style={styles.text_title}>• 五维情绪雷达图</TextPingFang>
 			</View>
 		)
 	}

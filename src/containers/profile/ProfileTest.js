@@ -18,6 +18,7 @@ import {
 	WIDTH,
 	getResponsiveWidth,
 } from '../../common/styles'
+import { updateReduxUser } from '../../common/util'
 
 import HttpUtils from '../../network/HttpUtils'
 import { USERS } from '../../network/Urls'
@@ -86,13 +87,15 @@ export default class ProfileReward extends Component {
 
 			const res = await HttpUtils.post(USERS.calculate_emotion, { content: content.join(',') })
 			if (res.code === 0) {
-				// e 喜悦 c 厌恶 o 低落 n 愤怒
+				updateReduxUser(this.props.user.id)
+				// e 喜悦 c 厌恶 o 低落 a n 愤怒
 				let data = res.data.emotions.split(',').map(item => parseFloat(item))
-				let e = data[0],
-						c = data[1],
-						o = data[2],
-						n = data[3]
-				this._renderTestResult([e, o, c, n])
+				// let e = data[0],
+				// 	c = data[1],
+				// 	o = data[2],
+				// 	a = data[3],
+				// 	n = data[4]
+				this._renderTestResult(data)
 			}
 		}
 
@@ -104,7 +107,7 @@ export default class ProfileReward extends Component {
 	_renderTestResult(data) {
 		let componentTestResult = (
 			<View style={styles.result_container}>
-				<Radar data={data} height={getResponsiveWidth(240)}/>
+				<Radar data={data} height={getResponsiveWidth(240)} />
 				<TextPingFang style={styles.text_result}>性格测试完成啦，但为了让结果更准确，你还需要多写几篇真情流露的日记呢</TextPingFang>
 			</View>
 		)
@@ -220,8 +223,8 @@ const styles = StyleSheet.create({
 		...ifIphoneX({
 			bottom: 58
 		}, {
-			bottom: 24
-		}),
+				bottom: 24
+			}),
 		height: getResponsiveWidth(120)
 	},
 	btn: {

@@ -13,6 +13,7 @@ import { Actions } from 'react-native-router-flux'
 import Container from '../../components/Container'
 import TextPingFang from '../../components/TextPingFang'
 import PrivacyAgreement from '../../components/PrivacyAgreement'
+import Row from './components/Row'
 
 import {
   WIDTH,
@@ -32,7 +33,8 @@ import {
   SCENE_MATCH_RESULT,
   SCENE_PROFILE_FEEDBACK,
   SCENE_LOGIN_OPTIONS,
-  SCENE_PROFILE_TEST
+  SCENE_PROFILE_TEST,
+  SCENE_PROFILE_SETTING
 } from '../../constants/scene'
 
 function mapStateToProps(state) {
@@ -59,7 +61,7 @@ export default class Profile extends Component {
         <PrivacyAgreement
           showPopup={this.state.showPrivacy}
           onAgree={() => Actions.jump(SCENE_LOGIN_OPTIONS)}
-          onCancel={() => this.setState({showPrivacy: false})}
+          onCancel={() => this.setState({ showPrivacy: false })}
         />
 
         <View>
@@ -69,7 +71,7 @@ export default class Profile extends Component {
 
         <TouchableOpacity
           style={styles.login_btn}
-          onPress={() => this.setState({showPrivacy: true})}
+          onPress={() => this.setState({ showPrivacy: true })}
         >
           <TextPingFang style={styles.text_login_btn}>现在登录</TextPingFang>
         </TouchableOpacity>
@@ -87,22 +89,22 @@ export default class Profile extends Component {
               <TextPingFang style={styles.text_name}>{this.props.partner.name}</TextPingFang>
             </View>
             <View style={styles.head_left_bottom}>
-              <Image source={require('../../../res/images/profile/icon_link.png')}/>
+              <Image source={require('../../../res/images/profile/icon_link.png')} />
               <TextPingFang style={styles.text_link}>你的匹配对象</TextPingFang>
             </View>
           </View>
           <View style={styles.head_right}>
-            <Image style={styles.img_head} source={{ uri: this.props.partner.face }}/>
+            <Image style={styles.img_head} source={{ uri: this.props.partner.face }} />
             {
               (() => {
                 if (this.props.partner.sex === 0) {
                   return <Image
                     style={styles.img_gender}
-                    source={require('../../../res/images/profile/icon_male.png')}/>
+                    source={require('../../../res/images/profile/icon_male.png')} />
                 } else {
                   return <Image
                     style={styles.img_gender}
-                    source={require('../../../res/images/profile/icon_female.png')}/>
+                    source={require('../../../res/images/profile/icon_female.png')} />
                 }
               })()
             }
@@ -113,9 +115,9 @@ export default class Profile extends Component {
           {
             (() => {
               if (this.props.partner.sex === 0) {
-                return <Image source={require('../../../res/images/profile/icon_mode_male.png')}/>
+                return <Image source={require('../../../res/images/profile/icon_mode_male.png')} />
               } else {
-                return <Image source={require('../../../res/images/profile/icon_mode_female.png')}/>
+                return <Image source={require('../../../res/images/profile/icon_mode_female.png')} />
               }
             })()
           }
@@ -132,9 +134,9 @@ export default class Profile extends Component {
           {
             (() => {
               if (this.props.partner.sex === 0) {
-                return <Image source={require('../../../res/images/profile/icon_diary_male.png')}/>
+                return <Image source={require('../../../res/images/profile/icon_diary_male.png')} />
               } else {
-                return <Image source={require('../../../res/images/profile/icon_diary_female.png')}/>
+                return <Image source={require('../../../res/images/profile/icon_diary_female.png')} />
               }
             })()
           }
@@ -147,7 +149,7 @@ export default class Profile extends Component {
   }
 
   render() {
-    if(!this.props.user.id) {
+    if (!this.props.user.id) {
       return this.renderUnlogin()
     }
 
@@ -170,40 +172,40 @@ export default class Profile extends Component {
                 </View>
               </TouchableOpacity>
               <View style={styles.head_right}>
-                <Image style={styles.img_head} source={{ uri: this.props.user.face }}/>
+                <Image style={styles.img_head} source={{ uri: this.props.user.face }} />
                 {
                   (() => {
                     if (this.props.user.sex === 0) {
                       return <Image
                         style={styles.img_gender}
-                        source={require('../../../res/images/profile/icon_male.png')}/>
+                        source={require('../../../res/images/profile/icon_male.png')} />
                     } else {
                       return <Image
                         style={styles.img_gender}
-                        source={require('../../../res/images/profile/icon_female.png')}/>
+                        source={require('../../../res/images/profile/icon_female.png')} />
                     }
                   })()
                 }
               </View>
             </View>
 
-            <TouchableOpacity
+            {/* <TouchableOpacity
               style={styles.row}
-              onPress={() => Actions.jump(SCENE_PROFILE_MODE)}
+              onPress={() => Actions.jump(SCENE_PROFILE_MODE, {user: this.props.user})}
             >
               {
                 (() => {
                   if (this.props.user.sex === 0) {
-                    return <Image source={require('../../../res/images/profile/icon_mode_male.png')}/>
+                    return <Image source={require('../../../res/images/profile/icon_mode_male.png')} />
                   } else {
-                    return <Image source={require('../../../res/images/profile/icon_mode_female.png')}/>
+                    return <Image source={require('../../../res/images/profile/icon_mode_female.png')} />
                   }
                 })()
               }
               <TextPingFang
                 style={styles.text_row_left}>{this.props.user.mode || '暂无'}</TextPingFang>
               <TextPingFang style={styles.text_row_desc}>平均情绪值</TextPingFang>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
 
             <TouchableOpacity
               style={styles.row}
@@ -214,9 +216,9 @@ export default class Profile extends Component {
               {
                 (() => {
                   if (this.props.user.sex === 0) {
-                    return <Image source={require('../../../res/images/profile/icon_diary_male.png')}/>
+                    return <Image source={require('../../../res/images/profile/icon_diary_male.png')} />
                   } else {
-                    return <Image source={require('../../../res/images/profile/icon_diary_female.png')}/>
+                    return <Image source={require('../../../res/images/profile/icon_diary_female.png')} />
                   }
                 })()
               }
@@ -260,18 +262,17 @@ export default class Profile extends Component {
              </View>
              </TouchableOpacity> */}
 
-            {/* <TouchableOpacity
-             style={[styles.row, styles.row_border_bottom]}
-             onPress={() => Actions.jump(SCENE_PROFILE_SYNC)}
-             >
-             <Image source={require('../../../res/images/profile/icon_sync.png')}/>
-             <TextPingFang style={styles.text_row_left}>同步</TextPingFang>
-             <TextPingFang style={styles.text_row_right}>10分钟前</TextPingFang>
-             <Image style={styles.row_indicator} source={require('../../../res/images/common/icon_indicator.png')}/>
-             </TouchableOpacity> */}
+             <View style={styles.margin}></View>
 
-            <TouchableOpacity
-              style={[styles.row, styles.row_top, styles.row_border_bottom]}
+            <Row
+              imageLeft={<Image source={require('../../../res/images/profile/icon_mood_analysis.png')} />}
+              title='情绪管理'
+              onPress={() => Actions.jump(SCENE_PROFILE_MODE, { user: this.props.user })}
+            />
+
+            <Row
+              imageLeft={<Image source={require('../../../res/images/profile/icon_match.png')} />}
+              title='匹配'
               onPress={() => {
                 if (this.props.user.user_other_id === -1) {
                   Actions.jump(SCENE_PROFILE_MATCH, { user: this.props.user })
@@ -279,39 +280,31 @@ export default class Profile extends Component {
                   Actions.jump(SCENE_MATCH_RESULT, { user: this.props.user })
                 }
               }}
-            >
-              <Image source={require('../../../res/images/profile/icon_match.png')}/>
-              <TextPingFang style={styles.text_row_left}>匹配</TextPingFang>
-              <Image style={styles.row_indicator} source={require('../../../res/images/common/icon_indicator.png')}/>
-            </TouchableOpacity>
+            />
 
-            <TouchableOpacity
-              style={[styles.row, styles.row_border_bottom]}
+            <Row
+              imageLeft={<Image source={require('../../../res/images/profile/icon_profile_scale.png')} />}
+              title='性格测试'
               onPress={() => Actions.jump(SCENE_PROFILE_TEST)}
-            >
-              <Image source={require('../../../res/images/profile/icon_profile_scale.png')}/>
-              <TextPingFang style={styles.text_row_left}>测试</TextPingFang>
-              <Image style={styles.row_indicator} source={require('../../../res/images/common/icon_indicator.png')}/>
-            </TouchableOpacity>
+            />
 
-            <TouchableOpacity
-              style={[styles.row, styles.row_border_bottom]}
+            <Row
+              imageLeft={<Image source={require('../../../res/images/profile/icon_sync.png')} />}
+              title='同步'
+              onPress={() => Actions.jump(SCENE_PROFILE_SYNC, { user: this.props.user })}
+            />
+
+            <Row
+              imageLeft={<Image source={require('../../../res/images/profile/icon_reward.png')} />}
+              title='打赏'
               onPress={() => Actions.jump(SCENE_PROFILE_REWARD)}
-            >
-              <Image source={require('../../../res/images/profile/icon_reward.png')}/>
-              <TextPingFang style={styles.text_row_left}>打赏</TextPingFang>
-              <Image style={styles.row_indicator} source={require('../../../res/images/common/icon_indicator.png')}/>
-            </TouchableOpacity>
+            />
 
-            <TouchableOpacity
-              style={[styles.row, styles.row_border_bottom]}
-              onPress={() => Actions.jump(SCENE_PROFILE_FEEDBACK)}
-            >
-              <Image source={require('../../../res/images/profile/icon_feedback.png')}/>
-              <TextPingFang style={styles.text_row_left}>反馈</TextPingFang>
-              <Image style={styles.row_indicator} source={require('../../../res/images/common/icon_indicator.png')}/>
-            </TouchableOpacity>
-
+            <Row
+              imageLeft={<Image source={require('../../../res/images/profile/icon_setting.png')} />}
+              title='设置'
+              onPress={() => Actions.jump(SCENE_PROFILE_SETTING)}
+            />
           </ScrollView>
 
         </View>
@@ -321,14 +314,17 @@ export default class Profile extends Component {
 }
 
 const styles = StyleSheet.create({
+  margin: {
+    marginBottom: getResponsiveWidth(12)
+  },
   title: {
     width: WIDTH,
     paddingLeft: getResponsiveWidth(70),
     ...ifIphoneX({
       paddingTop: getResponsiveHeight(4),
     }, {
-      paddingTop: getResponsiveHeight(28),
-    }),
+        paddingTop: getResponsiveHeight(28),
+      }),
     color: '#000',
     fontSize: 34,
     fontWeight: '500',
@@ -347,8 +343,8 @@ const styles = StyleSheet.create({
     ...ifIphoneX({
       bottom: getResponsiveWidth(120),
     }, {
-      bottom: getResponsiveWidth(80),
-    }),
+        bottom: getResponsiveWidth(80),
+      }),
 
     width: getResponsiveWidth(112),
     height: getResponsiveWidth(48),
@@ -368,8 +364,8 @@ const styles = StyleSheet.create({
     ...ifIphoneX({
       paddingBottom: 84,
     }, {
-      paddingBottom: 50,
-    }),
+        paddingBottom: 50,
+      }),
   },
   head_container: {
     flexDirection: 'row',
@@ -408,9 +404,6 @@ const styles = StyleSheet.create({
     position: 'absolute',
     right: 0,
     bottom: 0
-  },
-  row_top: {
-    marginTop: getResponsiveHeight(20),
   },
   row: {
     height: getResponsiveHeight(44),

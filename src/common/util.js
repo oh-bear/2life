@@ -519,6 +519,9 @@ export async function updateFile(obj) {
  * @param {Number} user_id 用户ID
  */
 export async function syncFile(user_id) {
+  const isSync = await Storage.get('isSync', true)
+  if (!isSync) return
+
   const SYNC_PERIOD = 1000 // 同步周期1分钟
 
   clearTimeout(TIMEOUT_ID)
