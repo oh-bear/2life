@@ -350,13 +350,16 @@ export default class DiaryDetail extends Component {
           {/* <TouchableOpacity
             style={[styles.mode_container, {display: this.props.diary.user_id === this.props.user.user_other_id ? 'flex' : 'none'}]}
             activeOpacity={1}
+            onPress={() => this.inputComment.focus()}
           >
             <Image style={styles.location_icon} source={require('../../../res/images/home/diary/icon_comment.png')} />
             <TextPingFang style={styles.text_comment}>有什么想说的</TextPingFang>
           </TouchableOpacity>
 
           <TextInput
-            placeholder='写下你的评论'
+            ref={ref => this.inputComment = ref}
+            style={styles.input_comment}
+            placeholder='写下想对Ta说的吧～'
           /> */}
         </KeyboardAwareScrollView>
 
@@ -512,5 +515,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-around',
     backgroundColor: '#fff'
+  },
+  input_comment: {
+    position: 'absolute',
+    bottom: -100,
+    backgroundColor: 'red'
   }
 })
