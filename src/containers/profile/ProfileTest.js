@@ -36,7 +36,7 @@ function mapStateToProps(state) {
 export default class ProfileReward extends Component {
 
 	state = {
-		question: '欢迎来到我们的性格测试环节，这里有12道题目，可以测出你的性格特征哦',
+		question: `欢迎来到我们的性格测试环节，这里有${questions.length}道题目，可以测出你的性格特征哦`,
 		answers: ['', ''],
 		questionIndex: 0,
 		content: [],

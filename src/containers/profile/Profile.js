@@ -328,7 +328,7 @@ export default class Profile extends Component {
             <Row
               imageLeft={<Image source={require('../../../res/images/profile/icon_setting.png')} />}
               title='设置'
-              onPress={() => Actions.jump(SCENE_PROFILE_SETTING)}
+              onPress={() => Actions.jump(SCENE_PROFILE_SETTING, {user: this.props.user})}
             />
           </ScrollView>
 

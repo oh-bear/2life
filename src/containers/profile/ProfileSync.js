@@ -39,11 +39,11 @@ export default class ProfileSync extends Component {
       .then(files => {
         let size = 0
         for (let file of files) {
-          if (file.filename.includes(`id_${id}`) || file.filename.includes(`user_${id}`)) {
+          if (file.filename.includes(`id_${id}_`) || file.filename.includes(`user_${id}_`)) {
             size += parseInt(file.size)
           }
         }
-        this.setState({size: (size / 1000000).toFixed(2) + 'MB'})
+        this.setState({size: (size / 1000000).toFixed(2) + 'M'})
       })
 
     const isSync = await Storage.get('isSync', true)
