@@ -17,7 +17,7 @@ import TextPingFang from '../../components/TextPingFang'
 import Popup from '../../components/Popup'
 import Container from '../../components/Container'
 import ProfileHeader from './components/ProfileHeader'
-import { fetchPartnerSuccess } from '../../redux/modules/partner'
+import { fetchPartnerSuccess, cleanPartner } from '../../redux/modules/partner'
 
 import {
   WIDTH,
@@ -95,7 +95,8 @@ export default class MatchResult extends Component {
       if (res.code === 0) {
         store.dispatch(fetchPartnerSuccess(res.data))
 
-        updateReduxUser(this.props.user.id)
+        await updateReduxUser(this.props.user.id)
+        DeviceEventEmitter.emit('flush_note', {})
 
         this.setState({ partner: res.data })
         this.matchSucceed()
@@ -108,7 +109,8 @@ export default class MatchResult extends Component {
       if (res.code === 0) {
         store.dispatch(fetchPartnerSuccess(res.data))
 
-        updateReduxUser(this.props.user.id)
+        await updateReduxUser(this.props.user.id)
+        DeviceEventEmitter.emit('flush_note', {})
 
         this.setState({ partner: res.data })
         this.matchSucceed()
@@ -194,16 +196,17 @@ export default class MatchResult extends Component {
 
   succeedBack() {
     if (this.state.matchSucceed) {
-      Actions.reset(SCENE_INDEX, { tab: 'profile' })
+      Actions.popTo(SCENE_INDEX, { tab: 'profile' })
     }
   }
 
   async disconnect() {
     const res = await HttpUtils.get(USERS.disconnect)
     if (res.code === 0) {
-      updateReduxUser(this.props.user.id)
-      store.dispatch(fetchPartnerSuccess({ id: null }))
+      await updateReduxUser(this.props.user.id)
       DeviceEventEmitter.emit('flush_note', {})
+
+      store.dispatch(cleanPartner())
       Actions.pop()
     }
   }

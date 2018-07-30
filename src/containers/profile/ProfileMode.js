@@ -34,10 +34,22 @@ export default class ProfileMode extends Component {
     averageMode: 0,
     totalDay: 0,
     emotions: [],
-    pieData: []
+    pieData: [],
+    reportList: [],
   }
 
   async componentWillMount() {
+    const reports = this.props.user.emotions_report.split('\n')
+    let reportList = []
+    for (let report of reports) {
+      const indexLeft = report.indexOf('(')
+      const indexRight = report.indexOf(')')
+      const title = report.slice(indexLeft + 1, indexRight)
+      const content = report.slice(0, indexLeft)
+
+      reportList.push({ title, content })
+    }
+
     let emotions = this.props.user.emotions_basis.split(',').map(num => +num)
 
     // 获得我的所有日记情绪值
@@ -57,21 +69,18 @@ export default class ProfileMode extends Component {
       66.66 < diary.mode && diary.mode <= 100 ? posDays++ : null
     }
 
-
-    // 平均情绪值
-    this.setState({
-      averageMode: (totalMode / myDiaryList.length).toFixed(2),
-      totalDay: myDiaryList.length,
-      emotions,
-      pieData: [posDays, midDays, negDays]
-    })
-
     // 将情绪值按日期分类
     const mergeData = this.mergeData(modeData)
     const weekData = mergeData.length >= 7 ? mergeData.slice(-7) : mergeData
     const monthData = mergeData.length >= 30 ? mergeData.slice(-30) : mergeData
     const yearData = mergeData.length >= 365 ? mergeData.slice(-365) : mergeData
+
     this.setState({
+      averageMode: (totalMode / myDiaryList.length).toFixed(2),
+      totalDay: myDiaryList.length,
+      emotions,
+      pieData: [posDays, midDays, negDays],
+      reportList,
       weekModeData: this.formData(weekData, 'week'),
       monthModeData: this.formData(monthData, 'month'),
       yearModeData: this.formData(yearData, 'year'),
@@ -203,18 +212,28 @@ export default class ProfileMode extends Component {
           </View>
 
           <View style={styles.pie_container}>
-            <Pie data={this.state.pieData} height={getResponsiveWidth(160)} />
+            <Pie data={this.state.pieData} height={getResponsiveWidth(180)} />
           </View>
 
           <View style={[styles.radar_container, { display: this.props.user.emotions_basis ? 'flex' : 'none' }]}>
-            <Radar data={this.state.emotions} height={getResponsiveWidth(200)} />
+            <Radar data={this.state.emotions} height={getResponsiveWidth(220)} />
           </View>
 
           <View style={[styles.report_container, { display: this.props.user.emotions_basis ? 'flex' : 'none' }]}>
             <TextPingFang style={styles.text_type}>{this.props.user.emotions_type}</TextPingFang>
             <TextPingFang style={styles.text_const}>你的性格属性</TextPingFang>
             <Image style={styles.img} source={require('../../../res/images/profile/character/untested.png')} />
-            <TextPingFang style={styles.text_report}>{this.props.user.emotions_report}</TextPingFang>
+            {
+              this.state.reportList.map(report => {
+                return (
+                  <View>
+                    <TextPingFang style={styles.small_type}>{report.title}</TextPingFang>
+                    <TextPingFang style={styles.text_report}>{report.content}</TextPingFang>
+                  </View>
+                )
+              })
+            }
+
           </View>
 
           <View style={[styles.report_container, { display: this.props.user.emotions_basis ? 'none' : 'flex' }]}>
@@ -273,13 +292,13 @@ const styles = StyleSheet.create({
   text_type: {
     color: '#333',
     fontSize: 20,
-    fontWeight: '500',
+    fontWeight: 'bold',
     marginLeft: getResponsiveWidth(24),
     marginRight: getResponsiveWidth(24),
   },
   text_const: {
     color: '#333',
-    fontSize: 16,
+    fontSize: 14,
     fontWeight: '400',
     marginLeft: getResponsiveWidth(24),
     marginRight: getResponsiveWidth(24),
@@ -289,14 +308,22 @@ const styles = StyleSheet.create({
   img: {
     width: WIDTH
   },
-  text_report: {
+  small_type: {
     color: '#333',
-    fontSize: 16,
-    fontWeight: '400',
-    lineHeight: getResponsiveWidth(26),
+    fontSize: 14,
+    fontWeight: 'bold',
     marginLeft: getResponsiveWidth(24),
     marginRight: getResponsiveWidth(24),
     marginTop: getResponsiveWidth(24)
+  },
+  text_report: {
+    color: '#333',
+    fontSize: 16,
+    fontWeight: '300',
+    lineHeight: getResponsiveWidth(26),
+    marginLeft: getResponsiveWidth(24),
+    marginRight: getResponsiveWidth(24),
+    marginTop: getResponsiveWidth(8)
   },
   text_test: {
     color: '#333',
@@ -307,18 +334,18 @@ const styles = StyleSheet.create({
     marginTop: getResponsiveWidth(24)
   },
   btn: {
-		width: WIDTH - getResponsiveWidth(48),
+    width: WIDTH - getResponsiveWidth(48),
     height: getResponsiveWidth(52),
     marginTop: getResponsiveWidth(48),
-		justifyContent: 'center',
-		alignItems: 'center',
-		borderRadius: 8,
-		backgroundColor: '#f5f5f5'
-	},
-	text_btn: {
-		color: '#2DC3A6',
-		textAlign: 'center',
-		fontSize: 14,
-		fontWeight: '500'
-	},
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 8,
+    backgroundColor: '#f5f5f5'
+  },
+  text_btn: {
+    color: '#2DC3A6',
+    textAlign: 'center',
+    fontSize: 14,
+    fontWeight: '500'
+  },
 })

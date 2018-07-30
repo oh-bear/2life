@@ -207,19 +207,9 @@ export default class NewDiary extends Component {
           popupContent: '你的日记已经自动保存，放心退出吧'
         })
       } else {
-        Actions.reset(SCENE_INDEX)
+        Actions.pop()
       }
 
-      // TODO: 是否为付费VIP用户
-      // if (false) {
-      //   const res = await HttpUtils.post(NOTES.publish, data)
-
-      //   if (res.code === 0) {
-      //     this._updateUser()
-      //     updateReduxUser(this.props.user.id)
-      //   }
-      // }
-  
       Toast.hide()
     } catch(e) {
       Toast.fail('保存失败，请稍后再试', 2)
@@ -384,15 +374,6 @@ export default class NewDiary extends Component {
             placeholderTextColor='#aaa'
             multiline
           />
-
-          {/* <TouchableOpacity
-           // style={[styles.hide_keyboard, {display: this.state.showKeyboard ? 'flex' : 'none'}]}
-           style={[styles.hide_keyboard]}
-           onPress={() => this.saveDiary()}
-           >
-           <TextPingFang style={styles.text_hide}>保存</TextPingFang>
-           </TouchableOpacity> */}
-
         </KeyboardAwareScrollView>
 
         <Popup
@@ -402,7 +383,7 @@ export default class NewDiary extends Component {
           content={this.state.popupContent}
           onPressLeft={() => {
             this.setState({ showPopup: false })
-            if (this.state.content) Actions.reset(SCENE_INDEX)
+            if (this.state.content) Actions.pop()
           }}
           textBtnLeft='我明白了'
         />
@@ -463,20 +444,5 @@ const styles = StyleSheet.create({
     paddingRight: getResponsiveWidth(24),
     marginTop: getResponsiveWidth(24),
     paddingBottom: getResponsiveWidth(24),
-  },
-  hide_keyboard: {
-    // position: 'absolute',
-    width: getResponsiveWidth(50),
-    height: getResponsiveWidth(20),
-    // justifyContent: 'center',
-    // bottom: 0,
-    // right: 2,
-    backgroundColor: '#eee',
-    borderRadius: getResponsiveWidth(10)
-  },
-  text_hide: {
-    color: '#bbb',
-    fontSize: 12,
-    textAlign: 'center'
   }
 })

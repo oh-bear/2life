@@ -42,6 +42,7 @@ export default class ProfileReward extends Component {
 		content: [],
 		isStart: true,
 		isEnd: false,
+		showTestBtn: true,
 		textBtn: '开始测试',
 		componentTestResult: null
 	}
@@ -49,8 +50,9 @@ export default class ProfileReward extends Component {
 	async componentDidMount() {
 		if (this.props.user.emotions_basis) {
 			this.setState({
-				question: '你已经做过测试啦，确定要重新再做一次吗？',
-				textBtn: '重新测试'
+				question: '你已经做过测试啦，不用再做了^_^',
+				textBtn: '重新测试',
+				showTestBtn: false
 			})
 		}
 	}
@@ -90,11 +92,6 @@ export default class ProfileReward extends Component {
 				updateReduxUser(this.props.user.id)
 				// e 喜悦 c 厌恶 o 低落 a n 愤怒
 				let data = res.data.emotions.split(',').map(item => parseFloat(item))
-				// let e = data[0],
-				// 	c = data[1],
-				// 	o = data[2],
-				// 	a = data[3],
-				// 	n = data[4]
 				this._renderTestResult(data)
 			}
 		}
@@ -136,7 +133,10 @@ export default class ProfileReward extends Component {
 
 				<View style={[styles.btns_container, { justifyContent: !this.state.isEnd && !this.state.isStart ? 'space-between' : 'flex-end' }]}>
 					<TouchableOpacity
-						style={[styles.btn, { display: this.state.isStart || this.state.isEnd ? 'flex' : 'none' }]}
+						style={[
+							styles.btn, 
+							{ display: (this.state.isStart || this.state.isEnd) && this.state.showTestBtn ? 'flex' : 'none'}
+						]}
 						onPress={() => this._select()}
 						activeOpacity={1}
 					>

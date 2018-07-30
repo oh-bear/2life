@@ -462,7 +462,7 @@ export async function readFile(user_id = 0) {
  */
 // obj 参数说明
 // user_id: Number, 用户ID，用于查找配置文件名称
-// action: String, 操作类型，有 add, delete, update 三种
+// action: String, 操作类型，有 add, delete, delete_other, update
 // data: Array | Object, 日记内容
 export async function updateFile(obj) {
   const fs = RNFetchBlob.fs
@@ -501,7 +501,11 @@ export async function updateFile(obj) {
   if (obj.action === 'delete') {
     diaryList = diaryList.filter(diary => diary.uuid !== obj.data.uuid)
   }
-  
+
+  // 删除匹配对象到日记
+  if (obj.action === 'delete_other') {
+    diaryList = diaryList.filter(diary => diary.user_id === obj.user_id)
+  }
   
   const newContent = {
     ...content,
@@ -511,7 +515,7 @@ export async function updateFile(obj) {
   
   await fs.writeFile(FILE_PATH, JSON.stringify(newContent), 'utf8')
 
-  DeviceEventEmitter.emit('flush_note')
+  DeviceEventEmitter.emit('flush_local_note')
 }
 
 /**
@@ -522,7 +526,7 @@ export async function syncFile(user_id) {
   const isSync = await Storage.get('isSync', true)
   if (!isSync) return
 
-  const SYNC_PERIOD = 1000 // 同步周期1分钟
+  const SYNC_PERIOD = 0 // 同步周期1分钟
 
   clearTimeout(TIMEOUT_ID)
 
@@ -581,7 +585,7 @@ export async function syncFile(user_id) {
   
       // 过滤op为3的日记
       diaryList = diaryList.filter(diary => diary.op !== 3)
-  
+      
       // 重置所有op为0
       diaryList = diaryList.map(diary => {
         diary.op = 0
@@ -596,7 +600,7 @@ export async function syncFile(user_id) {
       }
       
       await fs.writeFile(FILE_PATH, JSON.stringify(newContent), 'utf8')
-      DeviceEventEmitter.emit('flush_note')
+      DeviceEventEmitter.emit('flush_local_note')
     }
 
   }, SYNC_PERIOD)

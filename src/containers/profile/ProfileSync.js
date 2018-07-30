@@ -1,7 +1,8 @@
 import React, { Component } from 'react'
 import {
   View,
-  StyleSheet
+  StyleSheet,
+  DeviceEventEmitter
 } from 'react-native'
 import RNFetchBlob from 'rn-fetch-blob'
 
@@ -15,6 +16,12 @@ import Storage from '../../common/storage'
 import {
   getResponsiveWidth, WIDTH,
 } from '../../common/styles'
+import { updateUser } from '../../common/util'
+import store from '../../redux/store'
+import HttpUtils from '../../network/HttpUtils'
+import { USERS } from '../../network/Urls'
+import { fetchProfileSuccess } from '../../redux/modules/user'
+import { cleanPartner } from '../../redux/modules/partner'
 
 export default class ProfileSync extends Component {
 
@@ -52,11 +59,25 @@ export default class ProfileSync extends Component {
     this.setState({ isSync: true })
   }
 
-  closeSync() {
+  async closeSync() {
+    
     this.setState({
       isSync: false,
       showPopup: false
     })
+
+    // 解除匹配
+    const res = await HttpUtils.get(USERS.disconnect)
+    if (res.code === 0) {
+      // 更改用户status 为不可匹配999
+      const res = await updateUser(this.props.user, { status: 999 })
+      if (res.code === 0) {
+        store.dispatch(fetchProfileSuccess(res.data.user))
+        DeviceEventEmitter.emit('flush_note', {})
+      }
+      
+      store.dispatch(cleanPartner())
+    }
   }
 
   render() {

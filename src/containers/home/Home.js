@@ -45,8 +45,6 @@ import { SCENE_NEW_DIARY } from '../../constants/scene'
 import HttpUtils from '../../network/HttpUtils'
 import { NOTES } from '../../network/Urls'
 
-const URL_list = NOTES.list
-
 function mapStateToProps(state) {
   return {
     user: state.user,
@@ -91,57 +89,68 @@ export default class Home extends Component {
     this.props.user.id && await this._fetchDiary()
 
     DeviceEventEmitter.addListener('flush_note', async () => {
+      this._fetchDiary()
+    })
+    DeviceEventEmitter.addListener('flush_local_note', async () => {
       this._formDiaryList(await readFile(this.props.user.id))
     })
   }
 
   async _fetchDiary() {
-    // this.setState({ isRefreshing: true })
-    const res = await HttpUtils.get(URL_list)
+    this.setState({ isRefreshing: true })
+
+    if (this.props.user.user_other_id === -1) {
+      await updateFile({
+        user_id: this.props.user.id,
+        action: 'delete_other'
+      })
+    }
+
+    const res = await HttpUtils.get(NOTES.list)
     if (res.code === 0) {
       const { partner, recommend, user } = res.data
       let diaryList = [...partner, ...user]
 
       // 版本过渡：保存网络日记到本地配置文件
       const localDiaryList = await readFile(this.props.user.id)
-      
-      if(!localDiaryList.length) {
-        const diaryListPromises = diaryList.map(async diary => {
-          diary.imgPathList = diary.imgPathList || []
-          // 缓存图片
-          let pathPromises = []
-          if (diary.images) {
-            let urlList = diary.images.split(',')
-            for (let url of urlList) {
-              pathPromises.push(await downloadImg(url, this.props.user.id))
+
+      let newDiaryList = []
+      if (localDiaryList.length) {
+        for (let i = 0; i < diaryList.length; i++) {
+          for (let j = 0; j < localDiaryList.length; j++) {
+            if (diaryList[i].id === localDiaryList[j].id) {
+              break
+            }
+            if (j === localDiaryList.length - 1) {
+              newDiaryList.push(diaryList[i])
             }
           }
-  
-          for (let pathPromise of pathPromises) {
-            diary.imgPathList.push(await pathPromise)
-          }
-          return diary
-        })
-  
-        let newDiaryList = []
-        for (let diaryListPromise of diaryListPromises) {
-          newDiaryList.push({
-            ...await diaryListPromise,
-            uuid: uuid(),
-            op: 0
-          })
         }
-        this._formDiaryList(newDiaryList)
-        // 更新配置文件
-        updateFile({
-          user_id: this.props.user.id || 0,
-          action: 'add',
-          data: newDiaryList
-        })
-        
       } else {
-        this._formDiaryList(localDiaryList)
+        newDiaryList = [...diaryList]
       }
+
+      for (let newDiary of newDiaryList) {
+        newDiary.imgPathList = newDiary.imgPathList || []
+        newDiary.uuid = newDiary.uuid || uuid()
+        newDiary.op = 0
+
+        // 缓存图片
+        if (newDiary.images) {
+          let urlList = newDiary.images.split(',')
+          for (let url of urlList) {
+            newDiary.imgPathList.push(await downloadImg(url, this.props.user.id))
+          }
+        }
+      }
+
+      this._formDiaryList(newDiaryList)
+      // 更新配置文件
+      updateFile({
+        user_id: this.props.user.id || 0,
+        action: 'add',
+        data: newDiaryList
+      })
     }
   }
 
@@ -221,7 +230,7 @@ export default class Home extends Component {
         const { latitude, longitude } = res.coords
 
         // 更新用户经纬度
-        if(this.props.user.id) {
+        if (this.props.user.id) {
           await updateReduxUser(this.props.user.id)
           await updateUser(this.props.user, { latitude, longitude })
           this._updateUser()
@@ -262,9 +271,9 @@ export default class Home extends Component {
 
   tri() {
     if (this.state.showCalendar) {
-      return <Image style={styles.img_tri} source={require('../../../res/images/home/icon_dropup.png')}/>
+      return <Image style={styles.img_tri} source={require('../../../res/images/home/icon_dropup.png')} />
     } else {
-      return <Image style={styles.img_tri} source={require('../../../res/images/home/icon_dropdown.png')}/>
+      return <Image style={styles.img_tri} source={require('../../../res/images/home/icon_dropdown.png')} />
     }
   }
 
@@ -464,7 +473,7 @@ export default class Home extends Component {
             <View style={styles.triangle}/>
           </View>
         </View>
-            
+
         <Animated.View
           style={[
             {
@@ -516,7 +525,6 @@ export default class Home extends Component {
 
         <FlatList
           showsVerticalScrollIndicator={true}
-          ref={ref => this.fl = ref}
           style={styles.diary_container}
           data={this.state.filterDiaryList}
           extraData={this.state}
