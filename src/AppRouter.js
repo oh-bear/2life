@@ -27,6 +27,8 @@ import ProfileSync from './containers/profile/ProfileSync'
 import ProfileReward from './containers/profile/ProfileReward'
 import ProfileNote from './containers/profile/ProfileNote'
 import ProfileFeedBack from './containers/profile/ProfileFeedBack'
+import ProfileTest from './containers/profile/ProfileTest'
+import ProfileSetting from './containers/profile/ProfileSetting'
 
 import { Scene, Router, ActionConst } from 'react-native-router-flux'
 import * as scenes from './constants/scene'
@@ -187,6 +189,20 @@ export default class AppRouter extends Component {
               key={scenes.SCENE_PROFILE_FEEDBACK}
               component={ProfileFeedBack}
               title='反馈'
+              hideNavBar
+              duration={0}
+            />
+            <Scene
+              key={scenes.SCENE_PROFILE_TEST}
+              component={ProfileTest}
+              title='性格测试'
+              hideNavBar
+              duration={0}
+            />
+            <Scene
+              key={scenes.SCENE_PROFILE_SETTING}
+              component={ProfileSetting}
+              title='性格测试'
               hideNavBar
               duration={0}
             />

@@ -16,7 +16,8 @@ export const USERS = {
   feedback: '/users/feedback', // post {title, content, type}
   oauth_login: '/users/oauth_login', // post {code, type}
   bind_account: '/users/bind_account', // post {account, openid}
-  check_token: '/users/check_token'  // get {uid, token, timestamp}
+  check_token: '/users/check_token',  // get {uid, token, timestamp}
+  calculate_emotion: '/users/calculate_emotion',  // post {content}
 }
 
 export const NOTES = {
@@ -36,4 +37,5 @@ export const UTILS = {
   qiniu_token: '/utils/qiniu_token', // get {filename}
   get_ocr_sign: '/utils/get_ocr_sign',
   get_nlp_result: '/utils/get_nlp_result', // post {content}
+  update_emotion_report: '/utils/update_emotion_report', // get
 }

@@ -7,7 +7,9 @@ import {
   Alert,
   BackHandler,
   TouchableOpacity,
-  Image
+  Image,
+  Animated,
+  DatePickerIOS
 } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { connect } from 'react-redux'
@@ -20,6 +22,7 @@ import DiaryBanner from './DiaryBanner'
 
 import {
   WIDTH,
+  HEIGHT,
   getResponsiveWidth,
 } from '../../common/styles'
 import {
@@ -48,13 +51,16 @@ export default class UpdateDiary extends Component {
     imgPathList: [],
     oldImgPathList: [],
     savingDiary: false,
-    leftButton: null
+    leftButton: null,
+    datePickerY: new Animated.Value(-220),
+    showDatePicker: false
   }
 
   componentWillMount() {
     BackHandler.addEventListener('hardwareBackPress', this.onBackAndroid);
     const diary = this.props.diary
     this.setState({
+      date: new Date(diary.date),
       title: diary.title,
       content: diary.content,
       imgPathList: diary.imgPathList,
@@ -78,7 +84,7 @@ export default class UpdateDiary extends Component {
 
     this.setState({savingDiary: true})
 
-    const { title, content, imgPathList } = this.state
+    const { title, content, imgPathList, date } = this.state
 
     if (!title && !content) return Actions.pop()
     if (!title) return Alert.alert('', '给日记起个标题吧')
@@ -122,6 +128,7 @@ export default class UpdateDiary extends Component {
         ...this.props.diary,
         title,
         content,
+        date: date.getTime(),
         imgPathList: [...newUsingImgPathList, ...oldUseingImgPathList],
         op: this.props.diary.id ? 2 : 1
       }
@@ -153,9 +160,44 @@ export default class UpdateDiary extends Component {
     this.setState({ leftButton })
   }
 
+  _selectDate() {
+    this.setState({ showDatePicker: !this.state.showDatePicker }, () => {
+      Animated.spring(
+        this.state.datePickerY,
+        {
+          toValue: this.state.showDatePicker ? 0 : -220,
+          duration: 300
+        }
+      ).start()
+    })
+  }
+
   render() {
     return (
       <Container hidePadding={true}>
+
+        <Animated.View
+          style={{
+            position: 'absolute',
+            bottom: this.state.datePickerY,
+            backgroundColor: '#fff',
+            zIndex: 100
+          }}
+        >
+          <DatePickerIOS
+            locale={'zh-Hans'}
+            style={styles.date_picker}
+            date={this.state.date}
+            maximumDate={new Date()}
+            mode={'datetime'}
+            onDateChange={date => this.setState({date})}
+          />
+        </Animated.View>
+        <TouchableOpacity
+          style={[styles.mask, {display: this.state.showDatePicker ? 'flex' : 'none'}]}
+          onPress={() => this._selectDate()}
+        >
+        </TouchableOpacity>
 
         <KeyboardAwareScrollView
           contentContainerStyle={styles.scroll_style}
@@ -176,6 +218,12 @@ export default class UpdateDiary extends Component {
             <TextPingFang style={styles.text_date}>{getMonth(this.state.date.getMonth())} </TextPingFang>
             <TextPingFang style={styles.text_date}>{this.state.date.getDate()}，</TextPingFang>
             <TextPingFang style={styles.text_date}>{this.state.date.getFullYear()}</TextPingFang>
+            <TouchableOpacity
+              style={styles.small_calendar}
+              onPress={this._selectDate.bind(this)}
+            >
+              <Image source={require('../../../res/images/home/diary/icon_calendar_small.png')}/>
+            </TouchableOpacity>
           </View>
 
 
@@ -208,9 +256,19 @@ export default class UpdateDiary extends Component {
 }
 
 const styles = StyleSheet.create({
+  mask: {
+    position: 'absolute',
+    width: WIDTH,
+    height: HEIGHT,
+    zIndex: 10
+  },
+  date_picker: {
+    width: WIDTH,
+  },
   date_container: {
     width: WIDTH,
     flexDirection: 'row',
+    alignItems: 'center',
     paddingLeft: getResponsiveWidth(24),
     paddingTop: getResponsiveWidth(24),
     paddingBottom: getResponsiveWidth(24),
@@ -222,6 +280,9 @@ const styles = StyleSheet.create({
   text_date: {
     color: '#aaa',
     fontSize: 12
+  },
+  small_calendar: {
+    marginLeft: getResponsiveWidth(8)
   },
   text_title: {
     color: '#000',

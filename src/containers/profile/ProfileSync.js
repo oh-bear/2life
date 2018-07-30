@@ -1,29 +1,44 @@
 import React, { Component } from 'react'
 import {
   View,
-  StyleSheet,
-  ScrollView,
-  Switch
+  StyleSheet
 } from 'react-native'
+import RNFetchBlob from 'rn-fetch-blob'
 
 import TextPingFang from '../../components/TextPingFang'
 import Container from '../../components/Container'
 import Popup from '../../components/Popup'
 import ProfileHeader from './components/ProfileHeader'
+import Row from './components/Row'
 import Storage from '../../common/storage'
 
 import {
-  getResponsiveWidth,
+  getResponsiveWidth, WIDTH,
 } from '../../common/styles'
 
 export default class ProfileSync extends Component {
 
   state = {
     isSync: true,
-    showPopup: false
+    showPopup: false,
+    size: 0
   }
 
   async componentDidMount() {
+    const id = this.props.user.id
+    const path = RNFetchBlob.fs.dirs.DocumentDir
+    
+    RNFetchBlob.fs.lstat(path)
+      .then(files => {
+        let size = 0
+        for (let file of files) {
+          if (file.filename.includes(`id_${id}`) || file.filename.includes(`user_${id}`)) {
+            size += parseInt(file.size)
+          }
+        }
+        this.setState({size: (size / 1000000).toFixed(2) + 'MB'})
+      })
+
     const isSync = await Storage.get('isSync', true)
     this.setState({ isSync })
   }
@@ -47,33 +62,31 @@ export default class ProfileSync extends Component {
   render() {
     return (
       <Container>
-        <ScrollView>
+      
           <ProfileHeader title='日记同步'/>
 
           <View style={styles.container}>
-            <View style={styles.row}>
-              <TextPingFang style={styles.text_left}>同步</TextPingFang>
-              <Switch
-                value={this.state.isSync}
-                onValueChange={isSync => this.SyncChange(isSync)}
-                onTintColor='#2DC3A6'
-              />
-            </View>
+            <Row
+              title='同步'
+              showSwitch={true}
+              switchValue={this.state.isSync}
+              onValueChange={isSync => this.SyncChange(isSync)}
+            />
 
             <TextPingFang style={styles.text_close_sync}>关闭同步功能将不能匹配对象，已经匹配对象的将会被解除关系！请谨慎！</TextPingFang>
 
-            <View style={styles.row}>
+            {/* <View style={styles.row}>
               <TextPingFang style={styles.text_left}>同步间隔</TextPingFang>
-              <TextPingFang style={styles.text_left}>15 Min</TextPingFang>
-            </View>
+              <TextPingFang style={styles.text_right}>15 Min</TextPingFang>
+            </View> */}
 
             <View style={styles.row}>
               <TextPingFang style={styles.text_left}>储存</TextPingFang>
-              <TextPingFang style={styles.text_left}>4.8MB</TextPingFang>
+              <TextPingFang style={styles.text_right}>{this.state.size}</TextPingFang>
             </View>
           </View>
 
-        </ScrollView>
+        
         <Popup
           showPopup={this.state.showPopup}
           popupBgColor='#ff5757'
@@ -92,11 +105,12 @@ export default class ProfileSync extends Component {
 
 const styles = StyleSheet.create({
   container: {
+    width: WIDTH,
     paddingLeft: getResponsiveWidth(24),
     paddingRight: getResponsiveWidth(24),
   },
   row: {
-    height: getResponsiveWidth(66),
+    height: getResponsiveWidth(44),
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
@@ -105,7 +119,12 @@ const styles = StyleSheet.create({
   },
   text_left: {
     color: '#000',
-    fontSize: 20,
+    fontSize: 16,
+    fontWeight: '400'
+  },
+  text_right: {
+    color: '#444',
+    fontSize: 16,
     fontWeight: '300'
   },
   text_close_sync: {
