@@ -37,11 +37,10 @@ export default class Pie extends Component {
 				itemGap: 8,
 				itemWidth: 6,
 				itemHeight: 6,
-				// borderRadius: 5,
 				data: ['积极情绪', '一般情绪', '消极情绪'],
 				textStyle: {
 					color: 'RGBA(51, 51, 51, 0.87)',
-					fontSize: 16,
+					fontSize: 14,
 					fontWeight: '300'
 				}
 			},

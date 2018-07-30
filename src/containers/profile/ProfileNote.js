@@ -41,8 +41,6 @@ export default class ProfileNote extends Component {
 
   async componentDidMount() {
     this._fetchDiary()
-
-    DeviceEventEmitter.addListener('flush_note', () => this._fetchDiary())
   }
 
   async _fetchDiary() {
@@ -82,13 +80,11 @@ export default class ProfileNote extends Component {
   }
 
   render() {
-
     return (
       <Container>
         <ProfileHeader title={this.props.isMe ? '我的日记' : 'TA 的日记'}/>
 
         <FlatList
-          ref={ref => this.fl = ref}
           style={styles.diary_container}
           data={this.state.diaryList}
           extraData={this.state}
@@ -106,15 +102,14 @@ export default class ProfileNote extends Component {
 const styles = StyleSheet.create({
   diary_container: {
     width: WIDTH,
-    marginLeft: getResponsiveWidth(24),
-    marginRight: getResponsiveWidth(24),
-    backgroundColor: 'transparent',
+    paddingLeft: getResponsiveWidth(24),
+    paddingRight: getResponsiveWidth(24),
+    backgroundColor: '#fff'
   },
   none_container: {
     alignItems: 'center',
     paddingTop: getResponsiveHeight(150),
     backgroundColor: 'transparent',
-    zIndex: -10
   },
   text_none: {
     color: '#aaa',
@@ -125,6 +120,5 @@ const styles = StyleSheet.create({
     width: WIDTH,
     height: getResponsiveHeight(50),
     backgroundColor: '#fff',
-    zIndex: -10
   }
 })

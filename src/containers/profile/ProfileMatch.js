@@ -145,24 +145,21 @@ export default class ProfileMatch extends Component {
 
   async updateStatus() {
     const { matchGender, beMatched, character, matchUserId } = this.state
-    let { sex, status } = this.props.user
+    let { sex, status, user_other_id } = this.props.user
 
-    if (status === 1000 || this.props.user.user_other_id !== -1) {
+    if (status === 1000 || user_other_id !== -1) {
       return
     }
 
     if (!beMatched) {
-      if (this.props.user.status === 999) {
-        return
-      }
+      if (status === 999) return
+
       await updateUser(this.props.user, { status: 999 })
       await updateReduxUser(this.props.user.id)
       return
     }
 
-    if ((status >= 501 && status <= 504)) {
-      return
-    }
+    if ((status >= 501 && status <= 504)) return
 
     // 101：未匹配，期待异性，性格相同，主体男
     if (!sex && matchGender && character === 1) status = 101
@@ -196,6 +193,11 @@ export default class ProfileMatch extends Component {
   }
 
   async startMatch() {
+    // 若未开启同步，需要提醒开启
+    const isSync = await Storage.get('isSync', true)
+    if (!isSync) {
+      return Alert.alert('匹配需要开启同步功能', '')
+    }
     // 若用户没有匹配次数，则提示购买
     if (this.props.user.last_times <= 0) {
       return this.setState({ showPopup: true })
@@ -205,7 +207,7 @@ export default class ProfileMatch extends Component {
       return Actions.jump(SCENE_MATCH_RESULT)
     }
     if (this.state.matchType === 1 && !this.state.matchUserId) {
-      return Alert.alert('', '对方ID不能为空哦')
+      return Alert.alert('对方ID不能为空哦', '')
     } else {
       return Actions.jump(SCENE_MATCH_RESULT, { matchUserId: this.state.matchUserId })
     }
@@ -240,15 +242,13 @@ export default class ProfileMatch extends Component {
                     style={[styles.btn, this.state.beMatched ? styles.active_btn : null]}
                     onPress={() => this.setState({ beMatched: true })}
                   >
-                    <TextPingFang
-                      style={[styles.text_btn, this.state.beMatched ? styles.active_text : null]}>开启</TextPingFang>
+                    <TextPingFang style={[styles.text_btn, this.state.beMatched ? styles.active_text : null]}>开启</TextPingFang>
                   </TouchableOpacity>
                   <TouchableOpacity
                     style={[styles.btn, !this.state.beMatched ? styles.active_btn : null]}
                     onPress={() => this.setState({ beMatched: false })}
                   >
-                    <TextPingFang
-                      style={[styles.text_btn, !this.state.beMatched ? styles.active_text : null]}>关闭</TextPingFang>
+                    <TextPingFang style={[styles.text_btn, !this.state.beMatched ? styles.active_text : null]}>关闭</TextPingFang>
                   </TouchableOpacity>
                 </View>
               </View>
@@ -260,15 +260,13 @@ export default class ProfileMatch extends Component {
                     style={[styles.btn, this.state.matchGender !== this.props.user.sex ? styles.active_btn : null]}
                     onPress={() => this.setState({ matchGender: !this.props.user.sex })}
                   >
-                    <TextPingFang
-                      style={[styles.text_btn, this.state.matchGender !== this.props.user.sex ? styles.active_text : null]}>异性</TextPingFang>
+                    <TextPingFang style={[styles.text_btn, this.state.matchGender !== this.props.user.sex ? styles.active_text : null]}>异性</TextPingFang>
                   </TouchableOpacity>
                   <TouchableOpacity
                     style={[styles.btn, this.state.matchGender === this.props.user.sex ? styles.active_btn : null]}
                     onPress={() => this.setState({ matchGender: this.props.user.sex })}
                   >
-                    <TextPingFang
-                      style={[styles.text_btn, this.state.matchGender === this.props.user.sex ? styles.active_text : null]}>同性</TextPingFang>
+                    <TextPingFang style={[styles.text_btn, this.state.matchGender === this.props.user.sex ? styles.active_text : null]}>同性</TextPingFang>
                   </TouchableOpacity>
                 </View>
               </View>
@@ -280,24 +278,21 @@ export default class ProfileMatch extends Component {
                     style={[styles.btn, this.state.character === 1 ? styles.active_btn : null]}
                     onPress={() => this.setState({ character: 1 })}
                   >
-                    <TextPingFang
-                      style={[styles.text_btn, this.state.character === 1 ? styles.active_text : null]}>相同</TextPingFang>
+                    <TextPingFang style={[styles.text_btn, this.state.character === 1 ? styles.active_text : null]}>相同</TextPingFang>
                   </TouchableOpacity>
 
                   <TouchableOpacity
                     style={[styles.btn, this.state.character === 2 ? styles.active_btn : null]}
                     onPress={() => this.setState({ character: 2 })}
                   >
-                    <TextPingFang
-                      style={[styles.text_btn, this.state.character === 2 ? styles.active_text : null]}>互补</TextPingFang>
+                    <TextPingFang style={[styles.text_btn, this.state.character === 2 ? styles.active_text : null]}>互补</TextPingFang>
                   </TouchableOpacity>
 
                   <TouchableOpacity
                     style={[styles.btn, this.state.character === 3 ? styles.active_btn : null]}
                     onPress={() => this.setState({ character: 3 })}
                   >
-                    <TextPingFang
-                      style={[styles.text_btn, this.state.character === 3 ? styles.active_text : null]}>随意</TextPingFang>
+                    <TextPingFang style={[styles.text_btn, this.state.character === 3 ? styles.active_text : null]}>随意</TextPingFang>
                   </TouchableOpacity>
                 </View>
               </View>

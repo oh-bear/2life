@@ -30,16 +30,11 @@ export default class Radar extends Component {
 					backgroundColor: 'red'
 				},
 				indicator: [
-					// { name: '喜悦', max },
-					// { name: '低落', max },
-					// { name: '厌恶', max },
-					// { name: '愤怒', max },
-
-					{ name: 'e喜悦', max },
-					{ name: 'c厌恶', max },
-					{ name: 'o低落', max },
-					{ name: 'a', max },
-					{ name: 'n愤怒', max }
+					{ name: '外向性', max },
+					{ name: '严谨性', max },
+					{ name: '开放性', max },
+					{ name: '宜人性', max },
+					{ name: '神经质', max }
 				]
 			},
 			series: [{

@@ -26,8 +26,8 @@ import {
   WIDTH,
   getResponsiveWidth,
 } from '../../common/styles'
-import { getMonth, updateReduxUser, updateFile, syncFile, getPath } from '../../common/util'
-import { SCENE_INDEX, SCENE_UPDATE_DIARY } from '../../constants/scene'
+import { getMonth, updateFile, syncFile, getPath } from '../../common/util'
+import { SCENE_UPDATE_DIARY } from '../../constants/scene'
 
 import HttpUtils from '../../network/HttpUtils'
 import { NOTES } from '../../network/Urls'
@@ -141,17 +141,7 @@ export default class DiaryDetail extends Component {
 
                 !!this.props.user.id && syncFile(this.props.user.id)
 
-                Actions.reset(SCENE_INDEX)
-
-                // TODO: Vip
-                const vip = false
-                if (vip) {
-                  HttpUtils.get(NOTES.delete, { note_id: this.props.diary.id }).then(res => {
-                    if (res.code === 0) {
-                      updateReduxUser(this.props.user.id)
-                    }
-                  })
-                }
+                Actions.pop()
               }
             },
           ]

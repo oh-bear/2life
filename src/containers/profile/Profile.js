@@ -22,7 +22,7 @@ import {
   getResponsiveWidth,
   getResponsiveHeight
 } from '../../common/styles'
-
+import { readFile } from '../../common/util'
 import {
   SCENE_PROFILE_EDIT,
   SCENE_PROFILE_MODE,
@@ -50,10 +50,34 @@ export default class Profile extends Component {
 
   state = {
     is_scroll: true,
-    showPrivacy: false
+    showPrivacy: false,
+    myAverageMode: 0,
+    otherAverageMode: 0,
+    myDiaryCount: 0,
+    otherDiaryCount: 0
   }
 
-  componentDidMount() {
+  async componentDidMount() {
+    // 获得日记数量和情绪值
+    const diaryList = await readFile(this.props.user.id)
+    let myDiaryList = diaryList.filter(diary => diary.user_id === this.props.user.id)
+    let otherDiaryList = diaryList.filter(diary => diary.user_id !== this.props.user.id)
+
+    let myTotalMode = 0, otherTotalMode = 0
+    for (let diary of myDiaryList) {
+      myTotalMode += diary.mode
+    }
+    for (let diary of otherDiaryList) {
+      otherTotalMode += diary.mode
+    }
+
+    // 平均情绪值和日记数量
+    this.setState({
+      myAverageMode: Math.floor(myTotalMode / myDiaryList.length),
+      otherAverageMode: Math.floor(otherTotalMode / otherDiaryList.length),
+      myDiaryCount: myDiaryList.length,
+      otherDiaryCount: otherDiaryList.length
+    })
   }
 
   renderUnlogin() {
@@ -123,7 +147,7 @@ export default class Profile extends Component {
             })()
           }
           <TextPingFang
-            style={styles.text_row_left}>{this.props.partner.mode || '暂无'}</TextPingFang>
+            style={styles.text_row_left}>{this.state.otherAverageMode}</TextPingFang>
           <TextPingFang style={styles.text_row_desc}>平均情绪值</TextPingFang>
         </TouchableOpacity>
 
@@ -142,7 +166,7 @@ export default class Profile extends Component {
             })()
           }
           <TextPingFang
-            style={styles.text_row_left}>{this.props.partner.total_notes || 0}</TextPingFang>
+            style={styles.text_row_left}>{this.state.otherDiaryCount}</TextPingFang>
           <TextPingFang style={styles.text_row_desc}>日记数量</TextPingFang>
         </TouchableOpacity>
       </View>
@@ -190,9 +214,10 @@ export default class Profile extends Component {
               </View>
             </View>
 
-            {/* <TouchableOpacity
+            <TouchableOpacity
               style={styles.row}
-              onPress={() => Actions.jump(SCENE_PROFILE_MODE, {user: this.props.user})}
+              // onPress={() => Actions.jump(SCENE_PROFILE_MODE, {user: this.props.user})}
+              activeOpacity={1}
             >
               {
                 (() => {
@@ -204,9 +229,9 @@ export default class Profile extends Component {
                 })()
               }
               <TextPingFang
-                style={styles.text_row_left}>{this.props.user.mode || '暂无'}</TextPingFang>
+                style={styles.text_row_left}>{this.state.myAverageMode}</TextPingFang>
               <TextPingFang style={styles.text_row_desc}>平均情绪值</TextPingFang>
-            </TouchableOpacity> */}
+            </TouchableOpacity>
 
             <TouchableOpacity
               style={styles.row}
@@ -224,7 +249,7 @@ export default class Profile extends Component {
                 })()
               }
               <TextPingFang
-                style={styles.text_row_left}>{this.props.user.total_notes || 0}</TextPingFang>
+                style={styles.text_row_left}>{this.state.myDiaryCount}</TextPingFang>
               <TextPingFang style={styles.text_row_desc}>日记数量</TextPingFang>
             </TouchableOpacity>
 
@@ -282,7 +307,7 @@ export default class Profile extends Component {
                 }
               }}
             />
-
+            
             <Row
               imageLeft={<Image source={require('../../../res/images/profile/icon_profile_scale.png')} />}
               title='性格测试'
@@ -304,7 +329,7 @@ export default class Profile extends Component {
             <Row
               imageLeft={<Image source={require('../../../res/images/profile/icon_setting.png')} />}
               title='设置'
-              onPress={() => Actions.jump(SCENE_PROFILE_SETTING)}
+              onPress={() => Actions.jump(SCENE_PROFILE_SETTING, {user: this.props.user})}
             />
           </ScrollView>
 

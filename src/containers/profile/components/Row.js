@@ -1,13 +1,11 @@
 import React, { Component } from 'react'
 import {
-	View,
 	StyleSheet,
 	TouchableOpacity,
 	Switch,
 	Image
 } from 'react-native'
 import PropTypes from 'prop-types'
-import Echarts from 'native-echarts'
 
 import TextPingFang from '../../../components/TextPingFang'
 
@@ -18,7 +16,14 @@ import {
 export default class Row extends Component {
 
 	static propTypes = {
-		
+		onPress: PropTypes.func,
+		imageLeft: PropTypes.element,
+		title: PropTypes.string,
+		textRight: PropTypes.string,
+		showSwitch: PropTypes.bool,
+		switchValue: PropTypes.bool,
+		onValueChange: PropTypes.func,
+		tintColor: PropTypes.string
 	}
 
 	render() {
@@ -39,7 +44,7 @@ export default class Row extends Component {
 					onTintColor={this.props.tintColor || '#2DC3A6'}
 				/>
 
-				{/* <TextPingFang style={styles.text_title}>{this.props.title}</TextPingFang> */}
+				<TextPingFang style={styles.text_right}>{this.props.textRight}</TextPingFang>
 
 				<Image style={[styles.row_right, {display: this.props.showSwitch ? 'none' : 'flex'}]} source={require('../../../../res/images/common/icon_indicator.png')} />
 			</TouchableOpacity>
@@ -60,6 +65,13 @@ const styles = StyleSheet.create({
 		color: '#000',
     fontSize: 16,
 		fontWeight: '400'
+	},
+	text_right: {
+		position: 'absolute',
+    right: 20,
+		color: '#333',
+    fontSize: 14,
+		fontWeight: '300'
 	},
 	row_right: {
     position: 'absolute',

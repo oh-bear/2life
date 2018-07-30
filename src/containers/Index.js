@@ -38,12 +38,13 @@ export default class Index extends Component {
     unread: this.props.user.unread
   }
 
-  componentWillMount() {
+  async componentWillMount() {
+    await this._initFile()
+
     if (this.props.tab) this.setState({ selectedTab: this.props.tab })
   }
 
-  componentDidMount() {
-    this._initFile()
+  async componentDidMount() {
     this._mergeData()
     
     // 极光推送：添加事件角标，并触发强制刷新通知和用户、日记数据
