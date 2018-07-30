@@ -215,11 +215,11 @@ export default class ProfileMode extends Component {
             <Pie data={this.state.pieData} height={getResponsiveWidth(180)} />
           </View>
 
-          <View style={[styles.radar_container, { display: this.props.user.emotions_basis ? 'flex' : 'none' }]}>
+          <View style={[styles.radar_container, { display: this.props.user.emotions_basis ? 'flex' : 'none' ,position: this.props.user.emotions_basis ? 'absolute' : 'relative' }]}>
             <Radar data={this.state.emotions} height={getResponsiveWidth(220)} />
           </View>
 
-          <View style={[styles.report_container, { display: this.props.user.emotions_basis ? 'flex' : 'none' }]}>
+          <View style={[styles.report_container, { display: this.props.user.emotions_basis ? 'flex' : 'none' ,position: this.props.user.emotions_basis ? 'absolute' : 'relative'}]}>
             <TextPingFang style={styles.text_type}>{this.props.user.emotions_type}</TextPingFang>
             <TextPingFang style={styles.text_const}>你的性格属性</TextPingFang>
             <Image style={styles.img} source={require('../../../res/images/profile/character/untested.png')} />
@@ -236,7 +236,7 @@ export default class ProfileMode extends Component {
 
           </View>
 
-          <View style={[styles.report_container, { display: this.props.user.emotions_basis ? 'none' : 'flex' }]}>
+          <View style={[styles.report_container, { display: this.props.user.emotions_basis ? 'none' : 'flex',position: this.props.user.emotions_basis ? 'relative' : 'absolute' }]}>
             <Image style={styles.img} source={require('../../../res/images/profile/character/untested.png')} />
             <TextPingFang style={styles.text_test}>性格测试</TextPingFang>
             <TextPingFang style={styles.text_report}>我们准备了一个好玩的测试，可以分析出你的性格属性。测试完成后你不但可以看到你的四维情绪雷达图，还有你的性格属性哦。</TextPingFang>
