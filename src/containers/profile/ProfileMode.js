@@ -43,11 +43,11 @@ export default class ProfileMode extends Component {
     if (this.props.user.emotions_basis) {
       const reports = this.props.user.emotions_report.split('\n')
       for (let report of reports) {
-        const indexLeft = report.indexOf('(')
-        const indexRight = report.indexOf(')')
+        const indexLeft = report.indexOf('（')
+        const indexRight = report.indexOf('）')
         const title = report.slice(indexLeft + 1, indexRight)
         const content = report.slice(0, indexLeft)
-  
+
         reportList.push({ title, content })
       }
 
