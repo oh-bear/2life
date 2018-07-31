@@ -72,6 +72,8 @@ export default class ProfileMode extends Component {
       66.66 < diary.mode && diary.mode <= 100 ? posDays++ : null
     }
 
+
+
     // 将情绪值按日期分类
     const mergeData = this.mergeData(modeData)
     const weekData = mergeData.length >= 7 ? mergeData.slice(-7) : mergeData
@@ -173,6 +175,7 @@ export default class ProfileMode extends Component {
         timeRange.push(`${y}.${m}.${d}`)
       }
     })
+
     return { modes, timeRange }
   }
 
@@ -182,7 +185,7 @@ export default class ProfileMode extends Component {
         <ProfileHeader title='情绪图表' />
         <ScrollView>
           <ScrollableTabView
-            style={styles.marginLR}
+            style={styles.chart_height}
             renderTabBar={() => <TabBar tabNames={['一周', '一月', '一年', '全部']} />}
           >
             <ModeCharts
@@ -218,11 +221,11 @@ export default class ProfileMode extends Component {
             <Pie data={this.state.pieData} height={getResponsiveWidth(180)} />
           </View>
 
-          <View style={[styles.radar_container, { display: this.props.user.emotions_basis ? 'flex' : 'none' ,position: this.props.user.emotions_basis ? 'absolute' : 'relative' }]}>
+          <View style={[styles.radar_container, { display: this.props.user.emotions_basis ? 'flex' : 'none'} ]}>
             <Radar data={this.state.emotions} height={getResponsiveWidth(220)} />
           </View>
 
-          <View style={[styles.report_container, { display: this.props.user.emotions_basis ? 'flex' : 'none' ,position: this.props.user.emotions_basis ? 'absolute' : 'relative'}]}>
+          <View style={[styles.report_container, { display: this.props.user.emotions_basis ? 'flex' : 'none'} ]}>
             <TextPingFang style={styles.text_type}>{this.props.user.emotions_type}</TextPingFang>
             <TextPingFang style={styles.text_const}>你的性格属性</TextPingFang>
             <Image style={styles.img} source={require('../../../res/images/profile/character/untested.png')} />
@@ -261,6 +264,11 @@ const styles = StyleSheet.create({
   marginLR: {
     marginLeft: getResponsiveWidth(24),
     marginRight: getResponsiveWidth(24),
+  },
+  chart_height:{
+    marginLeft: getResponsiveWidth(24),
+    marginRight: getResponsiveWidth(24),
+    height:getResponsiveWidth(300)
   },
   total_container: {
     flexDirection: 'row',

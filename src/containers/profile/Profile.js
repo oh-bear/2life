@@ -307,7 +307,7 @@ export default class Profile extends Component {
                 }
               }}
             />
-            
+
             <Row
               imageLeft={<Image source={require('../../../res/images/profile/icon_profile_scale.png')} />}
               title='性格测试'
@@ -320,11 +320,11 @@ export default class Profile extends Component {
               onPress={() => Actions.jump(SCENE_PROFILE_SYNC, { user: this.props.user })}
             />
 
-            <Row
+            {/* <Row
               imageLeft={<Image source={require('../../../res/images/profile/icon_reward.png')} />}
               title='打赏'
               onPress={() => Actions.jump(SCENE_PROFILE_REWARD)}
-            />
+            /> */}
 
             <Row
               imageLeft={<Image source={require('../../../res/images/profile/icon_setting.png')} />}
