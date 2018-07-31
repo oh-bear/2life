@@ -9,13 +9,15 @@ import {
   Alert,
   DeviceEventEmitter,
   Modal,
-  Animated
+  Animated,
+  TextInput
 } from 'react-native'
 import { ActionSheet } from 'antd-mobile';
 import { connect } from 'react-redux'
 import { Actions } from 'react-native-router-flux'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import ImageViewer from 'react-native-image-zoom-viewer'
+import { ifIphoneX } from 'react-native-iphone-x-helper'
 
 import Container from '../../components/Container'
 import TextPingFang from '../../components/TextPingFang'
@@ -367,12 +369,6 @@ export default class DiaryDetail extends Component {
               <TextPingFang style={styles.text_update}>更正</TextPingFang>
             </TouchableOpacity>
 
-            <TouchableOpacity
-              style={[styles.btn_container, { display: this.props.user.id !== this.props.diary.user_id && this.props.partner.id ? 'flex' : 'none',position:this.props.user.id !== this.props.diary.user_id&& this.props.partner.id?'absolute':'relative'  }]}
-            >
-              {this.state.likeComponent}
-            </TouchableOpacity>
-
             <Animated.View style={[
               styles.choose_mode,
               {
@@ -412,6 +408,21 @@ export default class DiaryDetail extends Component {
               </TouchableOpacity>
             </Animated.View>
           </View>
+
+          {/* <TouchableOpacity
+            style={[styles.mode_container, {display: this.props.diary.user_id === this.props.user.user_other_id ? 'flex' : 'none'}]}
+            activeOpacity={1}
+            onPress={() => this.inputComment.focus()}
+          >
+            <Image style={styles.location_icon} source={require('../../../res/images/home/diary/icon_comment.png')} />
+            <TextPingFang style={styles.text_comment}>有什么想说的</TextPingFang>
+          </TouchableOpacity>
+
+          <TextInput
+            ref={ref => this.inputComment = ref}
+            style={styles.input_comment}
+            placeholder='写下想对Ta说的吧～'
+          /> */}
         </KeyboardAwareScrollView>
 
         <Modal
@@ -429,6 +440,12 @@ export default class DiaryDetail extends Component {
             onClick={() => this.setState({ showImgPreview: false })}
           />
         </Modal>
+
+        <TouchableOpacity
+          style={[styles.btn_container, { display: this.props.user.id !== this.props.diary.user_id && this.props.partner.id ? 'flex' : 'none' }]}
+        >
+          {this.state.likeComponent}
+        </TouchableOpacity>
 
       </Container>
     )
@@ -496,6 +513,7 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
     alignItems: 'center',
     paddingLeft: getResponsiveWidth(24),
+    marginBottom: getResponsiveWidth(16)
   },
   location_icon: {
     marginRight: getResponsiveWidth(8)
@@ -506,14 +524,13 @@ const styles = StyleSheet.create({
     fontWeight: '300'
   },
   mode_container: {
-    height: getResponsiveWidth(88),
+    height: getResponsiveWidth(64),
     flexDirection: 'row',
     alignItems: 'center',
     marginLeft: getResponsiveWidth(24),
     marginRight: getResponsiveWidth(24),
-    marginTop: getResponsiveWidth(16),
     borderBottomWidth: getResponsiveWidth(1),
-    borderBottomColor: '#f5f5f5'
+    borderBottomColor: '#f1f1f1'
   },
   text_mode: {
     width: getResponsiveWidth(30),
@@ -524,9 +541,15 @@ const styles = StyleSheet.create({
   },
   text_value: {
     marginLeft: getResponsiveWidth(8),
-    color: '#000',
+    color: '#aaa',
     fontSize: 16,
     fontWeight: '300'
+  },
+  text_comment: {
+    marginLeft: getResponsiveWidth(8),
+    color: '#333',
+    fontSize: 16,
+    fontWeight: '400'
   },
   update_container: {
     position: 'absolute',
@@ -538,8 +561,12 @@ const styles = StyleSheet.create({
   },
   btn_container: {
     position: 'absolute',
-    right: 0,
-    top: getResponsiveWidth(24)
+    right: 24,
+    ...ifIphoneX({
+      bottom: 48
+    }, {
+      bottom: 24
+    })
   },
   img_btn: {
     width: getResponsiveWidth(64),
@@ -551,5 +578,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-around',
     backgroundColor: '#fff'
+  },
+  input_comment: {
+    position: 'absolute',
+    bottom: -100,
+    backgroundColor: 'red'
   }
 })

@@ -39,18 +39,21 @@ export default class ProfileMode extends Component {
   }
 
   async componentWillMount() {
-    const reports = this.props.user.emotions_report.split('\n')
-    let reportList = []
-    for (let report of reports) {
-      const indexLeft = report.indexOf('(')
-      const indexRight = report.indexOf(')')
-      const title = report.slice(indexLeft + 1, indexRight)
-      const content = report.slice(0, indexLeft)
+    let emotions = [], reportList = []
+    if (this.props.user.emotions_basis) {
+      const reports = this.props.user.emotions_report.split('\n')
+      for (let report of reports) {
+        const indexLeft = report.indexOf('（')
+        const indexRight = report.indexOf('）')
+        const title = report.slice(indexLeft + 1, indexRight)
+        const content = report.slice(0, indexLeft)
 
-      reportList.push({ title, content })
+        reportList.push({ title, content })
+      }
+
+      emotions = this.props.user.emotions_basis.split(',').map(num => +num)
     }
 
-    let emotions = this.props.user.emotions_basis.split(',').map(num => +num)
 
     // 获得我的所有日记情绪值
     const diaryList = await readFile(this.props.user.id)
