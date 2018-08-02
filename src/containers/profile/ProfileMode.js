@@ -72,7 +72,6 @@ export default class ProfileMode extends Component {
       66.66 < diary.mode && diary.mode <= 100 ? posDays++ : null
     }
 
-    // 将情绪值按日期分类
     const mergeData = this.mergeData(modeData)
     const weekData = mergeData.length >= 7 ? mergeData.slice(-7) : mergeData
     const monthData = mergeData.length >= 30 ? mergeData.slice(-30) : mergeData
@@ -91,6 +90,7 @@ export default class ProfileMode extends Component {
     })
   }
 
+  // 将情绪值按日期分类，相同天数的日记取情绪平均值
   mergeData(modeData) {
 
     let newModeData = []
@@ -180,9 +180,8 @@ export default class ProfileMode extends Component {
     return (
       <Container>
         <ProfileHeader title='情绪图表' />
-        <ScrollView>
+        <ScrollView contentContainerStyle={styles.scroll_container}>
           <ScrollableTabView
-            style={styles.marginLR}
             renderTabBar={() => <TabBar tabNames={['一周', '一月', '一年', '全部']} />}
           >
             <ModeCharts
@@ -225,11 +224,11 @@ export default class ProfileMode extends Component {
           <View style={[styles.report_container, { display: this.props.user.emotions_basis ? 'flex' : 'none' }]}>
             <TextPingFang style={styles.text_type}>{this.props.user.emotions_type}</TextPingFang>
             <TextPingFang style={styles.text_const}>你的性格属性</TextPingFang>
-            <Image style={styles.img} source={require('../../../res/images/profile/character/untested.png')} />
+            <Image style={styles.img} resizeMethod='scale' source={require('../../../res/images/profile/character/untested.png')} />
             {
               this.state.reportList.map(report => {
                 return (
-                  <View>
+                  <View key={report.title}>
                     <TextPingFang style={styles.small_type}>{report.title}</TextPingFang>
                     <TextPingFang style={styles.text_report}>{report.content}</TextPingFang>
                   </View>
@@ -240,12 +239,12 @@ export default class ProfileMode extends Component {
           </View>
 
           <View style={[styles.report_container, { display: this.props.user.emotions_basis ? 'none' : 'flex' }]}>
-            <Image style={styles.img} source={require('../../../res/images/profile/character/untested.png')} />
+            <Image style={styles.img} resizeMethod='scale' source={require('../../../res/images/profile/character/untested.png')} />
             <TextPingFang style={styles.text_test}>性格测试</TextPingFang>
-            <TextPingFang style={styles.text_report}>我们准备了一个好玩的测试，可以分析出你的性格属性。测试完成后你不但可以看到你的四维情绪雷达图，还有你的性格属性哦。</TextPingFang>
+            <TextPingFang style={styles.text_report}>我们准备了一个好玩的测试，可以分析出你的性格属性。测试完成后你不但可以看到你的五维情绪雷达图，还有你的性格属性哦。</TextPingFang>
 
             <TouchableOpacity
-              style={[styles.btn, styles.marginLR]}
+              style={styles.btn}
               onPress={() => Actions.jump(SCENE_PROFILE_TEST)}
             >
               <TextPingFang style={styles.text_btn}>开始测试</TextPingFang>
@@ -258,9 +257,9 @@ export default class ProfileMode extends Component {
 }
 
 const styles = StyleSheet.create({
-  marginLR: {
+  scroll_container: {
     marginLeft: getResponsiveWidth(24),
-    marginRight: getResponsiveWidth(24),
+    marginRight: getResponsiveWidth(24)
   },
   total_container: {
     flexDirection: 'row',
@@ -295,28 +294,24 @@ const styles = StyleSheet.create({
   text_type: {
     color: '#333',
     fontSize: 20,
-    fontWeight: 'bold',
-    marginLeft: getResponsiveWidth(24),
-    marginRight: getResponsiveWidth(24),
+    fontWeight: 'bold'
   },
   text_const: {
     color: '#333',
     fontSize: 14,
     fontWeight: '400',
-    marginLeft: getResponsiveWidth(24),
-    marginRight: getResponsiveWidth(24),
     marginTop: getResponsiveWidth(8),
     marginBottom: getResponsiveWidth(8),
   },
   img: {
-    width: WIDTH
+    width: '100%',
+    resizeMode: 'cover',
+    borderRadius: 8
   },
   small_type: {
     color: '#333',
     fontSize: 14,
     fontWeight: 'bold',
-    marginLeft: getResponsiveWidth(24),
-    marginRight: getResponsiveWidth(24),
     marginTop: getResponsiveWidth(24)
   },
   text_report: {
@@ -324,16 +319,12 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '300',
     lineHeight: getResponsiveWidth(26),
-    marginLeft: getResponsiveWidth(24),
-    marginRight: getResponsiveWidth(24),
     marginTop: getResponsiveWidth(8)
   },
   text_test: {
     color: '#333',
     fontSize: 16,
     fontWeight: 'bold',
-    marginLeft: getResponsiveWidth(24),
-    marginRight: getResponsiveWidth(24),
     marginTop: getResponsiveWidth(24)
   },
   btn: {

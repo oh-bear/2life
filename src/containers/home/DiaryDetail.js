@@ -9,7 +9,8 @@ import {
   DeviceEventEmitter,
   Modal,
   Animated,
-  TextInput
+  TextInput,
+  Keyboard
 } from 'react-native'
 import { connect } from 'react-redux'
 import { Actions } from 'react-native-router-flux'
@@ -53,7 +54,9 @@ export default class DiaryDetail extends Component {
     modeWidth: new Animated.Value(0),
     modeOpacity: new Animated.Value(0),
     leftButton: null,
-    rightButton: null
+    rightButton: null,
+    inputCommentY: new Animated.Value(0),
+    showKeyboard: false
   }
 
   async componentWillMount() {
@@ -83,6 +86,7 @@ export default class DiaryDetail extends Component {
     this.setState({ mode: diary.mode ? diary.mode : 0 })
 
     this.renderlikeComponent(diary.is_liked)
+    this.setKeyboard()
   }
 
   async updateMode(mode, mode_face) {
@@ -208,6 +212,30 @@ export default class DiaryDetail extends Component {
         }
       )
     ]).start()
+  }
+
+  setKeyboard() {
+    Keyboard.addListener('keyboardWillShow', event => {
+      this.setState({showKeyboard: true})
+      this.toggleInputComment(true, event)
+    })
+    Keyboard.addListener('keyboardWillHide', event => {
+      this.setState({showKeyboard: false})
+      this.toggleInputComment(false, event)
+    })
+  }
+
+  toggleInputComment(showKeyboard, event) {
+    Animated.timing(
+      this.state.inputCommentY,
+      {
+        toValue: showKeyboard ? event.endCoordinates.height : 0,
+        duration: showKeyboard ? event.duration : event.duration
+      }
+    ).start()
+  }
+
+  sendComment() {
   }
 
   _renderLeftButton() {
@@ -350,17 +378,24 @@ export default class DiaryDetail extends Component {
           {/* <TouchableOpacity
             style={[styles.mode_container, {display: this.props.diary.user_id === this.props.user.user_other_id ? 'flex' : 'none'}]}
             activeOpacity={1}
-            onPress={() => this.inputComment.focus()}
+            onPress={() => {
+              setTimeout(() => this.inputComment.focus(), 250)
+              this.inputMask.focus()
+            }}
           >
             <Image style={styles.location_icon} source={require('../../../res/images/home/diary/icon_comment.png')} />
             <TextPingFang style={styles.text_comment}>有什么想说的</TextPingFang>
           </TouchableOpacity>
 
+          <View style={styles.comment_container}>
+            <TextPingFang style={styles.text_comment_top}>日记评论</TextPingFang>
+          </View>
+
           <TextInput
-            ref={ref => this.inputComment = ref}
-            style={styles.input_comment}
-            placeholder='写下想对Ta说的吧～'
+            ref={ref => this.inputMask = ref}
+            style={styles.input_mask}
           /> */}
+
         </KeyboardAwareScrollView>
 
         <Modal
@@ -383,7 +418,28 @@ export default class DiaryDetail extends Component {
         >
           {this.state.likeComponent}
         </TouchableOpacity>
-
+        
+        <Animated.View
+          style={[
+            styles.input_container,
+            {
+              position: 'absolute',
+              bottom: this.state.inputCommentY,
+              display: this.state.showKeyboard ? 'flex' : 'none'
+            }
+          ]}
+        >
+          <TextInput
+            ref={ref => this.inputComment = ref}
+            style={styles.input_comment}
+            placeholder='写下想对Ta说的吧～'
+            placeholderTextColor='#aaa'
+            enablesReturnKeyAutomatically={true}
+            multiline={true}
+            returnKeyType={'send'}
+            onSubmitEditing={() => this.sendComment()}
+          />
+        </Animated.View>
       </Container>
     )
   }
@@ -516,9 +572,39 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around',
     backgroundColor: '#fff'
   },
+  input_container: {
+    width: WIDTH,
+    paddingLeft: getResponsiveWidth(8),
+    paddingRight: getResponsiveWidth(8),
+    paddingTop: getResponsiveWidth(8),
+    paddingBottom: getResponsiveWidth(8),
+    backgroundColor: '#f3f3f3'
+  },
   input_comment: {
+    minHeight: getResponsiveWidth(24),
+    maxHeight: getResponsiveWidth(80),
+    paddingTop: getResponsiveWidth(6),
+    paddingBottom: getResponsiveWidth(6),
+    paddingLeft: getResponsiveWidth(12),
+    paddingRight: getResponsiveWidth(12),
+    color: '#444',
+    fontSize: 14,
+    borderRadius: 8,
+    backgroundColor: '#fff'
+  },
+  comment_container: {
+    marginTop: getResponsiveWidth(24),
+    paddingLeft: getResponsiveWidth(24),
+    paddingRight: getResponsiveWidth(24),
+  },
+  text_comment_top: {
+    color: '#444',
+    fontSize: 14,
+    fontWeight: 'bold'
+  },
+  input_mask: {
     position: 'absolute',
-    bottom: -100,
-    backgroundColor: 'red'
+    bottom: 0,
+    height: 0
   }
 })

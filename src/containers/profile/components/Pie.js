@@ -31,7 +31,7 @@ export default class Pie extends Component {
 			},
 			legend: {
 				orient: 'vertical',
-				right: getResponsiveWidth(30),
+				right: getResponsiveWidth(10),
 				top: 'middle',
 				itemGap: 8,
 				itemWidth: 6,

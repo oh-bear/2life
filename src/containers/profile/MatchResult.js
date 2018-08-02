@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import {
   View,
   StyleSheet,
-  ScrollView,
   TouchableOpacity,
   Image,
   ImageBackground,
@@ -197,6 +196,8 @@ export default class MatchResult extends Component {
   succeedBack() {
     if (this.state.matchSucceed) {
       Actions.popTo(SCENE_INDEX, { tab: 'profile' })
+    } else {
+      Actions.pop()
     }
   }
 
