@@ -681,7 +681,7 @@ export async function OCR(base64) {
   const sign = await getOCRSign()
 
   const data = {
-    appid: '',
+    appid: '1251705417',
     image: base64,
     // url: 'http://s10.sinaimg.cn/middle/520bb492t97963822a349&690'
   }

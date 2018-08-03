@@ -240,7 +240,7 @@ export default class ProfileMode extends Component {
 
           </View>
 
-          <View style={[styles.report_container, { display: this.props.user.emotions_basis ? 'none' : 'flex',position: this.props.user.emotions_basis ? 'relative' : 'absolute' }]}>
+          <View style={[styles.report_container, { display: this.props.user.emotions_basis ? 'none' : 'flex' }]}>
             <Image style={styles.img} resizeMethod='scale' source={require('../../../res/images/profile/character/untested.png')} />
             <TextPingFang style={styles.text_test}>性格测试</TextPingFang>
             <TextPingFang style={styles.text_report}>我们准备了一个好玩的测试，可以分析出你的性格属性。测试完成后你不但可以看到你的五维情绪雷达图，还有你的性格属性哦。</TextPingFang>
@@ -260,8 +260,8 @@ export default class ProfileMode extends Component {
 
 const styles = StyleSheet.create({
   scroll_container: {
-    marginLeft: getResponsiveWidth(24),
-    marginRight: getResponsiveWidth(24)
+    //marginLeft: getResponsiveWidth(24),
+    //marginRight: getResponsiveWidth(24)
   },
   chart_height:{
     marginLeft: getResponsiveWidth(24),
@@ -297,7 +297,9 @@ const styles = StyleSheet.create({
   report_container: {
     justifyContent: 'space-between',
     marginTop: getResponsiveWidth(56),
-    marginBottom: getResponsiveWidth(24)
+    marginBottom: getResponsiveWidth(24),
+    marginLeft: getResponsiveWidth(24),
+    marginRight: getResponsiveWidth(24)
   },
   text_type: {
     color: '#333',

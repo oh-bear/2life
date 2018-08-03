@@ -477,16 +477,16 @@ export default class DiaryDetail extends Component {
         </Modal>
 
         <TouchableOpacity
-          style={[styles.btn_container, { display: this.props.user.id !== this.props.diary.user_id && this.props.partner.id ? 'flex' : 'none' }]}
+          style={[styles.btn_container, { display: this.props.user.id !== this.props.diary.user_id && this.props.partner.id ? 'flex' : 'none' ,position: this.props.user.id !== this.props.diary.user_id && this.props.partner.id ? 'absolute' : 'relative'}]}
         >
           {this.state.likeComponent}
         </TouchableOpacity>
-        
+
         <Animated.View
           style={[
             styles.input_container,
             {
-              position: 'absolute',
+              position:  this.state.showKeyboard ? 'absolute' : 'relative',
               bottom: this.state.inputCommentY,
               display: this.state.showKeyboard ? 'flex' : 'none'
             }
@@ -499,6 +499,7 @@ export default class DiaryDetail extends Component {
             placeholderTextColor='#aaa'
             enablesReturnKeyAutomatically={true}
             multiline={true}
+            underlineColorAndroid='transparent'
             returnKeyType={'send'}
             onSubmitEditing={() => this.sendComment()}
           />
