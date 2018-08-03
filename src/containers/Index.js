@@ -54,7 +54,6 @@ export default class Index extends Component {
       })
       // 刷新通知、刷新日记、刷新用户
       DeviceEventEmitter.emit('flush_notification', {})
-
       const res = await HttpUtils.get(USERS.user, { user_id: this.props.user.id })
       if (res.code === 0) {
         store.dispatch(fetchProfileSuccess(res.data))

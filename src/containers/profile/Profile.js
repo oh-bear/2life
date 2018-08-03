@@ -72,10 +72,10 @@ export default class Profile extends Component {
 
     // 平均情绪值和日记数量
     this.setState({
-      myAverageMode: Math.floor(myTotalMode / myDiaryList.length),
-      otherAverageMode: Math.floor(otherTotalMode / otherDiaryList.length),
-      myDiaryCount: myDiaryList.length,
-      otherDiaryCount: otherDiaryList.length
+      myAverageMode: Math.floor(myTotalMode / myDiaryList.length) || 0,
+      otherAverageMode: Math.floor(otherTotalMode / otherDiaryList.length) || 0,
+      myDiaryCount: myDiaryList.length || 0,
+      otherDiaryCount: otherDiaryList.length || 0
     })
   }
 

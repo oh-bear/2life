@@ -124,11 +124,14 @@ export default class DiaryBanner extends Component {
           width={WIDTH}
           height={getResponsiveWidth(282)}
           style={styles.swiper}
-          loop={false}
+          autoplay
+          loop={false} //true有BUG
           dot={<View style={styles.swiper_dot}></View>}
           activeDot={<View style={[styles.swiper_dot, styles.swiper_active_dot]}></View>}
           bounces={true}
           onIndexChanged={this._onImgChanged.bind(this)}
+          onTouchStart={this.props.onTouchStart}
+          onTouchEnd={this.props.onTouchEnd}
         >
           {this.state.imgListComponent}
         </Swiper>

@@ -499,7 +499,13 @@ export async function updateFile(obj) {
 
   // 不用同步直接删除日记
   if (obj.action === 'delete') {
-    diaryList = diaryList.filter(diary => diary.uuid !== obj.data.uuid)
+    if (obj.data instanceof Array) {
+      for (let i = 0; i < obj.data.length; i++) {
+        diaryList = diaryList.filter(diary => diary.uuid !== obj.data[i].uuid)
+      }
+    } else {
+      diaryList = diaryList.filter(diary => diary.uuid !== obj.data.uuid)
+    }
   }
 
   // 删除匹配对象到日记
@@ -514,7 +520,8 @@ export async function updateFile(obj) {
   }
   
   await fs.writeFile(FILE_PATH, JSON.stringify(newContent), 'utf8')
-
+  console.log(obj.action)
+  console.log(obj.data)
   DeviceEventEmitter.emit('flush_local_note')
 }
 
