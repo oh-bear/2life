@@ -43,6 +43,7 @@ import {
 } from '../../common/util'
 
 import { SCENE_NEW_DIARY } from '../../constants/scene'
+import Toast from 'antd-mobile/lib/toast'
 
 import HttpUtils from '../../network/HttpUtils'
 import { NOTES } from '../../network/Urls'
@@ -256,6 +257,8 @@ export default class Home extends Component {
           weather_icon: require('../../../res/images/home/icon_sunny.png'),
         })
       }
+    },err=>{
+        Toast.info('呃哦，获取定位失败了，打开定位再试试吧', 2)
     })
   }
 

@@ -137,6 +137,8 @@ export default class NewDiary extends Component {
         this.setState({ location: `${location.city}，${location.province}，${location.country}` })
       }
       this.setState({ latitude, longitude })
+    },err=>{
+        Toast.info('呃哦，获取定位失败了，打开定位再试试吧', 2)
     })
   }
 

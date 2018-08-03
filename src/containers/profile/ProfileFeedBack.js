@@ -146,7 +146,8 @@ const styles = StyleSheet.create({
     fontWeight: '300',
     borderWidth: getResponsiveWidth(1),
     borderColor: '#2DC3A6',
-    borderRadius: getResponsiveWidth(8)
+    borderRadius: getResponsiveWidth(8),
+    textAlignVertical: 'top'
   },
   submit_btn: {
     width: getResponsiveWidth(112),
