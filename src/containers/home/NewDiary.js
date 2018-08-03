@@ -3,7 +3,6 @@ import {
   View,
   StyleSheet,
   TextInput,
-  Keyboard,
   Alert,
   TouchableOpacity,
   BackHandler,
@@ -68,10 +67,8 @@ export default class NewDiary extends Component {
     latitude: 0,
     longitude: 0,
     location: '',
-    showKeyboard: false,
     base64List: [],
     imgPathList: [],
-    keyboardHeight: 0,
     savingDiary: false,
     showPopup: false,
     firstEntryDiary: false,
@@ -93,20 +90,7 @@ export default class NewDiary extends Component {
   }
 
   componentDidMount() {
-    Keyboard.addListener('keyboardDidShow', (e) => {
-      this.setState({
-        showKeyboard: true,
-        keyboardHeight: e.endCoordinates.height
-      })
-    })
-    Keyboard.addListener('keyboardDidHide', () => {
-      this.setState({
-        showKeyboard: false,
-        keyboardHeight: 0
-      })
-    })
     BackHandler.addEventListener('hardwareBackPress', this.onBackAndroid);
-
     this._firstIn()
     this._getLocation()
   }

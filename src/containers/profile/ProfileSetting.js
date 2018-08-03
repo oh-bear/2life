@@ -2,12 +2,10 @@ import React, { Component } from 'react'
 import {
   View,
   StyleSheet,
-  Image
 } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import RNFetchBlob from 'rn-fetch-blob'
 
-import TextPingFang from '../../components/TextPingFang'
 import Container from '../../components/Container'
 import ProfileHeader from './components/ProfileHeader'
 import Row from './components/Row'
@@ -15,6 +13,8 @@ import Storage from '../../common/storage'
 
 import {
   SCENE_PROFILE_FEEDBACK,
+  SCENE_PROFILE_PRIVACY,
+  SCENE_PROFILE_THANKS,
 } from '../../constants/scene'
 
 import {
@@ -48,7 +48,7 @@ export default class ProfileSetting extends Component {
         let size = 0, fileList = []
         for (let file of files) {
           const fn = file.filename
-          if (fn.includes('.jpg') && !fn.includes(`id_${id}_`)) {
+          if (fn.includes('.jpg') && !fn.includes(`id_`)) {
             fileList.push(fn)
             size += parseInt(file.size)
           }
@@ -92,6 +92,16 @@ export default class ProfileSetting extends Component {
           <Row
             title='反馈'
             onPress={() => Actions.jump(SCENE_PROFILE_FEEDBACK)}
+          />
+
+          <Row
+            title='隐私协议'
+            onPress={() => Actions.jump(SCENE_PROFILE_PRIVACY)}
+          />
+
+          <Row
+            title='鸣谢'
+            onPress={() => Actions.jump(SCENE_PROFILE_THANKS)}
           />
 
           <Row

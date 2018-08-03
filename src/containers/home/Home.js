@@ -41,7 +41,8 @@ import {
   readFile,
   uuid
 } from '../../common/util'
-
+import store from '../../redux/store'
+import { cleanPartner } from '../../redux/modules/partner'
 import { SCENE_NEW_DIARY } from '../../constants/scene'
 
 import HttpUtils from '../../network/HttpUtils'
@@ -107,6 +108,7 @@ export default class Home extends Component {
         user_id: this.props.user.id,
         action: 'delete_other'
       })
+      store.dispatch(cleanPartner())
     }
 
     const res = await HttpUtils.get(NOTES.list)
@@ -155,6 +157,8 @@ export default class Home extends Component {
         data: newDiaryList
       })
     }
+
+    // this.setState({ isRefreshing: false })
   }
 
   _formDiaryList(diaryList) {
