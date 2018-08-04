@@ -91,7 +91,7 @@ export default class Home extends Component {
 
     // 读取日记配置文件
     this._formDiaryList(await readFile(this.props.user.id))
-    this.props.user.id && await this._fetchDiary()
+    await this._fetchDiary()
 
     DeviceEventEmitter.addListener('flush_note', async () => {
       this._fetchDiary()
@@ -102,7 +102,7 @@ export default class Home extends Component {
   }
 
   async _fetchDiary() {
-    this.setState({ isRefreshing: true })
+    if (!this.props.user.id) return
 
     if (this.props.user.user_other_id === -1) {
       await updateFile({
@@ -117,9 +117,10 @@ export default class Home extends Component {
       const { partner, recommend, user } = res.data
       let diaryList = [...partner, ...user]
 
-      // 版本过渡：保存网络日记到本地配置文件
       const localDiaryList = await readFile(this.props.user.id)
+      const localPartnerDiaryList = localDiaryList.filter(diary => diary.user_id !== this.props.user.id)
 
+      // 保存新日记
       let newDiaryList = []
       if (localDiaryList.length) {
         for (let i = 0; i < diaryList.length; i++) {
@@ -133,7 +134,31 @@ export default class Home extends Component {
           }
         }
       } else {
-        newDiaryList = [...diaryList]
+        newDiaryList = [...diaryList] 
+      }
+
+      // 删除、更新伙伴日记,
+      let deleteDiaryList = [], updateDiaryList = []
+      if (partner.length) {
+        for (let i = 0; i < localPartnerDiaryList.length; i++) {
+          for (let j = 0; j < partner.length; j++) {
+            if (localPartnerDiaryList[i].id === partner[j].id) {
+              break
+            }
+            if (j === partner.length - 1) {
+              deleteDiaryList.push(localPartnerDiaryList[i])
+            }
+          }
+
+          for (let z = 0; z < partner.length; z++) {
+            if ((localPartnerDiaryList[i].id === partner[z].id) && (localPartnerDiaryList[i].updated_at !== partner[z].updated_at)) {
+              updateDiaryList.push({ ...localPartnerDiaryList[i], ...partner[z] })
+              break
+            }
+          }
+        }
+      } else {
+        deleteDiaryList = [...localPartnerDiaryList]
       }
 
       for (let newDiary of newDiaryList) {
@@ -150,19 +175,40 @@ export default class Home extends Component {
         }
       }
 
-      this._formDiaryList(newDiaryList)
-      // 更新配置文件
-      updateFile({
+      // 增加日记
+      newDiaryList.length &&
+      await updateFile({
         user_id: this.props.user.id || 0,
         action: 'add',
         data: newDiaryList
       })
-    }
 
-    // this.setState({ isRefreshing: false })
+      // 更新日记
+      updateDiaryList.length &&
+      await updateFile({
+        user_id: this.props.user.id || 0,
+        action: 'update',
+        data: updateDiaryList
+      })
+
+      // 删除日记
+      deleteDiaryList.length &&
+      await updateFile({
+        user_id: this.props.user.id || 0,
+        action: 'delete',
+        data: deleteDiaryList
+      })
+
+      this._formDiaryList(await readFile(this.props.user.id))
+    }
   }
 
-  _formDiaryList(diaryList) {
+  async _formDiaryList(diaryList) {
+    this.setState({ isRefreshing: false })
+    if (!diaryList) {
+      diaryList = await readFile(this.props.user.id)
+    }
+
     diaryList.sort((a, b) => b.date - a.date)
     diaryList = diaryClassify(diaryList)
 
@@ -542,7 +588,7 @@ export default class Home extends Component {
           renderItem={this._renderItem}
           ListEmptyComponent={() => this._emptyDiary()}
           ListFooterComponent={() => this._listFooter()}
-          onRefresh={async () => this._formDiaryList(await readFile(this.props.user.id))}
+          onRefresh={() => this._fetchDiary()}
           refreshing={this.state.isRefreshing}
         />
 

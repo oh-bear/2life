@@ -106,6 +106,7 @@ export default class ProfileReward extends Component {
 			<View style={styles.result_container}>
 				<Radar data={data} height={getResponsiveWidth(240)} />
 				<TextPingFang style={styles.text_result}>性格测试完成啦，但为了让结果更准确，你还需要多写几篇真情流露的日记呢</TextPingFang>
+				<TextPingFang style={styles.text_small}>稍后可在「个人页」→「情绪管理」查看更详细内容</TextPingFang>
 			</View>
 		)
 
@@ -182,6 +183,13 @@ const styles = StyleSheet.create({
 		fontSize: 16,
 		fontWeight: '400',
 		textAlign: 'center'
+	},
+	text_small: {
+		color: '#aaa',
+		fontSize: 12,
+		fontWeight: '400',
+		textAlign: 'center',
+		marginTop: getResponsiveWidth(8)
 	},
 	question_container: {
 		width: WIDTH - getResponsiveWidth(48),

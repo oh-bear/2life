@@ -272,11 +272,11 @@ export default class DiaryDetail extends Component {
 
   setKeyboard() {
     Keyboard.addListener('keyboardWillShow', event => {
-      this.setState({showKeyboard: true})
+      this.setState({ showKeyboard: true })
       this.toggleInputComment(true, event)
     })
     Keyboard.addListener('keyboardWillHide', event => {
-      this.setState({showKeyboard: false})
+      this.setState({ showKeyboard: false })
       this.toggleInputComment(false, event)
     })
   }
@@ -337,18 +337,19 @@ export default class DiaryDetail extends Component {
     return (
       <Container hidePadding={this.state.showBanner}>
         <KeyboardAwareScrollView>
-          <TouchableOpacity
-            onPress={() => this.setState({ showImgPreview: true })}
-            activeOpacity={1}
-          >
-            <DiaryBanner
-              showNav={true}
-              showBanner={this.state.showBanner}
-              imgPathList={this.state.imgPathList}
-              leftButton={this.state.leftButton}
-              rightButton={this.state.rightButton}
-            />
-          </TouchableOpacity>
+          <DiaryBanner
+            showNav={true}
+            showBanner={this.state.showBanner}
+            imgPathList={this.state.imgPathList}
+            leftButton={this.state.leftButton}
+            rightButton={this.state.rightButton}
+            onTouchStart={() => this.setState({ touchStartTs: Date.now() })}
+            onTouchEnd={() => {
+              if (Date.now() - this.state.touchStartTs < 80) {
+                this.setState({ showImgPreview: true })
+              }
+            }}
+          />
 
           {/* 在无图片日记下的顶部导航 */}
           <CommonNav
@@ -622,8 +623,8 @@ const styles = StyleSheet.create({
     ...ifIphoneX({
       bottom: 48
     }, {
-      bottom: 24
-    })
+        bottom: 24
+      })
   },
   img_btn: {
     width: getResponsiveWidth(64),
