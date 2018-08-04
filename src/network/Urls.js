@@ -27,6 +27,7 @@ export const NOTES = {
   delete: '/notes/delete', // get {note_id}
   update: '/notes/update', // post {note_id, title, content, images, mode}
   sync: '/notes/sync', // get {synctime}
+  refresh_total_notes: '/notes/refresh_total_notes', // get
 }
 
 export const MODES = {

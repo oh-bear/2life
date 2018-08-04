@@ -182,6 +182,9 @@ export default class NewDiary extends Component {
         }
       })
 
+      // 第一次写日记更新用户status
+      this._updateUser()
+
       // 同步
       isLogin && syncFile(this.props.user.id)
 
