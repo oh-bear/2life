@@ -14,7 +14,6 @@ export function setToken(data) {
 }
 
 // let baseUrl = 'http://localhost:3002'
-// let baseUrl = 'http://172.20.10.4:3002'
 let baseUrl = 'https://2life.api.ursb.me'
 
 axios.defaults.timeout = 20000
