@@ -41,7 +41,7 @@ export default class ProfileThanks extends Component {
     ],
     names: ['CT', 'HHH', 'Noblevil', 'Ree', 'Sunki', '丁林', '杜肯坑', '二胡', '范宏䣭', '卡比兽',
       '孔卓晖', '梁锐成', '刘盼盼', '林少燕', '马戈', '王子昂', '吴匡伦', '叶婉颖', '奕宏', '卓奇林',
-      '卓奇林'
+      '朱国润'
     ]
   }
 
