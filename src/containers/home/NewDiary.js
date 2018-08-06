@@ -350,8 +350,6 @@ export default class NewDiary extends Component {
             placeholderTextColor='#aaa'
           />
 
-          <View style={styles.line}/>
-
           <TextInput
             style={styles.text_content}
             value={this.state.content}
@@ -409,27 +407,20 @@ const styles = StyleSheet.create({
     marginLeft: getResponsiveWidth(8)
   },
   text_title: {
-    color: '#000',
-    fontSize: 24,
+    color: '#333',
+    fontSize: 20,
     fontWeight: '500',
     paddingLeft: getResponsiveWidth(24),
     paddingRight: getResponsiveWidth(24),
     paddingTop: getResponsiveWidth(48),
-    paddingBottom: getResponsiveWidth(48),
-  },
-  line: {
-    width: getResponsiveWidth(40),
-    height: getResponsiveWidth(1),
-    marginLeft: getResponsiveWidth(24),
-    backgroundColor: '#aaa'
   },
   text_content: {
-    color: '#444',
+    color: '#666',
     fontSize: 16,
-    height: getResponsiveWidth(100),
+    lineHeight: getResponsiveWidth(100),
     paddingLeft: getResponsiveWidth(24),
     paddingRight: getResponsiveWidth(24),
-    marginTop: getResponsiveWidth(24),
+    marginTop: getResponsiveWidth(12),
     paddingBottom: getResponsiveWidth(24),
   }
 })

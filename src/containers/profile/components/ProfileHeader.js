@@ -33,7 +33,6 @@ export default class ProfileHeader extends Component {
 
 const styles = StyleSheet.create({
   container: {
-    paddingBottom: getResponsiveWidth(24),
   },
   navbar: {
     backgroundColor: 'transparent'
@@ -41,7 +40,7 @@ const styles = StyleSheet.create({
   text_title: {
     marginLeft: getResponsiveWidth(24),
     color: '#000',
-    fontSize: 34,
+    fontSize: 28,
     fontWeight: '500'
   },
   text_desc: {

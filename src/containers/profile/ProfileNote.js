@@ -3,7 +3,6 @@ import {
   View,
   StyleSheet,
   FlatList,
-  DeviceEventEmitter
 } from 'react-native'
 
 import TextPingFang from '../../components/TextPingFang'
@@ -59,6 +58,7 @@ export default class ProfileNote extends Component {
       diaryList,
       isRefreshing: false
     })
+    console.log(diaryList)
   }
 
   _renderItem({ item }) {

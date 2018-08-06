@@ -92,7 +92,7 @@ export default class Diary extends Component {
 
     return (
       <View style={styles.container}>
-        <TextPingFang style={styles.date}>{date}</TextPingFang>
+        <TextPingFang style={[styles.date, {display: date ? 'flex' : 'none'}]}>{date}</TextPingFang>
         <View style={styles.main_container}>
           {
             this.props.data.map((diary, index) => {
@@ -111,7 +111,6 @@ const styles = StyleSheet.create({
   container: {
     width: '100%',
     flexDirection: 'row',
-    paddingBottom: getResponsiveWidth(16),
     backgroundColor: '#fff'
   },
   date: {
@@ -119,7 +118,7 @@ const styles = StyleSheet.create({
     paddingTop: getResponsiveWidth(16),
     color: '#aaa',
     fontSize: 14,
-    fontWeight: '400'
+    fontWeight: 'bold',
   },
   main_container: {
     flex: 1
@@ -128,8 +127,8 @@ const styles = StyleSheet.create({
     paddingTop: getResponsiveWidth(16),
     paddingBottom: getResponsiveWidth(16),
     justifyContent: 'space-between',
-    borderBottomWidth: getResponsiveWidth(1),
-    borderBottomColor: '#f1f1f1'
+    borderBottomWidth: 1,
+    borderBottomColor: '#f1f1f1',
   },
   diary_top: {
     flexDirection: 'row',
@@ -137,12 +136,12 @@ const styles = StyleSheet.create({
   },
   diary_top_text: {
     flex: 1,
-    height: getResponsiveWidth(72),
     paddingRight: getResponsiveWidth(10),
   },
   text_diary_title: {
-    fontSize: 20,
-    fontWeight: '400',
+    color: '#333',
+    fontSize: 16,
+    fontWeight: '300',
   },
   text_diary_content: {
     color: '#666',
@@ -158,11 +157,12 @@ const styles = StyleSheet.create({
   diary_bottom: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    paddingTop: getResponsiveWidth(16),
+    marginTop: getResponsiveWidth(16),
   },
   time: {
     color: '#aaa',
     fontSize: 12,
+    fontWeight: '300'
   },
   location_container: {
     flexDirection: 'row',
@@ -174,6 +174,7 @@ const styles = StyleSheet.create({
   },
   text_location: {
     color: '#aaa',
-    fontSize: 10
+    fontSize: 12,
+    fontWeight: '300'
   }
 })

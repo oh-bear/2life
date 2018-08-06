@@ -2,9 +2,7 @@ import React, { Component } from 'react'
 import {
   View,
   StyleSheet,
-  Text,
   Image,
-  WebView,
   TouchableOpacity,
   DeviceEventEmitter
 } from 'react-native'
@@ -12,10 +10,12 @@ import PropTypes from 'prop-types'
 import { Actions } from 'react-native-router-flux'
 import Swipeout from 'react-native-swipeout'
 
+import TextPingFang from '../../components/TextPingFang'
 import {
   getResponsiveWidth,
   getResponsiveHeight,
-  WIDTH
+  WIDTH,
+  Colors
 } from '../../common/styles'
 import { SCENE_WEB } from '../../constants/scene'
 
@@ -94,7 +94,7 @@ export default class NotificationItem extends Component {
         right={[
           {
             text: '删除',
-            backgroundColor: '#FF5757',
+            backgroundColor: Colors.Secondary.DANGER,
             autoClose: true,
             onPress: () => this._delete()
           }
@@ -109,9 +109,8 @@ export default class NotificationItem extends Component {
             activeOpacity={1}
             onPress={() => this._jumpWeb()}
           >
-            <Text style={styles.title}>{this.props.data.title}</Text>
-            <Text style={styles.date}>{this._convertTime(this.props.data.date)}</Text>
-            <View style={styles.line}/>
+            <TextPingFang style={styles.title}>{this.props.data.title}</TextPingFang>
+            <TextPingFang style={styles.date}>{this._convertTime(this.props.data.date)}</TextPingFang>
           </TouchableOpacity>
         </View>
       </Swipeout>
@@ -125,31 +124,26 @@ const styles = StyleSheet.create({
   },
   container: {
     width: WIDTH,
-    flexDirection: 'row',
-    marginTop: getResponsiveHeight(20),
+    paddingHorizontal: getResponsiveWidth(24),
+    paddingTop: getResponsiveWidth(8),
+    flexDirection: 'row'
   },
   content_container: {
     width: getResponsiveWidth(279),
-    marginLeft: getResponsiveWidth(30),
+    marginLeft: getResponsiveWidth(23),
+    paddingBottom: getResponsiveWidth(8),
+    borderBottomColor: Colors.Netural.LINE,
+    borderBottomWidth: 1
   },
   icon: {
   },
   title: {
-    fontFamily: 'PingFang SC',
-    fontSize: 20,
-    color: '#000',
+    color: '#444',
+    fontSize: 16,
   },
   date: {
-    fontFamily: 'PingFang SC',
-    fontSize: 10,
+    fontSize: 12,
     color: '#aaa',
-    marginTop: getResponsiveHeight(16),
-  },
-  line: {
-    width: getResponsiveWidth(279),
-    height: 1,
-    marginTop: getResponsiveHeight(16),
-    borderBottomColor: '#F1F1F1',
-    borderBottomWidth: 1
-  },
+    marginTop: getResponsiveHeight(8),
+  }
 })

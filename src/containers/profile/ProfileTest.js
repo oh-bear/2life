@@ -90,7 +90,7 @@ export default class ProfileReward extends Component {
 			const res = await HttpUtils.post(USERS.calculate_emotion, { content: content.join(',') })
 			if (res.code === 0) {
 				updateReduxUser(this.props.user.id)
-				// e 喜悦 c 厌恶 o 低落 a n 愤怒
+				// e 喜悦 c 厌恶 o 低落 a 温和 n 愤怒
 				let data = res.data.emotions.split(',').map(item => parseFloat(item))
 				this._renderTestResult(data)
 			}
@@ -104,7 +104,7 @@ export default class ProfileReward extends Component {
 	_renderTestResult(data) {
 		let componentTestResult = (
 			<View style={styles.result_container}>
-				<Radar data={data} height={getResponsiveWidth(240)} />
+				<Radar data={data} isTest={true} height={getResponsiveWidth(240)} />
 				<TextPingFang style={styles.text_result}>性格测试完成啦，但为了让结果更准确，你还需要多写几篇真情流露的日记呢</TextPingFang>
 				<TextPingFang style={styles.text_small}>稍后可在「个人页」→「情绪管理」查看更详细内容</TextPingFang>
 			</View>

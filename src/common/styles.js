@@ -28,3 +28,29 @@ export function getResponsiveHeight(height) {
 export function getResponsiveWidth(width) {
   return width / iPhone6Width * WIDTH
 }
+
+export const Colors = {
+  // 主色
+  Primary: {
+    EXTREMELY_DARK: '#15594C', //极暗色
+    DARK: '#218e79', //暗色
+    LIGHT: '#2DC3A6', //主色，亮色
+    TINT: '#D8F4EE', //浅色
+    EXTREMELY_TINT: '#F0F7F6', //极浅色
+  },
+  // 辅助色
+  Secondary: {
+    WARNING: '#FAA755', //警告色
+    MALE: '#3594F2', //男性色
+    FEMALE: '#E84AE9', //女性色
+    DANGER: '#F54E4F', //危险、错误、点赞色
+  },
+  // 中性色
+  Netural: {
+    IMPORTANT: '#333', //重要文字
+    NORMAL: '#666', //一般文字
+    EXPLAN: '#AAA', //说明、不重要文字
+    LINE: '#F1F1F1', //分割线
+    TINT_BUTTON: '#F5F5F5', //浅色按钮
+  }
+}

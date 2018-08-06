@@ -222,6 +222,7 @@ export default class ProfileMatch extends Component {
       <Container>
 
         <ProfileHeader
+          headerStyle={styles.header_style}
           title='选择你的匹配项'
           desc={`本月还能匹配 ${this.props.user.last_times ? this.props.user.last_times : 0} 次`}
           onBack={() => this._back()}
@@ -310,14 +311,14 @@ export default class ProfileMatch extends Component {
             </View>
           </ScrollableTabView>
 
-          <TouchableOpacity
-            style={[styles.start_btn, this.state.beMatched ? null : styles.no_show]}
-            onPress={() => this.startMatch()}
-          >
-            <TextPingFang style={styles.text_start_btn}>开始匹配</TextPingFang>
-          </TouchableOpacity>
-
         </ScrollView>
+
+        <TouchableOpacity
+          style={[styles.start_btn, this.state.beMatched ? null : styles.no_show]}
+          onPress={() => this.startMatch()}
+        >
+          <TextPingFang style={styles.text_start_btn}>开始匹配</TextPingFang>
+        </TouchableOpacity>
 
         <MatchTips
           showPopup={this.state.showTips}
@@ -358,6 +359,9 @@ export default class ProfileMatch extends Component {
 }
 
 const styles = StyleSheet.create({
+  header_style: {
+    paddingBottom: getResponsiveWidth(24),
+  },
   tabview: {
     marginLeft: getResponsiveWidth(24),
     marginRight: getResponsiveWidth(24),
@@ -410,18 +414,17 @@ const styles = StyleSheet.create({
     borderBottomColor: '#2DC3A6'
   },
   start_btn: {
-    width: getResponsiveWidth(112),
-    height: getResponsiveWidth(48),
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginTop: getResponsiveWidth(50),
-    marginLeft: WIDTH - getResponsiveWidth(136),
+    position: 'absolute',
+    right: getResponsiveWidth(24),
+    bottom: getResponsiveWidth(80),
     backgroundColor: '#2DC3A6',
-    borderRadius: getResponsiveWidth(24)
+    borderRadius: getResponsiveWidth(30)
   },
   text_start_btn: {
+    paddingVertical: getResponsiveWidth(10),
+    paddingHorizontal: getResponsiveWidth(16),
     color: '#fff',
-    fontSize: 20,
-    fontWeight: '300'
+    fontSize: 16,
+    fontWeight: '500'
   }
 })

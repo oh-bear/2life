@@ -306,17 +306,16 @@ const styles = StyleSheet.create({
     fontSize: 16
   },
   start_btn: {
-    width: getResponsiveWidth(112),
-    height: getResponsiveWidth(48),
-    justifyContent: 'center',
-    alignItems: 'center',
     marginTop: getResponsiveWidth(50),
     marginLeft: WIDTH - getResponsiveWidth(136),
     backgroundColor: '#2DC3A6',
     borderRadius: getResponsiveWidth(24)
   },
   text_start_btn: {
+    paddingVertical: getResponsiveWidth(10),
+    paddingHorizontal: getResponsiveWidth(16),
     color: '#fff',
-    fontSize: 20
+    fontSize: 16,
+    fontWeight: '500'
   }
 })
