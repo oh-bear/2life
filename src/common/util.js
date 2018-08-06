@@ -610,6 +610,7 @@ export async function syncFile(user_id) {
     }
 
     // 更新配置文件
+    diaryListAddUpdate.length &&
     await updateFile({
       user_id,
       action: 'update',
@@ -624,6 +625,9 @@ export async function syncFile(user_id) {
 
     if (res.code === 0) {
       const resDiaryList = res.data
+
+      // 更新后台用户总日记数量
+      HttpUtils.get(NOTES.refresh_total_notes)
 
       // 如果是新增日记，需要遍历本地日记增加返回的ID字段等数据
       const content = JSON.parse(await fs.readFile(FILE_PATH, 'utf8'))

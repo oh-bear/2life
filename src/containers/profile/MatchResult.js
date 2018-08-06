@@ -72,7 +72,7 @@ export default class MatchResult extends Component {
         message = '你本月已经没有匹配次数了'
         break
       case 604:
-        message = '你必要写过日记才能匹配哦'
+        message = '你需要写过日记才能匹配哦'
         break
       case 602:
         message = '你目前没有匹配权限'
