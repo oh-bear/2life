@@ -99,6 +99,7 @@ export default class DiaryBanner extends Component {
           key={0}
         >
           <Image source={require('../../../res/images/home/icon_add_photo.png')}/>
+          <View style={styles.mask}></View>
         </TouchableOpacity>
       )
     }

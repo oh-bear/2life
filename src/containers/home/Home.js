@@ -553,13 +553,14 @@ export default class Home extends Component {
           />
         </Animated.View>
 
-        <View style={styles.weather}>
-          <View style={styles.weather_inner}>
+        <View style={styles.weather_container}>
+          <Image style={styles.weather_icon} source={this.state.weather_icon}/>
+
+          <View style={styles.weather_inner_container}>
             <TouchableOpacity
-              style={styles.inner_left}
+              style={styles.weather_left}
               onPress={() => this.exchangeWM()}
             >
-              <Image style={styles.weather_icon} source={this.state.weather_icon}/>
               <TextPingFang style={styles.text_weather}>{this.state.weather_text}</TextPingFang>
             </TouchableOpacity>
 
@@ -687,27 +688,31 @@ const styles = StyleSheet.create({
       return 350
     })()
   },
-  weather: {
+  weather_container: {
     width: WIDTH,
     paddingLeft: getResponsiveWidth(24),
     paddingRight: getResponsiveWidth(24),
-    zIndex: -10
-  },
-  weather_inner: {
-    height: getResponsiveHeight(60),
+    height: getResponsiveHeight(64),
     flexDirection: 'row',
     alignItems: 'center',
-    borderBottomWidth: getResponsiveWidth(1),
-    borderBottomColor: '#f1f1f1',
+    zIndex: -10,
   },
-  inner_left: {
+  weather_inner_container: {
+    flex: 1,
+    height: '100%',
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginLeft: getResponsiveWidth(24),
+    borderBottomColor: '#f1f1f1',
+    borderBottomWidth: 1,
+  },
+  weather_left: {
     flexDirection: 'row',
     alignItems: 'center',
   },
   // weather_icon: {
   // },
   text_weather: {
-    marginLeft: getResponsiveWidth(24),
     color: '#aaa',
     fontSize: 14,
     fontWeight: '400'

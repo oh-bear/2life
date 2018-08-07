@@ -18,7 +18,6 @@ import Row from './components/Row'
 
 import {
   WIDTH,
-  HEIGHT,
   getResponsiveWidth,
   getResponsiveHeight
 } from '../../common/styles'
@@ -146,8 +145,7 @@ export default class Profile extends Component {
               }
             })()
           }
-          <TextPingFang
-            style={styles.text_row_left}>{this.state.otherAverageMode}</TextPingFang>
+          <TextPingFang style={styles.text_row_left}>{this.state.otherAverageMode}</TextPingFang>
           <TextPingFang style={styles.text_row_desc}>平均情绪值</TextPingFang>
         </TouchableOpacity>
 
@@ -165,8 +163,7 @@ export default class Profile extends Component {
               }
             })()
           }
-          <TextPingFang
-            style={styles.text_row_left}>{this.state.otherDiaryCount}</TextPingFang>
+          <TextPingFang style={styles.text_row_left}>{this.state.otherDiaryCount}</TextPingFang>
           <TextPingFang style={styles.text_row_desc}>日记数量</TextPingFang>
         </TouchableOpacity>
       </View>
@@ -228,8 +225,7 @@ export default class Profile extends Component {
                   }
                 })()
               }
-              <TextPingFang
-                style={styles.text_row_left}>{this.state.myAverageMode}</TextPingFang>
+              <TextPingFang style={styles.text_row_left}>{this.state.myAverageMode}</TextPingFang>
               <TextPingFang style={styles.text_row_desc}>平均情绪值</TextPingFang>
             </TouchableOpacity>
 
@@ -248,8 +244,7 @@ export default class Profile extends Component {
                   }
                 })()
               }
-              <TextPingFang
-                style={styles.text_row_left}>{this.state.myDiaryCount}</TextPingFang>
+              <TextPingFang style={styles.text_row_left}>{this.state.myDiaryCount}</TextPingFang>
               <TextPingFang style={styles.text_row_desc}>日记数量</TextPingFang>
             </TouchableOpacity>
 
@@ -273,20 +268,6 @@ export default class Profile extends Component {
              </TouchableOpacity> */}
 
             {this.renderPartner()}
-
-            {/* <TouchableOpacity
-             style={styles.row_match}
-             onPress={() => Actions.jump(SCENE_PROFILE_MATCH, { user: this.props.user })}
-             >
-             <View style={styles.row_match_top}>
-             <Image source={require('../../../res/images/profile/icon_match.png')}/>
-             <TextPingFang style={styles.text_match_left}>匹配</TextPingFang>
-             </View>
-             <View style={styles.row_match_bottom}>
-             <TextPingFang style={styles.text_match_desc}>来匹配一个日记伴侣吧～</TextPingFang>
-             <Image style={styles.row_indicator} source={require('../../../res/images/common/icon_indicator.png')}/>
-             </View>
-             </TouchableOpacity> */}
 
              <View style={styles.margin}></View>
 
@@ -398,14 +379,14 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingLeft: getResponsiveWidth(24),
     marginTop: getResponsiveHeight(24),
-    marginBottom: getResponsiveHeight(24),
+    marginBottom: getResponsiveHeight(8),
   },
   head_left: {
     paddingLeft: getResponsiveWidth(24),
   },
   head_left_top: {},
   text_name: {
-    color: '#000',
+    color: '#444',
     fontSize: 24,
   },
   head_left_bottom: {
@@ -414,7 +395,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   text_check: {
-    color: '#000',
+    color: '#aaa',
     fontSize: 12,
     fontWeight: '300'
   },
@@ -432,30 +413,22 @@ const styles = StyleSheet.create({
     bottom: 0
   },
   row: {
-    height: getResponsiveHeight(44),
+    height: getResponsiveWidth(44),
     flexDirection: 'row',
     alignItems: 'center',
   },
-  row_border_bottom: {
-    borderBottomWidth: 1,
-    borderBottomColor: '#f1f1f1'
-  },
   text_row_left: {
     marginLeft: getResponsiveWidth(24),
-    color: '#000',
+    color: '#444',
     fontSize: 16,
-    fontWeight: '400'
+    fontWeight: '500'
   },
   text_row_desc: {
     position: 'absolute',
-    left: getResponsiveWidth(100),
-    color: '#000',
+    left: getResponsiveWidth(85),
+    color: '#aaa',
     fontSize: 16,
     fontWeight: '300'
-  },
-  row_indicator: {
-    position: 'absolute',
-    right: 0
   },
   row_match: {
     height: getResponsiveHeight(100),

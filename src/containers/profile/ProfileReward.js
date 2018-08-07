@@ -96,10 +96,7 @@ export default class ProfileReward extends Component {
   render() {
     return (
       <Container>
-        <ProfileHeader
-          title='打赏'
-          headerStyle={styles.header_style}
-        />
+        <ProfileHeader title='打赏'/>
         <Image source={this.state.bg}/>
         <View style={styles.container}>
           <TouchableOpacity
@@ -171,9 +168,6 @@ export default class ProfileReward extends Component {
 }
 
 const styles = StyleSheet.create({
-  header_style: {
-    paddingBottom: 0,
-  },
   container: {
     width: WIDTH,
     flexDirection: 'row',
@@ -230,19 +224,17 @@ const styles = StyleSheet.create({
     color: '#000',
   },
   btn: {
-    width: getResponsiveWidth(112),
-    height: getResponsiveWidth(48),
-    justifyContent: 'center',
-    alignItems: 'center',
     position: 'absolute',
     right: getResponsiveWidth(24),
     bottom: getResponsiveWidth(80),
     backgroundColor: '#2DC3A6',
-    borderRadius: getResponsiveWidth(24)
+    borderRadius: getResponsiveWidth(30)
   },
   text_btn: {
+    paddingVertical: getResponsiveWidth(10),
+    paddingHorizontal: getResponsiveWidth(16),
     color: '#fff',
-    fontSize: 20,
-    fontWeight: '300'
+    fontSize: 16,
+    fontWeight: '500'
   }
 })

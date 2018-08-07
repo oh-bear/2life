@@ -35,7 +35,7 @@ export default class Row extends Component {
 			>
 				{this.props.imageLeft}
 
-				<TextPingFang style={[styles.text_title, { marginLeft: this.props.imageLeft ? getResponsiveWidth(24) : 0}]}>{this.props.title}</TextPingFang>
+				<TextPingFang style={[styles.text_title, { marginLeft: this.props.imageLeft ? getResponsiveWidth(23) : 0}]}>{this.props.title}</TextPingFang>
 
 				<Switch
 					style={[styles.row_right, {display: this.props.showSwitch ? 'flex' : 'none',position:this.props.showSwitch ? 'absolute' : 'relative'}]}
@@ -55,16 +55,16 @@ export default class Row extends Component {
 const styles = StyleSheet.create({
 	container: {
 		width: '100%',
-		height: getResponsiveWidth(44),
+		height: getResponsiveWidth(64),
 		flexDirection: 'row',
 		alignItems: 'center',
 		borderBottomWidth: 1,
     borderBottomColor: '#f1f1f1'
 	},
 	text_title: {
-		color: '#000',
+		color: '#333',
     fontSize: 16,
-		fontWeight: '400'
+		fontWeight: '300'
 	},
 	text_right: {
 		position: 'absolute',

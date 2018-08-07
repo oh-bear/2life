@@ -8,7 +8,6 @@ import {
 import { ifIphoneX } from 'react-native-iphone-x-helper'
 
 import {
-  HEIGHT,
   WIDTH,
   getResponsiveWidth,
   getResponsiveHeight
@@ -17,12 +16,9 @@ import {
 import Container from '../../components/Container'
 import TextPingFang from '../../components/TextPingFang'
 import NotificationItem from './NotificationItem'
-import { Actions } from 'react-native-router-flux'
 import { connect } from 'react-redux'
 import { USERS } from '../../network/Urls'
 import HttpUtils from '../../network/HttpUtils'
-import store from '../../redux/store'
-import { fetchPartnerSuccess, fetchProfileSuccess } from '../../redux/modules/partner'
 
 import JPushModule from 'jpush-react-native'
 
@@ -77,17 +73,15 @@ export default class Notification extends Component {
   render() {
     return (
       <Container showNetStatus={true}>
-        <View>
-          <TextPingFang style={styles.title}>通知</TextPingFang>
-          <FlatList
-            showsVerticalScrollIndicator={false}
-            style={styles.notification_container}
-            data={this.state.notificationList}
-            extraData={this.state}
-            renderItem={this._renderItem}
-            ListEmptyComponent={this._renderEmpty}
-          />
-        </View>
+        <TextPingFang style={styles.title}>通知</TextPingFang>
+        <FlatList
+          showsVerticalScrollIndicator={false}
+          style={styles.notification_container}
+          data={this.state.notificationList}
+          extraData={this.state}
+          renderItem={this._renderItem}
+          ListEmptyComponent={this._renderEmpty}
+        />
       </Container>
     )
   }
@@ -108,7 +102,6 @@ const styles = StyleSheet.create({
   },
   notification_container: {
     width: WIDTH,
-    paddingLeft: getResponsiveWidth(24),
     marginBottom: getResponsiveHeight(48),
     backgroundColor: '#fff',
   },

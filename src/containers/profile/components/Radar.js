@@ -16,6 +16,7 @@ export default class Radar extends Component {
 
 	static propTypes = {
 		data: PropTypes.arrayOf(PropTypes.number).isRequired,
+		isTest: PropTypes.bool,
 		height: PropTypes.number
 	}
 
@@ -30,11 +31,11 @@ export default class Radar extends Component {
 					backgroundColor: 'red'
 				},
 				indicator: [
-					{ name: '外向性', max },
-					{ name: '严谨性', max },
-					{ name: '开放性', max },
-					{ name: '宜人性', max },
-					{ name: '神经质', max }
+					{ name: this.props.isTest ? '外向性' : '喜悦', max },
+					{ name: this.props.isTest ? '严谨性' : '厌恶', max },
+					{ name: this.props.isTest ? '开放性' : '低落', max },
+					{ name: this.props.isTest ? '宜人性' : '温和', max },
+					{ name: this.props.isTest ? '神经质' : '愤怒', max }
 				]
 			},
 			series: [{
