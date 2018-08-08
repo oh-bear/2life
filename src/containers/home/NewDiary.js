@@ -473,7 +473,6 @@ const styles = StyleSheet.create({
   text_content: {
     color: '#666',
     fontSize: 16,
-    lineHeight: getResponsiveWidth(100),
     paddingLeft: getResponsiveWidth(24),
     paddingRight: getResponsiveWidth(24),
     marginTop: getResponsiveWidth(12),

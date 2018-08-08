@@ -228,7 +228,7 @@ export default class ProfileMatch extends Component {
           desc={`本月还能匹配 ${this.props.user.last_times ? this.props.user.last_times : 0} 次`}
           onBack={() => this._back()}
         />
-        <ScrollView scrollEnabled={true}>
+        <ScrollView scrollEnabled={true} style={styles.scroll}>
           <ScrollableTabView
             style={styles.tabview}
             renderTabBar={() => <TabBar tabNames={['随机匹配', 'ID匹配']}/>}
@@ -407,6 +407,9 @@ const styles = StyleSheet.create({
   },
   active_text: {
     color: '#fff'
+  },
+  scroll:{
+    width:WIDTH,
   },
   input: {
     height: getResponsiveWidth(44),
