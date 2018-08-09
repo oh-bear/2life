@@ -193,64 +193,64 @@ export default class ProfileMode extends Component {
     let source
     switch (type) {
       case '实干主义者':
-        source = require('../../../res/images/profile/character/恬淡小天使.jpg')
+        source = require('../../../res/images/profile/character/e_tianshi.jpg')
         break;
       case '心灵多面手':
-        source = require('../../../res/images/profile/character/温暖小甜心.jpg')
+        source = require('../../../res/images/profile/character/e_tianxin.jpg')
         break;
       case '温和思想家':
-        source = require('../../../res/images/profile/character/元气小青年.jpg')
+        source = require('../../../res/images/profile/character/e_qingnian.jpg')
         break;
       case '自我笃行者':
-        source = require('../../../res/images/profile/character/品质小资.jpg')
+        source = require('../../../res/images/profile/character/e_xiaozi.jpg')
         break;
       case '恬淡小天使':
-        source = require('../../../res/images/profile/character/恬淡小天使.jpg')
+        source = require('../../../res/images/profile/character/e_tianshi.jpg')
         break;
       case '温暖小甜心':
-        source = require('../../../res/images/profile/character/温暖小甜心.jpg')
+        source = require('../../../res/images/profile/character/e_tianxin.jpg')
         break;
       case '元气小青年':
-        source = require('../../../res/images/profile/character/元气小青年.jpg')
+        source = require('../../../res/images/profile/character/e_qingnian.jpg')
         break;
       case '品质小资':
-        source = require('../../../res/images/profile/character/品质小资.jpg')
+        source = require('../../../res/images/profile/character/e_xiaozi.jpg')
         break;
       case '躁动小魔王':
-        source = require('../../../res/images/profile/character/躁动小魔王.jpg')
+        source = require('../../../res/images/profile/character/c_mowang.jpg')
         break;
       case '科学小怪人':
-        source = require('../../../res/images/profile/character/科学小怪人.jpg')
+        source = require('../../../res/images/profile/character/c_guairen.jpg')
         break;
       case '极致主义者':
-        source = require('../../../res/images/profile/character/极致主义者.jpg')
+        source = require('../../../res/images/profile/character/c_zhuyizhe.jpg')
         break;
       case '暴躁领袖':
-        source = require('../../../res/images/profile/character/暴躁领袖.jpg')
+        source = require('../../../res/images/profile/character/c_lingxiu.jpg')
         break;
       case '厌世大魔王':
-        source = require('../../../res/images/profile/character/厌世大魔王.jpg')
+        source = require('../../../res/images/profile/character/o_mowang.jpg')
         break;
       case '灵性创作家':
-        source = require('../../../res/images/profile/character/灵性创作家.jpg')
+        source = require('../../../res/images/profile/character/o_chuangzuojia.jpg')
         break;
       case '小世界掌控家':
-        source = require('../../../res/images/profile/character/小世界掌控家.jpg')
+        source = require('../../../res/images/profile/character/o_zhangkongjia.jpg')
         break;
       case '灵魂多面手':
-        source = require('../../../res/images/profile/character/灵魂多面手.jpg')
+        source = require('../../../res/images/profile/character/o_duomianshou.jpg')
         break;
       case '忧郁小王子':
-        source = require('../../../res/images/profile/character/忧郁小王子.jpg')
+        source = require('../../../res/images/profile/character/n_wangzi.jpg')
         break;
       case '忧伤小绵羊':
-        source = require('../../../res/images/profile/character/忧伤小绵羊.jpg')
+        source = require('../../../res/images/profile/character/n_mianyang.jpg')
         break;
       case '谦和小智者':
-        source = require('../../../res/images/profile/character/谦和小智者.jpg')
+        source = require('../../../res/images/profile/character/n_zhizhe.jpg')
         break;
       case '忧郁小麋鹿':
-        source = require('../../../res/images/profile/character/忧郁小麋鹿.jpg')
+        source = require('../../../res/images/profile/character/n_milu.jpg')
         break;
       default:
         source = require('../../../res/images/profile/character/untested.png')
