@@ -5,6 +5,7 @@ import {
   DeviceEventEmitter
 } from 'react-native'
 import RNFetchBlob from 'rn-fetch-blob'
+import * as RNIap from 'react-native-iap'
 
 import TextPingFang from '../../components/TextPingFang'
 import Container from '../../components/Container'
@@ -27,14 +28,17 @@ export default class ProfileSync extends Component {
 
   state = {
     isSync: true,
-    showPopup: false,
+    showCloseSyncPopup: false,
+    showOpenSyncPopup: false,
     size: 0
   }
 
   async componentDidMount() {
+    await RNIap.prepare()
+
     const id = this.props.user.id
     const path = RNFetchBlob.fs.dirs.DocumentDir
-    
+
     RNFetchBlob.fs.lstat(path)
       .then(files => {
         let size = 0
@@ -43,7 +47,7 @@ export default class ProfileSync extends Component {
             size += parseInt(file.size)
           }
         }
-        this.setState({size: (size / 1000000).toFixed(2) + 'M'})
+        this.setState({ size: (size / 1000000).toFixed(2) + 'M' })
       })
 
     const isSync = await Storage.get('isSync', true)
@@ -55,15 +59,34 @@ export default class ProfileSync extends Component {
   }
 
   SyncChange(isSync) {
-    if (!isSync) return this.setState({ showPopup: true })
-    this.setState({ isSync: true })
+    if (!isSync) {
+      return this.setState({ showCloseSyncPopup: true })
+    } else {
+      if (this.props.user.vip)
+        return this.setState({ isSync: true })
+
+      let expires = 30 * 24 * 60 * 60 * 1000
+      
+      RNIap.buyProduct('vip_month_1').then(purchase => {
+        HttpUtils.get(USERS.update_vip, { expires }).then(res => {
+          if (res.code === 0) {
+            this.setState({
+              showOpenSyncPopup: true,
+              isSync: true
+            })
+          }
+        })
+      }).catch(err => {
+        console.warn(err) // standardized err.code and err.message available
+      })
+    }
   }
 
   async closeSync() {
-    
+
     this.setState({
       isSync: false,
-      showPopup: false
+      showCloseSyncPopup: false
     })
 
     // 解除匹配
@@ -75,7 +98,7 @@ export default class ProfileSync extends Component {
         store.dispatch(fetchProfileSuccess(res.data.user))
         DeviceEventEmitter.emit('flush_note', {})
       }
-      
+
       store.dispatch(cleanPartner())
     }
   }
@@ -83,41 +106,51 @@ export default class ProfileSync extends Component {
   render() {
     return (
       <Container>
-      
-          <ProfileHeader title='日记同步'/>
 
-          <View style={styles.container}>
-            <Row
-              title='同步'
-              showSwitch={true}
-              switchValue={this.state.isSync}
-              onValueChange={isSync => this.SyncChange(isSync)}
-            />
+        <ProfileHeader title='日记同步' />
 
-            <TextPingFang style={styles.text_close_sync}>关闭同步功能将不能匹配对象，已经匹配对象的将会被解除关系！请谨慎！</TextPingFang>
+        <View style={styles.container}>
+          <Row
+            title='同步'
+            showSwitch={true}
+            switchValue={this.state.isSync}
+            onValueChange={isSync => this.SyncChange(isSync)}
+          />
 
-            {/* <View style={styles.row}>
+          <TextPingFang style={styles.text_close_sync}>关闭同步功能将不能匹配对象，已经匹配对象的将会被解除关系！请谨慎！</TextPingFang>
+
+          {/* <View style={styles.row}>
               <TextPingFang style={styles.text_left}>同步间隔</TextPingFang>
               <TextPingFang style={styles.text_right}>15 Min</TextPingFang>
             </View> */}
 
-            <View style={styles.row}>
-              <TextPingFang style={styles.text_left}>储存</TextPingFang>
-              <TextPingFang style={styles.text_right}>{this.state.size}</TextPingFang>
-            </View>
+          <View style={styles.row}>
+            <TextPingFang style={styles.text_left}>储存</TextPingFang>
+            <TextPingFang style={styles.text_right}>{this.state.size}</TextPingFang>
           </View>
+        </View>
 
-        
+
         <Popup
-          showPopup={this.state.showPopup}
+          showPopup={this.state.showCloseSyncPopup}
           popupBgColor='#ff5757'
           icon={require('../../../res/images/profile/icon_warning.png')}
           title='注意'
           content='关闭同步功能将不能匹配对象，已经匹配对象的将会被解除关系!'
-          onPressLeft={() => this.setState({ showPopup: false })}
+          onPressLeft={() => this.setState({ showCloseSyncPopup: false })}
           onPressRight={() => this.closeSync()}
           textBtnLeft='不关闭'
           textBtnRight='确定关闭'
+        />
+
+        <Popup
+          showPopup={this.state.showOpenSyncPopup}
+          popupBgColor='#2DC3A6'
+          icon={require('../../../res/images/profile/icon-popup-reward.png')}
+          title='订阅成功'
+          content='已经为您开启同步功能!'
+          onPressLeft={() => this.setState({ showOpenSyncPopup: false })}
+          textBtnLeft='好'
         />
       </Container>
     )
@@ -141,7 +174,7 @@ const styles = StyleSheet.create({
   text_left: {
     color: '#000',
     fontSize: 16,
-    fontWeight: '400'
+    fontWeight: '300'
   },
   text_right: {
     color: '#444',

@@ -31,7 +31,6 @@ import {
   getMonth,
   getLocation,
   updateUser,
-  updateReduxUser,
   sleep,
   downloadImg,
   updateFile,
@@ -41,10 +40,9 @@ import {
 } from '../../common/util'
 
 import Storage from '../../common/storage'
-import { SCENE_INDEX } from '../../constants/scene'
 
 import HttpUtils from '../../network/HttpUtils'
-import { NOTES, UTILS } from '../../network/Urls'
+import { UTILS, USERS } from '../../network/Urls'
 
 function mapStateToProps(state) {
   return {
@@ -186,7 +184,10 @@ export default class NewDiary extends Component {
       this._updateUser()
 
       // 同步
-      isLogin && syncFile(this.props.user.id)
+      isLogin && await syncFile(this.props.user.id)
+
+      // 七夕活动
+      HttpUtils.get(USERS.update_activity)
 
       if (this.state.firstEntryDiary) {
         this.setState({
@@ -417,7 +418,6 @@ const styles = StyleSheet.create({
   text_content: {
     color: '#666',
     fontSize: 16,
-    lineHeight: getResponsiveWidth(100),
     paddingLeft: getResponsiveWidth(24),
     paddingRight: getResponsiveWidth(24),
     marginTop: getResponsiveWidth(12),

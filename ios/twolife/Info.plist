@@ -32,6 +32,16 @@
 				<string>wxbf371b0ab61d3873</string>
 			</array>
 		</dict>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLName</key>
+			<string>twolife</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>twolife</string>
+			</array>
+		</dict>
 	</array>
 	<key>CFBundleVersion</key>
 	<string>1</string>

@@ -99,6 +99,9 @@ export default class Home extends Component {
 
   async _fetchDiary() {
     if (!this.props.user.id) return
+    
+    // 未开启同步不执行
+    if (!await Storage.get('isSync', false)) return
 
     if (this.props.user.user_other_id === -1) {
       await updateFile({
