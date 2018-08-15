@@ -67,18 +67,22 @@ export default class ProfileSync extends Component {
 
       let expires = 30 * 24 * 60 * 60 * 1000
       
-      RNIap.buyProduct('vip_month_1').then(purchase => {
-        HttpUtils.get(USERS.update_vip, { expires }).then(res => {
-          if (res.code === 0) {
-            this.setState({
-              showOpenSyncPopup: true,
-              isSync: true
-            })
-          }
-        })
-      }).catch(err => {
-        console.warn(err) // standardized err.code and err.message available
+      this.setState({
+        // showOpenSyncPopup: true,
+        isSync: true
       })
+      // RNIap.buyProduct('vip_month_1').then(purchase => {
+      //   HttpUtils.get(USERS.update_vip, { expires }).then(res => {
+      //     if (res.code === 0) {
+      //       this.setState({
+      //         showOpenSyncPopup: true,
+      //         isSync: true
+      //       })
+      //     }
+      //   })
+      // }).catch(err => {
+      //   console.warn(err) // standardized err.code and err.message available
+      // })
     }
   }
 
@@ -90,16 +94,18 @@ export default class ProfileSync extends Component {
     })
 
     // 解除匹配
-    const res = await HttpUtils.get(USERS.disconnect)
-    if (res.code === 0) {
-      // 更改用户status 为不可匹配999
-      const res = await updateUser(this.props.user, { status: 999 })
+    if (this.props.user.user_other_id !== -1) {
+      const res = await HttpUtils.get(USERS.disconnect)
       if (res.code === 0) {
-        store.dispatch(fetchProfileSuccess(res.data.user))
-        DeviceEventEmitter.emit('flush_note', {})
+        // 更改用户status 为不可匹配999
+        const res = await updateUser(this.props.user, { status: 999 })
+        if (res.code === 0) {
+          store.dispatch(fetchProfileSuccess(res.data.user))
+          DeviceEventEmitter.emit('flush_note', {})
+        }
+  
+        store.dispatch(cleanPartner())
       }
-
-      store.dispatch(cleanPartner())
     }
   }
 
