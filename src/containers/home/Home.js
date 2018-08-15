@@ -99,9 +99,6 @@ export default class Home extends Component {
 
   async _fetchDiary() {
     if (!this.props.user.id) return
-    
-    // 未开启同步不执行
-    if (!await Storage.get('isSync', false)) return
 
     if (this.props.user.user_other_id === -1) {
       await updateFile({
@@ -110,6 +107,9 @@ export default class Home extends Component {
       })
       store.dispatch(cleanPartner())
     }
+
+    // 未开启同步不执行
+    if (!await Storage.get('isSync', false)) return
 
     const res = await HttpUtils.get(NOTES.list)
     if (res.code === 0) {

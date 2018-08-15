@@ -63,7 +63,7 @@ export default class Profile extends Component {
 
   async componentDidMount() {
     const res = await HttpUtils.get(UTILS.show_act)
-    let showActEntry = false
+    let showActEntry = false, actUrl = 'https://2life.act.ursb.me/#/', shareUrl = 'https://2life.act.ursb.me/#/invitation/'
     if (res.code === 0) {
       showActEntry = res.show
       actUrl = res.url

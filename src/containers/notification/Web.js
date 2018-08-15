@@ -28,8 +28,9 @@ export default class Web extends Component {
 
   async componentWillMount() {
     // this._renderRightButton()
+    console.log({ shareUrl: `${this.props.shareUrl}?name=${this.props.user.name}` })
     let key = await Storage.get('key', {})
-    let url = `${this.props.url}?uid=${key.uid}&token=${key.token}&timestamp=${key.timestamp}`
+    let url = `${this.props.url}?uid=${key.uid}&token=${key.token}&timestamp=${key.timestamp}&user_other_id=${this.props.user.user_other_id}`
     this.setState({url}, () => console.log(this.state.url))
   }
 

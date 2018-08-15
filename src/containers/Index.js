@@ -74,7 +74,7 @@ export default class Index extends Component {
       await Storage.set('isSync', false)
 
     // 七夕活动开放vip
-    if ((new Date('2018-08-15 0:0:0').getTime() < Date.now()) && (Date.now() < new Date('2018-08-24 0:0:0').getTime()))
+    if (this.props.user.vip || (Date.now() < new Date('2018-08-27 0:0:0').getTime()))
       await Storage.set('isSync', true)
   }
 
