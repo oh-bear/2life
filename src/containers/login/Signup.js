@@ -4,9 +4,9 @@ import {
   TouchableOpacity,
   TextInput,
   TouchableWithoutFeedback,
-  Alert,
   DeviceEventEmitter
 } from 'react-native'
+import Toast from 'antd-mobile/lib/toast'
 
 import dismissKeyboard from 'dismissKeyboard'
 import { View } from 'react-native-animatable'
@@ -60,6 +60,10 @@ export default class Signup extends Component {
   }
 
   async getCode() {
+    // 国内港澳台正则
+    const phoneReg = /^[1][3-8]\d{9}$|^([6|9])\d{7}$|^[0][9]\d{8}$|^[6]([8|6])\d{5}$/
+    if (!phoneReg.test(this.state.account))
+      return Toast.fail('手机号码格式错误', 1)
 
     const res = await HttpUtils.post(URL_code, { account: this.state.accountArea + this.state.account })
     if (res.code === 0) {
@@ -67,13 +71,13 @@ export default class Signup extends Component {
         timestamp: res.data.timestamp,
         hadSendCode: true
       })
-      Alert.alert('', '验证码已发送')
+      Toast.success('验证码已发送', 1)
     }
-    if (res.code === 501) Alert.alert('', '请求过于频繁，请稍后再试')
+    if (res.code === 501) Toast.fail('请求过于频繁，请稍后再试', 1)
   }
 
   async register() {
-    if (!this.state.timestamp) return Alert.alert('', '请先获取验证码')
+    if (!this.state.timestamp) return Toast.fail('请先获取验证码', 1)
     if (/^[^\s]{6,16}$/.test(this.state.password)) {
       this.setState({ showPswTip: false })
     } else {
