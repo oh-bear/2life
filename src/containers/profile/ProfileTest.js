@@ -49,10 +49,11 @@ export default class ProfileReward extends Component {
 
 	async componentDidMount() {
 		if (this.props.user.emotions_basis) {
+			let data = this.props.user.emotions_basis.split(',').map(item => parseFloat(item))
+			this._renderTestResult(data)
 			this.setState({
-				question: '你已经做过测试啦，不用再做了^_^',
-				textBtn: '重新测试',
-				showTestBtn: false
+				isEnd: true,
+				textBtn: '去写一篇日记',
 			})
 		}
 	}
@@ -91,7 +92,7 @@ export default class ProfileReward extends Component {
 			if (res.code === 0) {
 				updateReduxUser(this.props.user.id)
 				// e 喜悦 c 厌恶 o 低落 a 温和 n 愤怒
-				let data = res.data.emotions.split(',').map(item => parseFloat(item))
+				let data = res.data.emotions_basis.split(',').map(item => parseFloat(item))
 				this._renderTestResult(data)
 			}
 		}

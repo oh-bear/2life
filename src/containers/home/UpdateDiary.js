@@ -3,7 +3,6 @@ import {
   View,
   StyleSheet,
   TextInput,
-  Keyboard,
   Alert,
   TouchableOpacity,
   Image,
@@ -13,7 +12,6 @@ import {
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { connect } from 'react-redux'
 import { Actions } from 'react-native-router-flux'
-import Toast from 'antd-mobile/lib/toast'
 
 import Container from '../../components/Container'
 import TextPingFang from '../../components/TextPingFang'
@@ -26,7 +24,6 @@ import {
 } from '../../common/styles'
 import {
   getMonth,
-  sleep,
   downloadImg,
   updateFile,
   syncFile
@@ -66,22 +63,22 @@ export default class UpdateDiary extends Component {
     }, () => this._renderLeftButton())
   }
 
+  componentWillUnmount() {
+    this.saveDiary()
+  }
+
   async saveDiary() {
     const isLogin = !!this.props.user.id
 
     if (this.state.savingDiary) return
 
-    this.setState({savingDiary: true})
+    // this.setState({savingDiary: true})
 
     const { title, content, imgPathList, date } = this.state
 
     if (!title && !content) return Actions.pop()
     if (!title) return Alert.alert('', '给日记起个标题吧')
     if (!content) return Alert.alert('', '日记内容不能为空哦')
-
-    Toast.loading('正在保存', 0)
-
-    await sleep(100)
 
     // 过滤已存在的图片
     let newImgPathList = [] // 新的未缓存图片
@@ -125,9 +122,7 @@ export default class UpdateDiary extends Component {
 
     isLogin && syncFile(this.props.user.id)
 
-    Actions.reset(SCENE_INDEX)
-
-    Toast.hide()
+    Actions.pop()
   }
 
   getImgPathList(imgPathList) {
@@ -141,7 +136,7 @@ export default class UpdateDiary extends Component {
       require('../../../res/images/home/diary/icon_back_black.png')
 
     const leftButton = (
-      <TouchableOpacity onPress={this.saveDiary.bind(this)}>
+      <TouchableOpacity onPress={() => Actions.pop()}>
         <Image source={source}/>
       </TouchableOpacity>
     )
@@ -198,7 +193,7 @@ export default class UpdateDiary extends Component {
             showBanner={true}
             showBottomBar={true}
             leftButton={this.state.leftButton}
-            onPressBack={() => this.saveDiary()}
+            onPressBack={() => Actions.pop()}
             imgPathList={this.state.imgPathList}
             getImgPathList={this.getImgPathList.bind(this)}
           />
