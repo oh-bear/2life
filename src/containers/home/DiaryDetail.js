@@ -184,13 +184,20 @@ export default class DiaryDetail extends Component {
               },
               {
                 text: '确定',
-                onPress: () => {
-                  HttpUtils.get(NOTES.delete, {note_id: this.props.diary.id}).then(res => {
-                    if (res.code === 0) {
-                      updateReduxUser(this.props.user.id)
-                      Actions.reset(SCENE_INDEX)
+                onPress: async () => {
+                  // 更新配置文件
+                  await updateFile({
+                    user_id: this.props.user.id || 0,
+                    action: this.props.diary.id ? 'update' : 'delete',
+                    data: {
+                      ...this.props.diary,
+                      op: 3
                     }
                   })
+
+                  !!this.props.user.id && syncFile(this.props.user.id)
+
+                  Actions.pop()
                 }
               },
             ]
