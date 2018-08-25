@@ -126,14 +126,6 @@ export default class NewDiary extends Component {
     let title = title_2
     let content = content_2
     if (!title && !content) return
-    if (!title) {
-      this.setState({ savingDiary: false })
-      return Alert.alert('', '给日记起个标题吧')
-    }
-    if (!content) {
-      this.setState({ savingDiary: false })
-      return Alert.alert('', '日记内容不能为空哦')
-    }
 
     let images = ''
 
@@ -173,9 +165,6 @@ export default class NewDiary extends Component {
   
       // 同步
       isLogin && await syncFile(this.props.user.id)
-  
-      // 七夕活动
-      HttpUtils.get(USERS.update_activity)
   
       if (this.state.firstEntryDiary) {
         this.setState({
@@ -406,5 +395,6 @@ const styles = StyleSheet.create({
     paddingRight: getResponsiveWidth(24),
     marginTop: getResponsiveWidth(12),
     paddingBottom: getResponsiveWidth(24),
+    maxHeight: getResponsiveWidth(150)
   }
 })

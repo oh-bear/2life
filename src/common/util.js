@@ -97,25 +97,25 @@ export function getDay(timestamp) {
   let EngWeekDay = ''
   switch (weekDay) {
     case 0:
-      EngWeekDay = 'Sun'
+      EngWeekDay = '周日'
       break
     case 1:
-      EngWeekDay = 'Mon'
+      EngWeekDay = '周一'
       break
     case 2:
-      EngWeekDay = 'Tue'
+      EngWeekDay = '周二'
       break
     case 3:
-      EngWeekDay = 'Wed'
+      EngWeekDay = '周三'
       break
     case 4:
-      EngWeekDay = 'Thu'
+      EngWeekDay = '周四'
       break
     case 5:
-      EngWeekDay = 'Fri'
+      EngWeekDay = '周五'
       break
     case 6:
-      EngWeekDay = 'Sat'
+      EngWeekDay = '周六'
       break
   }
   return `${day}\n${EngWeekDay}`
@@ -533,7 +533,7 @@ export async function syncFile(user_id) {
   const isSync = await Storage.get('isSync', true)
   if (!isSync) return
 
-  const SYNC_PERIOD = 0 // 同步周期1分钟
+  const SYNC_PERIOD = 10000 // 同步延迟10秒
 
   clearTimeout(TIMEOUT_ID)
 
