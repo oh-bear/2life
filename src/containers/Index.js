@@ -47,7 +47,7 @@ export default class Index extends Component {
 
   async componentDidMount() {
     this._mergeData()
-    
+
     // 极光推送：添加事件角标，并触发强制刷新通知和用户、日记数据
     JPushModule.addReceiveCustomMsgListener(async (message) => {
       console.log(message)
@@ -183,7 +183,6 @@ export default class Index extends Component {
             title='通知'
             titleStyle={styles.text_title}
             badgeText={this.state.unread}
-            //badgeText='11'
             selectedTitleStyle={styles.text_title_selected}
             renderIcon={() => this.icons.notification.default}
             renderSelectedIcon={() => this.icons.notification.selected}

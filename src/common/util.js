@@ -464,8 +464,10 @@ export function sleep(ms) {
  * @returns {String} 图片保存路径
  */
 export async function downloadImg(url, user_id = 0) {
-  if(url.indexOf('file://')==0){
-    return url;
+  if(Platform.OS==='android'){
+    if(url.indexOf('file://')==0){
+      return url;
+    }
   }
   const filename = `id_${user_id}_${Math.round(Math.pow(Math.random() * 10 , 10))}.jpg`
   const config = {

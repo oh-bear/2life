@@ -11,7 +11,6 @@ import {
 } from 'react-native'
 import { View } from 'react-native-animatable'
 import { CalendarList } from '../../components/react-native-calendars/src'
-//import { CalendarList } from 'react-native-calendars/src'
 import { Actions } from 'react-native-router-flux'
 import { connect } from 'react-redux'
 
@@ -85,7 +84,6 @@ export default class Home extends Component {
   }
 
   async componentDidMount() {
-    //alert(HEIGHT)
     this._showTips()
     this._getWeather()
 
@@ -137,7 +135,7 @@ export default class Home extends Component {
           }
         }
       } else {
-        newDiaryList = [...diaryList] 
+        newDiaryList = [...diaryList]
       }
 
       // 删除、更新伙伴日记,

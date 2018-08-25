@@ -80,7 +80,6 @@ export default class DiaryBanner extends Component {
     // 日记图片
     if (this.props.imgPathList && this.props.imgPathList.length) {
       imgListComponent = this.props.imgPathList.map((path, index) => {
-        //if(path.indexOf('http')!=0&&path.indexOf('file://')!=0) path = 'file://'+path;
         return (
           <View
             style={styles.img_container}
@@ -115,7 +114,7 @@ export default class DiaryBanner extends Component {
     return (
       <View style={[styles.container, { display: this.props.showBanner ? 'flex' : 'none' }]} animation='fadeIn'>
         <CommonNav
-          navStyle={[styles.nav_style, { display: this.props.showNav ? 'flex' : 'none'}]}
+          navStyle={[styles.nav_style, { display: this.props.showNav ? 'flex' : 'none' }]}
           navBarStyle={styles.navbar_style}
           onPressBack={this.props.onPressBack}
           leftButton={this.props.leftButton}
