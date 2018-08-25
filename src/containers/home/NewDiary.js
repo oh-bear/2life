@@ -87,7 +87,8 @@ export default class NewDiary extends Component {
   }
 
   onBackAndroid = () => {
-    this.saveDiary()
+    //this.saveDiary()
+    Actions.pop()
     return true;
    };
 

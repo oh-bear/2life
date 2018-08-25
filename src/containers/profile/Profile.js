@@ -287,7 +287,7 @@ export default class Profile extends Component {
             {this.renderPartner()}
 
              <View style={styles.margin}></View>
-            
+            {/* 
             <View style={{display: this.state.showActEntry ? 'flex' : 'none'}}>
               <Row
                 imageLeft={<Image source={require('../../../res/images/profile/icon-profile-event.png')} />}
@@ -295,7 +295,7 @@ export default class Profile extends Component {
                 showRedPoint={true}
                 onPress={() => Actions.jump(SCENE_WEB, { user: this.props.user, url: this.state.actUrl, shareUrl: this.state.shareUrl})}
               />
-            </View>
+            </View> */}
 
             <Row
               imageLeft={<Image source={require('../../../res/images/profile/icon_mood_analysis.png')} />}

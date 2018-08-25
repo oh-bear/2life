@@ -131,6 +131,8 @@ export default class DiaryBanner extends Component {
           dot={<View style={styles.swiper_dot}></View>}
           activeDot={<View style={[styles.swiper_dot, styles.swiper_active_dot]}></View>}
           bounces={true}
+          pagingEnabled={true}
+          key={this.state.imgPathList.length}
           onIndexChanged={this._onImgChanged.bind(this)}
           onTouchStart={this.props.onTouchStart}
           onTouchEnd={this.props.onTouchEnd}
