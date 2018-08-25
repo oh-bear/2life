@@ -7,6 +7,7 @@ import {
   ActionSheetIOS,
   Alert
 } from 'react-native'
+import { ActionSheet, Button } from 'antd-mobile'
 import * as WeChat from 'react-native-wechat'
 import { ifIphoneX } from 'react-native-iphone-x-helper'
 
@@ -35,15 +36,33 @@ export default class Web extends Component {
   }
 
   _showOptions() {
-    const options = {
-      options: ['分享给微信好友', '分享到微信朋友圈','取消'],
-      cancelButtonIndex: 2,
-    }
-    ActionSheetIOS.showActionSheetWithOptions(options, index => {
-      if (index === 0) this._shareToWeChat(0)
-      if (index === 1) this._shareToWeChat(1)
-      if (index === 2) return
-    })
+    const BUTTONS = [
+      '分享给微信好友',
+      '分享到微信朋友圈',
+      '取消',
+    ]
+    ActionSheet.showActionSheetWithOptions(
+      {
+        options: BUTTONS,
+        cancelButtonIndex: 2,
+        destructiveButtonIndex: 2,
+      },
+      (buttonIndex) => {
+        if (buttonIndex === 0) this._shareToWeChat(0)
+        if (buttonIndex === 1) this._shareToWeChat(1)
+        if (buttonIndex === 2) return
+      }
+    )
+
+    // const options = {
+    //   options: ['分享给微信好友', '分享到微信朋友圈','取消'],
+    //   cancelButtonIndex: 2,
+    // }
+    // ActionSheetIOS.showActionSheetWithOptions(options, index => {
+    //   if (index === 0) this._shareToWeChat(0)
+    //   if (index === 1) this._shareToWeChat(1)
+    //   if (index === 2) return
+    // })
   }
 
   async _shareToWeChat(mode) {
@@ -94,12 +113,22 @@ export default class Web extends Component {
     }
     this.web.postMessage(JSON.stringify(obj))
   }
+
+  _onNavigationStateChange = (navState) => {
+    this.setState({
+      backButtonEnabled: navState.canGoBack,
+      forwardButtonEnabled: navState.canGoForward,
+      title: navState.title,
+      loading: navState.loading,
+    })
+  }
   
   render() {
     return (
       <Container>
         <CommonNav
-          // rightButton={this.state.rightButton}
+          title={this.state.title}
+          rightButton={this.state.rightButton}
         />
         <WebView
           ref={ref => this.web = ref}
@@ -107,6 +136,7 @@ export default class Web extends Component {
           source={{ uri: this.state.url }}
           onMessage={this._onMessage.bind(this)}
           onLoadEnd={this._onLoadEnd.bind(this)}
+          onNavigationStateChange={this._onNavigationStateChange.bind(this)}
         />
       </Container>
     )
