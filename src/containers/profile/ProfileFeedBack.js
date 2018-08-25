@@ -11,7 +11,6 @@ import Toast from 'antd-mobile/lib/toast'
 
 import TextPingFang from '../../components/TextPingFang'
 import Container from '../../components/Container'
-import Popup from '../../components/Popup'
 import ProfileHeader from './components/ProfileHeader'
 
 import {
@@ -47,14 +46,17 @@ export default class ProfileFeedBack extends Component {
 
     if (!this.state.content) return Toast.info('你什么都没写哦', 1.5)
 
+    if (this.state.isSubmitted) return Toast.info('刚才已经提交反馈了^_^', 1.5)
+
+    this.setState({ isSubmitted: true})
+
     const data = {
       title: this.state.content.slice(0, 15),
       content: this.state.content,
       type: this.state.type
     }
-    HttpUtils.post(USERS.feedback, data).then(res => {
-      Toast.success('感谢您的反馈', 1.5)
-    })
+    HttpUtils.post(USERS.feedback, data)
+    Toast.success('反馈提交成功', 1.5)
   }
 
   render() {

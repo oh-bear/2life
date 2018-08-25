@@ -29,14 +29,17 @@ export default class HttpUtils {
     return axios.get(url, {params: data}).then(response => response.data)
   }
 
-  static post(url, data) {
+  static post(url, data, config) {
     url = baseUrl + url
 
     data = {
       ...defaultData,
       ...data
     }
-    return axios.post(url, data)
+    return axios.post(url, data, {
+      timeout: 3500,
+      ...config
+    })
       .then(response => response.data)
       .catch(error => console.dir(error))
   }

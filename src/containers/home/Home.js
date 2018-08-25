@@ -112,6 +112,9 @@ export default class Home extends Component {
       store.dispatch(cleanPartner())
     }
 
+    // 未开启同步不执行
+    if (!await Storage.get('isSync', false)) return
+
     const res = await HttpUtils.get(NOTES.list)
     if (res.code === 0) {
       const { partner, recommend, user } = res.data

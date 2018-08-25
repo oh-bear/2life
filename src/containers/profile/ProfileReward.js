@@ -5,7 +5,6 @@ import {
   Image,
   TouchableOpacity,
   Platform,
-  ScrollView
 } from 'react-native'
 import * as RNIap from 'react-native-iap'
 
@@ -16,7 +15,6 @@ import ProfileHeader from './components/ProfileHeader'
 
 import {
   WIDTH,
-  HEIGHT,
   getResponsiveWidth,
 } from '../../common/styles'
 

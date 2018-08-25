@@ -18,6 +18,10 @@ export const USERS = {
   bind_account: '/users/bind_account', // post {account, openid}
   check_token: '/users/check_token',  // get {uid, token, timestamp}
   calculate_emotion: '/users/calculate_emotion',  // post {content}
+  update_vip: '/users/update_vip', //get {expires}
+  enroll_activity: '/users/enroll_activity',
+  update_activity: '/users/update_activity',
+  get_activity: '/users/get_activity',
 }
 
 export const NOTES = {
@@ -39,4 +43,5 @@ export const UTILS = {
   get_ocr_sign: '/utils/get_ocr_sign',
   get_nlp_result: '/utils/get_nlp_result', // post {content}
   update_emotion_report: '/utils/update_emotion_report', // get
+  show_act: '/utils/show_act', // get
 }

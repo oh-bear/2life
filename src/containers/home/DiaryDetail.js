@@ -122,7 +122,7 @@ export default class DiaryDetail extends Component {
       destructiveButtonIndex: 1
     }
     ActionSheetIOS.showActionSheetWithOptions(options, index => {
-      if (index === 0) Actions.jump(SCENE_UPDATE_DIARY, { diary: this.props.diary })
+      if (index === 0) Actions.replace(SCENE_UPDATE_DIARY, { diary: this.props.diary })
       if (index === 1) {
         Alert.alert(
           '',
@@ -172,7 +172,7 @@ export default class DiaryDetail extends Component {
         //wrapProps,
       },
       (index) => {
-        if (index === 0) Actions.jump(SCENE_UPDATE_DIARY, {diary: this.props.diary})
+        if (index === 0) Actions.replace(SCENE_UPDATE_DIARY, {diary: this.props.diary})
         if (index === 1) {
           Alert.alert(
             '',

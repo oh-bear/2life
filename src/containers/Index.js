@@ -40,6 +40,7 @@ export default class Index extends Component {
 
   async componentWillMount() {
     await this._initFile()
+    await this._setSync()
 
     if (this.props.tab) this.setState({ selectedTab: this.props.tab })
   }
@@ -65,6 +66,16 @@ export default class Index extends Component {
     JPushModule.addReceiveNotificationListener(message => {
       console.log(message)
     })
+  }
+
+  async _setSync() {
+    // 版本过渡：设置非订阅同步用户本地同步
+    if (!this.props.user.vip)
+      await Storage.set('isSync', false)
+
+    // 七夕活动开放vip
+    if (this.props.user.vip || (Date.now() < new Date('2018-08-27').getTime()))
+      await Storage.set('isSync', true)
   }
 
   // 日记配置文件初始化

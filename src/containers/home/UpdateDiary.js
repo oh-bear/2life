@@ -3,7 +3,6 @@ import {
   View,
   StyleSheet,
   TextInput,
-  Keyboard,
   Alert,
   BackHandler,
   TouchableOpacity,
@@ -16,7 +15,6 @@ import DatePicker from 'react-native-datepicker'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { connect } from 'react-redux'
 import { Actions } from 'react-native-router-flux'
-import Toast from 'antd-mobile/lib/toast'
 
 import Container from '../../components/Container'
 import TextPingFang from '../../components/TextPingFang'
@@ -29,7 +27,6 @@ import {
 } from '../../common/styles'
 import {
   getMonth,
-  sleep,
   downloadImg,
   updateFile,
   syncFile
@@ -76,25 +73,23 @@ export default class UpdateDiary extends Component {
 
 
   componentWillUnmount() {
+      this.saveDiary()
       BackHandler.removeEventListener('hardwareBackPress',this.onBackAndroid);
   }
+
 
   async saveDiary() {
     const isLogin = !!this.props.user.id
 
     if (this.state.savingDiary) return
 
-    this.setState({savingDiary: true})
+    // this.setState({savingDiary: true})
 
     const { title, content, imgPathList, date } = this.state
 
     if (!title && !content) return Actions.pop()
     if (!title) return Alert.alert('', '给日记起个标题吧')
     if (!content) return Alert.alert('', '日记内容不能为空哦')
-
-    Toast.loading('正在保存', 0)
-
-    await sleep(100)
 
     // 过滤已存在的图片
     let newImgPathList = [] // 新的未缓存图片
@@ -138,9 +133,7 @@ export default class UpdateDiary extends Component {
 
     isLogin && syncFile(this.props.user.id)
 
-    Actions.reset(SCENE_INDEX)
-
-    Toast.hide()
+    Actions.pop()
   }
 
   getImgPathList(imgPathList) {
@@ -154,7 +147,7 @@ export default class UpdateDiary extends Component {
       require('../../../res/images/home/diary/icon_back_black.png')
 
     const leftButton = (
-      <TouchableOpacity onPress={this.saveDiary.bind(this)}>
+      <TouchableOpacity onPress={() => Actions.pop()}>
         <Image source={source}/>
       </TouchableOpacity>
     )
@@ -214,7 +207,7 @@ export default class UpdateDiary extends Component {
             showBanner={true}
             showBottomBar={true}
             leftButton={this.state.leftButton}
-            onPressBack={() => this.saveDiary()}
+            onPressBack={() => Actions.pop()}
             imgPathList={this.state.imgPathList}
             getImgPathList={this.getImgPathList.bind(this)}
           />
@@ -276,8 +269,6 @@ export default class UpdateDiary extends Component {
             placeholderTextColor='#aaa'
           />
 
-          <View style={styles.line}></View>
-
           <TextInput
             style={styles.text_content}
             value={this.state.content}
@@ -325,26 +316,19 @@ const styles = StyleSheet.create({
     marginLeft: getResponsiveWidth(8)
   },
   text_title: {
-    color: '#000',
-    fontSize: 24,
+    color: '#333',
+    fontSize: 20,
+    fontWeight: '500',
     paddingLeft: getResponsiveWidth(24),
     paddingRight: getResponsiveWidth(24),
     paddingTop: getResponsiveWidth(48),
-    paddingBottom: getResponsiveWidth(48),
-  },
-  line: {
-    width: getResponsiveWidth(40),
-    height: getResponsiveWidth(1),
-    marginLeft: getResponsiveWidth(24),
-    backgroundColor: '#aaa'
   },
   text_content: {
-    color: '#444',
+    color: '#666',
     fontSize: 16,
-    height: getResponsiveWidth(100),
     paddingLeft: getResponsiveWidth(24),
     paddingRight: getResponsiveWidth(24),
-    marginTop: getResponsiveWidth(24),
+    marginTop: getResponsiveWidth(12),
     paddingBottom: getResponsiveWidth(24),
-  },
+  }
 })

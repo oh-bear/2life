@@ -34,8 +34,11 @@ import {
   SCENE_PROFILE_FEEDBACK,
   SCENE_LOGIN_OPTIONS,
   SCENE_PROFILE_TEST,
-  SCENE_PROFILE_SETTING
+  SCENE_PROFILE_SETTING,
+  SCENE_WEB
 } from '../../constants/scene'
+import HttpUtils from '../../network/HttpUtils';
+import { UTILS } from '../../network/Urls';
 
 function mapStateToProps(state) {
   return {
@@ -53,10 +56,21 @@ export default class Profile extends Component {
     myAverageMode: 0,
     otherAverageMode: 0,
     myDiaryCount: 0,
-    otherDiaryCount: 0
+    otherDiaryCount: 0,
+    showActEntry: false,
+    actUrl: '',
+    shareUrl: ''
   }
 
   async componentDidMount() {
+    const res = await HttpUtils.get(UTILS.show_act)
+    let showActEntry = false, actUrl = 'https://2life.act.ursb.me/#/', shareUrl = 'https://2life.act.ursb.me/#/invitation/'
+    if (res.code === 0) {
+      showActEntry = res.show
+      actUrl = res.url
+      shareUrl = res.shareUrl
+    }
+
     // 获得日记数量和情绪值
     const diaryList = await readFile(this.props.user.id)
     let myDiaryList = diaryList.filter(diary => diary.user_id === this.props.user.id)
@@ -75,7 +89,10 @@ export default class Profile extends Component {
       myAverageMode: Math.floor(myTotalMode / myDiaryList.length) || 0,
       otherAverageMode: Math.floor(otherTotalMode / otherDiaryList.length) || 0,
       myDiaryCount: myDiaryList.length || 0,
-      otherDiaryCount: otherDiaryList.length || 0
+      otherDiaryCount: otherDiaryList.length || 0,
+      showActEntry,
+      actUrl,
+      shareUrl
     })
   }
 
@@ -270,6 +287,15 @@ export default class Profile extends Component {
             {this.renderPartner()}
 
              <View style={styles.margin}></View>
+            
+            <View style={{display: this.state.showActEntry ? 'flex' : 'none'}}>
+              <Row
+                imageLeft={<Image source={require('../../../res/images/profile/icon-profile-event.png')} />}
+                title='七夕活动'
+                showRedPoint={true}
+                onPress={() => Actions.jump(SCENE_WEB, { user: this.props.user, url: this.state.actUrl, shareUrl: this.state.shareUrl})}
+              />
+            </View>
 
             <Row
               imageLeft={<Image source={require('../../../res/images/profile/icon_mood_analysis.png')} />}

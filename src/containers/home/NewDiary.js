@@ -7,7 +7,6 @@ import {
   TouchableOpacity,
   BackHandler,
   Image,
-  NetInfo,
   DatePickerIOS,
   Animated,
   Platform,
@@ -34,8 +33,6 @@ import {
   getMonth,
   getLocation,
   updateUser,
-  updateReduxUser,
-  sleep,
   downloadImg,
   updateFile,
   syncFile,
@@ -44,10 +41,9 @@ import {
 } from '../../common/util'
 
 import Storage from '../../common/storage'
-import { SCENE_INDEX } from '../../constants/scene'
 
 import HttpUtils from '../../network/HttpUtils'
-import { NOTES, UTILS } from '../../network/Urls'
+import { UTILS, USERS } from '../../network/Urls'
 
 function mapStateToProps(state) {
   return {
@@ -75,7 +71,6 @@ export default class NewDiary extends Component {
     popupContent: '写完日记点击返回键就能自动保存哦',
     leftButton: null,
     rightButton: null,
-    isConnected: true,
     datePickerY: new Animated.Value(-220),
     showDatePicker: false
   }
@@ -83,10 +78,6 @@ export default class NewDiary extends Component {
   componentWillMount() {
     this._renderLeftButton()
     this._renderRightButton()
-
-    NetInfo.isConnected.addEventListener('connectionChange', isConnected => {
-			this.setState({ isConnected })
-		})
   }
 
   componentDidMount() {
@@ -103,6 +94,7 @@ export default class NewDiary extends Component {
   componentWillUnmount() {
     Storage.set('firstEntryDiary', false)
     BackHandler.removeEventListener('hardwareBackPress',this.onBackAndroid);
+    this.saveDiary()
   }
 
   async _firstIn() {
@@ -145,39 +137,33 @@ export default class NewDiary extends Component {
     const { title_2, content_2, latitude, longitude, location, imgPathList, date } = this.state
     let title = title_2
     let content = content_2
-    if (!title && !content) return Actions.pop()
+    if (!title && !content) return
     if (!title) {
-      this.setState({savingDiary: false})
+      this.setState({ savingDiary: false })
       return Alert.alert('', '给日记起个标题吧')
     }
     if (!content) {
-      this.setState({savingDiary: false})
+      this.setState({ savingDiary: false })
       return Alert.alert('', '日记内容不能为空哦')
     }
 
-    Toast.loading('正在保存', 0)
+    let images = ''
 
-    await sleep(100)
+    // 复制图片文件
+    let newPathListPromises = imgPathList.map(async path => {
+      return await downloadImg(path, this.props.user.id)
+    })
+    let newImgPathList = []
+    for (let newPathListPromise of newPathListPromises) {
+      newImgPathList.push(await newPathListPromise)
+    }
 
+    // 情绪分析
+    let mode = 50
     try {
-      let images = ''
-
-      // 复制图片文件
-      let newPathListPromises = imgPathList.map(async path => {
-        return await downloadImg(path, this.props.user.id)
-      })
-      let newImgPathList = []
-      for (let newPathListPromise of newPathListPromises) {
-        newImgPathList.push(await newPathListPromise)
-      }
-
-      // 情绪分析
-      let mode = 50
-      if (isLogin && this.state.isConnected) {
-        const res = await HttpUtils.post(UTILS.get_nlp_result, { content })
-        mode = res.code === 0 ? Math.floor(res.data * 100) : 50
-      }
-
+      const res = await HttpUtils.post(UTILS.get_nlp_result, { content })
+      mode = res.code === 0 ? Math.floor(res.data * 100) : 50
+    } finally {
       const data = { title, content, mode, images, latitude, longitude, location, imgPathList }
       // 更新配置文件
       await updateFile({
@@ -198,7 +184,10 @@ export default class NewDiary extends Component {
       this._updateUser()
 
       // 同步
-      isLogin && syncFile(this.props.user.id)
+      isLogin && await syncFile(this.props.user.id)
+
+      // 七夕活动
+      HttpUtils.get(USERS.update_activity)
 
       if (this.state.firstEntryDiary) {
         this.setState({
@@ -208,11 +197,6 @@ export default class NewDiary extends Component {
       } else {
         Actions.pop()
       }
-
-      Toast.hide()
-    } catch(e) {
-      console.log(e);
-      Toast.fail('保存失败，请稍后再试', 2)
     }
   }
 
@@ -246,7 +230,7 @@ export default class NewDiary extends Component {
 
         Toast.hide()
 
-        if(!message) {
+        if (!message) {
           this.setState({
             title,
             content,
@@ -278,8 +262,8 @@ export default class NewDiary extends Component {
       require('../../../res/images/home/diary/icon_back_black.png')
 
     const leftButton = (
-      <TouchableOpacity onPress={this.saveDiary.bind(this)}>
-        <Image source={source}/>
+      <TouchableOpacity onPress={() => Actions.pop()}>
+        <Image source={source} />
       </TouchableOpacity>
     )
 
@@ -293,7 +277,7 @@ export default class NewDiary extends Component {
 
     const rightButton = (
       <TouchableOpacity onPress={this._callImgPicker.bind(this)}>
-        <Image source={source}/>
+        <Image source={source} />
       </TouchableOpacity>
     )
 
