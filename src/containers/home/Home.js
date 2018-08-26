@@ -80,7 +80,8 @@ export default class Home extends Component {
     showWeather: true,
     isRefreshing: false,
     profileNote: false,
-    calendarHeight: new Animated.Value(0)
+    calendarHeight: new Animated.Value(0),
+    isFetchingDiary: false
   }
 
   async componentDidMount() {
@@ -113,95 +114,100 @@ export default class Home extends Component {
     // 未开启同步不执行
     if (!await Storage.get('isSync', false)) return
 
-    const res = await HttpUtils.get(NOTES.list)
-    if (res.code === 0) {
-      const { partner, recommend, user } = res.data
-      let diaryList = [...partner, ...user]
+    // 防止重复fetch
+    if (this.state.isFetchingDiary) return
 
-      const localDiaryList = await readFile(this.props.user.id)
-      const localPartnerDiaryList = localDiaryList.filter(diary => diary.user_id !== this.props.user.id)
+    this.setState({ isFetchingDiary: true }, async () => {
+      const res = await HttpUtils.get(NOTES.list)
+      if (res.code === 0) {
+        const { partner, recommend, user } = res.data
+        let diaryList = [...partner, ...user]
 
-      // 保存新日记
-      let newDiaryList = []
-      if (localDiaryList.length) {
-        for (let i = 0; i < diaryList.length; i++) {
-          for (let j = 0; j < localDiaryList.length; j++) {
-            if (diaryList[i].id === localDiaryList[j].id) {
-              break
+        const localDiaryList = await readFile(this.props.user.id)
+
+        // 保存新日记
+        let newDiaryList = []
+        if (localDiaryList.length) {
+          for (let i = 0; i < diaryList.length; i++) {
+            for (let j = 0; j < localDiaryList.length; j++) {
+              if (diaryList[i].id === localDiaryList[j].id) {
+                break
+              }
+              if (j === localDiaryList.length - 1) {
+                newDiaryList.push(diaryList[i])
+              }
             }
-            if (j === localDiaryList.length - 1) {
-              newDiaryList.push(diaryList[i])
+          }
+        } else {
+          newDiaryList = [...diaryList]
+        }
+
+
+        // 删除、更新日记
+        let deleteDiaryList = [], updateDiaryList = []
+        if (diaryList.length) {
+          for (let i = 0; i < localDiaryList.length; i++) {
+            for (let j = 0; j < diaryList.length; j++) {
+              if (localDiaryList[i].id === diaryList[j].id) {
+                break
+              }
+              if (j === diaryList.length - 1) {
+                deleteDiaryList.push(localDiaryList[i])
+              }
+            }
+
+            for (let z = 0; z < diaryList.length; z++) {
+              if ((localDiaryList[i].id === diaryList[z].id) && (localDiaryList[i].updated_at !== diaryList[z].updated_at)) {
+                updateDiaryList.push({ ...localDiaryList[i], ...diaryList[z] })
+                break
+              }
+            }
+          }
+        } else {
+          deleteDiaryList = [...localDiaryList]
+        }
+
+        for (let newDiary of newDiaryList) {
+          newDiary.imgPathList = newDiary.imgPathList || []
+          newDiary.uuid = newDiary.uuid || uuid()
+          newDiary.op = 0
+
+          // 缓存图片
+          if (newDiary.images) {
+            let urlList = newDiary.images.split(',')
+            for (let url of urlList) {
+              newDiary.imgPathList.push(await downloadImg(url, this.props.user.id))
             }
           }
         }
-      } else {
-        newDiaryList = [...diaryList]
+
+        // 增加日记
+        newDiaryList.length &&
+          await updateFile({
+            user_id: this.props.user.id || 0,
+            action: 'add',
+            data: newDiaryList
+          })
+
+        // 更新日记
+        updateDiaryList.length &&
+          await updateFile({
+            user_id: this.props.user.id || 0,
+            action: 'update',
+            data: updateDiaryList
+          })
+
+        // 删除日记
+        deleteDiaryList.length &&
+          await updateFile({
+            user_id: this.props.user.id || 0,
+            action: 'delete',
+            data: deleteDiaryList
+          })
+
+        this._formDiaryList(await readFile(this.props.user.id))
       }
-
-      // 删除、更新伙伴日记,
-      let deleteDiaryList = [], updateDiaryList = []
-      if (partner.length) {
-        for (let i = 0; i < localPartnerDiaryList.length; i++) {
-          for (let j = 0; j < partner.length; j++) {
-            if (localPartnerDiaryList[i].id === partner[j].id) {
-              break
-            }
-            if (j === partner.length - 1) {
-              deleteDiaryList.push(localPartnerDiaryList[i])
-            }
-          }
-
-          for (let z = 0; z < partner.length; z++) {
-            if ((localPartnerDiaryList[i].id === partner[z].id) && (localPartnerDiaryList[i].updated_at !== partner[z].updated_at)) {
-              updateDiaryList.push({ ...localPartnerDiaryList[i], ...partner[z] })
-              break
-            }
-          }
-        }
-      } else {
-        deleteDiaryList = [...localPartnerDiaryList]
-      }
-
-      for (let newDiary of newDiaryList) {
-        newDiary.imgPathList = newDiary.imgPathList || []
-        newDiary.uuid = newDiary.uuid || uuid()
-        newDiary.op = 0
-
-        // 缓存图片
-        if (newDiary.images) {
-          let urlList = newDiary.images.split(',')
-          for (let url of urlList) {
-            newDiary.imgPathList.push(await downloadImg(url, this.props.user.id))
-          }
-        }
-      }
-
-      // 增加日记
-      newDiaryList.length &&
-      await updateFile({
-        user_id: this.props.user.id || 0,
-        action: 'add',
-        data: newDiaryList
-      })
-
-      // 更新日记
-      updateDiaryList.length &&
-      await updateFile({
-        user_id: this.props.user.id || 0,
-        action: 'update',
-        data: updateDiaryList
-      })
-
-      // 删除日记
-      deleteDiaryList.length &&
-      await updateFile({
-        user_id: this.props.user.id || 0,
-        action: 'delete',
-        data: deleteDiaryList
-      })
-
-      this._formDiaryList(await readFile(this.props.user.id))
-    }
+    })
   }
 
   async _formDiaryList(diaryList) {
@@ -251,7 +257,8 @@ export default class Home extends Component {
       diaryList,
       markedDates,
       filterDiaryList: diaryList,
-      isRefreshing: false
+      isRefreshing: false,
+      isFetchingDiary: false
     })
   }
 
@@ -465,7 +472,7 @@ export default class Home extends Component {
   }
 
   _renderItem({ item }) {
-    return <Diary data={item} isProfileNote={false}/>
+    return <Diary data={item} isProfileNote={false} />
   }
 
   _emptyDiary() {
@@ -478,7 +485,7 @@ export default class Home extends Component {
 
   _listFooter() {
     return (
-      <View style={[styles.list_footer, { display: this.state.diaryList.length === 0 ? 'none' : 'flex' }]}/>
+      <View style={[styles.list_footer, { display: this.state.diaryList.length === 0 ? 'none' : 'flex' }]} />
     )
   }
 
@@ -523,6 +530,7 @@ export default class Home extends Component {
           </TouchableOpacity>
 
 
+
         </View>
         <View
           style={[styles.tip_container, { display: this.state.showDayTip ? 'flex' : 'none',position:this.state.showDayTip?'absolute':'relative' }]}
@@ -530,6 +538,7 @@ export default class Home extends Component {
         >
           <TextPingFang style={styles.text_tip}>点击这里回到当天日期哦</TextPingFang>
           <View style={styles.triangle}/>
+
         </View>
 
         <Animated.View
@@ -555,7 +564,7 @@ export default class Home extends Component {
         </Animated.View>
 
         <View style={styles.weather_container}>
-          <Image style={styles.weather_icon} source={this.state.weather_icon}/>
+          <Image style={styles.weather_icon} source={this.state.weather_icon} />
 
           <View style={styles.weather_inner_container}>
             <TouchableOpacity
@@ -569,7 +578,7 @@ export default class Home extends Component {
               style={[styles.weather_exchange, { display: this.props.partner.id ? 'flex' : 'none',position: this.props.partner.id ? 'absolute' : 'relative' }]}
               onPress={() => this.exchangeWeather()}
             >
-              <Image source={this.state.exchange_icon}/>
+              <Image source={this.state.exchange_icon} />
             </TouchableOpacity>
           </View>
 
@@ -598,7 +607,7 @@ export default class Home extends Component {
           style={styles.new_diary}
           onPress={() => Actions.jump(SCENE_NEW_DIARY)}
         >
-          <Image source={require('../../../res/images/home/icon_new_diary.png')}/>
+          <Image source={require('../../../res/images/home/icon_new_diary.png')} />
         </TouchableOpacity>
       </Container>
     )

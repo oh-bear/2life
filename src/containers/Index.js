@@ -70,12 +70,12 @@ export default class Index extends Component {
 
   async _setSync() {
     // 版本过渡：设置非订阅同步用户本地同步
-    if (!this.props.user.vip)
-      await Storage.set('isSync', false)
+    // const user = this.props.user
+    // if (!user.vip)
+    //   return await Storage.set('isSync', false)
 
-    // 七夕活动开放vip
-    if (this.props.user.vip || (Date.now() < new Date('2018-08-27').getTime()))
-      await Storage.set('isSync', true)
+    // if (user.vip_expires && Date.now() > user.vip_expires)
+    //   return await Storage.set('isSync', false)
   }
 
   // 日记配置文件初始化

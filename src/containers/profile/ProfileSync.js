@@ -17,7 +17,7 @@ import Storage from '../../common/storage'
 import {
   getResponsiveWidth, WIDTH,
 } from '../../common/styles'
-import { updateUser } from '../../common/util'
+import { updateUser, syncFile } from '../../common/util'
 import store from '../../redux/store'
 import HttpUtils from '../../network/HttpUtils'
 import { USERS } from '../../network/Urls'
@@ -58,31 +58,33 @@ export default class ProfileSync extends Component {
     Storage.set('isSync', this.state.isSync)
   }
 
-  SyncChange(isSync) {
+  async SyncChange(isSync) {
     if (!isSync) {
       return this.setState({ showCloseSyncPopup: true })
     } else {
-      if (this.props.user.vip)
+      const user = this.props.user
+      if (user.vip_expires && Date.now() < user.vip_expires) {
+        await Storage.set('isSync', true)
+        syncFile(user.id)
         return this.setState({ isSync: true })
+      }
 
       let expires = 30 * 24 * 60 * 60 * 1000
       
-      this.setState({
-        // showOpenSyncPopup: true,
-        isSync: true
+      RNIap.buyProduct('vip_month_1').then(purchase => {
+        HttpUtils.get(USERS.update_vip, { expires }).then(async res => {
+          if (res.code === 0) {
+            await Storage.set('isSync', true)
+            syncFile(user.id)
+            this.setState({
+              showOpenSyncPopup: true,
+              isSync: true
+            })
+          }
+        })
+      }).catch(err => {
+        console.warn(err) // standardized err.code and err.message available
       })
-      // RNIap.buyProduct('vip_month_1').then(purchase => {
-      //   HttpUtils.get(USERS.update_vip, { expires }).then(res => {
-      //     if (res.code === 0) {
-      //       this.setState({
-      //         showOpenSyncPopup: true,
-      //         isSync: true
-      //       })
-      //     }
-      //   })
-      // }).catch(err => {
-      //   console.warn(err) // standardized err.code and err.message available
-      // })
     }
   }
 

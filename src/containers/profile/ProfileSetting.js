@@ -20,6 +20,7 @@ import {
 import {
   getResponsiveWidth, WIDTH,
 } from '../../common/styles'
+import { readFile, updateFile }  from '../../common/util'
 
 export default class ProfileSetting extends Component {
 
@@ -67,6 +68,23 @@ export default class ProfileSetting extends Component {
     for (let filename of this.state.fileList) {
       await RNFetchBlob.fs.unlink(`${path}/${filename}`)
     }
+
+    // 筛选重复日记
+    let content = await readFile(id)
+    let deleteDiary = []
+    for (let i = 0; i < content.length; i++) {
+      for (let j = i + 1; j < content.length; j++) {
+        if (content[i].id === content[j].id)
+          deleteDiary.push(content[j])
+      }
+    }
+
+    updateFile({
+      user_id: id,
+      action: 'delete',
+      data: deleteDiary
+    })
+
     this.setState({
       size: '0M',
       fileList: []

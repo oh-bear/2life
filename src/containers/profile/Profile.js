@@ -63,13 +63,13 @@ export default class Profile extends Component {
   }
 
   async componentDidMount() {
-    const res = await HttpUtils.get(UTILS.show_act)
-    let showActEntry = false, actUrl = 'https://2life.act.ursb.me/#/', shareUrl = 'https://2life.act.ursb.me/#/invitation/'
-    if (res.code === 0) {
-      showActEntry = res.show
-      actUrl = res.url
-      shareUrl = res.shareUrl
-    }
+    // const res = await HttpUtils.get(UTILS.show_act)
+    // let showActEntry = false, actUrl = 'https://2life.act.ursb.me/#/', shareUrl = 'https://2life.act.ursb.me/#/invitation/'
+    // if (res.code === 0) {
+    //   showActEntry = res.show
+    //   actUrl = res.url
+    //   shareUrl = res.shareUrl
+    // }
 
     // 获得日记数量和情绪值
     const diaryList = await readFile(this.props.user.id)
@@ -90,9 +90,9 @@ export default class Profile extends Component {
       otherAverageMode: Math.floor(otherTotalMode / otherDiaryList.length) || 0,
       myDiaryCount: myDiaryList.length || 0,
       otherDiaryCount: otherDiaryList.length || 0,
-      showActEntry,
-      actUrl,
-      shareUrl
+      // showActEntry,
+      // actUrl,
+      // shareUrl
     })
   }
 
