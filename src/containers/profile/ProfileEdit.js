@@ -5,6 +5,7 @@ import {
   ScrollView,
   TouchableOpacity,
   Image,
+  Platform,
   TextInput,
   Alert
 } from 'react-native'
@@ -79,6 +80,8 @@ export default class ProfileEdit extends Component {
       if (res.code === 0) {
         store.dispatch(fetchProfileSuccess(res.data.user))
         Toast.success('修改成功')
+      }else {
+        Toast.fail('出错了，等会再试试')
       }
     } catch (e) {
       Toast.fail('出错了，等会再试试')
@@ -131,12 +134,22 @@ export default class ProfileEdit extends Component {
               <TextInput
                 ref={ref => this.name_ipt = ref}
                 style={styles.text_row_right}
-                value={this.state.user.name}
+                value={this.state.name}
                 maxLength={48}
+                underlineColorAndroid='transparent'
                 returnKeyType='done'
                 enablesReturnKeyAutomatically
-                onChangeText={name => this.setState({ name })}
+                onChangeText={name => {
+                  //if(Platform.OS === 'ios'){
+                      //  this.setState({ name })
+                  // }else{
+                  //   let user = this.state.user
+                  //   user.name = name
+                     this.setState({name:name})
+                  // }
+                }}
                 onSubmitEditing={() => this.updateUser()}
+                //onBlur={()=>this.updateUser()}
               />
               <TouchableOpacity
                 style={styles.row_indicator}

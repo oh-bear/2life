@@ -5,10 +5,13 @@ import {
   TextInput,
   Alert,
   TouchableOpacity,
+  BackHandler,
   Image,
   DatePickerIOS,
-  Animated
+  Animated,
+  Platform,
 } from 'react-native'
+import DatePicker from 'react-native-datepicker'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { connect } from 'react-redux'
 import { Actions } from 'react-native-router-flux'
@@ -78,12 +81,20 @@ export default class NewDiary extends Component {
   }
 
   componentDidMount() {
+    BackHandler.addEventListener('hardwareBackPress', this.onBackAndroid);
     this._firstIn()
     this._getLocation()
   }
 
+  onBackAndroid = () => {
+    //this.saveDiary()
+    Actions.pop()
+    return true;
+   };
+
   componentWillUnmount() {
     Storage.set('firstEntryDiary', false)
+    BackHandler.removeEventListener('hardwareBackPress',this.onBackAndroid);
     this.saveDiary()
   }
 
@@ -103,6 +114,8 @@ export default class NewDiary extends Component {
         this.setState({ location: `${location.city}，${location.province}，${location.country}` })
       }
       this.setState({ latitude, longitude })
+    },err=>{
+        Toast.info('呃哦，获取定位失败了，打开定位再试试吧', 2)
     })
   }
 
@@ -118,7 +131,7 @@ export default class NewDiary extends Component {
   async saveDiary() {
     const isLogin = !!this.props.user.id
 
-    if (this.state.savingDiary) return
+  //  if (this.state.savingDiary) return
 
     // this.setState({ savingDiary: true })
 
@@ -159,13 +172,13 @@ export default class NewDiary extends Component {
           op: 1
         }
       })
-  
+
       // 第一次写日记更新用户status
       this._updateUser()
-  
+
       // 同步
       isLogin && await syncFile(this.props.user.id)
-  
+
       if (this.state.firstEntryDiary) {
         this.setState({
           showPopup: true,
@@ -264,29 +277,33 @@ export default class NewDiary extends Component {
   render() {
     return (
       <Container hidePadding={true}>
+        {
+          Platform.OS=='ios'? <View> <Animated.View
+              style={{
+                position: 'absolute',
+                bottom: this.state.datePickerY,
+                backgroundColor: '#fff',
+                zIndex: 100
+              }}
+            >
+            <DatePickerIOS
+                locale={'zh-Hans'}
+                style={styles.date_picker}
+                date={this.state.date}
+                maximumDate={new Date()}
+                mode={'datetime'}
+                onDateChange={date => this.setState({date})}
+              />
+            </Animated.View>
+            <TouchableOpacity
+              style={[styles.mask, {display: this.state.showDatePicker ? 'flex' : 'none'}]}
+              onPress={() => this._selectDate()}
+            >
+            </TouchableOpacity></View>
+            :<View/>
+        }
 
-        <Animated.View
-          style={{
-            position: 'absolute',
-            bottom: this.state.datePickerY,
-            backgroundColor: '#fff',
-            zIndex: 100
-          }}
-        >
-          <DatePickerIOS
-            locale={'zh-Hans'}
-            style={styles.date_picker}
-            date={this.state.date}
-            maximumDate={new Date()}
-            mode={'datetime'}
-            onDateChange={date => this.setState({ date })}
-          />
-        </Animated.View>
-        <TouchableOpacity
-          style={[styles.mask, { display: this.state.showDatePicker ? 'flex' : 'none' }]}
-          onPress={() => this._selectDate()}
-        >
-        </TouchableOpacity>
+
 
         <KeyboardAwareScrollView
           contentContainerStyle={styles.scroll_style}
@@ -303,33 +320,71 @@ export default class NewDiary extends Component {
             rightButton={this.state.rightButton}
           />
 
-          <View style={styles.date_container}>
-            <TextPingFang style={styles.text_date}>{getMonth(this.state.date.getMonth())} </TextPingFang>
-            <TextPingFang style={styles.text_date}>{this.state.date.getDate()}，</TextPingFang>
-            <TextPingFang style={styles.text_date}>{this.state.date.getFullYear()}</TextPingFang>
-            <TouchableOpacity
-              style={styles.small_calendar}
-              onPress={this._selectDate.bind(this)}
-            >
-              <Image source={require('../../../res/images/home/diary/icon_calendar_small.png')} />
-            </TouchableOpacity>
-          </View>
+          {
+            Platform.OS=='ios'?
+            <View style={styles.date_container}>
+              <TextPingFang style={styles.text_date}>{getMonth(this.state.date.getMonth())} </TextPingFang>
+              <TextPingFang style={styles.text_date}>{this.state.date.getDate()}，</TextPingFang>
+              <TextPingFang style={styles.text_date}>{this.state.date.getFullYear()}</TextPingFang>
+              <TouchableOpacity
+                style={styles.small_calendar}
+                onPress={this._selectDate.bind(this)}
+              >
+                <Image source={require('../../../res/images/home/diary/icon_calendar_small.png')}/>
+              </TouchableOpacity>
+            </View>
+            :<View style={styles.date_container}>
+              <DatePicker
+                style={{width: 200}}
+                date={this.state.date}
+                mode="date"
+                format="MM-DD，YYYY"
+                maxDate={new Date()}
+                confirmBtnText="确定"
+                cancelBtnText="取消"
+                iconSource={require('../../../res/images/home/diary/icon_calendar_small.png')}
+                customStyles={{
+                  dateIcon: {
+                    position: 'absolute',
+                    right: getResponsiveWidth(100),
+                    top: 10,
+                    bottom:10,
+                    marginLeft: 0,
+                    width:getResponsiveWidth(20),
+                    height:getResponsiveWidth(20)
+                  },
+                  dateInput: {
+                    marginLeft: 0,
+                    borderWidth:0,
+                    alignItems: 'flex-start',
+                    justifyContent: 'center'
+                  }
+                }}
+                onDateChange={(date,date1) => {
+                  this.setState({date: date1})}
+                }
+              />
+            </View>
+          }
+
 
           <TextInput
             style={styles.text_title}
             value={this.state.title}
-            onChangeText={title => this.setState({ title_2: title })}
+            onChangeText={title => this.setState({ title_2: title,title:title })}
             onBlur={() => this.setState({ title: this.state.title_2 })}
             placeholder='标题'
+            underlineColorAndroid='transparent'
             placeholderTextColor='#aaa'
           />
 
           <TextInput
             style={styles.text_content}
             value={this.state.content}
-            onChangeText={content => this.setState({ content_2: content })}
+            onChangeText={content => this.setState({ content_2: content , content:content})}
             onBlur={() => this.setState({ content: this.state.content_2 })}
             placeholder='请输入正文'
+            underlineColorAndroid='transparent'
             placeholderTextColor='#aaa'
             multiline
           />
@@ -341,6 +396,7 @@ export default class NewDiary extends Component {
           icon={require('../../../res/images/home/icon_save.png')}
           content={this.state.popupContent}
           onPressLeft={() => {
+
             this.setState({ showPopup: false })
             if (this.state.content) Actions.pop()
           }}

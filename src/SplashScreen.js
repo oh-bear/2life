@@ -46,7 +46,7 @@ class SplashScreen extends Component {
       const { uid, token, timestamp } = key
 
       const res = await HttpUtils.get(USERS.check_token, key)
-      
+
       if (res.code === 0) {
         setToken({uid, token, timestamp})
 
@@ -54,7 +54,7 @@ class SplashScreen extends Component {
 
         if (res.code === 0) {
           store.dispatch(fetchProfileSuccess(res.data))
-  
+
           if (res.partner.id) {
             store.dispatch(fetchPartnerSuccess(res.partner))
           }

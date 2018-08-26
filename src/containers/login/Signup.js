@@ -139,11 +139,12 @@ export default class Signup extends Component {
                   <TextPingFang style={styles.text_area}>{this.state.accountArea}</TextPingFang>
                 </TouchableOpacity>
                 <TextInput
-                  style={styles.input}
+                  style={styles.input_phone}
                   onChangeText={account => this.setState({ account, showAccountTip: false })}
                   value={this.state.account}
                   keyboardType='numeric'
                   maxLength={11}
+                  underlineColorAndroid='transparent'
                   clearButtonMode='while-editing'
                   placeholder='请输入手机号码'
                   placeholderTextColor='#aaa'
@@ -157,6 +158,7 @@ export default class Signup extends Component {
                   onChangeText={code => this.setState({ code, showCodeTip: false })}
                   value={this.state.code}
                   keyboardType='numeric'
+                  underlineColorAndroid='transparent'
                   placeholder='请输入验证码'
                   placeholderTextColor='#aaa'
                   multiline={false}
@@ -175,6 +177,7 @@ export default class Signup extends Component {
                 onChangeText={password => this.setState({ password, showPswTip: false })}
                 value={this.state.password}
                 clearButtonMode='while-editing'
+                underlineColorAndroid='transparent'
                 placeholder='请输入密码'
                 placeholderTextColor='#aaa'
                 multiline={false}
@@ -201,8 +204,9 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: '#fff',
     width: WIDTH,
-    height: HEIGHT,
+    //height: HEIGHT,
     alignItems: 'center',
+    flex:1
   },
   inputs_container: {
     flex: 1,
@@ -238,6 +242,13 @@ const styles = StyleSheet.create({
     fontSize: 16,
     borderBottomWidth: .5,
     borderBottomColor: '#2DC3A6',
+  },
+  input_phone:{
+    width: getResponsiveWidth(240),
+    height: getResponsiveHeight(50),
+    marginTop: getResponsiveHeight(24),
+    color: '#444',
+    fontSize: 16,
   },
   code_container: {
     flexDirection: 'row',

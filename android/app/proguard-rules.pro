@@ -18,6 +18,7 @@
 
 # Disabling obfuscation is useful if you collect stack traces from production crashes
 # (unless you are using a system that supports de-obfuscate the stack traces).
+-ignorewarnings
 -dontobfuscate
 
 # React Native
@@ -39,6 +40,10 @@
 -keepclassmembers @com.facebook.proguard.annotations.KeepGettersAndSetters class * {
   void set*(***);
   *** get*();
+}
+
+-keep class com.tencent.mm.sdk.** {
+   *;
 }
 
 -keep class * extends com.facebook.react.bridge.JavaScriptModule { *; }

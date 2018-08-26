@@ -75,7 +75,7 @@ export default class ProfileNote extends Component {
 
   _listFooter() {
     return (
-      <View style={[styles.list_footer, { display: this.state.diaryList.length === 0 ? 'none' : 'flex' }]}/>
+      <View style={[styles.list_footer, { display: this.state.diaryList.length === 0 ? 'none' : 'flex' ,position: this.state.diaryList.length === 0 ? 'relative' : 'absolute'}]}/>
     )
   }
 
@@ -102,8 +102,8 @@ export default class ProfileNote extends Component {
 const styles = StyleSheet.create({
   diary_container: {
     width: WIDTH,
-    paddingLeft: getResponsiveWidth(24),
-    paddingRight: getResponsiveWidth(24),
+    marginLeft: getResponsiveWidth(24),
+    marginRight: getResponsiveWidth(24),
     backgroundColor: '#fff'
   },
   none_container: {

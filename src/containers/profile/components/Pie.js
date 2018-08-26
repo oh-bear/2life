@@ -9,7 +9,8 @@ import Echarts from 'native-echarts'
 import TextPingFang from '../../../components/TextPingFang'
 
 import {
-	getResponsiveWidth
+	getResponsiveWidth,
+	WIDTH
 } from '../../../common/styles'
 
 export default class Pie extends Component {
@@ -79,7 +80,7 @@ export default class Pie extends Component {
 
 		return (
 			<View style={styles.container}>
-				<Echarts option={option} height={this.props.height} />
+				<Echarts option={option} height={this.props.height} width={WIDTH}/>
 				<TextPingFang style={styles.text_title}>• 情绪饼状图</TextPingFang>
 			</View>
 		)

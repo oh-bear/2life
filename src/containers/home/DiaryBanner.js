@@ -130,6 +130,8 @@ export default class DiaryBanner extends Component {
           dot={<View style={styles.swiper_dot}></View>}
           activeDot={<View style={[styles.swiper_dot, styles.swiper_active_dot]}></View>}
           bounces={true}
+          pagingEnabled={true}
+          key={this.state.imgPathList.length}
           onIndexChanged={this._onImgChanged.bind(this)}
           onTouchStart={this.props.onTouchStart}
           onTouchEnd={this.props.onTouchEnd}
@@ -138,7 +140,8 @@ export default class DiaryBanner extends Component {
         </Swiper>
 
         <View
-          style={[styles.bottom_bar, { display: this.props.showBottomBar ? 'flex' : 'none' }]}>
+          style={[styles.bottom_bar, { display: this.props.showBottomBar ? 'flex' : 'none',
+          position: this.props.showBottomBar ? 'absolute' : 'relative'  }]}>
           <TouchableOpacity style={styles.icon_container} onPress={() => this._removeImg()}>
             <Image source={require('../../../res/images/home/icon_remove_photo.png')}/>
           </TouchableOpacity>

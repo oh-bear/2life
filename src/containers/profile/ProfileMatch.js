@@ -24,6 +24,7 @@ import {
   WIDTH,
   HEIGHT,
   getResponsiveWidth,
+  getResponsiveHeight,
 } from '../../common/styles'
 import { updateUser, updateReduxUser } from '../../common/util'
 import Storage from '../../common/storage'
@@ -227,7 +228,7 @@ export default class ProfileMatch extends Component {
           desc={`本月还能匹配 ${this.props.user.last_times ? this.props.user.last_times : 0} 次`}
           onBack={() => this._back()}
         />
-        <ScrollView scrollEnabled={true}>
+        <ScrollView scrollEnabled={true} style={styles.scroll}>
           <ScrollableTabView
             style={styles.tabview}
             renderTabBar={() => <TabBar tabNames={['随机匹配', 'ID匹配']}/>}
@@ -306,6 +307,7 @@ export default class ProfileMatch extends Component {
                 value={this.state.matchUserId}
                 placeholder='Example: 071512'
                 keyboardType='numeric'
+                underlineColorAndroid='transparent'
                 onChangeText={id => this.setState({ matchUserId: id })}
               />
             </View>
@@ -365,6 +367,7 @@ const styles = StyleSheet.create({
   tabview: {
     marginLeft: getResponsiveWidth(24),
     marginRight: getResponsiveWidth(24),
+    height:getResponsiveHeight(365),
   },
   tab_container: {
     marginTop: getResponsiveWidth(32),
@@ -405,6 +408,9 @@ const styles = StyleSheet.create({
   active_text: {
     color: '#fff'
   },
+  scroll:{
+    width:WIDTH,
+  },
   input: {
     height: getResponsiveWidth(44),
     marginTop: getResponsiveWidth(8),
@@ -412,6 +418,13 @@ const styles = StyleSheet.create({
     fontSize: 14,
     borderBottomWidth: getResponsiveWidth(1),
     borderBottomColor: '#2DC3A6'
+  },
+  start_btn_box:{
+    width:WIDTH-getResponsiveWidth(48),
+    marginLeft: getResponsiveWidth(24),
+    marginRight: getResponsiveWidth(24),
+    display:'flex',
+    alignItems:'flex-end',
   },
   start_btn: {
     position: 'absolute',

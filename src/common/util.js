@@ -230,12 +230,21 @@ export async function getWeather(region) {
 
 // ios文件路径每次访问后都会变化，需要特别处理
 export function getPath(uri) {
+  console.log(uri);
   let filePath = uri
   if (Platform.OS === 'ios') {
     let arr = uri.split('/')
     const dirs = RNFetchBlob.fs.dirs
     filePath = `${dirs.DocumentDir}/${arr[arr.length - 1]}`
   }
+  if(Platform.OS == 'android'){
+    if(filePath.indexOf("http")!=0&&filePath.indexOf("file")!=0){
+      let arr = uri.split('/')
+      const dirs = RNFetchBlob.fs.dirs
+      filePath = `file://${dirs.DocumentDir}/${arr[arr.length - 1]}`
+    }
+  }
+  console.log(filePath);
   return filePath
 }
 
@@ -250,6 +259,7 @@ export async function postImgToQiniu(uriList, obj) {
   const { type, user_id } = obj
   if (!type && !user_id) return
 
+
   const uriBase64ListPromises = uriList.map(async uri => {
     let filePath = getPath(uri)
     return await RNFetchBlob.fs.readFile(filePath, 'base64')
@@ -259,6 +269,7 @@ export async function postImgToQiniu(uriList, obj) {
   for (let uriBase64ListPromise of uriBase64ListPromises) {
     uriBase64List.push(await uriBase64ListPromise)
   }
+
 
   // 并发上传图片
   const qiniuPromises = uriBase64List.map(async (base64) => {
@@ -278,25 +289,63 @@ export async function postImgToQiniu(uriList, obj) {
     if (res_token.code === 0) {
       const qiniu_token = res_token.data // 七牛token
 
-      // 上传到七牛
-      const res_qiniu = await fetch(URL_QINIU_BASE64 + key_base64, {
-        method: 'post',
-        headers: {
-          'Content-Type': 'application/octet-stream',
-          'Authorization': 'UpToken ' + qiniu_token
-        },
-        body: base64
-      })
+      if(Platform.OS === 'android'){
+        var xmlPromise = new Promise(function(resolve,reject){
+          var request = new XMLHttpRequest();
+          request.onreadystatechange = handler
+          request.open('POST', URL_QINIU_BASE64 + key_base64,true);
+          request.setRequestHeader("Content-Type", "application/octet-stream");
+          request.setRequestHeader("Authorization", 'UpToken ' + qiniu_token);
+          request.send(base64);
+          function handler(){
+            if (request.readyState !== 4) {
+              return;
+            }
+            if (request.status === 200) {
+              console.log('success', request.responseText);
+              let res = {};
+              res._bodyText = request.responseText;
+              res.status = 200;
+              resolve(res);
+            } else {
+              reject('error');
+            }
+          }
+        })
+        return xmlPromise;
+      }else {
+        const res_qiniu = await fetch(URL_QINIU_BASE64  + key_base64, {
+          method: 'post',
+          headers: {
+            'Content-Type': 'application/octet-stream',
+            'Authorization': 'UpToken ' + qiniu_token
+          },
+          body:base64
+        })
+        return res_qiniu
+      }
 
-      return res_qiniu
+      // // 上传到七牛
+      // const res_qiniu = await fetch(URL_qiniu_host + key_base64, {
+      //   method: 'post',
+      //   headers: {
+      //     'Content-Type': 'application/octet-stream',
+      //     'Authorization': 'UpToken ' + qiniu_token
+      //   },
+      //   body: base64
+      // })
+      //
+      // return res_qiniu
+
     }
   })
-
   let imgUrls = []
   for (let i = 0; i < qiniuPromises.length; i++) {
     const res = await qiniuPromises[i]
+    //alert(JSON.stringify(res))
     if (res.status === 200) {
       const body = JSON.parse(res._bodyText)
+      //alert(body.key)
       imgUrls.push(BASE_IMG_URL + body.key)
     }
   }
@@ -304,7 +353,7 @@ export async function postImgToQiniu(uriList, obj) {
 }
 
 /**
- * 
+ *
  * @param {Number} user_id 用户ID
  */
 export async function postFileToQiniu(user_id) {
@@ -415,7 +464,12 @@ export function sleep(ms) {
  * @returns {String} 图片保存路径
  */
 export async function downloadImg(url, user_id = 0) {
-  const filename = `id_${user_id}_${Math.round(Math.random() * 10 ** 10)}.jpg`
+  if(Platform.OS==='android'){
+    if(url.indexOf('file://')==0){
+      return url;
+    }
+  }
+  const filename = `id_${user_id}_${Math.round(Math.pow(Math.random() * 10 , 10))}.jpg`
   const config = {
     fileCache: true,
     path: `${RNFetchBlob.fs.dirs.DocumentDir}/${filename}`
@@ -512,13 +566,13 @@ export async function updateFile(obj) {
   if (obj.action === 'delete_other') {
     diaryList = diaryList.filter(diary => diary.user_id === obj.user_id)
   }
-  
+
   const newContent = {
     ...content,
     lastModified: Date.now(),
     diaryList
   }
-  
+
   await fs.writeFile(FILE_PATH, JSON.stringify(newContent), 'utf8')
   console.log(obj.action)
   console.log(obj.data)
@@ -541,13 +595,13 @@ export async function syncFile(user_id) {
 
     const fs = RNFetchBlob.fs
     const FILE_PATH = fs.dirs.DocumentDir + `/user_${user_id}_config.json`
-  
+
     // 读取该用户配置文件内容
     const content = JSON.parse(await fs.readFile(FILE_PATH, 'utf8'))
     let diaryListAddUpdate = content.diaryList.filter(diary => {
       return diary.user_id === user_id && (diary.op === 1 || diary.op === 2)
     })
-  
+
     // 上传图片
     for (let diary of diaryListAddUpdate) {
       const images = await postImgToQiniu(diary.imgPathList, {
@@ -556,7 +610,7 @@ export async function syncFile(user_id) {
       })
       diary.images = images
     }
-  
+
     // 更新配置文件
     diaryListAddUpdate.length &&
     await updateFile({
@@ -564,23 +618,23 @@ export async function syncFile(user_id) {
       action: 'update',
       data: diaryListAddUpdate
     })
-  
+
     // 上传文件到七牛
     const synctime = await postFileToQiniu(user_id)
-  
+
     // 通知后台拉取文件进行更新
     const res = await HttpUtils.get(NOTES.sync, { synctime })
-  
+
     if (res.code === 0) {
       const resDiaryList = res.data
 
       // 更新后台用户总日记数量
       HttpUtils.get(NOTES.refresh_total_notes)
-  
+
       // 如果是新增日记，需要遍历本地日记增加返回的ID字段等数据
       const content = JSON.parse(await fs.readFile(FILE_PATH, 'utf8'))
       let { diaryList } = content
-  
+
       for (let i = 0; i < diaryList.length; i++) {
         if (!diaryList[i].id) {
           for (let j = 0; j < resDiaryList.length; j++) {
@@ -593,10 +647,10 @@ export async function syncFile(user_id) {
           }
         }
       }
-  
+
       // 过滤op为3的日记
       diaryList = diaryList.filter(diary => diary.op !== 3)
-      
+
       // 重置所有op为0
       diaryList = diaryList.map(diary => {
         diary.op = 0
@@ -609,7 +663,7 @@ export async function syncFile(user_id) {
         lastModified: Date.now(),
         diaryList
       }
-      
+
       await fs.writeFile(FILE_PATH, JSON.stringify(newContent), 'utf8')
       DeviceEventEmitter.emit('flush_local_note')
     }
@@ -648,11 +702,11 @@ export async function OCR(base64) {
   try {
     let res = await axios.post(url, data, {
       headers: {
+        'host':'recognition.image.myqcloud.com',
         'Content-Type': 'application/json',
         'Authorization': sign
       }
     })
-
     res = res.data
 
     let title = '',

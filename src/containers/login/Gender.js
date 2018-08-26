@@ -108,8 +108,9 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: '#fff',
     width: WIDTH,
-    height: HEIGHT,
+    //height: HEIGHT,
     alignItems: 'center',
+    flex:1
   },
   inputs_container: {
     flex: 1,

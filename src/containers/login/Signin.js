@@ -45,6 +45,8 @@ export default class Signin extends Component {
     showPswTip: false
   }
 
+
+
   async login() {
     Toast.loading('正在登录', 0)
 
@@ -56,25 +58,25 @@ export default class Signin extends Component {
         password: this.state.password
       }
       const res = await HttpUtils.post(URL_login, data)
-  
+
       if (res.code === 404) this.setState({ showAccountTip: true })
       if (res.code === 300) this.setState({ showPswTip: true })
       if (res.code === 0) {
-  
+
         const { uid, token, timestamp } = res.data.key
         setToken({ uid, token, timestamp })
         Storage.set('key', { uid, token, timestamp })
-  
+
         store.dispatch(fetchProfileSuccess(res.data.user))
         store.dispatch(fetchPartnerSuccess(res.data.partner))
-  
+
         JPushModule.setAlias(res.data.user.id.toString(), success => {
           console.log(success)
         })
-  
+
         Actions.reset(SCENE_INDEX, { user: res.data.user, partner: res.data.partner })
       }
-  
+
       Toast.hide()
     } catch (e) {
       console.log(e)
@@ -102,6 +104,7 @@ export default class Signin extends Component {
               value={this.state.account}
               keyboardType='numeric'
               maxLength={11}
+              underlineColorAndroid='transparent'
               clearButtonMode='while-editing'
               placeholder='请输入手机号码'
               placeholderTextColor='#aaa'
@@ -113,6 +116,7 @@ export default class Signin extends Component {
               value={this.state.password}
               clearButtonMode='while-editing'
               placeholder='请输入密码'
+              underlineColorAndroid='transparent'
               placeholderTextColor='#aaa'
               multiline={false}
               secureTextEntry
@@ -139,8 +143,9 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: '#fff',
     width: WIDTH,
-    height: HEIGHT,
+    //height: HEIGHT,
     alignItems: 'center',
+    flex:1,
   },
   inputs_container: {
     flex: 1,

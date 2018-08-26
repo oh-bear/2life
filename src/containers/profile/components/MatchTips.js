@@ -44,7 +44,7 @@ export default class MatchTips extends Component {
 
   render() {
     return (
-      <View style={[styles.container, { display: this.props.showPopup ? 'flex' : 'none' }]}>
+      <View style={[styles.container, { display: this.props.showPopup ? 'flex' : 'none',position:this.props.showPopup ? 'absolute' : 'relative' }]}>
         <View style={styles.swiper_container} animation='bounceIn'>
           <Swiper
             style={styles.swiper}
@@ -82,7 +82,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   swiper: {
-    paddingLeft: (WIDTH - getResponsiveWidth(311)) / 2
+    paddingLeft: (WIDTH - getResponsiveWidth(311)) / 2,
+  //  paddingLeft:getResponsiveWidth(24)
+  width:getResponsiveWidth(311),
   },
   popup_container: {
     width: getResponsiveWidth(311),

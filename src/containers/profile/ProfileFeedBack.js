@@ -93,6 +93,7 @@ export default class ProfileFeedBack extends Component {
             onChangeText={content => this.setState({ content })}
             multiline={true}
             placeholder='写下你想告诉我们的吧~'
+            underlineColorAndroid='transparent'
             placeholderTextColor='#000'
           />
 
@@ -147,7 +148,8 @@ const styles = StyleSheet.create({
     fontWeight: '300',
     borderWidth: getResponsiveWidth(1),
     borderColor: '#2DC3A6',
-    borderRadius: getResponsiveWidth(8)
+    borderRadius: getResponsiveWidth(8),
+    textAlignVertical: 'top'
   },
   submit_btn: {
     width: getResponsiveWidth(112),

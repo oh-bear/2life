@@ -45,7 +45,7 @@ export default class Row extends Component {
 				<View style={[styles.red_point, {display: this.props.showRedPoint ? 'flex' : 'none'}]}></View>
 
 				<Switch
-					style={[styles.row_right, {display: this.props.showSwitch ? 'flex' : 'none'}]}
+					style={[styles.row_right, {display: this.props.showSwitch ? 'flex' : 'none',position:this.props.showSwitch ? 'absolute' : 'relative'}]}
 					value={this.props.switchValue}
 					onValueChange={value => this.props.onValueChange(value)}
 					onTintColor={this.props.tintColor || '#2DC3A6'}
@@ -53,7 +53,7 @@ export default class Row extends Component {
 
 				<TextPingFang style={[styles.text_right, this.props.textRightStyle]}>{this.props.textRight}</TextPingFang>
 
-				<Image style={[styles.row_right, {display: this.props.showSwitch ? 'none' : 'flex'}]} source={require('../../../../res/images/common/icon_indicator.png')} />
+				<Image style={[styles.row_right, {display: this.props.showSwitch ? 'none' : 'flex',position:this.props.showSwitch ? 'relative' : 'absolute'}]} source={require('../../../../res/images/common/icon_indicator.png')} />
 			</TouchableOpacity>
 		)
 	}

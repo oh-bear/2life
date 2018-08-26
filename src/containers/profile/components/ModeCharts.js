@@ -69,7 +69,8 @@ export default class ModeCharts extends Component {
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: getResponsiveWidth(48)
+    marginTop: getResponsiveWidth(48),
+    //backgroundColor:'red',
   },
   top_container: {
     flexDirection: 'row',

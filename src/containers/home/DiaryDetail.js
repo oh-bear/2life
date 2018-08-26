@@ -5,6 +5,7 @@ import {
   TouchableOpacity,
   Image,
   ActionSheetIOS,
+  Platform,
   Alert,
   DeviceEventEmitter,
   Modal,
@@ -12,6 +13,7 @@ import {
   TextInput,
   Keyboard
 } from 'react-native'
+import { ActionSheet } from 'antd-mobile';
 import { connect } from 'react-redux'
 import { Actions } from 'react-native-router-flux'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
@@ -155,24 +157,85 @@ export default class DiaryDetail extends Component {
     })
   }
 
-  async likeNote() {
-    const res = await HttpUtils.post(NOTES.like, { note_id: this.props.diary.id })
 
-    if (res.code === 0) {
-      // 更新配置文件
-      await updateFile({
-        user_id: this.props.user.id || 0,
-        action: 'update',
-        data: {
-          ...this.props.diary,
-          is_liked: true,
-          op: 0
+
+    showActionSheet(){
+      const BUTTONS = ['修改日记', '删除日记', '取消'];
+      ActionSheet.showActionSheetWithOptions({
+        options: BUTTONS,
+        cancelButtonIndex: BUTTONS.length - 1,
+        destructiveButtonIndex: BUTTONS.length - 2,
+        // title: 'title',
+        //message: 'I am description, description, description',
+        maskClosable: true,
+        'data-seed': 'logId',
+        //wrapProps,
+      },
+      (index) => {
+        if (index === 0) Actions.replace(SCENE_UPDATE_DIARY, {diary: this.props.diary})
+        if (index === 1) {
+          Alert.alert(
+            '',
+            '确定要删除这篇日记吗？',
+            [
+              {
+                text: '取消',
+                onPress: () => {}
+              },
+              {
+                text: '确定',
+                onPress: async () => {
+                  // 更新配置文件
+                  await updateFile({
+                    user_id: this.props.user.id || 0,
+                    action: this.props.diary.id ? 'update' : 'delete',
+                    data: {
+                      ...this.props.diary,
+                      op: 3
+                    }
+                  })
+
+                  !!this.props.user.id && syncFile(this.props.user.id)
+
+                  Actions.pop()
+                }
+              },
+            ]
+          )
         }
-      })
-
-      DeviceEventEmitter.emit('flush_note', {})
-      this.renderlikeComponent(true)
+        if (index === 3) return
+      });
     }
+
+
+
+
+    // likeNote() {
+    //   HttpUtils.post(NOTES.like, {note_id: this.props.diary.id}).then(res => {
+    //     if (res.code === 0) {
+    //       DeviceEventEmitter.emit('flush_note', {})
+    //       this.renderlikeComponent(true)
+    //     }
+    //   })
+
+    async likeNote() {
+      const res = await HttpUtils.post(NOTES.like, { note_id: this.props.diary.id })
+
+      if (res.code === 0) {
+        // 更新配置文件
+        await updateFile({
+          user_id: this.props.user.id || 0,
+          action: 'update',
+          data: {
+            ...this.props.diary,
+            is_liked: true,
+            op: 0
+          }
+        })
+
+        DeviceEventEmitter.emit('flush_note', {})
+        this.renderlikeComponent(true)
+      }
 
   }
 
@@ -262,9 +325,15 @@ export default class DiaryDetail extends Component {
       const rightButton = (
         <TouchableOpacity
           style={styles.nav_right}
-          onPress={() => this.showOptions()}
-        >
-          <Image source={source} />
+         onPress={() =>{
+           if (Platform.OS === 'android') {
+             this.showActionSheet()
+           } else {
+             this.showOptions()
+           }
+         }}
+         >
+          <Image source={source}/>
         </TouchableOpacity>
       )
       this.setState({ rightButton })
@@ -330,7 +399,7 @@ export default class DiaryDetail extends Component {
             <TextPingFang style={styles.text_mode}>{this.state.mode}</TextPingFang>
             <TextPingFang style={styles.text_value}>情绪值</TextPingFang>
             <TouchableOpacity
-              style={[styles.update_container, { display: this.props.user.id === this.props.diary.user_id || this.props.diary.user_id === 0 ? 'flex' : 'none' }]}
+              style={[styles.update_container, { display: this.props.user.id === this.props.diary.user_id || this.props.diary.user_id === 0 ? 'flex' : 'none' ,position:this.props.user.id === this.props.diary.user_id || this.props.diary.user_id === 0?'absolute':'relative'}]}
               onPress={() => this.toggleChooseMode()}
             >
               <TextPingFang style={styles.text_update}>更正</TextPingFang>
@@ -403,6 +472,7 @@ export default class DiaryDetail extends Component {
           visible={this.state.showImgPreview}
           transparent={false}
           animationType={'fade'}
+          onRequestClose={() => {}}
         >
           <ImageViewer
             imageUrls={this.state.imgPathList.map(path => {
@@ -415,7 +485,7 @@ export default class DiaryDetail extends Component {
         </Modal>
 
         <TouchableOpacity
-          style={[styles.btn_container, { display: this.props.user.id !== this.props.diary.user_id && this.props.partner.id ? 'flex' : 'none' }]}
+          style={[styles.btn_container, { display: this.props.user.id !== this.props.diary.user_id && this.props.partner.id ? 'flex' : 'none' ,position: this.props.user.id !== this.props.diary.user_id && this.props.partner.id ? 'absolute' : 'relative'}]}
         >
           {this.state.likeComponent}
         </TouchableOpacity>
@@ -424,7 +494,7 @@ export default class DiaryDetail extends Component {
           style={[
             styles.input_container,
             {
-              position: 'absolute',
+              position:  this.state.showKeyboard ? 'absolute' : 'relative',
               bottom: this.state.inputCommentY,
               display: this.state.showKeyboard ? 'flex' : 'none'
             }
@@ -437,6 +507,7 @@ export default class DiaryDetail extends Component {
             placeholderTextColor='#aaa'
             enablesReturnKeyAutomatically={true}
             multiline={true}
+            underlineColorAndroid='transparent'
             returnKeyType={'send'}
             onSubmitEditing={() => this.sendComment()}
           />

@@ -78,6 +78,7 @@ const styles = StyleSheet.create({
 	container: {
 		width: WIDTH,
 		height: HEIGHT,
+		flex:1,
 		position: 'absolute',
 		justifyContent: 'center',
 		alignItems: 'center',
@@ -87,6 +88,7 @@ const styles = StyleSheet.create({
 	touch_view: {
 		width: WIDTH,
 		height: HEIGHT,
+		flex:1,
 		position: 'absolute',
 		backgroundColor: 'transparent',
 		zIndex: 10

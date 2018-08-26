@@ -5,6 +5,7 @@ import {
   ImageBackground,
   Image,
   FlatList,
+  Platform,
   DeviceEventEmitter,
   Animated
 } from 'react-native'
@@ -42,6 +43,7 @@ import {
 import store from '../../redux/store'
 import { cleanPartner } from '../../redux/modules/partner'
 import { SCENE_NEW_DIARY } from '../../constants/scene'
+import Toast from 'antd-mobile/lib/toast'
 
 import HttpUtils from '../../network/HttpUtils'
 import { NOTES } from '../../network/Urls'
@@ -139,6 +141,7 @@ export default class Home extends Component {
         } else {
           newDiaryList = [...diaryList]
         }
+
 
         // 删除、更新日记
         let deleteDiaryList = [], updateDiaryList = []
@@ -312,6 +315,8 @@ export default class Home extends Component {
           weather_icon: require('../../../res/images/home/icon_sunny.png'),
         })
       }
+    },err=>{
+        Toast.info('呃哦，获取定位失败了，打开定位再试试吧', 2)
     })
   }
 
@@ -524,13 +529,16 @@ export default class Home extends Component {
             </ImageBackground>
           </TouchableOpacity>
 
-          <View
-            style={[styles.tip_container, { display: this.state.showDayTip ? 'flex' : 'none' }]}
-            animation='bounceIn'
-          >
-            <TextPingFang style={styles.text_tip}>点击这里回到当天日期哦</TextPingFang>
-            <View style={styles.triangle} />
-          </View>
+
+
+        </View>
+        <View
+          style={[styles.tip_container, { display: this.state.showDayTip ? 'flex' : 'none',position:this.state.showDayTip?'absolute':'relative' }]}
+          animation='bounceIn'
+        >
+          <TextPingFang style={styles.text_tip}>点击这里回到当天日期哦</TextPingFang>
+          <View style={styles.triangle}/>
+
         </View>
 
         <Animated.View
@@ -567,7 +575,7 @@ export default class Home extends Component {
             </TouchableOpacity>
 
             <TouchableOpacity
-              style={[styles.weather_exchange, { display: this.props.partner.id ? 'flex' : 'none' }]}
+              style={[styles.weather_exchange, { display: this.props.partner.id ? 'flex' : 'none',position: this.props.partner.id ? 'absolute' : 'relative' }]}
               onPress={() => this.exchangeWeather()}
             >
               <Image source={this.state.exchange_icon} />
@@ -649,16 +657,18 @@ const styles = StyleSheet.create({
     fontSize: 10,
   },
   tip_container: {
+    display:'flex',
     width: getResponsiveWidth(164),
     height: getResponsiveWidth(37),
     position: 'absolute',
     right: getResponsiveWidth(8),
-    bottom: getResponsiveWidth(-35),
+    top:getResponsiveWidth(90),
+    //bottom: getResponsiveWidth(-35),
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#2DC3A6',
     borderRadius: getResponsiveWidth(8),
-    zIndex: 10
+    zIndex: 99
   },
   triangle: {
     position: 'absolute',
@@ -684,6 +694,8 @@ const styles = StyleSheet.create({
       if (HEIGHT === 667) return 190 // iphone 6/7/8
       if (HEIGHT === 736) return 335 // iphone 6P/7P/8P
       if (HEIGHT === 812) return 350 // iphone X
+      if (HEIGHT === 598) return 350
+      return 350
     })()
   },
   weather_container: {
@@ -725,12 +737,19 @@ const styles = StyleSheet.create({
       if (HEIGHT === 667) return 190 // iphone 6/7/8
       if (HEIGHT === 736) return 425 // iphone 6P/7P/8P
       if (HEIGHT === 812) return 500 // iphone X
+      if (HEIGHT === 598) return 310
+      if (HEIGHT >= 640) return 310
     })(),
     width: WIDTH,
-    paddingLeft: getResponsiveWidth(24),
-    paddingRight: getResponsiveWidth(24),
+    //paddingLeft: getResponsiveWidth(24),
+    //paddingRight: getResponsiveWidth(24),
     backgroundColor: 'transparent',
     zIndex: -10
+  },
+  diary_item:{
+    display:'flex',
+    alignItems:'center',
+    justifyContent:'center'
   },
   none_container: {
     alignItems: 'center',
