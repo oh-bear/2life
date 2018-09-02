@@ -40,7 +40,7 @@ export default class Index extends Component {
 
   async componentWillMount() {
     await this._initFile()
-    await this._setSync()
+    await this._setVip()
 
     if (this.props.tab) this.setState({ selectedTab: this.props.tab })
   }
@@ -68,14 +68,15 @@ export default class Index extends Component {
     })
   }
 
-  async _setSync() {
-    // 版本过渡：设置非订阅同步用户本地同步
-    // const user = this.props.user
-    // if (!user.vip)
-    //   return await Storage.set('isSync', false)
+  async _setVip() {
+    const user = this.props.user
+    if (!user.vip)
+      return await Storage.set('isVip', false)
 
-    // if (user.vip_expires && Date.now() > user.vip_expires)
-    //   return await Storage.set('isSync', false)
+    if (user.vip_expires && Date.now() > user.vip_expires)
+      return await Storage.set('isVip', false)
+
+    return await Storage.set('isVip', true)
   }
 
   // 日记配置文件初始化

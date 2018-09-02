@@ -157,22 +157,20 @@ export default class DiaryDetail extends Component {
     })
   }
 
-
-
-    showActionSheet(){
-      const BUTTONS = ['修改日记', '删除日记', '取消'];
-      ActionSheet.showActionSheetWithOptions({
-        options: BUTTONS,
-        cancelButtonIndex: BUTTONS.length - 1,
-        destructiveButtonIndex: BUTTONS.length - 2,
-        // title: 'title',
-        //message: 'I am description, description, description',
-        maskClosable: true,
-        'data-seed': 'logId',
-        //wrapProps,
-      },
+  showActionSheet() {
+    const BUTTONS = ['修改日记', '删除日记', '取消'];
+    ActionSheet.showActionSheetWithOptions({
+      options: BUTTONS,
+      cancelButtonIndex: BUTTONS.length - 1,
+      destructiveButtonIndex: BUTTONS.length - 2,
+      // title: 'title',
+      //message: 'I am description, description, description',
+      maskClosable: true,
+      'data-seed': 'logId',
+      //wrapProps,
+    },
       (index) => {
-        if (index === 0) Actions.replace(SCENE_UPDATE_DIARY, {diary: this.props.diary})
+        if (index === 0) Actions.replace(SCENE_UPDATE_DIARY, { diary: this.props.diary })
         if (index === 1) {
           Alert.alert(
             '',
@@ -180,7 +178,7 @@ export default class DiaryDetail extends Component {
             [
               {
                 text: '取消',
-                onPress: () => {}
+                onPress: () => { }
               },
               {
                 text: '确定',
@@ -205,38 +203,26 @@ export default class DiaryDetail extends Component {
         }
         if (index === 3) return
       });
+  }
+
+  async likeNote() {
+    const res = await HttpUtils.post(NOTES.like, { note_id: this.props.diary.id })
+
+    if (res.code === 0) {
+      // 更新配置文件
+      await updateFile({
+        user_id: this.props.user.id || 0,
+        action: 'update',
+        data: {
+          ...this.props.diary,
+          is_liked: true,
+          op: 0
+        }
+      })
+
+      DeviceEventEmitter.emit('flush_note', {})
+      this.renderlikeComponent(true)
     }
-
-
-
-
-    // likeNote() {
-    //   HttpUtils.post(NOTES.like, {note_id: this.props.diary.id}).then(res => {
-    //     if (res.code === 0) {
-    //       DeviceEventEmitter.emit('flush_note', {})
-    //       this.renderlikeComponent(true)
-    //     }
-    //   })
-
-    async likeNote() {
-      const res = await HttpUtils.post(NOTES.like, { note_id: this.props.diary.id })
-
-      if (res.code === 0) {
-        // 更新配置文件
-        await updateFile({
-          user_id: this.props.user.id || 0,
-          action: 'update',
-          data: {
-            ...this.props.diary,
-            is_liked: true,
-            op: 0
-          }
-        })
-
-        DeviceEventEmitter.emit('flush_note', {})
-        this.renderlikeComponent(true)
-      }
-
   }
 
   renderlikeComponent(isLiked) {
@@ -325,15 +311,15 @@ export default class DiaryDetail extends Component {
       const rightButton = (
         <TouchableOpacity
           style={styles.nav_right}
-         onPress={() =>{
-           if (Platform.OS === 'android') {
-             this.showActionSheet()
-           } else {
-             this.showOptions()
-           }
-         }}
-         >
-          <Image source={source}/>
+          onPress={() => {
+            if (Platform.OS === 'android') {
+              this.showActionSheet()
+            } else {
+              this.showOptions()
+            }
+          }}
+        >
+          <Image source={source} />
         </TouchableOpacity>
       )
       this.setState({ rightButton })
@@ -399,7 +385,7 @@ export default class DiaryDetail extends Component {
             <TextPingFang style={styles.text_mode}>{this.state.mode}</TextPingFang>
             <TextPingFang style={styles.text_value}>情绪值</TextPingFang>
             <TouchableOpacity
-              style={[styles.update_container, { display: this.props.user.id === this.props.diary.user_id || this.props.diary.user_id === 0 ? 'flex' : 'none' ,position:this.props.user.id === this.props.diary.user_id || this.props.diary.user_id === 0?'absolute':'relative'}]}
+              style={[styles.update_container, { display: this.props.user.id === this.props.diary.user_id || this.props.diary.user_id === 0 ? 'flex' : 'none', position: this.props.user.id === this.props.diary.user_id || this.props.diary.user_id === 0 ? 'absolute' : 'relative' }]}
               onPress={() => this.toggleChooseMode()}
             >
               <TextPingFang style={styles.text_update}>更正</TextPingFang>
@@ -485,7 +471,7 @@ export default class DiaryDetail extends Component {
         </Modal>
 
         <TouchableOpacity
-          style={[styles.btn_container, { display: this.props.user.id !== this.props.diary.user_id && this.props.partner.id ? 'flex' : 'none' ,position: this.props.user.id !== this.props.diary.user_id && this.props.partner.id ? 'absolute' : 'relative'}]}
+          style={[styles.btn_container, { display: this.props.user.id !== this.props.diary.user_id && this.props.partner.id ? 'flex' : 'none', position: this.props.user.id !== this.props.diary.user_id && this.props.partner.id ? 'absolute' : 'relative' }]}
         >
           {this.state.likeComponent}
         </TouchableOpacity>
@@ -494,7 +480,7 @@ export default class DiaryDetail extends Component {
           style={[
             styles.input_container,
             {
-              position:  this.state.showKeyboard ? 'absolute' : 'relative',
+              position: this.state.showKeyboard ? 'absolute' : 'relative',
               bottom: this.state.inputCommentY,
               display: this.state.showKeyboard ? 'flex' : 'none'
             }

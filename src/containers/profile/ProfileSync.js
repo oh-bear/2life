@@ -5,7 +5,6 @@ import {
   DeviceEventEmitter
 } from 'react-native'
 import RNFetchBlob from 'rn-fetch-blob'
-import * as RNIap from 'react-native-iap'
 
 import TextPingFang from '../../components/TextPingFang'
 import Container from '../../components/Container'
@@ -34,8 +33,6 @@ export default class ProfileSync extends Component {
   }
 
   async componentDidMount() {
-    await RNIap.prepare()
-
     const id = this.props.user.id
     const path = RNFetchBlob.fs.dirs.DocumentDir
 
@@ -62,29 +59,9 @@ export default class ProfileSync extends Component {
     if (!isSync) {
       return this.setState({ showCloseSyncPopup: true })
     } else {
-      const user = this.props.user
-      if (user.vip_expires && Date.now() < user.vip_expires) {
-        await Storage.set('isSync', true)
-        syncFile(user.id)
-        return this.setState({ isSync: true })
-      }
-
-      let expires = 30 * 24 * 60 * 60 * 1000
-      
-      RNIap.buyProduct('vip_month_1').then(purchase => {
-        HttpUtils.get(USERS.update_vip, { expires }).then(async res => {
-          if (res.code === 0) {
-            await Storage.set('isSync', true)
-            syncFile(user.id)
-            this.setState({
-              showOpenSyncPopup: true,
-              isSync: true
-            })
-          }
-        })
-      }).catch(err => {
-        console.warn(err) // standardized err.code and err.message available
-      })
+      await Storage.set('isSync', true)
+      syncFile(this.props.user.id)
+      this.setState({ isSync: true })
     }
   }
 

@@ -131,13 +131,12 @@ export default class NewDiary extends Component {
   async saveDiary() {
     const isLogin = !!this.props.user.id
 
-  //  if (this.state.savingDiary) return
+    // if (this.state.savingDiary) return
 
     // this.setState({ savingDiary: true })
 
     const { title_2, content_2, latitude, longitude, location, imgPathList, date } = this.state
-    let title = title_2
-    let content = content_2
+    let title = title_2, content = content_2
     if (!title && !content) return
 
     let images = ''
@@ -278,7 +277,8 @@ export default class NewDiary extends Component {
     return (
       <Container hidePadding={true}>
         {
-          Platform.OS=='ios'? <View> <Animated.View
+          Platform.OS=='ios'?
+            <Animated.View
               style={{
                 position: 'absolute',
                 bottom: this.state.datePickerY,
@@ -286,24 +286,27 @@ export default class NewDiary extends Component {
                 zIndex: 100
               }}
             >
-            <DatePickerIOS
+              <DatePickerIOS
                 locale={'zh-Hans'}
                 style={styles.date_picker}
                 date={this.state.date}
                 maximumDate={new Date()}
                 mode={'datetime'}
-                onDateChange={date => this.setState({date})}
+                onDateChange={date => this.setState({ date })}
               />
             </Animated.View>
-            <TouchableOpacity
-              style={[styles.mask, {display: this.state.showDatePicker ? 'flex' : 'none'}]}
-              onPress={() => this._selectDate()}
-            >
-            </TouchableOpacity></View>
-            :<View/>
+            : null
         }
 
-
+        {
+          Platform.OS=='ios'?
+            <TouchableOpacity
+              style={[styles.mask, { display: this.state.showDatePicker ? 'flex' : 'none' }]}
+              onPress={() => this._selectDate()}
+            >
+            </TouchableOpacity>
+            : null
+        }
 
         <KeyboardAwareScrollView
           contentContainerStyle={styles.scroll_style}
@@ -371,7 +374,7 @@ export default class NewDiary extends Component {
           <TextInput
             style={styles.text_title}
             value={this.state.title}
-            onChangeText={title => this.setState({ title_2: title,title:title })}
+            onChangeText={title => this.setState({ title_2: title })}
             onBlur={() => this.setState({ title: this.state.title_2 })}
             placeholder='标题'
             underlineColorAndroid='transparent'
@@ -381,7 +384,7 @@ export default class NewDiary extends Component {
           <TextInput
             style={styles.text_content}
             value={this.state.content}
-            onChangeText={content => this.setState({ content_2: content , content:content})}
+            onChangeText={content => this.setState({ content_2: content })}
             onBlur={() => this.setState({ content: this.state.content_2 })}
             placeholder='请输入正文'
             underlineColorAndroid='transparent'
@@ -450,7 +453,6 @@ const styles = StyleSheet.create({
     paddingLeft: getResponsiveWidth(24),
     paddingRight: getResponsiveWidth(24),
     marginTop: getResponsiveWidth(12),
-    paddingBottom: getResponsiveWidth(24),
-    maxHeight: getResponsiveWidth(150)
+    maxHeight: getResponsiveWidth(120),
   }
 })

@@ -22,6 +22,7 @@ import {
   getResponsiveHeight
 } from '../../common/styles'
 import { readFile } from '../../common/util'
+import Storage from '../../common/storage'
 import {
   SCENE_PROFILE_EDIT,
   SCENE_PROFILE_MODE,
@@ -35,10 +36,11 @@ import {
   SCENE_LOGIN_OPTIONS,
   SCENE_PROFILE_TEST,
   SCENE_PROFILE_SETTING,
-  SCENE_WEB
+  SCENE_WEB,
+  SCENE_PROFILE_VIP
 } from '../../constants/scene'
-import HttpUtils from '../../network/HttpUtils';
-import { UTILS } from '../../network/Urls';
+import HttpUtils from '../../network/HttpUtils'
+import { UTILS } from '../../network/Urls'
 
 function mapStateToProps(state) {
   return {
@@ -59,7 +61,8 @@ export default class Profile extends Component {
     otherDiaryCount: 0,
     showActEntry: false,
     actUrl: '',
-    shareUrl: ''
+    shareUrl: '',
+    isVip: false
   }
 
   async componentDidMount() {
@@ -70,6 +73,8 @@ export default class Profile extends Component {
     //   actUrl = res.url
     //   shareUrl = res.shareUrl
     // }
+
+    const isVip = await Storage.get('isVip', false)
 
     // 获得日记数量和情绪值
     const diaryList = await readFile(this.props.user.id)
@@ -90,6 +95,7 @@ export default class Profile extends Component {
       otherAverageMode: Math.floor(otherTotalMode / otherDiaryList.length) || 0,
       myDiaryCount: myDiaryList.length || 0,
       otherDiaryCount: otherDiaryList.length || 0,
+      isVip
       // showActEntry,
       // actUrl,
       // shareUrl
@@ -197,14 +203,15 @@ export default class Profile extends Component {
         <View>
           <TextPingFang style={styles.title}>关于我</TextPingFang>
           <ScrollView scrollEnabled={this.state.is_scroll} contentContainerStyle={styles.profile_container}>
-            <View
-              style={styles.head_container}>
+            <View style={styles.head_container}>
               <TouchableOpacity
                 style={styles.head_left}
                 activeOpacity={1}
-                onPress={() => Actions.jump(SCENE_PROFILE_EDIT, { user: this.props.user })}>
+                onPress={() => Actions.jump(SCENE_PROFILE_EDIT, { user: this.props.user })}
+              >
                 <View style={styles.head_left_top}>
                   <TextPingFang style={styles.text_name}>{this.props.user.name}</TextPingFang>
+                  <Image style={{display: this.state.isVip ? 'flex' : 'none'}} source={require('../../../res/images/profile/vip/icon-profile-vip-2.png')}/>
                 </View>
                 <View style={styles.head_left_bottom}>
                   <TextPingFang style={styles.text_check}>查看资料</TextPingFang>
@@ -316,6 +323,13 @@ export default class Profile extends Component {
             />
 
             <Row
+              imageLeft={<Image source={require('../../../res/images/profile/vip/icon-profile-vip.png')} />}
+              title='高级会员'
+              iconRight={require('../../../res/images/profile/vip/icon-profile-pro.png')}
+              onPress={() => Actions.jump(SCENE_PROFILE_VIP)}
+            />
+
+            <Row
               imageLeft={<Image source={require('../../../res/images/profile/icon_profile_scale.png')} />}
               title='性格测试'
               onPress={() => Actions.jump(SCENE_PROFILE_TEST)}
@@ -327,11 +341,11 @@ export default class Profile extends Component {
               onPress={() => Actions.jump(SCENE_PROFILE_SYNC, { user: this.props.user })}
             />
 
-            {/* <Row
+            <Row
               imageLeft={<Image source={require('../../../res/images/profile/icon_reward.png')} />}
               title='打赏'
               onPress={() => Actions.jump(SCENE_PROFILE_REWARD)}
-            /> */}
+            />
 
             <Row
               imageLeft={<Image source={require('../../../res/images/profile/icon_setting.png')} />}
@@ -410,10 +424,14 @@ const styles = StyleSheet.create({
   head_left: {
     paddingLeft: getResponsiveWidth(24),
   },
-  head_left_top: {},
+  head_left_top: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
   text_name: {
     color: '#444',
     fontSize: 24,
+    marginRight: 4
   },
   head_left_bottom: {
     flexDirection: 'row',

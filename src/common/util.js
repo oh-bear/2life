@@ -15,7 +15,7 @@ const BASE_IMG_URL = 'https://airing.ursb.me/'
 // const URL_QINIU_BASE64 = `${URL_QINIU_BASE}/putb64/-1/key/`
 // const BASE_IMG_URL = 'http://p3nr2tlc4.bkt.clouddn.com/'
 
-let TIMEOUT_ID = null
+export let SYNC_TIMEOUT_ID = null
 
 export const isDev = global.process.env.NODE_ENV === 'development'
 
@@ -230,7 +230,6 @@ export async function getWeather(region) {
 
 // ios文件路径每次访问后都会变化，需要特别处理
 export function getPath(uri) {
-  console.log(uri);
   let filePath = uri
   if (Platform.OS === 'ios') {
     let arr = uri.split('/')
@@ -244,7 +243,6 @@ export function getPath(uri) {
       filePath = `file://${dirs.DocumentDir}/${arr[arr.length - 1]}`
     }
   }
-  console.log(filePath);
   return filePath
 }
 
@@ -259,7 +257,6 @@ export async function postImgToQiniu(uriList, obj) {
   const { type, user_id } = obj
   if (!type && !user_id) return
 
-
   const uriBase64ListPromises = uriList.map(async uri => {
     let filePath = getPath(uri)
     return await RNFetchBlob.fs.readFile(filePath, 'base64')
@@ -269,7 +266,6 @@ export async function postImgToQiniu(uriList, obj) {
   for (let uriBase64ListPromise of uriBase64ListPromises) {
     uriBase64List.push(await uriBase64ListPromise)
   }
-
 
   // 并发上传图片
   const qiniuPromises = uriBase64List.map(async (base64) => {
@@ -313,7 +309,7 @@ export async function postImgToQiniu(uriList, obj) {
           }
         })
         return xmlPromise;
-      }else {
+      } else {
         const res_qiniu = await fetch(URL_QINIU_BASE64  + key_base64, {
           method: 'post',
           headers: {
@@ -324,19 +320,6 @@ export async function postImgToQiniu(uriList, obj) {
         })
         return res_qiniu
       }
-
-      // // 上传到七牛
-      // const res_qiniu = await fetch(URL_qiniu_host + key_base64, {
-      //   method: 'post',
-      //   headers: {
-      //     'Content-Type': 'application/octet-stream',
-      //     'Authorization': 'UpToken ' + qiniu_token
-      //   },
-      //   body: base64
-      // })
-      //
-      // return res_qiniu
-
     }
   })
   let imgUrls = []
@@ -589,9 +572,9 @@ export async function syncFile(user_id) {
 
   const SYNC_PERIOD = 10000 // 同步延迟10秒
 
-  clearTimeout(TIMEOUT_ID)
+  clearTimeout(SYNC_TIMEOUT_ID)
 
-  TIMEOUT_ID = setTimeout(async () => {
+  SYNC_TIMEOUT_ID = setTimeout(async () => {
 
     const fs = RNFetchBlob.fs
     const FILE_PATH = fs.dirs.DocumentDir + `/user_${user_id}_config.json`
@@ -666,6 +649,8 @@ export async function syncFile(user_id) {
 
       await fs.writeFile(FILE_PATH, JSON.stringify(newContent), 'utf8')
       DeviceEventEmitter.emit('flush_local_note')
+
+      SYNC_TIMEOUT_ID = null
     }
 
   }, SYNC_PERIOD)

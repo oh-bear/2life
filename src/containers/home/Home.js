@@ -38,7 +38,8 @@ import {
   downloadImg,
   updateFile,
   readFile,
-  uuid
+  uuid,
+  SYNC_TIMEOUT_ID
 } from '../../common/util'
 import store from '../../redux/store'
 import { cleanPartner } from '../../redux/modules/partner'
@@ -112,7 +113,10 @@ export default class Home extends Component {
     }
 
     // 未开启同步不执行
-    if (!await Storage.get('isSync', false)) return
+    if (!await Storage.get('isSync', true)) return
+
+    // 有同步任务时不执行
+    if (SYNC_TIMEOUT_ID) return
 
     // 防止重复fetch
     if (this.state.isFetchingDiary) return
@@ -770,7 +774,7 @@ const styles = StyleSheet.create({
   },
   new_diary: {
     position: 'absolute',
-    bottom: getResponsiveHeight(65),
+    bottom: getResponsiveWidth(24),
     right: getResponsiveWidth(16),
   }
 })

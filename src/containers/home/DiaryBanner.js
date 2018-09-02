@@ -18,6 +18,7 @@ import {
   getResponsiveWidth
 } from '../../common/styles'
 import { getPath } from '../../common/util'
+import Storage from '../../common/storage'
 
 export default class DiaryBanner extends Component {
   static propTypes = {}
@@ -26,11 +27,13 @@ export default class DiaryBanner extends Component {
     imgPathList: [], // 本地图片资源链接
     imgIndex: 0,
     imgListComponent: [],
+    isVip: false
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     this.setState({
       imgPathList: this.props.imgPathList || [],
+      isVip: await Storage.get('isVip', false)
     })
     this._setImgList()
   }
@@ -43,8 +46,6 @@ export default class DiaryBanner extends Component {
       chooseFromLibraryButtonTitle: '从相册选择',
       cameraType: 'back',
       mediaType: 'photo',
-      maxWidth: 375,
-      maxHeight: 282,
       quality: 1,
       allowsEditing: true,
       storageOptions: {
@@ -53,7 +54,8 @@ export default class DiaryBanner extends Component {
         waitUntilSaved: true
       }
     }
-    ImagePicker.showImagePicker(options, res => {
+    const options_size = this.state.isVip ? {} : { maxWidth: 375, maxHeight: 282 }
+    ImagePicker.showImagePicker(Object.assign(options, options_size), res => {
       if (!res.didCancel) {
         let { imgPathList } = this.state
         imgPathList.push(res.uri)

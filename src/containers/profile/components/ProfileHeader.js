@@ -1,7 +1,8 @@
 import React, { Component } from 'react'
 import {
   View,
-  StyleSheet
+  StyleSheet,
+  Image
 } from 'react-native'
 
 import TextPingFang from '../../../components/TextPingFang'
@@ -24,7 +25,10 @@ export default class ProfileHeader extends Component {
           onPressBack={this.props.onBack}
         />
 
-        <TextPingFang style={styles.text_title}>{this.props.title}</TextPingFang>
+        <View style={styles.title_container}>
+          <TextPingFang style={styles.text_title}>{this.props.title}</TextPingFang>
+          <Image style={styles.title_icon} source={this.props.titleIcon}/>
+        </View>
         <TextPingFang style={styles.text_desc}>{this.props.desc}</TextPingFang>
       </View>
     )
@@ -37,11 +41,18 @@ const styles = StyleSheet.create({
   navbar: {
     backgroundColor: 'transparent'
   },
+  title_container: {
+    flexDirection: 'row',
+  },
   text_title: {
     marginLeft: getResponsiveWidth(24),
     color: '#000',
     fontSize: 28,
-    fontWeight: '500'
+    fontWeight: '500',
+  },
+  title_icon: {
+    top: 6,
+    left: 6
   },
   text_desc: {
     marginLeft: getResponsiveWidth(24),

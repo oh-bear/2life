@@ -53,6 +53,8 @@ export default class Row extends Component {
 
 				<TextPingFang style={[styles.text_right, this.props.textRightStyle]}>{this.props.textRight}</TextPingFang>
 
+				<Image style={[styles.icon_right, {display: this.props.iconRight ? 'flex' : 'none'}]} source={this.props.iconRight} />
+
 				<Image style={[styles.row_right, {display: this.props.showSwitch ? 'none' : 'flex',position:this.props.showSwitch ? 'relative' : 'absolute'}]} source={require('../../../../res/images/common/icon_indicator.png')} />
 			</TouchableOpacity>
 		)
@@ -88,6 +90,10 @@ const styles = StyleSheet.create({
 		color: '#333',
     fontSize: 14,
 		fontWeight: '300'
+	},
+	icon_right: {
+		position: 'absolute',
+    right: 20,
 	},
 	row_right: {
     position: 'absolute',

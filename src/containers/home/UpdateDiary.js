@@ -9,7 +9,7 @@ import {
   Image,
   Animated,
   DatePickerIOS,
-    Platform,
+  Platform,
 } from 'react-native'
 import DatePicker from 'react-native-datepicker'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
@@ -45,7 +45,9 @@ export default class UpdateDiary extends Component {
   state = {
     date: new Date(),
     title: '',
+    title_2: '', //解决TextInput 无法输入中文
     content: '',
+    content_2: '',
     showPopup: false,
     imgPathList: [],
     oldImgPathList: [],
@@ -61,41 +63,41 @@ export default class UpdateDiary extends Component {
     this.setState({
       date: new Date(diary.date),
       title: diary.title,
+      title_2: diary.title,
       content: diary.content,
+      content_2: diary.content,
       imgPathList: diary.imgPathList,
-      oldImgPathList : [...diary.imgPathList],
+      oldImgPathList: [...diary.imgPathList],
     }, () => this._renderLeftButton())
   }
   onBackAndroid = () => {
     this.saveDiary()
     return true;
-   };
+  };
 
 
   componentWillUnmount() {
-      this.saveDiary()
-      BackHandler.removeEventListener('hardwareBackPress',this.onBackAndroid);
+    this.saveDiary()
+    BackHandler.removeEventListener('hardwareBackPress', this.onBackAndroid);
   }
 
 
   async saveDiary() {
     const isLogin = !!this.props.user.id
 
-    if (this.state.savingDiary) return
+    // if (this.state.savingDiary) return
 
     // this.setState({savingDiary: true})
 
-    const { title, content, imgPathList, date } = this.state
-
-    if (!title && !content) return Actions.pop()
-    if (!title) return Alert.alert('', '给日记起个标题吧')
-    if (!content) return Alert.alert('', '日记内容不能为空哦')
+    const { title_2, content_2, imgPathList, date } = this.state
+    let title = title_2, content = content_2
+    if (!title && !content) return
 
     // 过滤已存在的图片
     let newImgPathList = [] // 新的未缓存图片
     let oldUseingImgPathList = [] // 更新日记继续使用的已缓存图片
-    for(let i = 0; i < imgPathList.length; i++) {
-      for(let j = 0; j < this.state.oldImgPathList.length; j++) {
+    for (let i = 0; i < imgPathList.length; i++) {
+      for (let j = 0; j < this.state.oldImgPathList.length; j++) {
         if (imgPathList[i] === this.state.oldImgPathList[j]) {
           oldUseingImgPathList.push(imgPathList[i])
           break
@@ -105,7 +107,7 @@ export default class UpdateDiary extends Component {
         }
       }
     }
-    if(!this.state.oldImgPathList.length) {
+    if (!this.state.oldImgPathList.length) {
       newImgPathList = imgPathList
     }
     // 复制图片文件
@@ -137,7 +139,7 @@ export default class UpdateDiary extends Component {
   }
 
   getImgPathList(imgPathList) {
-    this.setState({imgPathList})
+    this.setState({ imgPathList })
     this._renderLeftButton()
   }
 
@@ -148,7 +150,7 @@ export default class UpdateDiary extends Component {
 
     const leftButton = (
       <TouchableOpacity onPress={() => Actions.pop()}>
-        <Image source={source}/>
+        <Image source={source} />
       </TouchableOpacity>
     )
 
@@ -170,9 +172,9 @@ export default class UpdateDiary extends Component {
   render() {
     return (
       <Container hidePadding={true}>
-
         {
-          Platform.OS=='ios'? <View> <Animated.View
+          Platform.OS == 'ios' ?
+            <Animated.View
               style={{
                 position: 'absolute',
                 bottom: this.state.datePickerY,
@@ -180,21 +182,26 @@ export default class UpdateDiary extends Component {
                 zIndex: 100
               }}
             >
-            <DatePickerIOS
+              <DatePickerIOS
                 locale={'zh-Hans'}
                 style={styles.date_picker}
                 date={this.state.date}
                 maximumDate={new Date()}
                 mode={'datetime'}
-                onDateChange={date => this.setState({date})}
+                onDateChange={date => this.setState({ date })}
               />
             </Animated.View>
+            : null
+        }
+
+        {
+          Platform.OS == 'ios' ?
             <TouchableOpacity
-              style={[styles.mask, {display: this.state.showDatePicker ? 'flex' : 'none'}]}
+              style={[styles.mask, { display: this.state.showDatePicker ? 'flex' : 'none' }]}
               onPress={() => this._selectDate()}
             >
-            </TouchableOpacity></View>
-            :<View/>
+            </TouchableOpacity>
+            : null
         }
 
         <KeyboardAwareScrollView
@@ -213,50 +220,51 @@ export default class UpdateDiary extends Component {
           />
 
           {
-            Platform.OS=='ios'?
-            <View style={styles.date_container}>
-              <TextPingFang style={styles.text_date}>{getMonth(this.state.date.getMonth())} </TextPingFang>
-              <TextPingFang style={styles.text_date}>{this.state.date.getDate()}，</TextPingFang>
-              <TextPingFang style={styles.text_date}>{this.state.date.getFullYear()}</TextPingFang>
-              <TouchableOpacity
-                style={styles.small_calendar}
-                onPress={this._selectDate.bind(this)}
-              >
-                <Image source={require('../../../res/images/home/diary/icon_calendar_small.png')}/>
-              </TouchableOpacity>
-            </View>
-            :<View style={styles.date_container}>
-              <DatePicker
-                style={{width: 200}}
-                date={this.state.date}
-                mode="date"
-                format="MM-DD，YYYY"
-                maxDate={new Date()}
-                confirmBtnText="确定"
-                cancelBtnText="取消"
-                iconSource={require('../../../res/images/home/diary/icon_calendar_small.png')}
-                customStyles={{
-                  dateIcon: {
-                    position: 'absolute',
-                    right: getResponsiveWidth(100),
-                    top: 10,
-                    bottom:10,
-                    marginLeft: 0,
-                    width:getResponsiveWidth(20),
-                    height:getResponsiveWidth(20)
-                  },
-                  dateInput: {
-                    marginLeft: 0,
-                    borderWidth:0,
-                    alignItems: 'flex-start',
-                    justifyContent: 'center'
+            Platform.OS == 'ios' ?
+              <View style={styles.date_container}>
+                <TextPingFang style={styles.text_date}>{getMonth(this.state.date.getMonth())} </TextPingFang>
+                <TextPingFang style={styles.text_date}>{this.state.date.getDate()}，</TextPingFang>
+                <TextPingFang style={styles.text_date}>{this.state.date.getFullYear()}</TextPingFang>
+                <TouchableOpacity
+                  style={styles.small_calendar}
+                  onPress={this._selectDate.bind(this)}
+                >
+                  <Image source={require('../../../res/images/home/diary/icon_calendar_small.png')} />
+                </TouchableOpacity>
+              </View>
+              : <View style={styles.date_container}>
+                <DatePicker
+                  style={{ width: 200 }}
+                  date={this.state.date}
+                  mode="date"
+                  format="MM-DD，YYYY"
+                  maxDate={new Date()}
+                  confirmBtnText="确定"
+                  cancelBtnText="取消"
+                  iconSource={require('../../../res/images/home/diary/icon_calendar_small.png')}
+                  customStyles={{
+                    dateIcon: {
+                      position: 'absolute',
+                      right: getResponsiveWidth(100),
+                      top: 10,
+                      bottom: 10,
+                      marginLeft: 0,
+                      width: getResponsiveWidth(20),
+                      height: getResponsiveWidth(20)
+                    },
+                    dateInput: {
+                      marginLeft: 0,
+                      borderWidth: 0,
+                      alignItems: 'flex-start',
+                      justifyContent: 'center'
+                    }
+                  }}
+                  onDateChange={(date, date1) => {
+                    this.setState({ date: date1 })
                   }
-                }}
-                onDateChange={(date,date1) => {
-                  this.setState({date: date1})}
-                }
-              />
-            </View>
+                  }
+                />
+              </View>
           }
 
 
@@ -264,7 +272,8 @@ export default class UpdateDiary extends Component {
             style={styles.text_title}
             value={this.state.title}
             underlineColorAndroid='transparent'
-            onChangeText={title => this.setState({ title })}
+            onChangeText={title => this.setState({ title_2: title })}
+            onBlur={() => this.setState({ title: this.state.title_2 })}
             placeholder='标题'
             placeholderTextColor='#aaa'
           />
@@ -273,7 +282,8 @@ export default class UpdateDiary extends Component {
             style={styles.text_content}
             value={this.state.content}
             underlineColorAndroid='transparent'
-            onChangeText={content => this.setState({ content })}
+            onChangeText={content => this.setState({ content_2: content })}
+            onBlur={() => this.setState({ content: this.state.content_2 })}
             placeholder='请输入正文'
             placeholderTextColor='#aaa'
             multiline
