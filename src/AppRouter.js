@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import Index from './containers/Index'
+import AppAuth from './containers/AppAuth'
 
 // login
 import Options from './containers/login/Options'
@@ -52,6 +53,15 @@ export default class AppRouter extends Component {
               type={ActionConst.RESET}
               duration={0}
               hideNavBar
+            />
+            <Scene
+              key={scenes.SCENE_APP_AUTH}
+              component={AppAuth}
+              title='密码验证'
+              type={ActionConst.RESET}
+              duration={0}
+              hideNavBar
+              panHandlers={null} // 禁用手势返回
             />
             <Scene
               key={scenes.SCENE_LOGIN_OPTIONS}

@@ -4,7 +4,8 @@ import {
   StyleSheet,
   Image,
   DeviceEventEmitter,
-  Alert
+  Alert,
+  AppState
 } from 'react-native'
 import Home from './home/Home'
 import Notification from './notification/Notification'
@@ -12,6 +13,7 @@ import Profile from './profile/Profile'
 import TabNavigator from 'react-native-tab-navigator'
 import { ifIphoneX } from 'react-native-iphone-x-helper'
 import { connect } from 'react-redux'
+import { Actions } from 'react-native-router-flux'
 
 import JPushModule from 'jpush-react-native'
 
@@ -22,6 +24,7 @@ import HttpUtils from '../network/HttpUtils'
 import store from '../redux/store'
 import { fetchPartnerSuccess } from '../redux/modules/partner'
 import { fetchProfileSuccess } from '../redux/modules/user'
+import { SCENE_APP_AUTH } from '../constants/scene'
 
 function mapStateToProps(state) {
   return {
@@ -41,6 +44,7 @@ export default class Index extends Component {
   async componentWillMount() {
     await this._initFile()
     await this._setVip()
+    this._showAppAuth()
 
     if (this.props.tab) this.setState({ selectedTab: this.props.tab })
   }
@@ -65,6 +69,15 @@ export default class Index extends Component {
 
     JPushModule.addReceiveNotificationListener(message => {
       console.log(message)
+    })
+  }
+
+  async _showAppAuth() {
+    AppState.addEventListener('change', async state => {
+      const openAppAuth = await Storage.get('openAppAuth', false)
+      if (openAppAuth && state === 'background') {
+        Actions.jump(SCENE_APP_AUTH, { gotoApp: true })
+      }
     })
   }
 

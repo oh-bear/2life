@@ -15,6 +15,7 @@ import {
   SCENE_PROFILE_FEEDBACK,
   SCENE_PROFILE_PRIVACY,
   SCENE_PROFILE_THANKS,
+  SCENE_APP_AUTH,
 } from '../../constants/scene'
 
 import {
@@ -26,12 +27,15 @@ export default class ProfileSetting extends Component {
 
   state = {
     allowRecommend: true,
-    size: ''
+    size: '',
+    openAppAuth: false
   }
 
   async componentDidMount() {
     const allowRecommend = await Storage.get('allowRecommend', true)
-    this.setState({ allowRecommend })
+    let openAppAuth = await Storage.get('openAppAuth', false)
+
+    this.setState({ allowRecommend, openAppAuth })
 
     this.checkCache()
   }
@@ -92,6 +96,20 @@ export default class ProfileSetting extends Component {
 
   }
 
+  async authChange(value) {
+    if (value) {
+      Actions.jump(SCENE_APP_AUTH, {cb: () => this.setState({ openAppAuth: true })})
+    } else {
+      Actions.jump(SCENE_APP_AUTH, {
+        cancelValidate: true,
+        cb: () => {
+          Storage.set('openAppAuth', false)
+          this.setState({ openAppAuth: false })
+        }
+      })
+    }
+  }
+
   render() {
     return (
       <Container>
@@ -106,6 +124,18 @@ export default class ProfileSetting extends Component {
             onValueChange={value => this.setState({ allowRecommend: value })}
           />
 
+          <Row
+            title='开启密码和Touch Id/Face Id'
+            showSwitch={true}
+            switchValue={this.state.openAppAuth}
+            onValueChange={value => this.authChange(value)}
+          />
+
+          <Row
+            title='清除缓存'
+            textRight={this.state.size}
+            onPress={() => this.clearCache()}
+          />
 
           <Row
             title='反馈'
@@ -120,12 +150,6 @@ export default class ProfileSetting extends Component {
           <Row
             title='鸣谢'
             onPress={() => Actions.jump(SCENE_PROFILE_THANKS)}
-          />
-
-          <Row
-            title='清除缓存'
-            textRight={this.state.size}
-            onPress={() => this.clearCache()}
           />
 
         </View>

@@ -1,5 +1,6 @@
 export const SCENE_INDEX = 'INDEX'
 export const SCENE_HOME = 'HOME'
+export const SCENE_APP_AUTH = 'APP_AUTH'
 
 export const SCENE_LOGIN_OPTIONS = 'LOGIN_OPTIONS'
 export const SCENE_LOGIN_SIGNIN = 'LOGIN_SIGNIN'
