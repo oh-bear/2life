@@ -226,5 +226,5 @@
 * @[LinDing](https://github.com/linding)
 * @[Jsonsnow](https://github.com/jsonsnow)
 * @[煜寒了](https://github.com/yuhanle)
-* @[ChZ][https://github.com/ChZ-CC]
+* @[ChZ](https://github.com/ChZ-CC)
 * @[mieruko0713](https://github.com/mieruko0713)
