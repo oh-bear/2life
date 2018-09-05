@@ -774,7 +774,7 @@ const styles = StyleSheet.create({
   },
   new_diary: {
     position: 'absolute',
-    bottom: getResponsiveWidth(24),
+    bottom: getResponsiveWidth(44),
     right: getResponsiveWidth(16),
   }
 })

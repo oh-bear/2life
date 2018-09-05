@@ -75,9 +75,11 @@ export default class Index extends Component {
   async _showAppAuth() {
     AppState.addEventListener('change', async state => {
       const openAppAuth = await Storage.get('openAppAuth', false)
-      if (openAppAuth && state === 'background') {
+      if (openAppAuth && state === 'background')
         Actions.jump(SCENE_APP_AUTH, { gotoApp: true })
-      }
+
+      if (openAppAuth && state === 'active' && Actions.currentScene === 'APP_AUTH')
+        DeviceEventEmitter.emit('validateId')
     })
   }
 

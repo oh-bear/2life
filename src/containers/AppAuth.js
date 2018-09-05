@@ -4,7 +4,7 @@ import {
   StyleSheet,
   TextInput,
   TouchableOpacity,
-  AppState
+  DeviceEventEmitter
 } from 'react-native'
 import Toast from 'antd-mobile/lib/toast'
 import TouchID from 'react-native-touch-id'
@@ -31,34 +31,27 @@ export default class AppAuth extends Component {
   async componentDidMount() {
     if (this.props.gotoApp) {
       this.setState({ gotoApp: true })
-
-      AppState.addEventListener('change', this._validateId.bind(this))
+      DeviceEventEmitter.once('validateId', this._validateId.bind(this))
     }
 
     if (this.props.cancelValidate)
       this.setState({ cancelValidate: true })
   }
 
-  componentWillUnmount() {
-    AppState.removeEventListener('change', this._validateId.bind(this))
-  }
-
-  async _validateId(state) {
+  async _validateId() {
     if (this.state.pswOnly) return
 
-    if (state === 'active' && Actions.currentScene === 'APP_AUTH') {
+    try {
       const type = await TouchID.isSupported()
-      try {
-        if (type) {
-          const isSucceed = await TouchID.authenticate('需要验证')
-          if (isSucceed) {
-            Actions.pop()
-          }
+      if (type) {
+        const isSucceed = await TouchID.authenticate('需要验证')
+        if (isSucceed) {
+          Actions.pop()
         }
-      } catch (err) {
-        console.log(err)
-        this.setState({ pswOnly: true })
       }
+    } catch (err) {
+      console.log(err)
+      this.setState({ pswOnly: true })
     }
   }
 

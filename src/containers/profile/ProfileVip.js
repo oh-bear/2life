@@ -51,8 +51,6 @@ export default class ProfileVip extends Component {
   async componentDidMount() {
     await RNIap.prepare()
     const products = await RNIap.getProducts(itemSkus)
-    console.log('products')
-    console.log(products)
 
     const isVip = await Storage.get('isVip', false)
 
