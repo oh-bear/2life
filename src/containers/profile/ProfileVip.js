@@ -51,7 +51,7 @@ export default class ProfileVip extends Component {
   async componentDidMount() {
     await RNIap.prepare()
     const products = await RNIap.getProducts(itemSkus)
-
+    this.setState({ productList: products })
     const isVip = await Storage.get('isVip', false)
 
     if (isVip) {
@@ -75,6 +75,7 @@ export default class ProfileVip extends Component {
           this.setState({ expiresDate })
         }
       })
+      HttpUtils.post(USERS.update_rate, { price: this.state.productList[0].price })
     }).catch(err => {
       console.warn(err) // standardized err.code and err.message available
     })
