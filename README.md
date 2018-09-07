@@ -4,18 +4,20 @@
 
 ---
 
-> 写下此时的心情，匹配和你一样的 TA 吧~
+> 写春花秋月事，感喜乐怨哀情。
 
 双生 app 是一款与众不同的写日记软件，很多朋友写日记坚持不下去是因为太枯燥乏味，没有兴趣感，而这款软件可以在你写日记的同时匹配更多同类型心情的日记主人，让你们一起分享彼此的心情，共建友谊。欢迎下载体验。
 
-宣传视频：[https://www.bilibili.com/video/av24289205](https://www.bilibili.com/video/av24289205)
+双生日记2.0 鼓励用户书写和记录自己的心情，通过自研的 NLP 多维情感分析算法结合自研大五人格量表分析出用户的情绪状态，并配合专业的心理学知识，生成可视化情绪周期图表，为用户生成定制化的、科学的情绪管理方案。
+
+宣传视频：[https://www.bilibili.com/video/av26702790](https://www.bilibili.com/video/av26702790)
 
 * App Store 下载地址：搜索“双生日记”即可
 * Android 下载地址：[https://www.pgyer.com/2life](https://www.pgyer.com/2life)
 * 前端 GitHub 地址：[https://github.com/oh-bear/2life](https://github.com/oh-bear/2life)
 * 后端 GitHub 地址：[https://github.com/airingursb/2life-server](https://github.com/airingursb/2life-server)
 * 小程序端：搜索“双生小日记”即可
-
+* 算法侧 GitHub 地址：[https://github.com/oh-bear/2life-lstm(https://github.com/oh-bear/2life-lstm)
 
 ## Screenshots
 
@@ -36,7 +38,42 @@
 * Push to the branch: `git push origin my-new-feature`
 * Submit a pull request
 
-## 2.0
+
+## 2.x
+
+### 2.1.4 / 2018-09-05
+
+- 新增了双生会员体系
+- 新增了会员用户上传高清图的功能
+- 新增了大图预览功能
+- 新增了密码 / Touch ID / Face ID解锁功能
+- 新增了手势返回自动保存日记的功能
+- 新增了注册手机号码格式检查
+
+### 2.1.3 / 2018-08-15
+
+本版本为七夕特别版！
+限免2周！！参加活动领一年VIP！
+七夕可以来参加活动找到你的另一半哦！
+情侣也可邀请另一半来参加活动领大奖！
+
+- 新增了七夕活动
+- 新增了 vip 权限和版本控制
+- 开放了 vip 的全部功能
+- 修改了产品的价格（￥1 -> ￥0！）
+
+### 2.1.2 / 2018-08-06
+- 新增了16种情绪插画
+- 修改了雷达图的文案
+
+### 2.1.1 / 2018-08-03
+
+- 新增了鸣谢页面
+- 新增了隐私协议
+- 修复了首页刷新指示器bug
+- 修复了图片无法滑动bug
+- 修复了被解除匹配不主动刷新的bug
+- 修复了新版本新用户无法匹配的bug
 
 ### 2.0.7 / 2018-07-04
 
@@ -184,9 +221,11 @@
 * @[Airing](https://github.com/airingursb)
 * @[lightnate](https://github.com/lightnate)
 * @[唐墨夏](https://github.com/csfwff)
+* @[zyktrcn](https://github.com/zyktrcn)
 
 ### Participants
 * @[LinDing](https://github.com/linding)
 * @[Jsonsnow](https://github.com/jsonsnow)
 * @[煜寒了](https://github.com/yuhanle)
+* @[ChZ](https://github.com/ChZ-CC)
 * @[mieruko0713](https://github.com/mieruko0713)
