@@ -43,7 +43,7 @@ export default class Nickname extends Component {
         <View style={styles.container} animation='fadeIn'>
           <Banner
             bg={require('../../../res/images/login/bg_nickname.png')}
-            title={['注册成功', '取个好听的昵称吧']}
+            title={['注册成功', '取个昵称吧']}
             showNavLeft={false}
             showNavRight={false}
           />

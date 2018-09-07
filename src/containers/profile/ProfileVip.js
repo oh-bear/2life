@@ -48,23 +48,24 @@ export default class ProfileVip extends Component {
     expiresDate: ''
   }
 
-  async componentDidMount() {
-    await RNIap.prepare()
-    const products = await RNIap.getProducts(itemSkus)
-    this.setState({ productList: products })
+  async componentWillMount() {
     const isVip = await Storage.get('isVip', false)
-
     if (isVip) {
       const date = new Date(this.props.user.vip_expires)
       const expiresDate = `${date.getFullYear()} 年 ${date.getMonth() + 1} 月 ${date.getDate()} 日`
       this.setState({ isVip, expiresDate })
     }
+
+    await RNIap.prepare()
+    const products = await RNIap.getProducts(itemSkus)
+    this.setState({ productList: products })
   }
 
   _buyVip() {
     let expires = Date.now() + 30 * 24 * 60 * 60 * 1000
 
     RNIap.buySubscription('vip_1').then(purchase => {
+      console.log({purchase})
       Storage.set('isVip', true)
       HttpUtils.get(USERS.update_vip, { expires }).then(async res => {
         if (res.code === 0) {
@@ -92,7 +93,7 @@ export default class ProfileVip extends Component {
 
         <ScrollView contentContainerStyle={styles.container}>
           <Image style={{width: '100%', borderRadius: 8}} source={require('../../../res/images/profile/vip/bg-vip.png')} />
-          <TextPingFang style={styles.text_bevip}>成为高级会员，享受更多服务</TextPingFang>
+          <TextPingFang style={styles.text_bevip}>订阅高级会员，享受更多服务</TextPingFang>
 
           <View style={styles.vip_item}>
             <Image style={styles.vip_item_img_left} source={require('../../../res/images/profile/vip/icon-profile-image.png')} />
@@ -112,13 +113,17 @@ export default class ProfileVip extends Component {
             <Image style={styles.vip_item_img_right} source={require('../../../res/images/profile/vip/icon-profile-selected.png')} />
           </View>
 
-          <TextPingFang style={[styles.text_expires, {display: this.state.isVip ? 'flex' : 'none'}]}>您的会员将在 {this.state.expiresDate} 自动续费，如需取消可前往用户的帐户设置中关闭。</TextPingFang>
+          <TextPingFang style={[styles.text_expires, {display: this.state.isVip ? 'none' : 'flex', fontSize: 16, color: '#333'}]}>订阅说明：</TextPingFang>
+          <TextPingFang style={[styles.text_expires, {display: this.state.isVip ? 'flex' : 'none'}]}>您的订阅将在 {this.state.expiresDate} 自动续费，如需取消可前往用户的帐户设置中关闭。</TextPingFang>
+          <TextPingFang style={[styles.text_expires, {display: this.state.isVip ? 'none' : 'flex'}]}>1. 订阅自动续期，除非在当前订阅期之前24小时外关闭自动续订功能。</TextPingFang>
+          <TextPingFang style={[styles.text_expires, {display: this.state.isVip ? 'none' : 'flex'}]}>2. 账户将在当前订阅期结束前的24小时内进行续费扣费，续费金额在前12个月为￥3.99/月，第13个月起为￥12.00/月。</TextPingFang>
+          <TextPingFang style={[styles.text_expires, {display: this.state.isVip ? 'none' : 'flex'}]}>3. 用户可自行管理订阅服务，自动续订服务可以在购买后前往用户的账户设置中关闭。</TextPingFang>
         </ScrollView>
 
         <View style={[styles.buy_container, {display: this.state.isVip ? 'none' : 'flex'}]}>
           <View style={styles.price_container}>
             <TextPingFang style={styles.text_price_now}>￥3.99/月</TextPingFang>
-            <TextPingFang style={styles.text_price_before}>原价￥12.99</TextPingFang>
+            <TextPingFang style={styles.text_price_before}>原价￥12.00</TextPingFang>
             <View style={styles.delete_line}></View>
           </View>
           <LinearGradient start={{x: 0, y: 0}} end={{x: 1, y: 0}} colors={['#9EE143', '#2DC3A6']} style={styles.liner_gradient}>
@@ -147,6 +152,7 @@ const styles = StyleSheet.create({
     width: WIDTH,
     paddingLeft: getResponsiveWidth(24),
     paddingRight: getResponsiveWidth(24),
+    paddingBottom: getResponsiveWidth(84),
     justifyContent: 'flex-start'
   },
   text_bevip: {
@@ -184,7 +190,7 @@ const styles = StyleSheet.create({
     fontWeight: '500',
   },
   text_expires: {
-    color: '#aaa',
+    color: '#666',
     fontSize: 14,
     fontWeight: '400',
     marginTop: 16
@@ -194,12 +200,15 @@ const styles = StyleSheet.create({
     ...ifIphoneX({
       bottom: 44
     }, {
-      bottom: 16
+      bottom: 0
     }),
     width: WIDTH - getResponsiveWidth(48),
-    height: getResponsiveWidth(52),
+    height: getResponsiveWidth(68),
+    paddingTop: 8,
+    paddingBottom: 8,
     flexDirection: 'row',
-    alignItems: 'center'
+    alignItems: 'center',
+    backgroundColor: '#fff'
   },
   text_price_now: {
     color: '#2DC3A6',

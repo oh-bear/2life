@@ -123,7 +123,7 @@ export default class Signup extends Component {
           <NetStatus showNetStatus={true}/>
           <Banner
             bg={require('../../../res/images/login/bg_signup.png')}
-            title={['Wow', '欢迎成为新成员！']}
+            title={['Wow', '欢迎成为新成员']}
             showNavLeft={true}
             onNavLeftPress={() => Actions.pop()}
             showNavRight={false}
