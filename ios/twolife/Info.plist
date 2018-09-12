@@ -4,8 +4,6 @@
 <dict>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
-	<key>NSFaceIDUsageDescription</key>
-	<string>双生请求调用您的 FaceID 权限，以便为您的日记本加锁</string>
 	<key>CFBundleDisplayName</key>
 	<string>双生日记</string>
 	<key>CFBundleExecutable</key>
@@ -46,7 +44,7 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>1</string>
+	<string>3</string>
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
 		<string>weixin</string>
@@ -81,6 +79,8 @@
 	</dict>
 	<key>NSCameraUsageDescription</key>
 	<string>双生请求调用您的相机权限，以便上传图片</string>
+	<key>NSFaceIDUsageDescription</key>
+	<string>双生请求调用您的 FaceID 权限，以便为您的日记本加锁</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>双生日记请求获取您的地理位置，以便生成天气信息和完善日记定位。</string>
 	<key>NSMicrophoneUsageDescription</key>

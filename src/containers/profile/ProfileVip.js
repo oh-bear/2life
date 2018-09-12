@@ -117,9 +117,11 @@ export default class ProfileVip extends Component {
 
           <TextPingFang style={[styles.text_expires, {display: this.state.isVip ? 'none' : 'flex', fontSize: 16, color: '#333'}]}>订阅说明：</TextPingFang>
           <TextPingFang style={[styles.text_expires, {display: this.state.isVip ? 'flex' : 'none'}]}>您的订阅将在 {this.state.expiresDate} 自动续费，如需取消可前往用户的帐户设置中关闭。</TextPingFang>
-          <TextPingFang style={[styles.text_expires, {display: this.state.isVip ? 'none' : 'flex'}]}>1. 订阅自动续期，除非在当前订阅期之前24小时外关闭自动续订功能。</TextPingFang>
-          <TextPingFang style={[styles.text_expires, {display: this.state.isVip ? 'none' : 'flex'}]}>2. 账户将在当前订阅期结束前的24小时内进行续费扣费，续费金额在前12个月为￥3.99/月，第13个月起为￥12.00/月。</TextPingFang>
-          <TextPingFang style={[styles.text_expires, {display: this.state.isVip ? 'none' : 'flex'}]}>3. 用户可自行管理订阅服务，自动续订服务可以在购买后前往用户的账户设置中关闭。</TextPingFang>
+          <TextPingFang style={[styles.text_expires, {display: this.state.isVip ? 'none' : 'flex'}]}>1. 在双生日记的购买窗口中，最新订阅价格会实时显示。</TextPingFang>
+          <TextPingFang style={[styles.text_expires, {display: this.state.isVip ? 'none' : 'flex'}]}>2. 在付款确认后， iTunes账户将被扣款。</TextPingFang>
+          <TextPingFang style={[styles.text_expires, {display: this.state.isVip ? 'none' : 'flex'}]}>3. 订阅自动续期，除非在当前订阅期之前24小时外关闭自动续订功能。</TextPingFang>
+          <TextPingFang style={[styles.text_expires, {display: this.state.isVip ? 'none' : 'flex'}]}>4. 账户将在当前订阅期结束前的24小时内进行续费扣费，续费金额在前12个月为￥3.99/月，第13个月起为￥12.00/月。</TextPingFang>
+          <TextPingFang style={[styles.text_expires, {display: this.state.isVip ? 'none' : 'flex'}]}>5. 用户可自行管理订阅服务，自动续订服务可以在购买后前往用户的账户设置中关闭。</TextPingFang>
 
           <View style={styles.privacy}>
             <TouchableOpacity onPress={() => Actions.jump(SCENE_WEB, { url: 'https://github.com/oh-bear/2life/wiki/%E7%94%A8%E6%88%B7%E9%9A%90%E7%A7%81%E5%8D%8F%E8%AE%AE' })}>
