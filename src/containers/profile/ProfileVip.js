@@ -210,15 +210,17 @@ const styles = StyleSheet.create({
   },
   buy_container: {
     position: 'absolute',
+    bottom: 0,
     ...ifIphoneX({
-      bottom: 44
+      height: getResponsiveWidth(96),
+      paddingTop: 8,
+      paddingBottom: 34,
     }, {
-      bottom: 0
+      height: getResponsiveWidth(68),
+      paddingTop: 8,
+      paddingBottom: 8,
     }),
     width: WIDTH - getResponsiveWidth(48),
-    height: getResponsiveWidth(68),
-    paddingTop: 8,
-    paddingBottom: 8,
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: '#fff'
