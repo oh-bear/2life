@@ -24,6 +24,8 @@ import {
 import { updateReduxUser } from '../../common/util'
 import HttpUtils from '../../network/HttpUtils'
 import { USERS } from '../../network/Urls'
+import { Actions } from 'react-native-router-flux';
+import { SCENE_WEB } from '../../constants/scene';
 
 const itemSkus = Platform.select({
   ios: [
@@ -118,6 +120,15 @@ export default class ProfileVip extends Component {
           <TextPingFang style={[styles.text_expires, {display: this.state.isVip ? 'none' : 'flex'}]}>1. 订阅自动续期，除非在当前订阅期之前24小时外关闭自动续订功能。</TextPingFang>
           <TextPingFang style={[styles.text_expires, {display: this.state.isVip ? 'none' : 'flex'}]}>2. 账户将在当前订阅期结束前的24小时内进行续费扣费，续费金额在前12个月为￥3.99/月，第13个月起为￥12.00/月。</TextPingFang>
           <TextPingFang style={[styles.text_expires, {display: this.state.isVip ? 'none' : 'flex'}]}>3. 用户可自行管理订阅服务，自动续订服务可以在购买后前往用户的账户设置中关闭。</TextPingFang>
+
+          <View style={styles.privacy}>
+            <TouchableOpacity onPress={() => Actions.jump(SCENE_WEB, { url: 'https://github.com/oh-bear/2life/wiki/%E7%94%A8%E6%88%B7%E9%9A%90%E7%A7%81%E5%8D%8F%E8%AE%AE' })}>
+              <TextPingFang style={styles.text_privacy}>隐私政策</TextPingFang>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() =>  Actions.jump(SCENE_WEB, { url: 'https://github.com/oh-bear/2life/wiki/%E5%8F%8C%E7%94%9F%E6%97%A5%E8%AE%B0%E4%BD%BF%E7%94%A8%E6%9D%A1%E6%AC%BE' })}>
+              <TextPingFang style={styles.text_privacy}>使用条款</TextPingFang>
+            </TouchableOpacity>
+          </View>
         </ScrollView>
 
         <View style={[styles.buy_container, {display: this.state.isVip ? 'none' : 'flex'}]}>
@@ -240,6 +251,17 @@ const styles = StyleSheet.create({
   },
   text_btn: {
     color: '#fff',
+    fontSize: 14,
+    fontWeight: '500',
+  },
+  privacy: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 16,
+    marginBottom: 16,
+  },
+  text_privacy: {
+    color: '#2DC3A6',
     fontSize: 14,
     fontWeight: '500',
   }

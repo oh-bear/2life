@@ -29,10 +29,10 @@ export default class Web extends Component {
 
   async componentWillMount() {
     // this._renderRightButton()
-    console.log({ shareUrl: `${this.props.shareUrl}?name=${this.props.user.name}` })
-    let key = await Storage.get('key', {})
-    let url = `${this.props.url}?uid=${key.uid}&token=${key.token}&timestamp=${key.timestamp}&user_other_id=${this.props.user.user_other_id}`
-    this.setState({url}, () => console.log(this.state.url))
+    // console.log({ shareUrl: `${this.props.shareUrl}?name=${this.props.user.name}` })
+    // let key = await Storage.get('key', {})
+    // let url = `${this.props.url}?uid=${key.uid}&token=${key.token}&timestamp=${key.timestamp}&user_other_id=${this.props.user.user_other_id}`
+    // this.setState({url}, () => console.log(this.state.url))
   }
 
   _showOptions() {
@@ -133,7 +133,7 @@ export default class Web extends Component {
         <WebView
           ref={ref => this.web = ref}
           style={styles.web_container}
-          source={{ uri: this.state.url }}
+          source={{ uri: this.props.url }}
           onMessage={this._onMessage.bind(this)}
           onLoadEnd={this._onLoadEnd.bind(this)}
           onNavigationStateChange={this._onNavigationStateChange.bind(this)}
