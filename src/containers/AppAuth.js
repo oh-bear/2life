@@ -118,24 +118,28 @@ export default class AppAuth extends Component {
             style={styles.psw_item}
             secureTextEntry
             editable={false}
+            underlineColorAndroid='transparent'
             value={this.state.password.length < 4 ? this.state.password[0] : this.state.passwordConfirm[0]}
           />
           <TextInput
             style={styles.psw_item}
             secureTextEntry
             editable={false}
+            underlineColorAndroid='transparent'
             value={this.state.password.length < 4 ? this.state.password[1] : this.state.passwordConfirm[1]}
           />
           <TextInput
             style={styles.psw_item}
             secureTextEntry
             editable={false}
+            underlineColorAndroid='transparent'
             value={this.state.password.length < 4 ? this.state.password[2] : this.state.passwordConfirm[2]}
           />
           <TextInput
             style={styles.psw_item}
             secureTextEntry
             editable={false}
+            underlineColorAndroid='transparent'
             value={this.state.password.length < 4 ? this.state.password[3] : this.state.passwordConfirm[3]}
           />
         </View>
@@ -171,7 +175,7 @@ export default class AppAuth extends Component {
             })
           }
         </View>
-        
+
         <View style={styles.btns_container}>
           <TouchableOpacity style={{display: this.state.gotoApp ? 'none' : 'flex'}} onPress={() => Actions.pop()}>
             <TextPingFang style={styles.text_btn}>取消</TextPingFang>

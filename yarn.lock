@@ -5478,6 +5478,10 @@ react-native-level-fs@^3.0.1:
     level-filesystem "^1.0.1"
     levelup "^0.18.2"
 
+react-native-linear-gradient@^2.4.2:
+  version "2.4.2"
+  resolved "http://registry.npm.taobao.org/react-native-linear-gradient/download/react-native-linear-gradient-2.4.2.tgz#9d3acd0a198b9d4566e8f6253ef1f60fef0ff2be"
+
 react-native-menu@~0.21.0:
   version "0.21.0"
   resolved "http://registry.npm.taobao.org/react-native-menu/download/react-native-menu-0.21.0.tgz#ebc647862eb80ed00e2289397bf8b634b09b1e8b"
@@ -5600,6 +5604,10 @@ react-native-tcp@^3.3.0:
     ip-regex "^1.0.3"
     process "^0.11.9"
     util "^0.10.3"
+
+react-native-touch-id@^4.0.4:
+  version "4.0.4"
+  resolved "http://registry.npm.taobao.org/react-native-touch-id/download/react-native-touch-id-4.0.4.tgz#7dbc051c9966bbcd33c2cfbb8d3bad171770b6b7"
 
 react-native-udp@^2.3.1:
   version "2.3.1"

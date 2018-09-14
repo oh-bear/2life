@@ -17,6 +17,7 @@ import Container from '../../components/Container'
 import Popup from '../../components/Popup'
 import ProfileHeader from './components/ProfileHeader'
 import Storage from '../../common/storage'
+import Toast from 'antd-mobile/lib/toast'
 
 import {
   getResponsiveWidth, WIDTH,
@@ -52,6 +53,7 @@ export default class ProfileVip extends Component {
 
   async componentWillMount() {
     const isVip = await Storage.get('isVip', false)
+    //const isVip = true;
     if (isVip) {
       const date = new Date(this.props.user.vip_expires)
       const expiresDate = `${date.getFullYear()} 年 ${date.getMonth() + 1} 月 ${date.getDate()} 日`
@@ -64,6 +66,12 @@ export default class ProfileVip extends Component {
   }
 
   _buyVip() {
+
+    if(Platform.OS==="android"){
+      Toast.info('暂时仅限iOS支付', 2)
+      return;
+    }
+
     let expires = Date.now() + 30 * 24 * 60 * 60 * 1000
 
     RNIap.buySubscription('vip_1').then(purchase => {
@@ -115,13 +123,23 @@ export default class ProfileVip extends Component {
             <Image style={styles.vip_item_img_right} source={require('../../../res/images/profile/vip/icon-profile-selected.png')} />
           </View>
 
-          <TextPingFang style={[styles.text_expires, {display: this.state.isVip ? 'none' : 'flex', fontSize: 16, color: '#333'}]}>订阅说明：</TextPingFang>
-          <TextPingFang style={[styles.text_expires, {display: this.state.isVip ? 'flex' : 'none'}]}>您的订阅将在 {this.state.expiresDate} 自动续费，如需取消可前往用户的帐户设置中关闭。</TextPingFang>
-          <TextPingFang style={[styles.text_expires, {display: this.state.isVip ? 'none' : 'flex'}]}>1. 在双生日记的购买窗口中，最新订阅价格会实时显示。</TextPingFang>
-          <TextPingFang style={[styles.text_expires, {display: this.state.isVip ? 'none' : 'flex'}]}>2. 在付款确认后， iTunes账户将被扣款。</TextPingFang>
-          <TextPingFang style={[styles.text_expires, {display: this.state.isVip ? 'none' : 'flex'}]}>3. 订阅自动续期，除非在当前订阅期之前24小时外关闭自动续订功能。</TextPingFang>
-          <TextPingFang style={[styles.text_expires, {display: this.state.isVip ? 'none' : 'flex'}]}>4. 账户将在当前订阅期结束前的24小时内进行续费扣费，续费金额在前12个月为￥3.99/月，第13个月起为￥12.00/月。</TextPingFang>
-          <TextPingFang style={[styles.text_expires, {display: this.state.isVip ? 'none' : 'flex'}]}>5. 用户可自行管理订阅服务，自动续订服务可以在购买后前往用户的账户设置中关闭。</TextPingFang>
+          {Platform.OS==="ios" ?
+          <View>
+            <TextPingFang style={[styles.text_expires, {display: this.state.isVip ? 'none' : 'flex', fontSize: 16, color: '#333'}]}>订阅说明：</TextPingFang>
+            <TextPingFang style={[styles.text_expires, {display: this.state.isVip ? 'flex' : 'none'}]}>您的订阅将在 {this.state.expiresDate} 自动续费，如需取消可前往用户的帐户设置中关闭。</TextPingFang>
+            <TextPingFang style={[styles.text_expires, {display: this.state.isVip ? 'none' : 'flex'}]}>1. 在双生日记的购买窗口中，最新订阅价格会实时显示。</TextPingFang>
+            <TextPingFang style={[styles.text_expires, {display: this.state.isVip ? 'none' : 'flex'}]}>2. 在付款确认后， iTunes账户将被扣款。</TextPingFang>
+            <TextPingFang style={[styles.text_expires, {display: this.state.isVip ? 'none' : 'flex'}]}>3. 订阅自动续期，除非在当前订阅期之前24小时外关闭自动续订功能。</TextPingFang>
+            <TextPingFang style={[styles.text_expires, {display: this.state.isVip ? 'none' : 'flex'}]}>4. 账户将在当前订阅期结束前的24小时内进行续费扣费，续费金额在前12个月为￥3.99/月，第13个月起为￥12.00/月。</TextPingFang>
+            <TextPingFang style={[styles.text_expires, {display: this.state.isVip ? 'none' : 'flex'}]}>5. 用户可自行管理订阅服务，自动续订服务可以在购买后前往用户的账户设置中关闭。</TextPingFang>
+          </View>:<View>
+            <TextPingFang style={[styles.text_expires, {display: this.state.isVip ? 'none' : 'flex', fontSize: 16, color: '#333'}]}>订阅说明：</TextPingFang>
+            <TextPingFang style={[styles.text_expires, {display: this.state.isVip ? 'flex' : 'none'}]}>您的订阅将在 {this.state.expiresDate} 到期，不要忘了续费哦~</TextPingFang>
+            <TextPingFang style={[styles.text_expires, {display: this.state.isVip ? 'none' : 'flex'}]}>暂不支持在Android端开通高级会员，如有需要，请前往iOS版开通</TextPingFang>
+          </View>
+
+            }
+
 
           <View style={styles.privacy}>
             <TouchableOpacity onPress={() => Actions.jump(SCENE_WEB, { url: 'https://github.com/oh-bear/2life/wiki/%E7%94%A8%E6%88%B7%E9%9A%90%E7%A7%81%E5%8D%8F%E8%AE%AE' })}>
@@ -133,7 +151,7 @@ export default class ProfileVip extends Component {
           </View>
         </ScrollView>
 
-        <View style={[styles.buy_container, {display: this.state.isVip ? 'none' : 'flex'}]}>
+        <View style={[styles.buy_container, {display: this.state.isVip ? 'none' : 'flex', position: this.state.isVip ? 'relative' : 'absolute'}]}>
           <View style={styles.price_container}>
             <TextPingFang style={styles.text_price_now}>￥3.99/月</TextPingFang>
             <TextPingFang style={styles.text_price_before}>原价￥12.00</TextPingFang>
@@ -141,7 +159,7 @@ export default class ProfileVip extends Component {
           </View>
           <LinearGradient start={{x: 0, y: 0}} end={{x: 1, y: 0}} colors={['#9EE143', '#2DC3A6']} style={styles.liner_gradient}>
             <TouchableOpacity style={styles.buy_btn} onPress={this._buyVip.bind(this)}>
-              <TextPingFang style={styles.text_btn}>马上开通</TextPingFang>
+              <TextPingFang style={styles.text_btn}>{Platform.OS==="ios"?"马上开通":"暂时仅限iOS支付"}</TextPingFang>
             </TouchableOpacity>
           </LinearGradient>
         </View>

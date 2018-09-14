@@ -294,7 +294,7 @@ export default class Profile extends Component {
             {this.renderPartner()}
 
              <View style={styles.margin}></View>
-            {/* 
+            {/*
             <View style={{display: this.state.showActEntry ? 'flex' : 'none'}}>
               <Row
                 imageLeft={<Image source={require('../../../res/images/profile/icon-profile-event.png')} />}
@@ -341,11 +341,12 @@ export default class Profile extends Component {
               onPress={() => Actions.jump(SCENE_PROFILE_SYNC, { user: this.props.user })}
             />
 
+            {Platform.OS==="ios"?
             <Row
               imageLeft={<Image source={require('../../../res/images/profile/icon_reward.png')} />}
               title='打赏'
               onPress={() => Actions.jump(SCENE_PROFILE_REWARD)}
-            />
+            />:<View />}
 
             <Row
               imageLeft={<Image source={require('../../../res/images/profile/icon_setting.png')} />}
