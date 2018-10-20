@@ -374,7 +374,7 @@ export default class NewDiary extends Component {
           <TextInput
             style={styles.text_title}
             value={this.state.title}
-            onChangeText={title => this.setState({ title_2: title })}
+            onChangeText={title => this.setState({ title_2: title , title:title })}
             onBlur={() => this.setState({ title: this.state.title_2 })}
             placeholder='标题'
             underlineColorAndroid='transparent'
@@ -384,7 +384,7 @@ export default class NewDiary extends Component {
           <TextInput
             style={styles.text_content}
             value={this.state.content}
-            onChangeText={content => this.setState({ content_2: content })}
+            onChangeText={content => this.setState({ content_2: content, content:content })}
             onBlur={() => this.setState({ content: this.state.content_2 })}
             placeholder='请输入正文'
             underlineColorAndroid='transparent'
