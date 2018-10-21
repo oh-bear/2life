@@ -38,6 +38,7 @@ import {
   downloadImg,
   updateFile,
   readFile,
+  readFullFile,
   uuid,
   SYNC_TIMEOUT_ID
 } from '../../common/util'
@@ -127,7 +128,9 @@ export default class Home extends Component {
         const { partner, recommend, user } = res.data
         let diaryList = [...partner, ...user]
 
-        const localDiaryList = await readFile(this.props.user.id)
+        //这里需要读取完整的配置文件，否则无法得知未删除的日记
+        const localDiaryList = await readFullFile(this.props.user.id)
+        //const localDiaryList = await readFile(this.props.user.id)
 
         // 保存新日记
         let newDiaryList = []
@@ -155,7 +158,11 @@ export default class Home extends Component {
               if (localDiaryList[i].id === diaryList[j].id) {
                 break
               }
-              if (j === diaryList.length - 1) {
+              if (j === diaryList.length - 1 ) {
+                //如果本地的日记操作op是1 or 2，不删除
+                if (localDiaryList[i].op === 1 || localDiaryList[i].op === 2 ){
+                  break
+                }
                 deleteDiaryList.push(localDiaryList[i])
               }
             }
@@ -167,9 +174,18 @@ export default class Home extends Component {
               }
             }
           }
-        } else {
-          deleteDiaryList = [...localDiaryList]
-        }
+         } else {
+           //由于存在保存完文件立刻杀掉app导致配置文件未上传成功的情况
+           //导致服务端返回数据不完全可信
+           //因此不能粗暴认为服务端返回列表为空时就删除所有日记
+           //遍历筛选出所有删除的日记
+           //deleteDiaryList = [...localDiaryList]
+           for (let i = 0; i < localDiaryList.length; i++){
+             if (localDiaryList[i].op === 3){
+               deleteDiaryList.push(localDiaryList[i])
+             }
+           }
+         }
 
         for (let newDiary of newDiaryList) {
           newDiary.imgPathList = newDiary.imgPathList || []
