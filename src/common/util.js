@@ -494,6 +494,23 @@ export async function readFile(user_id = 0) {
 }
 
 /**
+ * 读取完整的配置文件，不过滤删除的部分
+ * @param {Number} user_id 用户ID
+ */
+export async function readFullFile(user_id = 0) {
+  const fs = RNFetchBlob.fs
+  const FILE_PATH = fs.dirs.DocumentDir + `/user_${user_id}_config.json`
+
+  // 读取配置文件内容
+  try {
+    const content = JSON.parse(await fs.readFile(FILE_PATH, 'utf8'))
+    return content.diaryList
+  } catch (err) {
+    return []
+  }
+}
+
+/**
  * 日记配置文件的增删改
  * @param {Object} obj
  */
@@ -529,6 +546,12 @@ export async function updateFile(obj) {
         }
       }
     } else {
+      // for (let i = 0; i < diaryList.length; i++){
+      //   if (obj.data.uuid === diaryList[i].uuid) {
+      //     diaryList[i] = obj.data
+      //     break
+      //   }
+      // }
       diaryList = diaryList.filter(diary => diary.uuid !== obj.data.uuid)
       diaryList.push(obj.data)
     }
