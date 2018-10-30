@@ -30,7 +30,8 @@ export default class HttpUtils {
   }
 
   static post(url, data, config) {
-    url = baseUrl + url
+    const query = `?uid=${defaultData.uid}&timestamp=${defaultData.timestamp}&token=${defaultData.token}`
+    url = baseUrl + url + query
 
     data = {
       ...defaultData,
