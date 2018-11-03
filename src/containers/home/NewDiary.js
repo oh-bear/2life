@@ -370,11 +370,18 @@ export default class NewDiary extends Component {
             </View>
           }
 
-
+          {/* Android下，因为TextInput的value设的是title,而onChangeText的时候修改的是title_2,所以会导致在安卓下输入的时候，看到的效果是输入一个字符后又立刻被删除，虽然输入的内容已经被存在title_2了 */}
           <TextInput
             style={styles.text_title}
             value={this.state.title}
-            onChangeText={title => this.setState({ title_2: title , title:title })}
+            onChangeText={title =>{
+                if(Platform.OS=='ios'){
+                  this.setState({ title_2: title })
+                }else {
+                  this.setState({ title_2: title, title : title })
+                }
+              }
+            }
             onBlur={() => this.setState({ title: this.state.title_2 })}
             placeholder='标题'
             underlineColorAndroid='transparent'
@@ -384,7 +391,14 @@ export default class NewDiary extends Component {
           <TextInput
             style={styles.text_content}
             value={this.state.content}
-            onChangeText={content => this.setState({ content_2: content, content:content })}
+            onChangeText={content =>{
+                if(Platform.OS=='ios'){
+                  this.setState({ content_2: content })
+                }else {
+                  this.setState({ content_2: content , content : content })
+                }
+              }
+            }
             onBlur={() => this.setState({ content: this.state.content_2 })}
             placeholder='请输入正文'
             underlineColorAndroid='transparent'

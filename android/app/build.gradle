@@ -95,8 +95,8 @@ android {
         applicationId "me.ursb.twolife"
         minSdkVersion 16
         targetSdkVersion 22
-        versionCode 12
-        versionName "2.1.4"
+        versionCode 13
+        versionName "2.1.6"
         manifestPlaceholders = [
                 JPUSH_APPKEY: "67fdf21f35e554cc0b985e4e",
                 APP_CHANNEL : "default"
