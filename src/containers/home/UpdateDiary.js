@@ -272,7 +272,7 @@ export default class UpdateDiary extends Component {
             style={styles.text_title}
             value={this.state.title}
             underlineColorAndroid='transparent'
-            onChangeText={title => this.setState({ title_2: title, title : title })}
+            onChangeText={title => this.setState({ title_2: title })}
             onBlur={() => this.setState({ title: this.state.title_2 })}
             placeholder='标题'
             placeholderTextColor='#aaa'
@@ -282,7 +282,7 @@ export default class UpdateDiary extends Component {
             style={styles.text_content}
             value={this.state.content}
             underlineColorAndroid='transparent'
-            onChangeText={content => this.setState({ content_2: content , content : content})}
+            onChangeText={content => this.setState({ content_2: content })}
             onBlur={() => this.setState({ content: this.state.content_2 })}
             placeholder='请输入正文'
             placeholderTextColor='#aaa'
