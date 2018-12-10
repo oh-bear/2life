@@ -9,6 +9,7 @@ import Signup from './containers/login/Signup'
 import Nickname from './containers/login/Nickname'
 import Gender from './containers/login/Gender'
 import Area from './containers/login/Area'
+import ResetPsw from './containers/login/ResetPsw'
 
 // home
 import NewDiary from './containers/home/NewDiary'
@@ -82,6 +83,13 @@ export default class AppRouter extends Component {
               key={scenes.SCENE_LOGIN_SIGNUP}
               component={Signup}
               title='注册'
+              duration={0}
+              hideNavBar
+            />
+            <Scene
+              key={scenes.SCENE_LOGIN_RESET_PSW}
+              component={ResetPsw}
+              title='忘记密码'
               duration={0}
               hideNavBar
             />

@@ -26,7 +26,7 @@ import {
 } from '../../common/styles'
 import { sleep } from '../../common/util'
 import Storage from '../../common/storage'
-import { SCENE_INDEX } from '../../constants/scene'
+import { SCENE_INDEX, SCENE_LOGIN_RESET_PSW } from '../../constants/scene'
 
 import { USERS } from '../../network/Urls'
 import HttpUtils from '../../network/HttpUtils'
@@ -44,8 +44,6 @@ export default class Signin extends Component {
     showAccountTip: false,
     showPswTip: false
   }
-
-
 
   async login() {
     Toast.loading('正在登录', 0)
@@ -121,8 +119,14 @@ export default class Signin extends Component {
               multiline={false}
               secureTextEntry
             />
-            <TextPingFang
-              style={[styles.text_tip, { color: this.state.showPswTip ? '#F43C56' : 'transparent' }]}>密码不正确</TextPingFang>
+            <TextPingFang style={[styles.text_tip, { color: this.state.showPswTip ? '#F43C56' : 'transparent' }]}>密码不正确</TextPingFang>
+
+            <TouchableOpacity
+              style={styles.reset_container}
+              onPress={() => Actions.jump(SCENE_LOGIN_RESET_PSW)}
+            >
+              <TextPingFang style={styles.text_reset}>忘记密码？</TextPingFang>
+            </TouchableOpacity>
 
             <TouchableOpacity
               style={styles.btn_container}
@@ -162,6 +166,12 @@ const styles = StyleSheet.create({
   text_tip: {
     fontSize: 12,
     marginTop: 4
+  },
+  reset_container: {
+  },
+  text_reset: {
+    color: '#aaa',
+    fontSize: 14,
   },
   btn_container: {
     position: 'absolute',

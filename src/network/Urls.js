@@ -2,6 +2,7 @@ export const USERS = {
   login: '/users/login',
   register: '/users/register',
   code: '/users/code',
+  reset_password: '/users/reset_password', // post {account, password, code, timestamp}
   update: '/users/update', // post {sex, name, face, status, latitude, longitude, badge_id, badges}
   user: '/users/user',
   notification: '/users/show_notification',
