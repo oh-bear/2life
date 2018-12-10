@@ -38,7 +38,7 @@ export default class Banner extends Component {
                 style={{ display: this.props.showNavLeft ? 'flex' : 'none' }}
                 source={require('../../../res/images/common/icon_back_white.png')}/>
             </TouchableOpacity>
-            <TouchableOpacity style={{display: Date.now() > new Date('2018-09-12').getTime() ? 'flex' : 'none'}} onPress={this.props.onNavRightPress}>
+            <TouchableOpacity style={{display: Date.now() > new Date('2018-12-25').getTime() ? 'flex' : 'none'}} onPress={this.props.onNavRightPress}>
               <TextPingFang style={[styles.text_nav_right, { display: this.props.showNavRight ? 'flex' : 'none' }]}>直接使用</TextPingFang>
             </TouchableOpacity>
           </View>
