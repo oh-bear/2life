@@ -8,7 +8,7 @@ import {
   AppState
 } from 'react-native'
 import Home from './home/Home'
-import Notification from './notification/Notification'
+import ProfileMode from './profile/ProfileMode'
 import Profile from './profile/Profile'
 import TabNavigator from 'react-native-tab-navigator'
 import { ifIphoneX } from 'react-native-iphone-x-helper'
@@ -163,12 +163,12 @@ export default class Index extends Component {
       ),
       selected: <Image source={require('../../res/images/tab/icon_home_active.png')}/>
     },
-    notification: {
+    mode: {
       default: (
-        <Image source={require('../../res/images/tab/icon_notification_inactive.png')}/>
+        <Image source={require('../../res/images/tab/icon_tab_bar_mood_analysisinactive.png')}/>
       ),
       selected: (
-        <Image source={require('../../res/images/tab/icon_notification_active.png')}/>
+        <Image source={require('../../res/images/tab/icon_tab_bar_mood_analysisactive.png')}/>
       )
     },
     profile: {
@@ -195,19 +195,19 @@ export default class Index extends Component {
             <Home />
           </TabNavigator.Item>
           <TabNavigator.Item
-            selected={this.state.selectedTab === 'notification'}
-            title='通知'
+            selected={this.state.selectedTab === 'mode'}
+            title='情绪'
             titleStyle={styles.text_title}
             badgeText={this.state.unread}
             selectedTitleStyle={styles.text_title_selected}
-            renderIcon={() => this.icons.notification.default}
-            renderSelectedIcon={() => this.icons.notification.selected}
+            renderIcon={() => this.icons.mode.default}
+            renderSelectedIcon={() => this.icons.mode.selected}
             onPress={() => {
               JPushModule.clearAllNotifications()
-              this.setState({ selectedTab: 'notification', unread: 0 })
+              this.setState({ selectedTab: 'mode', unread: 0 })
             }}
           >
-            <Notification />
+            <ProfileMode />
           </TabNavigator.Item>
           <TabNavigator.Item
             selected={this.state.selectedTab === 'profile'}
@@ -231,8 +231,9 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   tabbar: {
-    backgroundColor: 'rgba(255,255,255,.95)',
     height:56,
+    alignItems: 'center',
+    backgroundColor: 'rgba(255,255,255,.95)',
     ...ifIphoneX({
       height: 84,
       paddingBottom: 34

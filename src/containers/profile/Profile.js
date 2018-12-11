@@ -25,19 +25,18 @@ import { readFile } from '../../common/util'
 import Storage from '../../common/storage'
 import {
   SCENE_PROFILE_EDIT,
-  SCENE_PROFILE_MODE,
   SCENE_PROFILE_BADGE,
   SCENE_PROFILE_MATCH,
   SCENE_PROFILE_SYNC,
   SCENE_PROFILE_NOTE,
   SCENE_PROFILE_REWARD,
   SCENE_MATCH_RESULT,
-  SCENE_PROFILE_FEEDBACK,
   SCENE_LOGIN_OPTIONS,
   SCENE_PROFILE_TEST,
   SCENE_PROFILE_SETTING,
   SCENE_WEB,
-  SCENE_PROFILE_VIP
+  SCENE_PROFILE_VIP,
+  SCENE_PROFILE_NOTIFICATION
 } from '../../constants/scene'
 import HttpUtils from '../../network/HttpUtils'
 import { UTILS } from '../../network/Urls'
@@ -305,9 +304,9 @@ export default class Profile extends Component {
             </View> */}
 
             <Row
-              imageLeft={<Image source={require('../../../res/images/profile/icon_mood_analysis.png')} />}
-              title='情绪管理'
-              onPress={() => Actions.jump(SCENE_PROFILE_MODE, { user: this.props.user })}
+              imageLeft={<Image source={require('../../../res/images/profile/icon_profile_notification.png')} />}
+              title='通知'
+              onPress={() => Actions.jump(SCENE_PROFILE_NOTIFICATION, { user: this.props.user })}
             />
 
             <Row

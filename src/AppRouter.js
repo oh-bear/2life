@@ -34,6 +34,7 @@ import ProfileSetting from './containers/profile/ProfileSetting'
 import ProfileThanks from './containers/profile/ProfileThanks'
 import ProfilePrivacy from './containers/profile/ProfilePrivacy'
 import ProfileVip from './containers/profile/ProfileVip'
+import Notification from './containers/notification/Notification'
 
 import { Scene, Router, ActionConst } from 'react-native-router-flux'
 import * as scenes from './constants/scene'
@@ -244,6 +245,13 @@ export default class AppRouter extends Component {
             <Scene
               key={scenes.SCENE_PROFILE_VIP}
               component={ProfileVip}
+              title='高级会员'
+              hideNavBar
+              duration={0}
+            />
+            <Scene
+              key={scenes.SCENE_PROFILE_NOTIFICATION}
+              component={Notification}
               title='高级会员'
               hideNavBar
               duration={0}

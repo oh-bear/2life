@@ -5,7 +5,6 @@ import {
   FlatList,
   DeviceEventEmitter,
 } from 'react-native'
-import { ifIphoneX } from 'react-native-iphone-x-helper'
 
 import {
   WIDTH,
@@ -15,6 +14,7 @@ import {
 
 import Container from '../../components/Container'
 import TextPingFang from '../../components/TextPingFang'
+import ProfileHeader from '../../containers/profile/components/ProfileHeader'
 import NotificationItem from './NotificationItem'
 import { connect } from 'react-redux'
 import { USERS } from '../../network/Urls'
@@ -73,7 +73,8 @@ export default class Notification extends Component {
   render() {
     return (
       <Container showNetStatus={true}>
-        <TextPingFang style={styles.title}>通知</TextPingFang>
+        <ProfileHeader title='通知' />
+
         <FlatList
           showsVerticalScrollIndicator={false}
           style={styles.notification_container}
@@ -88,18 +89,6 @@ export default class Notification extends Component {
 }
 
 const styles = StyleSheet.create({
-  title: {
-    width: WIDTH,
-    paddingLeft: getResponsiveWidth(72),
-    ...ifIphoneX({
-      paddingTop: getResponsiveHeight(4),
-    }, {
-      paddingTop: getResponsiveHeight(28),
-    }),
-    color: '#000',
-    fontSize: 34,
-    fontWeight: '500',
-  },
   notification_container: {
     width: WIDTH,
     marginBottom: getResponsiveHeight(48),

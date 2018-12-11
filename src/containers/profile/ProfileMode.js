@@ -8,6 +8,8 @@ import {
 } from 'react-native'
 import ScrollableTabView from 'react-native-scrollable-tab-view'
 import { Actions } from '../../../node_modules/react-native-router-flux'
+import { ifIphoneX } from 'react-native-iphone-x-helper'
+import { connect } from 'react-redux'
 
 import Container from '../../components/Container'
 import TextPingFang from '../../components/TextPingFang'
@@ -26,7 +28,13 @@ import { SCENE_PROFILE_TEST } from '../../constants/scene'
 import HttpUtils from '../../network/HttpUtils'
 import { UTILS } from '../../network/Urls'
 
+function mapStateToProps(state) {
+  return {
+    user: state.user,
+  }
+}
 
+@connect(mapStateToProps)
 export default class ProfileMode extends Component {
 
   state = {
@@ -34,7 +42,7 @@ export default class ProfileMode extends Component {
     weekModeData: { modes: [], timeRange: [] },
     monthModeData: { modes: [], timeRange: [] },
     yearModeData: { modes: [], timeRange: [] },
-    averageMode: 0,
+     || 0: 0,
     totalDay: 0,
     emotions: [],
     pieData: [],
@@ -91,7 +99,7 @@ export default class ProfileMode extends Component {
     const yearData = mergeData.length >= 365 ? mergeData.slice(-365) : mergeData
 
     this.setState({
-      averageMode: (totalMode / myDiaryList.length).toFixed(2),
+       || 0: (totalMode / myDiaryList.length).toFixed(2),
       totalDay: mergeData.length,
       emotions,
       pieData: [posDays, midDays, negDays],
@@ -263,7 +271,8 @@ export default class ProfileMode extends Component {
   render() {
     return (
       <Container>
-        <ProfileHeader title='情绪图表' />
+        <TextPingFang style={styles.title}>情绪图表</TextPingFang>
+
         <ScrollView contentContainerStyle={styles.scroll_container}>
           <ScrollableTabView
             style={styles.chart_height}
@@ -293,7 +302,7 @@ export default class ProfileMode extends Component {
               <TextPingFang style={styles.text_bottom}>累计写日记/天</TextPingFang>
             </View>
             <View style={styles.total_inner_container}>
-              <TextPingFang style={styles.text_top}>{this.state.averageMode}</TextPingFang>
+              <TextPingFang style={styles.text_top}>{this.state.averageMode || 0}</TextPingFang>
               <TextPingFang style={styles.text_bottom}>平均情绪值</TextPingFang>
             </View>
           </View>
@@ -342,6 +351,18 @@ export default class ProfileMode extends Component {
 }
 
 const styles = StyleSheet.create({
+  title: {
+    width: WIDTH,
+    paddingLeft: getResponsiveWidth(48),
+    ...ifIphoneX({
+      paddingTop: getResponsiveWidth(4),
+    }, {
+      paddingTop: getResponsiveWidth(28),
+    }),
+    color: '#000',
+    fontSize: 34,
+    fontWeight: '500',
+  },
   scroll_container: {
     //marginLeft: getResponsiveWidth(24),
     //marginRight: getResponsiveWidth(24)
