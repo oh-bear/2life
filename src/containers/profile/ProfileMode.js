@@ -13,7 +13,6 @@ import { connect } from 'react-redux'
 
 import Container from '../../components/Container'
 import TextPingFang from '../../components/TextPingFang'
-import ProfileHeader from './components/ProfileHeader'
 import TabBar from './components/TabBar'
 import ModeCharts from './components/ModeCharts'
 import Pie from './components/Pie'
@@ -42,7 +41,7 @@ export default class ProfileMode extends Component {
     weekModeData: { modes: [], timeRange: [] },
     monthModeData: { modes: [], timeRange: [] },
     yearModeData: { modes: [], timeRange: [] },
-     || 0: 0,
+    averageMode: 0,
     totalDay: 0,
     emotions: [],
     pieData: [],
@@ -99,7 +98,7 @@ export default class ProfileMode extends Component {
     const yearData = mergeData.length >= 365 ? mergeData.slice(-365) : mergeData
 
     this.setState({
-       || 0: (totalMode / myDiaryList.length).toFixed(2),
+      averageMode: (totalMode / myDiaryList.length).toFixed(2),
       totalDay: mergeData.length,
       emotions,
       pieData: [posDays, midDays, negDays],
