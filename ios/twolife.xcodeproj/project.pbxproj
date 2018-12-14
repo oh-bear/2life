@@ -514,8 +514,6 @@
 		9205A697341B40CE9892ADF8 /* RCTWeChatTests.xctest */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = RCTWeChatTests.xctest; sourceTree = "<group>"; };
 		9A6665F726344C73886521AB /* libimageCropPicker.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libimageCropPicker.a; sourceTree = "<group>"; };
 		9D080C811EF0FBA800A7A56C /* ART.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ART.xcodeproj; path = "../node_modules/react-native/Libraries/ART/ART.xcodeproj"; sourceTree = "<group>"; };
-		9D5A9B0C1EF5371100A09E59 /* QBImagePicker.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = QBImagePicker.framework; sourceTree = "<group>"; };
-		9D5A9B0D1EF5371100A09E59 /* RSKImageCropper.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = RSKImageCropper.framework; sourceTree = "<group>"; };
 		9D6068BE1FF7788C0029F046 /* ART.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ART.xcodeproj; path = "../node_modules/react-native/Libraries/ART/ART.xcodeproj"; sourceTree = "<group>"; };
 		9DBAAD9420A886390006BC8A /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		9EC2E5115E774CEE995B5D58 /* Zocial.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Zocial.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Zocial.ttf"; sourceTree = "<group>"; };
@@ -755,7 +753,6 @@
 		81AB327E154042D5A2D8F773 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				9D5A9B0B1EF5371100A09E59 /* ImageCropPickerSDK */,
 				788194994A804BCEBFFF6CF0 /* Entypo.ttf */,
 				A8563AD954754FA79DC7BFD2 /* EvilIcons.ttf */,
 				39B5C8A559C744A2A9DCFDBA /* FontAwesome.ttf */,
@@ -850,15 +847,6 @@
 				9D244951209D7C3500171DF5 /* libRNSVG-tvOS.a */,
 			);
 			name = Products;
-			sourceTree = "<group>";
-		};
-		9D5A9B0B1EF5371100A09E59 /* ImageCropPickerSDK */ = {
-			isa = PBXGroup;
-			children = (
-				9D5A9B0C1EF5371100A09E59 /* QBImagePicker.framework */,
-				9D5A9B0D1EF5371100A09E59 /* RSKImageCropper.framework */,
-			);
-			path = ImageCropPickerSDK;
 			sourceTree = "<group>";
 		};
 		9D6068BF1FF7788C0029F046 /* Products */ = {
