@@ -21,9 +21,10 @@ export const isDev = global.process.env.NODE_ENV === 'development'
 
 export function uuid() {
   function S4() {
-    return (((1+Math.random())*0x10000)|0).toString(16).substring(1);
+    return (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1)
   }
-  return (S4()+S4()+"-"+S4()+"-"+S4()+"-"+S4()+"-"+S4()+S4()+S4());
+
+  return (S4() + S4() + '-' + S4() + '-' + S4() + '-' + S4() + '-' + S4() + S4() + S4())
 }
 
 /**
@@ -33,7 +34,7 @@ export function uuid() {
 export function getFormDay(timestamp) {
   const date = new Date(timestamp)
   const year = date.getFullYear()
-  const month = date.getMonth() < 10 ? `0${date.getMonth() + 1}` : date.getMonth()
+  const month = date.getMonth() < 10 ? `0${date.getMonth() + 1}` : (date.getMonth() + 1)
   const day = date.getDate() < 10 ? `0${date.getDate()}` : date.getDate()
   return `${year}-${month}-${day}`
 }
@@ -236,8 +237,8 @@ export function getPath(uri) {
     const dirs = RNFetchBlob.fs.dirs
     filePath = `${dirs.DocumentDir}/${arr[arr.length - 1]}`
   }
-  if(Platform.OS == 'android'){
-    if(filePath.indexOf("http")!=0&&filePath.indexOf("file")!=0){
+  if (Platform.OS == 'android') {
+    if (filePath.indexOf('http') != 0 && filePath.indexOf('file') != 0) {
       let arr = uri.split('/')
       const dirs = RNFetchBlob.fs.dirs
       filePath = `file://${dirs.DocumentDir}/${arr[arr.length - 1]}`
@@ -276,6 +277,9 @@ export async function postImgToQiniu(uriList, obj) {
     if (type === 'profile') {
       filename = `2life/user/${user_id}/profile_${Date.now()}.png-2life_face.jpg`
     }
+    if (type === 'share') {
+      filename = `2life/share/${user_id}/img_${Date.now()}.png-2life_share.jpg`
+    }
 
     // 向后台获取七牛token
     const res_token = await HttpUtils.get(UTILS.qiniu_token, { filename })
@@ -285,38 +289,39 @@ export async function postImgToQiniu(uriList, obj) {
     if (res_token.code === 0) {
       const qiniu_token = res_token.data // 七牛token
 
-      if(Platform.OS === 'android'){
-        var xmlPromise = new Promise(function(resolve,reject){
-          var request = new XMLHttpRequest();
+      if (Platform.OS === 'android') {
+        let xmlPromise = new Promise(function (resolve, reject) {
+          let request = new XMLHttpRequest()
           request.onreadystatechange = handler
-          request.open('POST', URL_QINIU_BASE64 + key_base64,true);
-          request.setRequestHeader("Content-Type", "application/octet-stream");
-          request.setRequestHeader("Authorization", 'UpToken ' + qiniu_token);
-          request.send(base64);
-          function handler(){
+          request.open('POST', URL_QINIU_BASE64 + key_base64, true)
+          request.setRequestHeader('Content-Type', 'application/octet-stream')
+          request.setRequestHeader('Authorization', 'UpToken ' + qiniu_token)
+          request.send(base64)
+
+          function handler() {
             if (request.readyState !== 4) {
-              return;
+              return
             }
             if (request.status === 200) {
-              console.log('success', request.responseText);
-              let res = {};
-              res._bodyText = request.responseText;
-              res.status = 200;
-              resolve(res);
+              console.log('success', request.responseText)
+              let res = {}
+              res._bodyText = request.responseText
+              res.status = 200
+              resolve(res)
             } else {
-              reject('error');
+              reject('error')
             }
           }
         })
-        return xmlPromise;
+        return xmlPromise
       } else {
-        const res_qiniu = await fetch(URL_QINIU_BASE64  + key_base64, {
+        const res_qiniu = await fetch(URL_QINIU_BASE64 + key_base64, {
           method: 'post',
           headers: {
             'Content-Type': 'application/octet-stream',
             'Authorization': 'UpToken ' + qiniu_token
           },
-          body:base64
+          body: base64
         })
         return res_qiniu
       }
@@ -352,24 +357,24 @@ export async function postFileToQiniu(user_id) {
     const res = await RNFetchBlob.fetch('POST', URL_QINIU_BASE, {
       'Content-Type': 'multipart/form-data'
     }, [
-        {
-          name: 'file',
-          data: content
-        },
-        {
-          name: 'token',
-          data: res_token.data
-        },
-        {
-          name: 'fileName',
-          data: `user_${user_id}_config.json`
-        },
-        {
-          name: 'key',
-          data: filename
-        },
+      {
+        name: 'file',
+        data: content
+      },
+      {
+        name: 'token',
+        data: res_token.data
+      },
+      {
+        name: 'fileName',
+        data: `user_${user_id}_config.json`
+      },
+      {
+        name: 'key',
+        data: filename
+      },
 
-      ])
+    ])
     console.log(res.data)
 
     return now
@@ -447,12 +452,12 @@ export function sleep(ms) {
  * @returns {String} 图片保存路径
  */
 export async function downloadImg(url, user_id = 0) {
-  if(Platform.OS==='android'){
-    if(url.indexOf('file://')==0){
-      return url;
+  if (Platform.OS === 'android') {
+    if (url.indexOf('file://') == 0) {
+      return url
     }
   }
-  const filename = `id_${user_id}_${Math.round(Math.pow(Math.random() * 10 , 10))}.jpg`
+  const filename = `id_${user_id}_${Math.round(Math.pow(Math.random() * 10, 10))}.jpg`
   const config = {
     fileCache: true,
     path: `${RNFetchBlob.fs.dirs.DocumentDir}/${filename}`
@@ -710,7 +715,7 @@ export async function OCR(base64) {
   try {
     let res = await axios.post(url, data, {
       headers: {
-        'host':'recognition.image.myqcloud.com',
+        'host': 'recognition.image.myqcloud.com',
         'Content-Type': 'application/json',
         'Authorization': sign
       }

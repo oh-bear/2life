@@ -87,7 +87,7 @@ export default class DiaryBanner extends Component {
             style={styles.img_container}
             key={index}
           >
-            <Image style={styles.img} resizeMode='cover' source={{uri: getPath(path)}}/>
+            <Image style={styles.img} resizeMode='cover' source={{ uri: getPath(path) }}/>
             <View style={styles.mask}></View>
           </View>
         )
@@ -108,7 +108,7 @@ export default class DiaryBanner extends Component {
   }
 
   _onImgChanged(index) {
-    this.setState({imgIndex: index})
+    this.setState({ imgIndex: index })
     console.log(index)
   }
 
@@ -128,7 +128,7 @@ export default class DiaryBanner extends Component {
           height={getResponsiveWidth(282)}
           style={styles.swiper}
           autoplay
-          loop={false} //true有BUG
+          loop={false} // true有BUG
           dot={<View style={styles.swiper_dot}></View>}
           activeDot={<View style={[styles.swiper_dot, styles.swiper_active_dot]}></View>}
           bounces={true}
@@ -142,8 +142,10 @@ export default class DiaryBanner extends Component {
         </Swiper>
 
         <View
-          style={[styles.bottom_bar, { display: this.props.showBottomBar ? 'flex' : 'none',
-          position: this.props.showBottomBar ? 'absolute' : 'relative'  }]}>
+          style={[styles.bottom_bar, {
+            display: this.props.showBottomBar ? 'flex' : 'none',
+            position: this.props.showBottomBar ? 'absolute' : 'relative'
+          }]}>
           <TouchableOpacity style={styles.icon_container} onPress={() => this._removeImg()}>
             <Image source={require('../../../res/images/home/icon_remove_photo.png')}/>
           </TouchableOpacity>

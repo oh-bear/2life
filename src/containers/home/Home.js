@@ -128,9 +128,9 @@ export default class Home extends Component {
         const { partner, recommend, user } = res.data
         let diaryList = [...partner, ...user]
 
-        //这里需要读取完整的配置文件，否则无法得知未删除的日记
+        // 这里需要读取完整的配置文件，否则无法得知未删除的日记
         const localDiaryList = await readFullFile(this.props.user.id)
-        //const localDiaryList = await readFile(this.props.user.id)
+        // const localDiaryList = await readFile(this.props.user.id)
 
         // 保存新日记
         let newDiaryList = []
@@ -158,9 +158,9 @@ export default class Home extends Component {
               if (localDiaryList[i].id === diaryList[j].id) {
                 break
               }
-              if (j === diaryList.length - 1 ) {
-                //如果本地的日记操作op是1 or 2，不删除
-                if (localDiaryList[i].op === 1 || localDiaryList[i].op === 2 ){
+              if (j === diaryList.length - 1) {
+                // 如果本地的日记操作op是1 or 2，不删除
+                if (localDiaryList[i].op === 1 || localDiaryList[i].op === 2) {
                   break
                 }
                 deleteDiaryList.push(localDiaryList[i])
@@ -174,18 +174,18 @@ export default class Home extends Component {
               }
             }
           }
-         } else {
-           //由于存在保存完文件立刻杀掉app导致配置文件未上传成功的情况
-           //导致服务端返回数据不完全可信
-           //因此不能粗暴认为服务端返回列表为空时就删除所有日记
-           //遍历筛选出所有删除的日记
-           //deleteDiaryList = [...localDiaryList]
-           for (let i = 0; i < localDiaryList.length; i++){
-             if (localDiaryList[i].op === 3){
-               deleteDiaryList.push(localDiaryList[i])
-             }
-           }
-         }
+        } else {
+          // 由于存在保存完文件立刻杀掉app导致配置文件未上传成功的情况
+          // 导致服务端返回数据不完全可信
+          // 因此不能粗暴认为服务端返回列表为空时就删除所有日记
+          // 遍历筛选出所有删除的日记
+          // deleteDiaryList = [...localDiaryList]
+          for (let i = 0; i < localDiaryList.length; i++) {
+            if (localDiaryList[i].op === 3) {
+              deleteDiaryList.push(localDiaryList[i])
+            }
+          }
+        }
 
         for (let newDiary of newDiaryList) {
           newDiary.imgPathList = newDiary.imgPathList || []
@@ -336,7 +336,7 @@ export default class Home extends Component {
         })
       }
     },err=>{
-        Toast.info('呃哦，获取定位失败了，打开定位再试试吧', 2)
+      Toast.info('呃哦，获取定位失败了，打开定位再试试吧', 2)
     })
   }
 
@@ -549,11 +549,9 @@ export default class Home extends Component {
             </ImageBackground>
           </TouchableOpacity>
 
-
-
         </View>
         <View
-          style={[styles.tip_container, { display: this.state.showDayTip ? 'flex' : 'none',position:this.state.showDayTip?'absolute':'relative' }]}
+          style={[styles.tip_container, { display: this.state.showDayTip ? 'flex' : 'none', position: this.state.showDayTip ? 'absolute' : 'relative' }]}
           animation='bounceIn'
         >
           <TextPingFang style={styles.text_tip}>点击这里回到当天日期哦</TextPingFang>
@@ -677,13 +675,13 @@ const styles = StyleSheet.create({
     fontSize: 10,
   },
   tip_container: {
-    display:'flex',
+    display: 'flex',
     width: getResponsiveWidth(164),
     height: getResponsiveWidth(37),
     position: 'absolute',
     right: getResponsiveWidth(8),
-    top:getResponsiveWidth(90),
-    //bottom: getResponsiveWidth(-35),
+    top: getResponsiveWidth(90),
+    // bottom: getResponsiveWidth(-35),
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#2DC3A6',
@@ -761,15 +759,15 @@ const styles = StyleSheet.create({
       if (HEIGHT >= 640) return 310
     })(),
     width: WIDTH,
-    //paddingLeft: getResponsiveWidth(24),
-    //paddingRight: getResponsiveWidth(24),
+    // paddingLeft: getResponsiveWidth(24),
+    // paddingRight: getResponsiveWidth(24),
     backgroundColor: 'transparent',
     zIndex: -10
   },
-  diary_item:{
-    display:'flex',
-    alignItems:'center',
-    justifyContent:'center'
+  diary_item: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center'
   },
   none_container: {
     alignItems: 'center',

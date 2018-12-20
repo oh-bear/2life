@@ -57,7 +57,7 @@ export default class NewDiary extends Component {
   state = {
     date: new Date(),
     title: '',
-    title_2: '', //解决TextInput 无法输入中文
+    title_2: '', // 解决TextInput 无法输入中文
     content: '',
     content_2: '',
     latitude: 0,
@@ -81,20 +81,20 @@ export default class NewDiary extends Component {
   }
 
   componentDidMount() {
-    BackHandler.addEventListener('hardwareBackPress', this.onBackAndroid);
+    BackHandler.addEventListener('hardwareBackPress', this.onBackAndroid)
     this._firstIn()
     this._getLocation()
   }
 
   onBackAndroid = () => {
-    //this.saveDiary()
+    // this.saveDiary()
     Actions.pop()
-    return true;
-   };
+    return true
+  }
 
   componentWillUnmount() {
     Storage.set('firstEntryDiary', false)
-    BackHandler.removeEventListener('hardwareBackPress',this.onBackAndroid);
+    BackHandler.removeEventListener('hardwareBackPress', this.onBackAndroid)
     this.saveDiary()
   }
 
@@ -114,8 +114,8 @@ export default class NewDiary extends Component {
         this.setState({ location: `${location.city}，${location.province}，${location.country}` })
       }
       this.setState({ latitude, longitude })
-    },err=>{
-        Toast.info('呃哦，获取定位失败了，打开定位再试试吧', 2)
+    }, err => {
+      Toast.info('呃哦，获取定位失败了，打开定位再试试吧', 2)
     })
   }
 
@@ -252,7 +252,7 @@ export default class NewDiary extends Component {
 
     const leftButton = (
       <TouchableOpacity onPress={() => Actions.pop()}>
-        <Image source={source} />
+        <Image source={source}/>
       </TouchableOpacity>
     )
 
@@ -266,7 +266,7 @@ export default class NewDiary extends Component {
 
     const rightButton = (
       <TouchableOpacity onPress={this._callImgPicker.bind(this)}>
-        <Image source={source} />
+        <Image source={source}/>
       </TouchableOpacity>
     )
 
@@ -277,7 +277,7 @@ export default class NewDiary extends Component {
     return (
       <Container hidePadding={true}>
         {
-          Platform.OS=='ios'?
+          Platform.OS == 'ios' ?
             <Animated.View
               style={{
                 position: 'absolute',
@@ -299,7 +299,7 @@ export default class NewDiary extends Component {
         }
 
         {
-          Platform.OS=='ios'?
+          Platform.OS == 'ios' ?
             <TouchableOpacity
               style={[styles.mask, { display: this.state.showDatePicker ? 'flex' : 'none' }]}
               onPress={() => this._selectDate()}
@@ -324,50 +324,51 @@ export default class NewDiary extends Component {
           />
 
           {
-            Platform.OS=='ios'?
-            <View style={styles.date_container}>
-              <TextPingFang style={styles.text_date}>{getMonth(this.state.date.getMonth())} </TextPingFang>
-              <TextPingFang style={styles.text_date}>{this.state.date.getDate()}，</TextPingFang>
-              <TextPingFang style={styles.text_date}>{this.state.date.getFullYear()}</TextPingFang>
-              <TouchableOpacity
-                style={styles.small_calendar}
-                onPress={this._selectDate.bind(this)}
-              >
-                <Image source={require('../../../res/images/home/diary/icon_calendar_small.png')}/>
-              </TouchableOpacity>
-            </View>
-            :<View style={styles.date_container}>
-              <DatePicker
-                style={{width: 200}}
-                date={this.state.date}
-                mode="date"
-                format="MM-DD，YYYY"
-                maxDate={new Date()}
-                confirmBtnText="确定"
-                cancelBtnText="取消"
-                iconSource={require('../../../res/images/home/diary/icon_calendar_small.png')}
-                customStyles={{
-                  dateIcon: {
-                    position: 'absolute',
-                    right: getResponsiveWidth(100),
-                    top: 10,
-                    bottom:10,
-                    marginLeft: 0,
-                    width:getResponsiveWidth(20),
-                    height:getResponsiveWidth(20)
-                  },
-                  dateInput: {
-                    marginLeft: 0,
-                    borderWidth:0,
-                    alignItems: 'flex-start',
-                    justifyContent: 'center'
+            Platform.OS == 'ios' ?
+              <View style={styles.date_container}>
+                <TextPingFang style={styles.text_date}>{getMonth(this.state.date.getMonth())} </TextPingFang>
+                <TextPingFang style={styles.text_date}>{this.state.date.getDate()}，</TextPingFang>
+                <TextPingFang style={styles.text_date}>{this.state.date.getFullYear()}</TextPingFang>
+                <TouchableOpacity
+                  style={styles.small_calendar}
+                  onPress={this._selectDate.bind(this)}
+                >
+                  <Image source={require('../../../res/images/home/diary/icon_calendar_small.png')}/>
+                </TouchableOpacity>
+              </View>
+              : <View style={styles.date_container}>
+                <DatePicker
+                  style={{ width: 200 }}
+                  date={this.state.date}
+                  mode="date"
+                  format="MM-DD，YYYY"
+                  maxDate={new Date()}
+                  confirmBtnText="确定"
+                  cancelBtnText="取消"
+                  iconSource={require('../../../res/images/home/diary/icon_calendar_small.png')}
+                  customStyles={{
+                    dateIcon: {
+                      position: 'absolute',
+                      right: getResponsiveWidth(100),
+                      top: 10,
+                      bottom: 10,
+                      marginLeft: 0,
+                      width: getResponsiveWidth(20),
+                      height: getResponsiveWidth(20)
+                    },
+                    dateInput: {
+                      marginLeft: 0,
+                      borderWidth: 0,
+                      alignItems: 'flex-start',
+                      justifyContent: 'center'
+                    }
+                  }}
+                  onDateChange={(date, date1) => {
+                    this.setState({ date: date1 })
                   }
-                }}
-                onDateChange={(date,date1) => {
-                  this.setState({date: date1})}
-                }
-              />
-            </View>
+                  }
+                />
+              </View>
           }
 
 
