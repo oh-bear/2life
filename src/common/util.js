@@ -251,15 +251,16 @@ export function getPath(uri) {
  * 上传图片至七牛
  * @param {Array of String} 图片链接数组
  * @param {Object}
+ * @param {Boolean} shouldUseGetPath 是否使用 getPath 方法
  * @returns {String} 图片链接 img_url,img_url...
  */
-export async function postImgToQiniu(uriList, obj) {
+export async function postImgToQiniu(uriList, obj, shouldUseGetPath = true) {
   if (uriList.length === 0) return ''
   const { type, user_id } = obj
   if (!type && !user_id) return
 
   const uriBase64ListPromises = uriList.map(async uri => {
-    let filePath = getPath(uri)
+    let filePath = shouldUseGetPath ? getPath(uri) : uri
     return await RNFetchBlob.fs.readFile(filePath, 'base64')
   })
 

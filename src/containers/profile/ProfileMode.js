@@ -356,7 +356,7 @@ export default class ProfileMode extends Component {
     console.log(uri)
 
     // 上传图片
-    const image = await postImgToQiniu([uri], { type: 'share', user_id: this.props.user.id })
+    const image = await postImgToQiniu([uri], { type: 'share', user_id: this.props.user.id }, false)
     console.log(image)
 
     // 微信分享
