@@ -7,8 +7,7 @@ import {
   Image,
   View,
   ScrollView,
-  Modal,
-  CameraRoll
+  Modal
 } from 'react-native'
 import ScrollableTabView from 'react-native-scrollable-tab-view'
 import { Actions } from '../../../node_modules/react-native-router-flux'
@@ -30,7 +29,7 @@ import {
   getResponsiveHeight,
   WIDTH
 } from '../../common/styles'
-import { readFile, postImgToQiniu, getFormDay } from '../../common/util'
+import { readFile, getFormDay } from '../../common/util'
 import { SCENE_PROFILE_TEST } from '../../constants/scene'
 import HttpUtils from '../../network/HttpUtils'
 import { UTILS } from '../../network/Urls'
@@ -59,8 +58,6 @@ export default class ProfileMode extends Component {
     pieData: [],
     reportList: [],
     characterImg: null,
-    uri: null,
-    bottom: getResponsiveHeight(46),
     isWXAppInstalled: false,
     isShareModal: false
   }
@@ -343,56 +340,6 @@ export default class ProfileMode extends Component {
     this.setState({
       isShareModal: true
     })
-
-  }
-
-  async _share(type) {
-    // 拉长 container，以便放置二维码
-    this.setState({ bottom: getResponsiveHeight(46) })
-
-    // 生成图片并保存
-    let uri = await this.refs.viewShot.capture()
-    uri = await CameraRoll.saveToCameraRoll(uri)
-    console.log(uri)
-
-    // 上传图片
-    const image = await postImgToQiniu([uri], { type: 'share', user_id: this.props.user.id }, false)
-    console.log(image)
-
-    // 微信分享
-    // if (type === 'session') {
-    //   try {
-    //     let result = await WeChat.shareToTimeline({
-    //       type: 'text',
-    //       description: 'hello, wechat'
-    //     })
-    //     console.log('share text message to time line successful:', result)
-    //   } catch (e) {
-    //     if (e instanceof WeChat.WechatError) {
-    //       console.error(e.stack)
-    //     } else {
-    //       throw e
-    //     }
-    //   }
-    // }
-    //
-    if (type === 'timeline') {
-      try {
-        let result = await WeChat.shareToTimeline({
-          type: 'imageUrl',
-          title: '双生日记情绪报告',
-          description: 'share web image to time line',
-          imageUrl: 'https://airing.ursb.me/2life/user/1/img_1524916657644.png'
-        })
-        console.log('share text message to time line successful:', result)
-      } catch (e) {
-        if (e instanceof WeChat.WechatError) {
-          console.error(e.stack)
-        } else {
-          throw e
-        }
-      }
-    }
   }
 
   renderSpinner = () => {
@@ -414,8 +361,16 @@ export default class ProfileMode extends Component {
             <View style={styles.shareParent}>
               <TouchableOpacity
                 style={styles.base}
-                onPress={() => {
-                  this._share('session')
+                onPress={async () => {
+                  const uri = await this.refs.viewShot.capture()
+                  await WeChat.shareToSession({
+                    type: 'imageFile',
+                    title: '双生日记情绪报告',
+                    description: 'share web image to time line',
+                    imageUrl: 'file://' + uri
+                  }).catch(e => {
+                    console.log(e)
+                  })
                 }}
               >
                 <View style={styles.shareContent}>
@@ -425,8 +380,16 @@ export default class ProfileMode extends Component {
               </TouchableOpacity>
               <TouchableOpacity
                 style={styles.base}
-                onPress={() => {
-                  this._share('timeline')
+                onPress={async () => {
+                  const uri = await this.refs.viewShot.capture()
+                  await WeChat.shareToTimeline({
+                    type: 'imageFile',
+                    title: '双生日记情绪报告',
+                    description: 'share web image to time line',
+                    imageUrl: 'file://' + uri
+                  }).catch(e => {
+                    console.log(e)
+                  })
                 }}
               >
                 <View style={styles.shareContent}>
@@ -447,7 +410,7 @@ export default class ProfileMode extends Component {
         <View style={styles.banner}>
           <TextPingFang style={styles.title}>情绪报告</TextPingFang>
           <TouchableOpacity
-            style={[styles.share, { display: this.props.user.emotions_basis && !this.state.isWXAppInstalled ? 'flex' : 'none' }]}
+            style={[styles.share, { display: this.props.user.emotions_basis && this.state.isWXAppInstalled ? 'flex' : 'none' }]}
             onPress={() => this._toggleShare()}
           >
             <Image source={shareIcon}/>
@@ -468,6 +431,11 @@ export default class ProfileMode extends Component {
 
         <ScrollView contentContainerStyle={styles.scroll_container}>
           <ViewShot ref='viewShot' options={{ format: 'jpg', quality: 1 }}>
+            <View
+              style={[styles.report_banner, { display: this.props.user.emotions_basis && this.state.isShareModal ? 'flex' : 'none' }]}>
+              <Image source={require('../../../res/images/common/report_banner.png')}
+              />
+            </View>
             <ScrollableTabView
               style={styles.chart_height}
               renderTabBar={() => <TabBar tabNames={['一周', '一月', '一年', '全部']}/>}
@@ -510,7 +478,7 @@ export default class ProfileMode extends Component {
             </View>
 
             <View
-              style={[styles.report_container, { marginBottom: this.state.bottom }, { display: this.props.user.emotions_basis ? 'flex' : 'none' }]}>
+              style={[styles.report_container, { display: this.props.user.emotions_basis ? 'flex' : 'none' }]}>
               <TextPingFang style={styles.text_type}>{this.props.user.emotions_type}</TextPingFang>
               <TextPingFang style={styles.text_const}>你的性格属性</TextPingFang>
               <Image style={styles.img} resizeMethod='scale' source={this.state.characterImg}/>
@@ -626,7 +594,8 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     marginTop: getResponsiveHeight(56),
     marginLeft: getResponsiveWidth(24),
-    marginRight: getResponsiveWidth(24)
+    marginRight: getResponsiveWidth(24),
+    marginBottom: getResponsiveHeight(56)
   },
   text_type: {
     color: '#333',
@@ -726,5 +695,11 @@ const styles = StyleSheet.create({
   report_qrcode: {
     position: 'absolute',
     right: getResponsiveWidth(25),
+  },
+  report_banner: {
+    width: WIDTH,
+    height: getResponsiveHeight(178),
+    flexDirection: 'row',
+    backgroundColor: '#fff',
   }
 })

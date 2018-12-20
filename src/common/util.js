@@ -279,7 +279,7 @@ export async function postImgToQiniu(uriList, obj, shouldUseGetPath = true) {
       filename = `2life/user/${user_id}/profile_${Date.now()}.png-2life_face.jpg`
     }
     if (type === 'share') {
-      filename = `2life/share/${user_id}/img_${Date.now()}.png-2life_share.jpg`
+      filename = `2life/share/${user_id}/${Date.now()}.jpg`
     }
 
     // 向后台获取七牛token

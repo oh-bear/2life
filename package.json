@@ -39,6 +39,7 @@
     "react-native-canvas": "^0.1.24",
     "react-native-crypto": "^2.1.2",
     "react-native-datepicker": "^1.7.2",
+    "react-native-fs": "^2.11.17",
     "react-native-iap": "^0.3.23",
     "react-native-image-picker": "^0.26.7",
     "react-native-image-progress": "^1.0.1",
