@@ -17,18 +17,12 @@
 * 前端 GitHub 地址：[https://github.com/oh-bear/2life](https://github.com/oh-bear/2life)
 * 后端 GitHub 地址：[https://github.com/airingursb/2life-server](https://github.com/airingursb/2life-server)
 * 小程序端：搜索“双生小日记”即可
-* 算法侧 GitHub 地址：[https://github.com/oh-bear/2life-lstm(https://github.com/oh-bear/2life-lstm)
+* 算法侧 GitHub 地址：[https://github.com/oh-bear/2life-lstm](https://github.com/oh-bear/2life-lstm)
 
 ## Screenshots
 
-![](http://airing.ursb.me/image/2life/cover/X-1.png-h600.jpg)
+![](http://airing.ursb.me/image/2life/2life-max.jpg)
 
----
-
-![](http://airing.ursb.me/image/2life/cover/X-2.png-h600.jpg)
----
-
-![](http://airing.ursb.me/image/2life/cover/X-3.png-h600.jpg)
 
 ## Contributing
 
@@ -48,7 +42,7 @@
 
 ### 2.1.9 / 2018-12-12
 
-- 优化了交互，更改了消息模块和报告模块的位置
+- 优化了交互，更改了消息模块和情绪报告模块的位置
 
 ### 2.1.8 / 2018-12-10
 
@@ -91,6 +85,7 @@
 - 修改了产品的价格（￥1 -> ￥0！）
 
 ### 2.1.2 / 2018-08-06
+
 - 新增了16种情绪插画
 - 修改了雷达图的文案
 
@@ -102,6 +97,20 @@
 - 修复了图片无法滑动bug
 - 修复了被解除匹配不主动刷新的bug
 - 修复了新版本新用户无法匹配的bug
+
+### 2.1.0 / 2018-07-30
+
+2.1 版本上线啦，新增了很多很多新功能~~~
+
+- 新增了同步功能，现在可以离线写日记了哦
+- 新增了OCR功能，现在可以拍照识别手写日记了
+- 新增了心理量表，可以去做做看下你是什么性格哦
+- 新增了日记五维情感分类（暂对灰度用户开放）
+- 新增了心情报告页面，有更好看的图表，还有更丰富的20种性格分类~
+- 新增了写日记选日期的功能
+- 新增了隐私协议页面
+- 优化了日记保存方案
+- 优化了验证码按钮
 
 ### 2.0.7 / 2018-07-04
 
