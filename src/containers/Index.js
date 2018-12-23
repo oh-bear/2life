@@ -112,11 +112,11 @@ export default class Index extends Component {
     // 询问周期一天一次
     const lastAskMergeTime = await Storage.get('lastAskMergeTime')
     const now = Date.now()
-    if(now - lastAskMergeTime < 86400000) return
+    if (now - lastAskMergeTime < 86400000) return
 
-    if(this.props.user.id) {
+    if (this.props.user.id) {
       const diaryList = await readFile()
-      if(diaryList.length) {
+      if (diaryList.length) {
         Storage.set('lastAskMergeTime', now)
 
         Alert.alert(
@@ -198,13 +198,11 @@ export default class Index extends Component {
             selected={this.state.selectedTab === 'mode'}
             title='情绪'
             titleStyle={styles.text_title}
-            badgeText={this.state.unread}
             selectedTitleStyle={styles.text_title_selected}
             renderIcon={() => this.icons.mode.default}
             renderSelectedIcon={() => this.icons.mode.selected}
             onPress={() => {
-              JPushModule.clearAllNotifications()
-              this.setState({ selectedTab: 'mode', unread: 0 })
+              this.setState({ selectedTab: 'mode' })
             }}
           >
             <ProfileMode />
@@ -213,10 +211,14 @@ export default class Index extends Component {
             selected={this.state.selectedTab === 'profile'}
             title='我的'
             titleStyle={styles.text_title}
+            badgeText={this.state.unread}
             selectedTitleStyle={styles.text_title_selected}
             renderIcon={() => this.icons.profile.default}
             renderSelectedIcon={() => this.icons.profile.selected}
-            onPress={() => this.setState({ selectedTab: 'profile' })}
+            onPress={() => {
+              JPushModule.clearAllNotifications()
+              this.setState({ selectedTab: 'profile', unread: 0 })
+            }}
           >
             <Profile />
           </TabNavigator.Item>
@@ -231,7 +233,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   tabbar: {
-    height:56,
+    height: 56,
     alignItems: 'center',
     backgroundColor: 'rgba(255,255,255,.95)',
     ...ifIphoneX({

@@ -292,7 +292,7 @@ export default class Profile extends Component {
 
             {this.renderPartner()}
 
-             <View style={styles.margin}></View>
+            <View style={styles.margin}></View>
             {/*
             <View style={{display: this.state.showActEntry ? 'flex' : 'none'}}>
               <Row
@@ -303,6 +303,7 @@ export default class Profile extends Component {
               />
             </View> */}
 
+            {/* TODO: 给通知加上 badge */}
             <Row
               imageLeft={<Image source={require('../../../res/images/profile/icon_profile_notification.png')} />}
               title='通知'
@@ -340,12 +341,12 @@ export default class Profile extends Component {
               onPress={() => Actions.jump(SCENE_PROFILE_SYNC, { user: this.props.user })}
             />
 
-            {Platform.OS==="ios"?
-            <Row
-              imageLeft={<Image source={require('../../../res/images/profile/icon_reward.png')} />}
-              title='打赏'
-              onPress={() => Actions.jump(SCENE_PROFILE_REWARD)}
-            />:<View />}
+            {Platform.OS === 'ios'?
+              <Row
+                imageLeft={<Image source={require('../../../res/images/profile/icon_reward.png')} />}
+                title='打赏'
+                onPress={() => Actions.jump(SCENE_PROFILE_REWARD)}
+              />:<View />}
 
             <Row
               imageLeft={<Image source={require('../../../res/images/profile/icon_setting.png')} />}
@@ -369,9 +370,10 @@ const styles = StyleSheet.create({
     paddingLeft: getResponsiveWidth(70),
     ...ifIphoneX({
       paddingTop: getResponsiveHeight(4),
-    }, {
-        paddingTop: getResponsiveHeight(28),
-      }),
+    }, 
+    {
+      paddingTop: getResponsiveHeight(28),
+    }),
     color: '#000',
     fontSize: 34,
     fontWeight: '500',
@@ -389,9 +391,10 @@ const styles = StyleSheet.create({
     right: getResponsiveWidth(32),
     ...ifIphoneX({
       bottom: getResponsiveWidth(120),
-    }, {
-        bottom: getResponsiveWidth(80),
-      }),
+    }, 
+    {
+      bottom: getResponsiveWidth(80),
+    }),
 
     width: getResponsiveWidth(112),
     height: getResponsiveWidth(48),
@@ -410,9 +413,10 @@ const styles = StyleSheet.create({
     paddingRight: getResponsiveWidth(24),
     ...ifIphoneX({
       paddingBottom: 84,
-    }, {
-        paddingBottom: 50,
-      }),
+    }, 
+    {
+      paddingBottom: 50,
+    }),
   },
   head_container: {
     flexDirection: 'row',
