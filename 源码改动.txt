@@ -1,4 +1,0 @@
-1.native-echarts
-	a.拷贝node_modules\native-echarts\src\components\Echarts下tpl.html文件到根目录下的android\app\src\main\assets下
-	b.修改node_modules\native-echarts\src\components\Echarts目录下的index.js文件source={{uri:'file:///android_asset/tpl.html'}}
-	c.引入Platform，修改scalesPageToFit={Platform.OS==='ios'?false:true}
