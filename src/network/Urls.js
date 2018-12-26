@@ -45,4 +45,5 @@ export const UTILS = {
   get_nlp_result: '/utils/get_nlp_result', // post {content}
   update_emotion_report: '/utils/update_emotion_report', // get
   show_act: '/utils/show_act', // get
+  check_version: '/utils/check_version', // get {is_wxapp, version}
 }

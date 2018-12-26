@@ -10,11 +10,13 @@ import Container from '../../components/Container'
 import ProfileHeader from './components/ProfileHeader'
 import Row from './components/Row'
 import Storage from '../../common/storage'
+import { VERSION } from './constants/config'
 
 import {
   SCENE_PROFILE_FEEDBACK,
   SCENE_PROFILE_PRIVACY,
   SCENE_PROFILE_THANKS,
+  SCENE_PROFILE_VERSION,
   SCENE_APP_AUTH,
 } from '../../constants/scene'
 
@@ -150,6 +152,12 @@ export default class ProfileSetting extends Component {
           <Row
             title='鸣谢'
             onPress={() => Actions.jump(SCENE_PROFILE_THANKS)}
+          />
+
+          <Row
+            title='关于双生'
+            textRight={`版本${VERSION}`}
+            onPress={() => Actions.jump(SCENE_PROFILE_VERSION)}
           />
 
         </View>

@@ -1,6 +1,6 @@
 {
   "name": "twolife",
-  "version": "2.0.3",
+  "version": "2.1.11",
   "private": true,
   "scripts": {
     "start": "node node_modules/react-native/local-cli/cli.js start",

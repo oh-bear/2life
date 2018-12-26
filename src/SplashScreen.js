@@ -30,7 +30,6 @@ class SplashScreen extends Component {
   async componentDidMount() {
 
     WeChat.registerApp('wxbf371b0ab61d3873')
-
     this._autoLogin()
   }
 

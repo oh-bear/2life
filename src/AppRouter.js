@@ -243,6 +243,13 @@ export default class AppRouter extends Component {
               duration={0}
             />
             <Scene
+              key={scenes.SCENE_PROFILE_VERSION}
+              component={ProfileVersion}
+              title='关于双生'
+              hideNavBar
+              duration={0}
+            />
+            <Scene
               key={scenes.SCENE_PROFILE_VIP}
               component={ProfileVip}
               title='高级会员'
@@ -252,7 +259,7 @@ export default class AppRouter extends Component {
             <Scene
               key={scenes.SCENE_PROFILE_NOTIFICATION}
               component={Notification}
-              title='高级会员'
+              title='通知'
               hideNavBar
               duration={0}
             />
