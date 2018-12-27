@@ -34,6 +34,7 @@ import ProfileSetting from './containers/profile/ProfileSetting'
 import ProfileThanks from './containers/profile/ProfileThanks'
 import ProfilePrivacy from './containers/profile/ProfilePrivacy'
 import ProfileVip from './containers/profile/ProfileVip'
+import ProfileVersion from './containers/profile/ProfileVersion'
 import Notification from './containers/notification/Notification'
 
 import { Scene, Router, ActionConst } from 'react-native-router-flux'

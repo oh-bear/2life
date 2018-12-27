@@ -10,7 +10,7 @@ import Container from '../../components/Container'
 import ProfileHeader from './components/ProfileHeader'
 import Row from './components/Row'
 import Storage from '../../common/storage'
-import { VERSION } from './constants/config'
+import { VERSION } from '../../constants/config'
 
 import {
   SCENE_PROFILE_FEEDBACK,
