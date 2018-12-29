@@ -150,11 +150,6 @@ export default class ProfileSetting extends Component {
           />
 
           <Row
-            title='鸣谢'
-            onPress={() => Actions.jump(SCENE_PROFILE_THANKS)}
-          />
-
-          <Row
             title='关于双生'
             textRight={`版本${VERSION}`}
             onPress={() => Actions.jump(SCENE_PROFILE_VERSION)}
