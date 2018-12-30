@@ -211,6 +211,13 @@ export default class Home extends Component {
             data: newDiaryList
           })
 
+        if (newDiaryList.length) {
+          // ios 10.3 or later
+          if (StoreReview.isAvailable) {
+            StoreReview.requestReview()
+          }
+        }
+
         // 更新日记
         updateDiaryList.length &&
           await updateFile({
@@ -301,12 +308,6 @@ export default class Home extends Component {
         showWeatherTip: false,
       })
     } else {
-
-      // ios 10.3 or later
-      // 若不是第一次使用，则弹出评分弹窗
-      if (StoreReview.isAvailable) {
-        StoreReview.requestReview()
-      }
 
       this.setState({
         showWeatherFlag: true
