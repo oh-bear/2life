@@ -211,13 +211,6 @@ export default class Home extends Component {
             data: newDiaryList
           })
 
-        if (newDiaryList.length) {
-          // ios 10.3 or later
-          if (StoreReview.isAvailable) {
-            StoreReview.requestReview()
-          }
-        }
-
         // 更新日记
         updateDiaryList.length &&
           await updateFile({
@@ -234,7 +227,14 @@ export default class Home extends Component {
             data: deleteDiaryList
           })
 
-        this._formDiaryList(await readFile(this.props.user.id))
+        await this._formDiaryList(await readFile(this.props.user.id))
+
+        if (newDiaryList.length) {
+          // ios 10.3 or later
+          if (StoreReview.isAvailable) {
+            StoreReview.requestReview()
+          }
+        }
       }
     })
   }
