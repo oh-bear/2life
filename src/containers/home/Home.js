@@ -50,6 +50,8 @@ import Toast from 'antd-mobile/lib/toast'
 import HttpUtils from '../../network/HttpUtils'
 import { NOTES } from '../../network/Urls'
 
+import * as StoreReview from 'react-native-store-review'
+
 function mapStateToProps(state) {
   return {
     user: state.user,
@@ -299,6 +301,13 @@ export default class Home extends Component {
         showWeatherTip: false,
       })
     } else {
+
+      // ios 10.3 or later
+      // 若不是第一次使用，则弹出评分弹窗
+      if (StoreReview.isAvailable) {
+        StoreReview.requestReview()
+      }
+
       this.setState({
         showWeatherFlag: true
       })
