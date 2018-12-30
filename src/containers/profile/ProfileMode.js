@@ -16,6 +16,7 @@ import { connect } from 'react-redux'
 import ViewShot from 'react-native-view-shot'
 import Canvas from 'react-native-canvas'
 import * as WeChat from 'react-native-wechat'
+import Storage from '../../common/storage'
 
 import Container from '../../components/Container'
 import TextPingFang from '../../components/TextPingFang'
@@ -33,6 +34,8 @@ import { readFile, getFormDay } from '../../common/util'
 import { SCENE_PROFILE_TEST } from '../../constants/scene'
 import HttpUtils from '../../network/HttpUtils'
 import { UTILS } from '../../network/Urls'
+
+import * as StoreReview from 'react-native-store-review'
 
 function mapStateToProps(state) {
   return {
@@ -123,8 +126,13 @@ export default class ProfileMode extends Component {
     })
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     WeChat.isWXAppInstalled().then(isWXAppInstalled => this.setState({ isWXAppInstalled }))
+    // ios 10.3 or later
+    if (this.props.user.emotions_basis && StoreReview.isAvailable && !await Storage.get('isRate', false)) {
+      StoreReview.requestReview()
+      await Storage.set('isRate', true)
+    }
   }
 
   // 将情绪值按日期分类，相同天数的日记取情绪平均值

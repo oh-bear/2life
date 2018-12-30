@@ -50,8 +50,6 @@ import Toast from 'antd-mobile/lib/toast'
 import HttpUtils from '../../network/HttpUtils'
 import { NOTES } from '../../network/Urls'
 
-import * as StoreReview from 'react-native-store-review'
-
 function mapStateToProps(state) {
   return {
     user: state.user,
@@ -227,14 +225,7 @@ export default class Home extends Component {
             data: deleteDiaryList
           })
 
-        await this._formDiaryList(await readFile(this.props.user.id))
-
-        if (newDiaryList.length) {
-          // ios 10.3 or later
-          if (StoreReview.isAvailable) {
-            StoreReview.requestReview()
-          }
-        }
+        this._formDiaryList(await readFile(this.props.user.id))
       }
     })
   }
