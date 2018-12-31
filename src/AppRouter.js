@@ -32,6 +32,7 @@ import ProfileFeedBack from './containers/profile/ProfileFeedBack'
 import ProfileTest from './containers/profile/ProfileTest'
 import ProfileSetting from './containers/profile/ProfileSetting'
 import ProfileThanks from './containers/profile/ProfileThanks'
+import ProfileAuthor from './containers/profile/ProfileAuthor'
 import ProfilePrivacy from './containers/profile/ProfilePrivacy'
 import ProfileVip from './containers/profile/ProfileVip'
 import ProfileVersion from './containers/profile/ProfileVersion'
@@ -233,6 +234,13 @@ export default class AppRouter extends Component {
               key={scenes.SCENE_PROFILE_THANKS}
               component={ProfileThanks}
               title='鸣谢'
+              hideNavBar
+              duration={0}
+            />
+            <Scene
+              key={scenes.SCENE_PROFILE_AUTHOR}
+              component={ProfileAuthor}
+              title='联系我们'
               hideNavBar
               duration={0}
             />
