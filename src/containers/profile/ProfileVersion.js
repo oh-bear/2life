@@ -16,6 +16,7 @@ import { VERSION } from '../../constants/config'
 
 import {
   SCENE_PROFILE_THANKS,
+  SCENE_PROFILE_AUTHOR,
   SCENE_WEB,
 } from '../../constants/scene'
 
@@ -56,7 +57,7 @@ export default class ProfileVersion extends Component {
 
           <Row
             title='联系作者'
-            onPress={() => Actions.jump(SCENE_PROFILE_THANKS)}
+            onPress={() => Actions.jump(SCENE_PROFILE_AUTHOR)}
           />
 
           <Row

@@ -17,6 +17,38 @@ import {
 export default class ProfileThanks extends Component {
 
   state = {
+    f6: [
+      {
+        avatar: require('../../../res/images/profile/thanks/author_1.png'),
+        name: 'Airing',
+        job: '产品设计，前端与服务端开发'
+      },
+      {
+        avatar: require('../../../res/images/profile/thanks/author_2.png'),
+        name: '梁志豪',
+        job: 'UI 设计'
+      },
+      {
+        avatar: require('../../../res/images/profile/thanks/author_3.png'),
+        name: '王国全',
+        job: 'iOS 开发'
+      },
+      {
+        avatar: require('../../../res/images/profile/thanks/author_4.png'),
+        name: '夏墨',
+        job: 'Android 开发'
+      },
+      {
+        avatar: require('../../../res/images/profile/thanks/author_5.png'),
+        name: 'zyktrcn',
+        job: '微信小程序开发'
+      },
+      {
+        avatar: require('../../../res/images/profile/thanks/author_6.png'),
+        name: '王善文',
+        job: '算法设计'
+      },
+    ],
     f4: [
       {
         avatar: require('../../../res/images/profile/thanks/avatar_1.png'),
@@ -52,6 +84,22 @@ export default class ProfileThanks extends Component {
         <ProfileHeader title='鸣谢' />
 
         <ScrollView contentContainerStyle={styles.container}>
+          <View style={styles.outer_container}>
+            <TextPingFang style={styles.text_title}>研发团队</TextPingFang>
+            {
+              this.state.f6.map(item => {
+                return (
+                  <View style={styles.f4_item_container}>
+                    <Image source={item.avatar} />
+                    <View style={styles.f4_right}>
+                      <TextPingFang style={styles.text_name}>{item.name}</TextPingFang>
+                      <TextPingFang style={styles.text_job}>{item.job}</TextPingFang>
+                    </View>
+                  </View>
+                )
+              })
+            }
+          </View>
           <View style={styles.outer_container}>
             <TextPingFang style={styles.text_title}>心理学和美术团队</TextPingFang>
             {

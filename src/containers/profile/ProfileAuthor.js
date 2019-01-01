@@ -17,41 +17,27 @@ import {
 export default class ProfileAuthor extends Component {
 
   state = {
-    f4: [
+    contacts: [
       {
-        avatar: require('../../../res/images/profile/thanks/avatar_1.png'),
-        name: 'Airing',
-        job: '产品设计，前端与服务端开发'
+        avatar: require('../../../res/images/profile/thanks/icon_profile_weibo.png'),
+        name: '微博',
+        detail: 'Airing'
       },
       {
-        avatar: require('../../../res/images/profile/thanks/avatar_2.png'),
-        name: '梁志豪',
-        job: 'UI 设计'
+        avatar: require('../../../res/images/profile/thanks/icon_profile_wechat.png'),
+        name: '微信公众号',
+        detail: '零熊技术团队'
       },
       {
-        avatar: require('../../../res/images/profile/thanks/avatar_3.png'),
-        name: '王国全',
-        job: 'iOS 开发'
+        avatar: require('../../../res/images/profile/thanks/icon_profile_github.png'),
+        name: 'GitHub',
+        detail: 'airingursb'
       },
       {
-        avatar: require('../../../res/images/profile/thanks/avatar_4.png'),
-        name: '夏墨',
-        job: 'Android 开发'
+        avatar: require('../../../res/images/profile/thanks/icon_profile_email.png'),
+        name: '邮箱',
+        detail: 'airing@ursb.me'
       },
-      {
-        avatar: require('../../../res/images/profile/thanks/avatar_4.png'),
-        name: 'zyktrcn',
-        job: '微信小程序开发'
-      },
-      {
-        avatar: require('../../../res/images/profile/thanks/avatar_4.png'),
-        name: '王善文',
-        job: '算法设计'
-      },
-    ],
-    names: ['CT', 'HHH', 'Noblevil', 'Ree', 'Sunki', '丁林', '杜肯坑', '二胡', '范宏䣭', '卡比兽',
-      '孔卓晖', '梁锐成', '刘盼盼', '林少燕', '马戈', '王子昂', '吴匡伦', '叶婉颖', '奕宏', '卓奇林',
-      '朱国润'
     ]
   }
 
@@ -63,33 +49,19 @@ export default class ProfileAuthor extends Component {
 
         <ScrollView contentContainerStyle={styles.container}>
           <View style={styles.outer_container}>
-            <TextPingFang style={styles.text_title}>研发团队</TextPingFang>
             {
-              this.state.f4.map(item => {
+              this.state.contacts.map(item => {
                 return (
                   <View style={styles.f4_item_container}>
                     <Image source={item.avatar} />
                     <View style={styles.f4_right}>
                       <TextPingFang style={styles.text_name}>{item.name}</TextPingFang>
-                      <TextPingFang style={styles.text_job}>{item.job}</TextPingFang>
+                      <TextPingFang style={styles.text_job}>{item.detail}</TextPingFang>
                     </View>
                   </View>
                 )
               })
             }
-          </View>
-
-          <View style={styles.outer_container}>
-            <TextPingFang style={styles.text_title}>语料库整理团队</TextPingFang>
-            <TextPingFang style={styles.text_s_title}>以下排名不分先后</TextPingFang>
-            <View style={styles.names_container}>
-              {
-                this.state.names.map(name => {
-                  return <TextPingFang style={styles.text_word_name}>{name}</TextPingFang>
-                })
-              }
-            </View>
-
           </View>
         </ScrollView>
       </Container>
