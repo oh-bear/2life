@@ -40,6 +40,8 @@ import {
 } from '../../constants/scene'
 import HttpUtils from '../../network/HttpUtils'
 import { UTILS } from '../../network/Urls'
+import JPushModule from 'jpush-react-native'
+
 
 function mapStateToProps(state) {
   return {
@@ -61,7 +63,8 @@ export default class Profile extends Component {
     showActEntry: false,
     actUrl: '',
     shareUrl: '',
-    isVip: false
+    isVip: false,
+    unread: this.props.user.unread
   }
 
   async componentDidMount() {
@@ -197,6 +200,29 @@ export default class Profile extends Component {
       return this.renderUnlogin()
     }
 
+    let NotificationRow
+    if (this.state.unread !== 0) {
+      NotificationRow = 
+      <Row
+        imageLeft={<Image source={require('../../../res/images/profile/icon_profile_notification.png')} />}
+        title='通知'
+        iconRight={require('../../../res/images/common/oval.png')}
+        onPress={() => {
+          JPushModule.clearAllNotifications()
+          this.setState({ unread: 0 })
+          Actions.jump(SCENE_PROFILE_NOTIFICATION, { user: this.props.user })
+        }}
+      />
+    } else {
+      NotificationRow = <Row
+        imageLeft={<Image source={require('../../../res/images/profile/icon_profile_notification.png')} />}
+        title='通知'
+        onPress={() => {
+          Actions.jump(SCENE_PROFILE_NOTIFICATION, { user: this.props.user })
+        }}
+      />
+    }
+
     return (
       <Container showNetStatus={true}>
         <View>
@@ -303,12 +329,10 @@ export default class Profile extends Component {
               />
             </View> */}
 
-            {/* TODO: 给通知加上 badge */}
-            <Row
-              imageLeft={<Image source={require('../../../res/images/profile/icon_profile_notification.png')} />}
-              title='通知'
-              onPress={() => Actions.jump(SCENE_PROFILE_NOTIFICATION, { user: this.props.user })}
-            />
+            
+            {
+              NotificationRow
+            }
 
             <Row
               imageLeft={<Image source={require('../../../res/images/profile/icon_match.png')} />}
