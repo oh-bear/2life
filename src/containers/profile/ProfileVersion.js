@@ -4,7 +4,9 @@ import {
   ScrollView,
   Image,
   View,
-  Platform
+  Platform,
+  Alert,
+  
 } from 'react-native'
 
 import Container from '../../components/Container'
@@ -13,6 +15,9 @@ import TextPingFang from '../../components/TextPingFang'
 import Row from './components/Row'
 
 import { VERSION } from '../../constants/config'
+
+import HttpUtils from '../../network/HttpUtils'
+import { UTILS } from '../../network/Urls'
 
 import {
   SCENE_PROFILE_THANKS,
@@ -52,7 +57,31 @@ export default class ProfileVersion extends Component {
 
           <Row
             title='版本更新'
-            onPress={() => Actions.jump(SCENE_PROFILE_THANKS)}
+            onPress={async() => {
+              let platform = 1
+              Platform.OS === 'ios' ? platform = 1 : platform = 0
+              const res = await HttpUtils.get(UTILS.check_version, { version: VERSION, platform })
+              if (res && res.code !== 0) {
+                Alert.alert('双生日记', '当前有更新版本可以下载。', 
+                  [
+                    {
+                      text: '现在下载', 
+                      onPress: () => {
+                        Platform.OS === 'ios' ?
+                          Actions.jump(SCENE_WEB, { url: 'https://itunes.apple.com/cn/app/%E5%8F%8C%E7%94%9F%E6%97%A5%E8%AE%B0-%E4%BD%A0%E6%98%AF%E6%88%91%E6%97%A5%E8%AE%B0%E9%87%8C%E5%86%99%E4%B8%8B%E7%9A%84%E4%B8%83%E5%A4%95/id1245100877?mt=8' }) :
+                          Actions.jump(SCENE_WEB, { url: 'https://www.pgyer.com/2life' })
+                      }
+                    },
+                    {
+                      text: '暂不更新',
+                      style: 'cancel'
+                    }
+                  ]
+                )
+              } else {
+                Alert.alert('双生日记', '目前已经是最新版本。')
+              }
+            }}
           />
 
           <Row
