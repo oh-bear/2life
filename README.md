@@ -1,6 +1,8 @@
 # 双生：遇见另一半的美好：）
 
-持续更新中，欢迎 Star~欢迎下载~
+持续更新中，欢迎 Star！欢迎下载！
+
+如果您喜欢双生日记，请考虑在 App Store / Google Play 留一个评价，这对开发者来说很重要。非常感谢。
 
 ---
 
@@ -13,10 +15,11 @@
 宣传视频：[https://www.bilibili.com/video/av26702790](https://www.bilibili.com/video/av26702790)
 
 * App Store 下载地址：搜索“双生日记”即可
-* Android 下载地址：[https://www.pgyer.com/2life](https://www.pgyer.com/2life)
+* Google Play 下载地址：[https://play.google.com/store/apps/details?id=me.ursb.twolife](https://play.google.com/store/apps/details?id=me.ursb.twolife)
+* Android 国内下载地址（酷安）：[https://www.coolapk.com/apk/214311](https://www.coolapk.com/apk/214311)
+* 微信小程序：搜索“双生小日记”即可
 * 前端 GitHub 地址：[https://github.com/oh-bear/2life](https://github.com/oh-bear/2life)
 * 后端 GitHub 地址：[https://github.com/airingursb/2life-server](https://github.com/airingursb/2life-server)
-* 小程序端：搜索“双生小日记”即可
 * 算法侧 GitHub 地址：[https://github.com/oh-bear/2life-lstm](https://github.com/oh-bear/2life-lstm)
 
 ## Screenshots
