@@ -129,7 +129,7 @@ export default class ProfileMode extends Component {
   async componentDidMount() {
     WeChat.isWXAppInstalled().then(isWXAppInstalled => this.setState({ isWXAppInstalled }))
     // ios 10.3 or later
-    if (this.props.user.emotions_basis && StoreReview.isAvailable && !await Storage.get('isRate', false)) {
+    if (this.props.user.emotions_basis && StoreReview.isAvailable && await Storage.get('isRate', false)) {
       StoreReview.requestReview()
       await Storage.set('isRate', true)
     }
