@@ -1,5 +1,7 @@
 import axios from 'axios'
 
+import { VERSION } from '../constants/config'
+
 let defaultData = {
   uid: '',
   token: '',
@@ -23,6 +25,7 @@ export default class HttpUtils {
   static get(url, data = {}) {
     url = baseUrl + url
     data = {
+      version: VERSION,
       ...defaultData,
       ...data
     }
@@ -30,7 +33,7 @@ export default class HttpUtils {
   }
 
   static post(url, data, config) {
-    const query = `?uid=${defaultData.uid}&timestamp=${defaultData.timestamp}&token=${defaultData.token}`
+    const query = `?uid=${defaultData.uid}&timestamp=${defaultData.timestamp}&token=${defaultData.token}&version=${VERSION}`
     url = baseUrl + url + query
 
     data = {
