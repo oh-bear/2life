@@ -16,6 +16,7 @@ import Banner from './Banner'
 import store from '../../redux/store'
 import { fetchProfileSuccess } from '../../redux/modules/user'
 import { fetchPartnerSuccess } from '../../redux/modules/partner'
+import Toast from 'antd-mobile/lib/toast'
 
 import {
   HEIGHT,
@@ -65,6 +66,11 @@ export default class Options extends Component {
           // 用户未绑定
           if (res.code === 404) {
             const openid = res.data
+            //如果未获取openid，提示重新登录
+            if(!openid){
+              Toast.info('微信登陆失败，请重新登录', 2)
+              return
+            }
             HttpUtils.post(USERS.bind_account, { account: openid, openid }).then(res => {
               const { uid, token, timestamp } = res.key
               setToken({ uid, token, timestamp })
