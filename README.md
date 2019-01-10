@@ -12,11 +12,14 @@
 
 双生日记2.0 鼓励用户书写和记录自己的心情，通过自研的 NLP 多维情感分析算法结合自研大五人格量表分析出用户的情绪状态，并配合专业的心理学知识，生成可视化情绪周期图表，为用户生成定制化的、科学的情绪管理方案。
 
-宣传视频：[https://www.bilibili.com/video/av26702790](https://www.bilibili.com/video/av26702790)
-
-* App Store 下载地址：搜索“双生日记”即可
-* Google Play 下载地址：[https://play.google.com/store/apps/details?id=me.ursb.twolife](https://play.google.com/store/apps/details?id=me.ursb.twolife)
-* Android 国内下载地址（酷安）：[https://www.coolapk.com/apk/214311](https://www.coolapk.com/apk/214311)
+* 宣传视频：[https://www.bilibili.com/video/av26702790](https://www.bilibili.com/video/av26702790)
+* App Store 下载地址：[https://itunes.apple.com/cn/app/id1245100877](https://itunes.apple.com/cn/app/id1245100877)
+* Android 版下载地址：
+    * [Google Play](https://play.google.com/store/apps/details?id=me.ursb.twolife)
+    * [PP 助手](http://m.pp.cn/detail.html?appid=7925788&ch_src=pp_dev&ch=default)
+    * [豌豆荚](https://www.wandoujia.com/apps/me.ursb.twolife)
+    * [酷安](https://www.coolapk.com/apk/214311)
+    * [蒲公英](https://www.pgyer.com/2life)
 * 微信小程序：搜索“双生小日记”即可
 * 前端 GitHub 地址：[https://github.com/oh-bear/2life](https://github.com/oh-bear/2life)
 * 后端 GitHub 地址：[https://github.com/airingursb/2life-server](https://github.com/airingursb/2life-server)
