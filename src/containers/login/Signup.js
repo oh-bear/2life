@@ -60,12 +60,23 @@ export default class Signup extends Component {
   }
 
   async getCode() {
-    // 国内港澳台正则
-    const phoneReg = /^[1][3-8]\d{9}$|^([6|9])\d{7}$|^[0][9]\d{8}$|^[6]([8|6])\d{5}$/
+    
+    let region = 'china'
+    let phoneReg = /^[1][3-8]\d{9}$|^([6|9])\d{7}$|^[0][9]\d{8}$|^[6]([8|6])\d{5}$/
+    switch (this.setState.accountArea) {
+      case '+1':
+        phoneReg = /^(\+?1)?[2-9]\d{2}[2-9](?!11)\d{6}$/
+        region = 'en-US'
+        break
+      default:
+        phoneReg = /^[1][3-8]\d{9}$|^([6|9])\d{7}$|^[0][9]\d{8}$|^[6]([8|6])\d{5}$/
+        region = 'china'
+        break
+    }
     if (!phoneReg.test(this.state.account))
       return Toast.fail('手机号码格式错误', 1)
 
-    const res = await HttpUtils.post(URL_code, { account: this.state.accountArea + this.state.account })
+    const res = await HttpUtils.post(`${URL_code}?region=${region}`, { account: this.state.accountArea + this.state.account })
     if (res.code === 0) {
       this.setState({
         timestamp: res.data.timestamp,
@@ -165,7 +176,7 @@ export default class Signup extends Component {
                 />
                 <TouchableOpacity
                   style={styles.text_code_container}
-                  onPress={() => {this.getCode()}}
+                  onPress={() => { this.getCode() }}
                 >
                   <TextPingFang style={[styles.text_code, {color: this.state.hadSendCode ? '#aaa' : '#2DC3A6'}]}>{this.state.text_code}</TextPingFang>
                 </TouchableOpacity>
@@ -204,9 +215,8 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: '#fff',
     width: WIDTH,
-    //height: HEIGHT,
     alignItems: 'center',
-    flex:1
+    flex: 1
   },
   inputs_container: {
     flex: 1,
@@ -243,7 +253,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: .5,
     borderBottomColor: '#2DC3A6',
   },
-  input_phone:{
+  input_phone: {
     width: getResponsiveWidth(240),
     height: getResponsiveHeight(50),
     marginTop: getResponsiveHeight(24),
