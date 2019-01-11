@@ -35,6 +35,7 @@
     "react-dom": "^16.4.1",
     "react-native": "^0.54.0",
     "react-native-animatable": "^1.2.4",
+    "react-native-calendar-heatmap": "^0.1.2",
     "react-native-calendars": "^1.19.3",
     "react-native-canvas": "^0.1.24",
     "react-native-crypto": "^2.1.2",

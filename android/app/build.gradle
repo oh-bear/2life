@@ -162,6 +162,7 @@ android {
 }
 
 dependencies {
+    compile project(':react-native-svg')
     compile project(':react-native-fs')
     compile project(':react-native-view-shot')
     compile project(':react-native-touch-id')
