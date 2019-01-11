@@ -599,7 +599,7 @@ export async function syncFile(user_id) {
   const isSync = await Storage.get('isSync', true)
   if (!isSync) return
 
-  const SYNC_PERIOD = 10000 // 同步延迟10秒
+  const SYNC_PERIOD = 1000 // 同步延迟1秒
 
   clearTimeout(SYNC_TIMEOUT_ID)
 
