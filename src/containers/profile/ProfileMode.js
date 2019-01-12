@@ -25,6 +25,8 @@ import ModeCharts from './components/ModeCharts'
 import Pie from './components/Pie'
 import Radar from './components/Radar'
 
+import CalendarHeatmap from '../../components/react-native-calendar-heatmap'
+
 import {
   getResponsiveWidth,
   getResponsiveHeight,
@@ -62,7 +64,8 @@ export default class ProfileMode extends Component {
     reportList: [],
     characterImg: null,
     isWXAppInstalled: false,
-    isShareModal: false
+    isShareModal: false,
+    calendarHeatMapValue: []
   }
 
   async componentWillMount() {
@@ -97,15 +100,22 @@ export default class ProfileMode extends Component {
     myDiaryList.sort((a, b) => a.date - b.date)
 
     let modeData = [], totalMode = 0, posDays = 0, midDays = 0, negDays = 0
+    let calendarHeatMapValue = []
     for (let diary of myDiaryList) {
       modeData.push({
         [diary.date]: diary.mode
       })
 
+      let heatmapValue = {
+        date: diary.date,
+        count: Math.floor(diary.mode / 33.33) + 1
+      }
+
       totalMode += diary.mode
       diary.mode <= 33.33 ? negDays++ : null
       33.33 < diary.mode && diary.mode <= 66.66 ? midDays++ : null
       66.66 < diary.mode && diary.mode <= 100 ? posDays++ : null
+      calendarHeatMapValue.push(heatmapValue)
     }
 
     const mergeData = this.mergeData(modeData)
@@ -123,6 +133,7 @@ export default class ProfileMode extends Component {
       monthModeData: this.formData(monthData, 'month'),
       yearModeData: this.formData(yearData, 'year'),
       totalModeData: this.formData(modeData, 'total'),
+      calendarHeatMapValue
     })
   }
 
@@ -444,7 +455,7 @@ export default class ProfileMode extends Component {
               <Image source={require('../../../res/images/common/report_banner.png')}
               />
             </View>
-            <ScrollableTabView
+            {/* <ScrollableTabView
               style={styles.chart_height}
               renderTabBar={() => <TabBar tabNames={['一周', '一月', '一年', '全部']}/>}
             >
@@ -464,8 +475,15 @@ export default class ProfileMode extends Component {
                 modeData={this.state.totalModeData.modes}
                 timeRange={this.state.totalModeData.timeRange}
               />
-            </ScrollableTabView>
+            </ScrollableTabView> */}
 
+            <View style={styles.heatmap_container}>
+              <CalendarHeatmap
+                numDays={180}
+                gutterSize={1}
+                values={this.state.calendarHeatMapValue}
+              />
+            </View>
             <View style={styles.total_container}>
               <View style={styles.total_inner_container}>
                 <TextPingFang style={styles.text_top}>{this.state.totalDay}</TextPingFang>
@@ -572,6 +590,13 @@ const styles = StyleSheet.create({
     marginRight: getResponsiveWidth(24),
     height: getResponsiveWidth(300)
   },
+  heatmap_container: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    width: 0.95 * WIDTH,
+    marginLeft: 0.04 * WIDTH,
+    marginTop: getResponsiveWidth(24)
+  },
   total_container: {
     flexDirection: 'row',
     justifyContent: 'space-around',
@@ -603,7 +628,7 @@ const styles = StyleSheet.create({
     marginTop: getResponsiveHeight(56),
     marginLeft: getResponsiveWidth(24),
     marginRight: getResponsiveWidth(24),
-    marginBottom: getResponsiveHeight(56)
+    marginBottom: getResponsiveHeight(48)
   },
   text_type: {
     color: '#333',

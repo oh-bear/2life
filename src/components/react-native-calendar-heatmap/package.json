@@ -1,0 +1,61 @@
+{
+  "_from": "react-native-calendar-heatmap",
+  "_id": "react-native-calendar-heatmap@0.1.2",
+  "_inBundle": false,
+  "_integrity": "sha1-BYD+Lt6Cb3WNyuSYeWRcLWmANnI=",
+  "_location": "/react-native-calendar-heatmap",
+  "_phantomChildren": {
+    "loose-envify": "1.3.1",
+    "object-assign": "4.1.1"
+  },
+  "_requested": {
+    "type": "tag",
+    "registry": true,
+    "raw": "react-native-calendar-heatmap",
+    "name": "react-native-calendar-heatmap",
+    "escapedName": "react-native-calendar-heatmap",
+    "rawSpec": "",
+    "saveSpec": null,
+    "fetchSpec": "latest"
+  },
+  "_requiredBy": [
+    "#USER",
+    "/"
+  ],
+  "_resolved": "http://registry.npm.taobao.org/react-native-calendar-heatmap/download/react-native-calendar-heatmap-0.1.2.tgz",
+  "_shasum": "0580fe2ede826f758dcae49879645c2d69803672",
+  "_spec": "react-native-calendar-heatmap",
+  "_where": "/Users/airing/Files/code/2life",
+  "author": {
+    "name": "ayooby"
+  },
+  "bundleDependencies": false,
+  "dependencies": {
+    "lodash": "^4.17.10",
+    "prop-types": "^15.6.1",
+    "react-native-svg": "^6.3.1"
+  },
+  "deprecated": false,
+  "description": "heatmap component for react-native, inspired by github's contribution graph",
+  "files": [
+    "dist"
+  ],
+  "homepage": "https://github.com/ayooby/react-native-calendar-heatmap#readme",
+  "keywords": [
+    "calendar",
+    "react-native",
+    "react-native-component",
+    "svg"
+  ],
+  "license": "MIT",
+  "main": "./dist/index.js",
+  "name": "react-native-calendar-heatmap",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ayooby/react-native-calendar-heatmap.git"
+  },
+  "scripts": {
+    "lint": "eslint ./"
+  },
+  "version": "0.1.2"
+}
