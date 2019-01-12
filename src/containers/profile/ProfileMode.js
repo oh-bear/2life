@@ -68,7 +68,14 @@ export default class ProfileMode extends Component {
     calendarHeatMapValue: []
   }
 
-  async componentWillMount() {
+  async componentDidMount() {
+
+    WeChat.isWXAppInstalled().then(isWXAppInstalled => this.setState({ isWXAppInstalled }))
+    // ios 10.3 or later
+    if (this.props.user.emotions_basis && StoreReview.isAvailable && await Storage.get('isRate', false)) {
+      StoreReview.requestReview()
+      await Storage.set('isRate', true)
+    }
     let user = this.props.user
 
     const res = await HttpUtils.get(UTILS.update_emotion_report)
@@ -93,7 +100,6 @@ export default class ProfileMode extends Component {
 
     this.setCharacterImg(user.emotions_type)
 
-
     // 获得我的所有日记情绪值
     const diaryList = await readFile(user.id)
     let myDiaryList = diaryList.filter(diary => diary.user_id === user.id)
@@ -108,7 +114,7 @@ export default class ProfileMode extends Component {
 
       let heatmapValue = {
         date: diary.date,
-        count: Math.floor(diary.mode / 33.33) + 1
+        count: Math.floor(diary.mode / 33.34) + 1
       }
 
       totalMode += diary.mode
@@ -135,15 +141,6 @@ export default class ProfileMode extends Component {
       totalModeData: this.formData(modeData, 'total'),
       calendarHeatMapValue
     })
-  }
-
-  async componentDidMount() {
-    WeChat.isWXAppInstalled().then(isWXAppInstalled => this.setState({ isWXAppInstalled }))
-    // ios 10.3 or later
-    if (this.props.user.emotions_basis && StoreReview.isAvailable && await Storage.get('isRate', false)) {
-      StoreReview.requestReview()
-      await Storage.set('isRate', true)
-    }
   }
 
   // 将情绪值按日期分类，相同天数的日记取情绪平均值
