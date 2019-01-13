@@ -7,7 +7,8 @@ import {
   Image,
   View,
   ScrollView,
-  Modal
+  Modal,
+  DeviceEventEmitter
 } from 'react-native'
 import ScrollableTabView from 'react-native-scrollable-tab-view'
 import { Actions } from '../../../node_modules/react-native-router-flux'
@@ -70,12 +71,21 @@ export default class ProfileMode extends Component {
 
   async componentDidMount() {
 
+    this._computeModeData()
+
+    DeviceEventEmitter.addListener('flush_mode_data', async () => {
+      this._computeModeData()
+    })
+
     WeChat.isWXAppInstalled().then(isWXAppInstalled => this.setState({ isWXAppInstalled }))
     // ios 10.3 or later
     if (this.props.user.emotions_basis && StoreReview.isAvailable && await Storage.get('isRate', false)) {
       StoreReview.requestReview()
       await Storage.set('isRate', true)
     }
+  }
+
+  async _computeModeData() {
     let user = this.props.user
 
     const res = await HttpUtils.get(UTILS.update_emotion_report)
