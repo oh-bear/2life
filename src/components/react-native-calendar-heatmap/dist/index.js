@@ -22,7 +22,12 @@ export default class CalendarHeatmap extends Component {
     valueCache: this.props.values
   }
 
+  componentDidMount() {
+    this.refs.scrollView.scrollToEnd({animated: false})
+  }
+
   componentWillReceiveProps(nextProps) {
+    this.refs.scrollView.scrollToEnd({animated: false})
     this.setState({
       valueCache: this.getValueCache(nextProps.values)
     })
@@ -240,7 +245,11 @@ export default class CalendarHeatmap extends Component {
 
   render() {
     return (
-      <ScrollView>
+      <ScrollView
+        horizontal={true}
+        showsHorizontalScrollIndicator={false}
+        ref='scrollView'
+      >
         <Svg
           height={this.getHeight()} 
           width={this.getWidth()}
@@ -277,7 +286,7 @@ CalendarHeatmap.ViewPropTypes = {
 /* eslint-enable */
 
 CalendarHeatmap.defaultProps = {
-  numDays: 200,
+  numDays: 220,
   endDate: new Date(),
   gutterSize: 1,
   horizontal: true,

@@ -66,12 +66,15 @@ export default class ProfileMode extends Component {
     characterImg: null,
     isWXAppInstalled: false,
     isShareModal: false,
-    calendarHeatMapValue: []
+    calendarHeatMapValue: [],
+    numDays: 180
+  }
+
+  async componentWillMount() {
+    this._computeModeData()
   }
 
   async componentDidMount() {
-
-    this._computeModeData()
 
     DeviceEventEmitter.addListener('flush_mode_data', async () => {
       this._computeModeData()
@@ -117,10 +120,12 @@ export default class ProfileMode extends Component {
 
     let modeData = [], totalMode = 0, posDays = 0, midDays = 0, negDays = 0
     let calendarHeatMapValue = []
+    let startTime = Date.now() // 开始写日记的时间戳
     for (let diary of myDiaryList) {
       modeData.push({
         [diary.date]: diary.mode
       })
+      startTime = startTime < diary.date ? startTime: diary.date
 
       let heatmapValue = {
         date: diary.date,
@@ -133,6 +138,10 @@ export default class ProfileMode extends Component {
       66.66 < diary.mode && diary.mode <= 100 ? posDays++ : null
       calendarHeatMapValue.push(heatmapValue)
     }
+
+    this.setState({
+      numDays: Math.ceil((Date.now() - startTime) / (24 * 60 * 60 * 1000)) < 240 ? 240 : Math.ceil((Date.now() - startTime) / (24 * 60 * 60 * 1000)),
+    })
 
     const mergeData = this.mergeData(modeData)
     const weekData = mergeData.length >= 7 ? mergeData.slice(-7) : mergeData
@@ -486,7 +495,7 @@ export default class ProfileMode extends Component {
 
             <View style={styles.heatmap_container}>
               <CalendarHeatmap
-                numDays={180}
+                numDays={this.state.numDays}
                 gutterSize={1}
                 values={this.state.calendarHeatMapValue}
               />
@@ -600,8 +609,8 @@ const styles = StyleSheet.create({
   heatmap_container: {
     flexDirection: 'row',
     alignItems: 'center',
-    width: 0.95 * WIDTH,
-    marginLeft: 0.04 * WIDTH,
+    // width: 0.95 * WIDTH,
+    // marginLeft: 0.04 * WIDTH,
     marginTop: getResponsiveWidth(24)
   },
   total_container: {
