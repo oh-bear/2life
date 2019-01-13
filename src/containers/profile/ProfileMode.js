@@ -139,6 +139,7 @@ export default class ProfileMode extends Component {
       calendarHeatMapValue.push(heatmapValue)
     }
 
+    // 单独 setState 是为了保证情绪格子的数目能先于数据确定下来，避免渲染错误
     this.setState({
       numDays: Math.ceil((Date.now() - startTime) / (24 * 60 * 60 * 1000)) < 240 ? 240 : Math.ceil((Date.now() - startTime) / (24 * 60 * 60 * 1000)),
     })
@@ -609,8 +610,8 @@ const styles = StyleSheet.create({
   heatmap_container: {
     flexDirection: 'row',
     alignItems: 'center',
-    // width: 0.95 * WIDTH,
-    // marginLeft: 0.04 * WIDTH,
+    marginLeft: 0.04 * WIDTH,
+    marginRight: 0.04 * WIDTH,
     marginTop: getResponsiveWidth(24)
   },
   total_container: {
