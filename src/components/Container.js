@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import {
   StyleSheet,
-  TouchableOpacity,
+  View,
   Keyboard
 } from 'react-native'
 import { isIphoneX } from 'react-native-iphone-x-helper'
@@ -18,7 +18,6 @@ export default class Container extends Component {
   static propTypes = {
     hidePadding: PropTypes.bool,
     showNetStatus: PropTypes.bool,
-    onPress: PropTypes.func,
     style: PropTypes.any
   }
 
@@ -26,8 +25,7 @@ export default class Container extends Component {
     let padding_top = isIphoneX() ? 44 : 20
 
     return (
-      <TouchableOpacity
-        activeOpacity={1}
+      <View
         style={[
           styles.container,
           {
@@ -35,14 +33,10 @@ export default class Container extends Component {
           },
           this.props.style
         ]}
-        onPress={() => {
-          Keyboard.dismiss()
-          this.props.onPress && this.props.onPress()
-        }}
       >
         <NetStatus showNetStatus={this.props.showNetStatus}/>
         {this.props.children}
-      </TouchableOpacity>
+      </View>
     )
   }
 }

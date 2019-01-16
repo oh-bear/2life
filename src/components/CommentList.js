@@ -6,7 +6,8 @@ import {
   Platform,
   FlatList,
   View,
-  Image
+  Image,
+  TouchableOpacity
 } from 'react-native'
 import PropTypes from 'prop-types'
 
@@ -27,21 +28,28 @@ export default class CommentList extends Component {
   renderItem = ({item}) => {
     return (
       <View style={styles.comment_item}>
-        <Image style={styles.item_img} source={{ uri: item.reply.face }} />
+        {
+          item.reply.id === item.user.id ?
+          <Image style={styles.item_img} source={{ uri: item.reply.face }} />:
+          <Image style={styles.item_img} source={{ uri: item.user.face }} />
+        }
         <View style={styles.item_right}>
           <View style={styles.item_right_top}>
-            <TextPingFang style={styles.text_item_reply}>{item.reply.name}</TextPingFang>
             {
               item.reply.id === item.user.id ?
+              <TextPingFang style={styles.text_item_reply}>{item.reply.name}</TextPingFang>
+              :
               <TextPingFang style={styles.text_item_user}>
+                <TextPingFang style={styles.text_item_reply}>{item.user.name}</TextPingFang>
                 <TextPingFang style={styles.text_const_reply}> 回复了 </TextPingFang>
-                {item.user.name}
-              </TextPingFang> :
-              null
+                {item.reply.name}
+              </TextPingFang>
             }
-            <TextPingFang style={styles.text_item_time} onPress={this.props.onPressItem.bind(this, item)}>{formatDate(item.created_at, 'm月dd hh:ii')}</TextPingFang>
+            <TextPingFang style={styles.text_item_time}>{formatDate(item.created_at, 'm月dd日 hh:ii')}</TextPingFang>
           </View>
-          <TextPingFang style={styles.text_item_content}>{item.content}</TextPingFang>
+          <TouchableOpacity onPress={this.props.onPressItem.bind(this, item)} activeOpacity={1}>
+            <TextPingFang style={styles.text_item_content}>{item.content}</TextPingFang>
+          </TouchableOpacity>
         </View>
       </View>
     )
@@ -82,6 +90,7 @@ const styles = StyleSheet.create({
   container: {
     width: '100%',
     paddingHorizontal: getWidth(24),
+    paddingBottom: getWidth(24)
   },
   header_container: {
     marginTop: getWidth(24),
@@ -100,7 +109,7 @@ const styles = StyleSheet.create({
   },
   comment_item: {
     flexDirection: 'row',
-    marginTop: getWidth(20),
+    marginTop: getWidth(24),
   },
   item_img: {
     width: getWidth(32),

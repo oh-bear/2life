@@ -60,7 +60,10 @@ export default class DiaryDetail extends Component {
     leftButton: null,
     rightButton: null,
     commentContent: '',
-    commentList: []
+    commentContent_2: '',
+    commentList: [],
+    inputCommentPlaceholder: '写下想对Ta说的吧～',
+    currentReplyComment: {}, // 当前正在回复的评论
   }
 
   async componentWillMount() {
@@ -273,10 +276,11 @@ export default class DiaryDetail extends Component {
     this.setState({ hideCommentInput: false })
   }
   keyboardWillHide = () => {
+    this.inputComment.blur()
     this.setState({ hideCommentInput: true })
   }
 
-  async getComment() {
+  getComment  = async () => {
     const params = {
       note_id: this.props.diary.id,
       owner_id: this.props.diary.user_id
@@ -285,19 +289,36 @@ export default class DiaryDetail extends Component {
     this.setState({ commentList: res.comments })
   }
 
-  async addComment(comment) {
-    console.log(comment)
+  addComment = async () => {
     const data = {
       note_id: this.props.diary.id,
-      user_id: comment ? comment.user.id : this.props.user.id,
+      user_id: this.props.user.id,
       owner_id: this.props.diary.user_id,
       content: this.state.commentContent,
     }
     const res = await HttpUtils.post(NOTES.add_comment, data)
     if (res.code === 0) {
-      this.inputComment.value = ''
+      this.keyboardWillHide()
+      this.setState({ commentContent: '', commentContent_2: '', currentReplyComment: {} })
+      this.getComment()
     }
-    console.log(res)
+  }
+
+  replyComment = async () => {
+    const comment = this.state.currentReplyComment
+    this.setState({ inputCommentPlaceholder: '回复 ' + comment.reply.name })
+    const data = {
+      note_id: this.props.diary.id,
+      user_id: comment.user.id,
+      owner_id: this.props.diary.user_id,
+      content: this.state.commentContent,
+    }
+    const res = await HttpUtils.post(NOTES.add_comment, data)
+    if (res.code === 0) {
+      this.keyboardWillHide()
+      this.setState({ commentContent: '', commentContent_2: '', currentReplyComment: {} })
+      this.getComment()
+    }
   }
 
   _renderLeftButton() {
@@ -346,120 +367,123 @@ export default class DiaryDetail extends Component {
         hidePadding={this.state.showBanner}
       >
         <KeyboardAwareScrollView>
-        <DiaryBanner
-          showNav={true}
-          showBanner={this.state.showBanner}
-          imgPathList={this.state.imgPathList}
-          leftButton={this.state.leftButton}
-          rightButton={this.state.rightButton}
-          onTouchStart={() => this.setState({ touchStartTs: Date.now() })}
-          onTouchEnd={() => {
-            if (Date.now() - this.state.touchStartTs < 80) {
-              this.setState({ showImgPreview: true })
-            }
-          }}
-        />
+          <DiaryBanner
+            showNav={true}
+            showBanner={this.state.showBanner}
+            imgPathList={this.state.imgPathList}
+            leftButton={this.state.leftButton}
+            rightButton={this.state.rightButton}
+            onTouchStart={() => this.setState({ touchStartTs: Date.now() })}
+            onTouchEnd={() => {
+              if (Date.now() - this.state.touchStartTs < 80) {
+                this.setState({ showImgPreview: true })
+              }
+            }}
+          />
 
-        {/* 在无图片日记下的顶部导航 */}
-        <CommonNav
-          navStyle={[styles.nav_style, { display: this.state.showBanner ? 'none' : 'flex' }]}
-          navBarStyle={styles.navbar_style}
-          leftButton={this.state.leftButton}
-          rightButton={this.state.rightButton}
-        />
+          {/* 在无图片日记下的顶部导航 */}
+          <CommonNav
+            navStyle={[styles.nav_style, { display: this.state.showBanner ? 'none' : 'flex' }]}
+            navBarStyle={styles.navbar_style}
+            leftButton={this.state.leftButton}
+            rightButton={this.state.rightButton}
+          />
 
-        <View style={styles.date_container}>
-          <TextPingFang
-            style={styles.text_date}>{getMonth(new Date(this.props.diary.date).getMonth())} </TextPingFang>
-          <TextPingFang style={styles.text_date}>{new Date(this.props.diary.date).getDate()}，</TextPingFang>
-          <TextPingFang style={styles.text_date}>{new Date(this.props.diary.date).getFullYear()}</TextPingFang>
-        </View>
+          <View style={styles.date_container}>
+            <TextPingFang
+              style={styles.text_date}>{getMonth(new Date(this.props.diary.date).getMonth())} </TextPingFang>
+            <TextPingFang style={styles.text_date}>{new Date(this.props.diary.date).getDate()}，</TextPingFang>
+            <TextPingFang style={styles.text_date}>{new Date(this.props.diary.date).getFullYear()}</TextPingFang>
+          </View>
 
-        <TextPingFang style={styles.text_title}>{this.props.diary.title}</TextPingFang>
+          <TextPingFang style={styles.text_title}>{this.props.diary.title}</TextPingFang>
 
-        <View style={[styles.partner_container, { display: this.props.diary.user_id !== this.props.user.id ? 'flex' : 'none' }]}>
-          <Image style={styles.partner_face} source={{ uri: this.props.partner.face }} />
-          <TextPingFang style={styles.text_name}>{this.props.partner.name}</TextPingFang>
-        </View>
+          <View style={[styles.partner_container, { display: this.props.diary.user_id !== this.props.user.id ? 'flex' : 'none' }]}>
+            <Image style={styles.partner_face} source={{ uri: this.props.partner.face }} />
+            <TextPingFang style={styles.text_name}>{this.props.partner.name}</TextPingFang>
+          </View>
 
-        <View style={[styles.partner_container, { display: this.props.diary.user_id !== this.props.user.id ? 'none' : 'flex' }]}>
-          <Image style={styles.partner_face} source={{ uri: this.props.user.face }} />
-          <TextPingFang style={styles.text_name}>{this.props.user.name}</TextPingFang>
-        </View>
+          <View style={[styles.partner_container, { display: this.props.diary.user_id !== this.props.user.id ? 'none' : 'flex' }]}>
+            <Image style={styles.partner_face} source={{ uri: this.props.user.face }} />
+            <TextPingFang style={styles.text_name}>{this.props.user.name}</TextPingFang>
+          </View>
 
-        <View style={styles.line} />
+          <View style={styles.line} />
 
-        <TextPingFang style={styles.text_content}>{this.props.diary.content}</TextPingFang>
+          <TextPingFang style={styles.text_content}>{this.props.diary.content}</TextPingFang>
 
-        <View style={styles.location_container}>
-          <Image style={styles.location_icon} source={require('../../../res/images/home/icon_location.png')} />
-          <TextPingFang style={styles.text_location}>{this.props.diary.location}</TextPingFang>
-        </View>
+          <View style={styles.location_container}>
+            <Image style={styles.location_icon} source={require('../../../res/images/home/icon_location.png')} />
+            <TextPingFang style={styles.text_location}>{this.props.diary.location}</TextPingFang>
+          </View>
 
-        <View style={styles.mode_container}>
-          <Image style={styles.location_icon} source={this.state.mode_face} />
-          <TextPingFang style={styles.text_mode}>{this.state.mode}</TextPingFang>
-          <TextPingFang style={styles.text_value}>情绪值</TextPingFang>
+          <View style={styles.mode_container}>
+            <Image style={styles.location_icon} source={this.state.mode_face} />
+            <TextPingFang style={styles.text_mode}>{this.state.mode}</TextPingFang>
+            <TextPingFang style={styles.text_value}>情绪值</TextPingFang>
+            <TouchableOpacity
+              style={[styles.update_container, { display: this.props.user.id === this.props.diary.user_id || this.props.diary.user_id === 0 ? 'flex' : 'none', position: this.props.user.id === this.props.diary.user_id || this.props.diary.user_id === 0 ? 'absolute' : 'relative' }]}
+              onPress={() => this.toggleChooseMode()}
+            >
+              <TextPingFang style={styles.text_update}>更正</TextPingFang>
+            </TouchableOpacity>
+
+            <Animated.View style={[
+              styles.choose_mode,
+              {
+                width: this.state.modeWidth,
+                opacity: this.state.modeOpacity
+              }
+            ]}>
+              <TouchableOpacity
+                style={styles.mode_item}
+                onPress={() => this.updateMode(0, require('../../../res/images/home/icon_very_sad_male.png'))}
+              >
+                <Image source={require('../../../res/images/home/icon_very_sad_male.png')} />
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.mode_item}
+                onPress={() => this.updateMode(25, require('../../../res/images/home/icon_sad_male.png'))}
+              >
+                <Image source={require('../../../res/images/home/icon_sad_male.png')} />
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.mode_item}
+                onPress={() => this.updateMode(50, require('../../../res/images/home/icon_normal_male.png'))}
+              >
+                <Image source={require('../../../res/images/home/icon_normal_male.png')} />
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.mode_item}
+                onPress={() => this.updateMode(75, require('../../../res/images/home/icon_happy_male.png'))}
+              >
+                <Image source={require('../../../res/images/home/icon_happy_male.png')} />
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.mode_item}
+                onPress={() => this.updateMode(100, require('../../../res/images/home/icon_very_happy_male.png'))}
+              >
+                <Image source={require('../../../res/images/home/icon_very_happy_male.png')} />
+              </TouchableOpacity>
+            </Animated.View>
+          </View>
+
           <TouchableOpacity
-            style={[styles.update_container, { display: this.props.user.id === this.props.diary.user_id || this.props.diary.user_id === 0 ? 'flex' : 'none', position: this.props.user.id === this.props.diary.user_id || this.props.diary.user_id === 0 ? 'absolute' : 'relative' }]}
-            onPress={() => this.toggleChooseMode()}
+            style={[styles.mode_container, {display: this.props.diary.user_id === this.props.user.user_other_id ? 'flex' : 'none'}]}
+            activeOpacity={1}
+            onPress={this.keyboardWillShow}
           >
-            <TextPingFang style={styles.text_update}>更正</TextPingFang>
+            <Image style={styles.location_icon} source={require('../../../res/images/home/diary/icon_comment.png')} />
+            <TextPingFang style={styles.text_comment}>有什么想说的</TextPingFang>
           </TouchableOpacity>
 
-          <Animated.View style={[
-            styles.choose_mode,
-            {
-              width: this.state.modeWidth,
-              opacity: this.state.modeOpacity
-            }
-          ]}>
-            <TouchableOpacity
-              style={styles.mode_item}
-              onPress={() => this.updateMode(0, require('../../../res/images/home/icon_very_sad_male.png'))}
-            >
-              <Image source={require('../../../res/images/home/icon_very_sad_male.png')} />
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.mode_item}
-              onPress={() => this.updateMode(25, require('../../../res/images/home/icon_sad_male.png'))}
-            >
-              <Image source={require('../../../res/images/home/icon_sad_male.png')} />
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.mode_item}
-              onPress={() => this.updateMode(50, require('../../../res/images/home/icon_normal_male.png'))}
-            >
-              <Image source={require('../../../res/images/home/icon_normal_male.png')} />
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.mode_item}
-              onPress={() => this.updateMode(75, require('../../../res/images/home/icon_happy_male.png'))}
-            >
-              <Image source={require('../../../res/images/home/icon_happy_male.png')} />
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.mode_item}
-              onPress={() => this.updateMode(100, require('../../../res/images/home/icon_very_happy_male.png'))}
-            >
-              <Image source={require('../../../res/images/home/icon_very_happy_male.png')} />
-            </TouchableOpacity>
-          </Animated.View>
-        </View>
-
-        <TouchableOpacity
-          style={[styles.mode_container, {display: this.props.diary.user_id === this.props.user.user_other_id ? 'flex' : 'none'}]}
-          activeOpacity={1}
-          onPress={this.keyboardWillShow}
-        >
-          <Image style={styles.location_icon} source={require('../../../res/images/home/diary/icon_comment.png')} />
-          <TextPingFang style={styles.text_comment}>有什么想说的</TextPingFang>
-        </TouchableOpacity>
-
-        <CommentList
-          data={this.state.commentList}
-          onPressItem={this.addComment}
-        />
+          <CommentList
+            data={this.state.commentList}
+            onPressItem={(comment) => {
+              this.setState({currentReplyComment: comment})
+              this.keyboardWillShow()
+            }}
+          />
 
         </KeyboardAwareScrollView>
 
@@ -488,20 +512,24 @@ export default class DiaryDetail extends Component {
         <KeyboardStickeyBar
           hide={this.state.hideCommentInput}
           ctnStyle={styles.input_container}
-          // keyboardWillShow={this.keyboardWillShow}
           keyboardWillHide={this.keyboardWillHide}
         >
           <TextInput
             ref={ref => this.inputComment = ref}
             style={styles.input_comment}
-            onChangeText={text => this.setState({ commentContent: text })}
-            placeholder='写下想对Ta说的吧～'
+            value={this.state.commentContent}
+            onChangeText={text => this.setState({ commentContent_2: text })}
+            placeholder={this.state.inputCommentPlaceholder}
             placeholderTextColor='#aaa'
             enablesReturnKeyAutomatically={true}
             multiline={true}
             underlineColorAndroid='transparent'
             returnKeyType={'send'}
-            onSubmitEditing={this.addComment}
+            onSubmitEditing={() => {
+              this.setState({ commentContent: this.state.commentContent_2 }, () => {
+                this.state.currentReplyComment.id ? this.replyComment() : this.addComment()
+              })
+            }}
           />
         </KeyboardStickeyBar>
 
