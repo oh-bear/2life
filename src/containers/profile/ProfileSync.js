@@ -85,6 +85,13 @@ export default class ProfileSync extends Component {
   
         store.dispatch(cleanPartner())
       }
+    } else {
+      // 更改用户status 为不可匹配999
+      const res = await updateUser(this.props.user, { status: 999 })
+      if (res.code === 0) {
+        store.dispatch(fetchProfileSuccess(res.data.user))
+        DeviceEventEmitter.emit('flush_note', {})
+      }
     }
   }
 
