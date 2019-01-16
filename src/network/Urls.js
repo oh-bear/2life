@@ -33,6 +33,9 @@ export const NOTES = {
   update: '/notes/update', // post {note_id, title, content, images, mode}
   sync: '/notes/sync', // get {synctime}
   refresh_total_notes: '/notes/refresh_total_notes', // get
+  add_comment: '/notes/add_comment', // post { note_id, user_id, content, owner_id }
+  show_comment: '/notes/show_comment', // get { note_id, owner_id }
+  delete_comment: '/notes/delete_comment', //
 }
 
 export const MODES = {

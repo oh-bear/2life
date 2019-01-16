@@ -28,15 +28,47 @@ export function uuid() {
 }
 
 /**
- * 返回 yyyy-mm-hh
+ * @param {Date} date
+ * @param {String} formatStr 转化的字符格式
+ * @return {String} 对应的日期
+ */
+export function formatDate(date, formatStr) {
+  if (!date) return ''
+  date = new Date(date)
+  function $addZero(v, size) {
+    for (var i = 0, len = size - (v + "").length; i < len; i++) {
+      v = "0" + v;
+    }
+    ;
+    return v + "";
+  }
+
+  //格式化时间
+  var arrWeek = ['日', '一', '二', '三', '四', '五', '六'],
+    str = formatStr
+      .replace(/yyyy|YYYY/, date.getFullYear())
+      .replace(/yy|YY/, $addZero(date.getFullYear() % 100, 2))
+      .replace(/mm|MM/, $addZero(date.getMonth() + 1, 2))
+      .replace(/m|M/g, date.getMonth() + 1)
+      .replace(/dd|DD/, $addZero(date.getDate(), 2))
+      .replace(/d|D/g, date.getDate())
+      .replace(/hh|HH/, $addZero(date.getHours(), 2))
+      .replace(/h|H/g, date.getHours())
+      .replace(/ii|II/, $addZero(date.getMinutes(), 2))
+      .replace(/i|I/g, date.getMinutes())
+      .replace(/ss|SS/, $addZero(date.getSeconds(), 2))
+      .replace(/s|S/g, date.getSeconds())
+      .replace(/w/g, date.getDay())
+      .replace(/W/g, arrWeek[date.getDay()]);
+  return str;
+}
+
+/**
+ * 返回 yyyy-mm-dd
  * @param {Number} timestamp 时间戳
  */
 export function getFormDay(timestamp) {
-  const date = new Date(timestamp)
-  const year = date.getFullYear()
-  const month = date.getMonth() < 10 ? `0${date.getMonth() + 1}` : (date.getMonth() + 1)
-  const day = date.getDate() < 10 ? `0${date.getDate()}` : date.getDate()
-  return `${year}-${month}-${day}`
+  return formatDate(timestamp, 'yyyy-mm-dd')
 }
 
 /**
@@ -134,15 +166,12 @@ export function getMonthDay(timestamp) {
 }
 
 /**
- * 获取 hh:mm
+ * 获取 hh:ii
  * @param {Number} timestamp
- * @returns {String} // hh:mm
+ * @returns {String} // hh:ii
  */
 export function getTime(timestamp) {
-  const date = new Date(timestamp)
-  const hour = date.getHours() < 10 ? `0${date.getHours()}` : date.getHours()
-  const min = date.getMinutes() < 10 ? `0${date.getMinutes()}` : date.getMinutes()
-  return `${hour}:${min}`
+  return formatDate(timestamp, 'hh:ii')
 }
 
 /**

@@ -11,18 +11,19 @@ import {
   Modal,
   Animated,
   TextInput,
-  Keyboard
 } from 'react-native'
-import { ActionSheet } from 'antd-mobile';
+import { ActionSheet } from 'antd-mobile'
 import { connect } from 'react-redux'
 import { Actions } from 'react-native-router-flux'
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import ImageViewer from 'react-native-image-zoom-viewer'
 import { ifIphoneX } from 'react-native-iphone-x-helper'
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
 import Container from '../../components/Container'
 import TextPingFang from '../../components/TextPingFang'
 import CommonNav from '../../components/CommonNav'
+import KeyboardStickeyBar from '../../components/KeyboardStickeyBar'
+import CommentList from '../../components/CommentList'
 import DiaryBanner from './DiaryBanner'
 
 import {
@@ -53,12 +54,13 @@ export default class DiaryDetail extends Component {
     mode_face: require('../../../res/images/home/icon_happy.png'),
     showChangeMode: false,
     showImgPreview: false,
+    hideCommentInput: true,
     modeWidth: new Animated.Value(0),
     modeOpacity: new Animated.Value(0),
     leftButton: null,
     rightButton: null,
-    inputCommentY: new Animated.Value(0),
-    showKeyboard: false
+    commentContent: '',
+    commentList: []
   }
 
   async componentWillMount() {
@@ -88,7 +90,10 @@ export default class DiaryDetail extends Component {
     this.setState({ mode: diary.mode ? diary.mode : 0 })
 
     this.renderlikeComponent(diary.is_liked)
-    this.setKeyboard()
+  }
+
+  componentDidMount() {
+    this.getComment()
   }
 
   async updateMode(mode, mode_face) {
@@ -263,28 +268,36 @@ export default class DiaryDetail extends Component {
     ]).start()
   }
 
-  setKeyboard() {
-    Keyboard.addListener('keyboardWillShow', event => {
-      this.setState({ showKeyboard: true })
-      this.toggleInputComment(true, event)
-    })
-    Keyboard.addListener('keyboardWillHide', event => {
-      this.setState({ showKeyboard: false })
-      this.toggleInputComment(false, event)
-    })
+  keyboardWillShow = () => {
+    this.inputComment.focus()
+    this.setState({ hideCommentInput: false })
+  }
+  keyboardWillHide = () => {
+    this.setState({ hideCommentInput: true })
   }
 
-  toggleInputComment(showKeyboard, event) {
-    Animated.timing(
-      this.state.inputCommentY,
-      {
-        toValue: showKeyboard ? event.endCoordinates.height : 0,
-        duration: showKeyboard ? event.duration : event.duration
-      }
-    ).start()
+  async getComment() {
+    const params = {
+      note_id: this.props.diary.id,
+      owner_id: this.props.diary.user_id
+    }
+    const res = await HttpUtils.get(NOTES.show_comment, params)
+    this.setState({ commentList: res.comments })
   }
 
-  sendComment() {
+  async addComment(comment) {
+    console.log(comment)
+    const data = {
+      note_id: this.props.diary.id,
+      user_id: comment ? comment.user.id : this.props.user.id,
+      owner_id: this.props.diary.user_id,
+      content: this.state.commentContent,
+    }
+    const res = await HttpUtils.post(NOTES.add_comment, data)
+    if (res.code === 0) {
+      this.inputComment.value = ''
+    }
+    console.log(res)
   }
 
   _renderLeftButton() {
@@ -328,129 +341,125 @@ export default class DiaryDetail extends Component {
 
   render() {
     return (
-      <Container hidePadding={this.state.showBanner}>
+      <Container
+        style={styles.container}
+        hidePadding={this.state.showBanner}
+      >
         <KeyboardAwareScrollView>
-          <DiaryBanner
-            showNav={true}
-            showBanner={this.state.showBanner}
-            imgPathList={this.state.imgPathList}
-            leftButton={this.state.leftButton}
-            rightButton={this.state.rightButton}
-            onTouchStart={() => this.setState({ touchStartTs: Date.now() })}
-            onTouchEnd={() => {
-              if (Date.now() - this.state.touchStartTs < 80) {
-                this.setState({ showImgPreview: true })
-              }
-            }}
-          />
+        <DiaryBanner
+          showNav={true}
+          showBanner={this.state.showBanner}
+          imgPathList={this.state.imgPathList}
+          leftButton={this.state.leftButton}
+          rightButton={this.state.rightButton}
+          onTouchStart={() => this.setState({ touchStartTs: Date.now() })}
+          onTouchEnd={() => {
+            if (Date.now() - this.state.touchStartTs < 80) {
+              this.setState({ showImgPreview: true })
+            }
+          }}
+        />
 
-          {/* 在无图片日记下的顶部导航 */}
-          <CommonNav
-            navStyle={[styles.nav_style, { display: this.state.showBanner ? 'none' : 'flex' }]}
-            navBarStyle={styles.navbar_style}
-            leftButton={this.state.leftButton}
-            rightButton={this.state.rightButton}
-          />
+        {/* 在无图片日记下的顶部导航 */}
+        <CommonNav
+          navStyle={[styles.nav_style, { display: this.state.showBanner ? 'none' : 'flex' }]}
+          navBarStyle={styles.navbar_style}
+          leftButton={this.state.leftButton}
+          rightButton={this.state.rightButton}
+        />
 
-          <View style={styles.date_container}>
-            <TextPingFang
-              style={styles.text_date}>{getMonth(new Date(this.props.diary.date).getMonth())} </TextPingFang>
-            <TextPingFang style={styles.text_date}>{new Date(this.props.diary.date).getDate()}，</TextPingFang>
-            <TextPingFang style={styles.text_date}>{new Date(this.props.diary.date).getFullYear()}</TextPingFang>
-          </View>
+        <View style={styles.date_container}>
+          <TextPingFang
+            style={styles.text_date}>{getMonth(new Date(this.props.diary.date).getMonth())} </TextPingFang>
+          <TextPingFang style={styles.text_date}>{new Date(this.props.diary.date).getDate()}，</TextPingFang>
+          <TextPingFang style={styles.text_date}>{new Date(this.props.diary.date).getFullYear()}</TextPingFang>
+        </View>
 
-          <TextPingFang style={styles.text_title}>{this.props.diary.title}</TextPingFang>
+        <TextPingFang style={styles.text_title}>{this.props.diary.title}</TextPingFang>
 
-          <View style={[styles.partner_container, { display: this.props.diary.user_id !== this.props.user.id ? 'flex' : 'none' }]}>
-            <Image style={styles.partner_face} source={{ uri: this.props.partner.face }} />
-            <TextPingFang style={styles.text_name}>{this.props.partner.name}</TextPingFang>
-          </View>
+        <View style={[styles.partner_container, { display: this.props.diary.user_id !== this.props.user.id ? 'flex' : 'none' }]}>
+          <Image style={styles.partner_face} source={{ uri: this.props.partner.face }} />
+          <TextPingFang style={styles.text_name}>{this.props.partner.name}</TextPingFang>
+        </View>
 
-          <View style={[styles.partner_container, { display: this.props.diary.user_id !== this.props.user.id ? 'none' : 'flex' }]}>
-            <Image style={styles.partner_face} source={{ uri: this.props.user.face }} />
-            <TextPingFang style={styles.text_name}>{this.props.user.name}</TextPingFang>
-          </View>
+        <View style={[styles.partner_container, { display: this.props.diary.user_id !== this.props.user.id ? 'none' : 'flex' }]}>
+          <Image style={styles.partner_face} source={{ uri: this.props.user.face }} />
+          <TextPingFang style={styles.text_name}>{this.props.user.name}</TextPingFang>
+        </View>
 
-          <View style={styles.line} />
+        <View style={styles.line} />
 
-          <TextPingFang style={styles.text_content}>{this.props.diary.content}</TextPingFang>
+        <TextPingFang style={styles.text_content}>{this.props.diary.content}</TextPingFang>
 
-          <View style={styles.location_container}>
-            <Image style={styles.location_icon} source={require('../../../res/images/home/icon_location.png')} />
-            <TextPingFang style={styles.text_location}>{this.props.diary.location}</TextPingFang>
-          </View>
+        <View style={styles.location_container}>
+          <Image style={styles.location_icon} source={require('../../../res/images/home/icon_location.png')} />
+          <TextPingFang style={styles.text_location}>{this.props.diary.location}</TextPingFang>
+        </View>
 
-          <View style={styles.mode_container}>
-            <Image style={styles.location_icon} source={this.state.mode_face} />
-            <TextPingFang style={styles.text_mode}>{this.state.mode}</TextPingFang>
-            <TextPingFang style={styles.text_value}>情绪值</TextPingFang>
-            <TouchableOpacity
-              style={[styles.update_container, { display: this.props.user.id === this.props.diary.user_id || this.props.diary.user_id === 0 ? 'flex' : 'none', position: this.props.user.id === this.props.diary.user_id || this.props.diary.user_id === 0 ? 'absolute' : 'relative' }]}
-              onPress={() => this.toggleChooseMode()}
-            >
-              <TextPingFang style={styles.text_update}>更正</TextPingFang>
-            </TouchableOpacity>
-
-            <Animated.View style={[
-              styles.choose_mode,
-              {
-                width: this.state.modeWidth,
-                opacity: this.state.modeOpacity
-              }
-            ]}>
-              <TouchableOpacity
-                style={styles.mode_item}
-                onPress={() => this.updateMode(0, require('../../../res/images/home/icon_very_sad_male.png'))}
-              >
-                <Image source={require('../../../res/images/home/icon_very_sad_male.png')} />
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.mode_item}
-                onPress={() => this.updateMode(25, require('../../../res/images/home/icon_sad_male.png'))}
-              >
-                <Image source={require('../../../res/images/home/icon_sad_male.png')} />
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.mode_item}
-                onPress={() => this.updateMode(50, require('../../../res/images/home/icon_normal_male.png'))}
-              >
-                <Image source={require('../../../res/images/home/icon_normal_male.png')} />
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.mode_item}
-                onPress={() => this.updateMode(75, require('../../../res/images/home/icon_happy_male.png'))}
-              >
-                <Image source={require('../../../res/images/home/icon_happy_male.png')} />
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.mode_item}
-                onPress={() => this.updateMode(100, require('../../../res/images/home/icon_very_happy_male.png'))}
-              >
-                <Image source={require('../../../res/images/home/icon_very_happy_male.png')} />
-              </TouchableOpacity>
-            </Animated.View>
-          </View>
-
-          {/* <TouchableOpacity
-            style={[styles.mode_container, {display: this.props.diary.user_id === this.props.user.user_other_id ? 'flex' : 'none'}]}
-            activeOpacity={1}
-            onPress={() => {
-              setTimeout(() => this.inputComment.focus(), 250)
-              this.inputMask.focus()
-            }}
+        <View style={styles.mode_container}>
+          <Image style={styles.location_icon} source={this.state.mode_face} />
+          <TextPingFang style={styles.text_mode}>{this.state.mode}</TextPingFang>
+          <TextPingFang style={styles.text_value}>情绪值</TextPingFang>
+          <TouchableOpacity
+            style={[styles.update_container, { display: this.props.user.id === this.props.diary.user_id || this.props.diary.user_id === 0 ? 'flex' : 'none', position: this.props.user.id === this.props.diary.user_id || this.props.diary.user_id === 0 ? 'absolute' : 'relative' }]}
+            onPress={() => this.toggleChooseMode()}
           >
-            <Image style={styles.location_icon} source={require('../../../res/images/home/diary/icon_comment.png')} />
-            <TextPingFang style={styles.text_comment}>有什么想说的</TextPingFang>
+            <TextPingFang style={styles.text_update}>更正</TextPingFang>
           </TouchableOpacity>
 
-          <View style={styles.comment_container}>
-            <TextPingFang style={styles.text_comment_top}>日记评论</TextPingFang>
-          </View>
+          <Animated.View style={[
+            styles.choose_mode,
+            {
+              width: this.state.modeWidth,
+              opacity: this.state.modeOpacity
+            }
+          ]}>
+            <TouchableOpacity
+              style={styles.mode_item}
+              onPress={() => this.updateMode(0, require('../../../res/images/home/icon_very_sad_male.png'))}
+            >
+              <Image source={require('../../../res/images/home/icon_very_sad_male.png')} />
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.mode_item}
+              onPress={() => this.updateMode(25, require('../../../res/images/home/icon_sad_male.png'))}
+            >
+              <Image source={require('../../../res/images/home/icon_sad_male.png')} />
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.mode_item}
+              onPress={() => this.updateMode(50, require('../../../res/images/home/icon_normal_male.png'))}
+            >
+              <Image source={require('../../../res/images/home/icon_normal_male.png')} />
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.mode_item}
+              onPress={() => this.updateMode(75, require('../../../res/images/home/icon_happy_male.png'))}
+            >
+              <Image source={require('../../../res/images/home/icon_happy_male.png')} />
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.mode_item}
+              onPress={() => this.updateMode(100, require('../../../res/images/home/icon_very_happy_male.png'))}
+            >
+              <Image source={require('../../../res/images/home/icon_very_happy_male.png')} />
+            </TouchableOpacity>
+          </Animated.View>
+        </View>
 
-          <TextInput
-            ref={ref => this.inputMask = ref}
-            style={styles.input_mask}
-          /> */}
+        <TouchableOpacity
+          style={[styles.mode_container, {display: this.props.diary.user_id === this.props.user.user_other_id ? 'flex' : 'none'}]}
+          activeOpacity={1}
+          onPress={this.keyboardWillShow}
+        >
+          <Image style={styles.location_icon} source={require('../../../res/images/home/diary/icon_comment.png')} />
+          <TextPingFang style={styles.text_comment}>有什么想说的</TextPingFang>
+        </TouchableOpacity>
+
+        <CommentList
+          data={this.state.commentList}
+          onPressItem={this.addComment}
+        />
 
         </KeyboardAwareScrollView>
 
@@ -476,34 +485,35 @@ export default class DiaryDetail extends Component {
           {this.state.likeComponent}
         </TouchableOpacity>
 
-        <Animated.View
-          style={[
-            styles.input_container,
-            {
-              position: this.state.showKeyboard ? 'absolute' : 'relative',
-              bottom: this.state.inputCommentY,
-              display: this.state.showKeyboard ? 'flex' : 'none'
-            }
-          ]}
+        <KeyboardStickeyBar
+          hide={this.state.hideCommentInput}
+          ctnStyle={styles.input_container}
+          // keyboardWillShow={this.keyboardWillShow}
+          keyboardWillHide={this.keyboardWillHide}
         >
           <TextInput
             ref={ref => this.inputComment = ref}
             style={styles.input_comment}
+            onChangeText={text => this.setState({ commentContent: text })}
             placeholder='写下想对Ta说的吧～'
             placeholderTextColor='#aaa'
             enablesReturnKeyAutomatically={true}
             multiline={true}
             underlineColorAndroid='transparent'
             returnKeyType={'send'}
-            onSubmitEditing={() => this.sendComment()}
+            onSubmitEditing={this.addComment}
           />
-        </Animated.View>
+        </KeyboardStickeyBar>
+
       </Container>
     )
   }
 }
 
 const styles = StyleSheet.create({
+  container: {
+    alignItems: 'flex-start',
+  },
   nav_right: {
     justifyContent: 'center',
     height: getResponsiveWidth(30)
@@ -632,37 +642,19 @@ const styles = StyleSheet.create({
   },
   input_container: {
     width: WIDTH,
-    paddingLeft: getResponsiveWidth(8),
-    paddingRight: getResponsiveWidth(8),
-    paddingTop: getResponsiveWidth(8),
-    paddingBottom: getResponsiveWidth(8),
+    paddingVertical: getResponsiveWidth(8),
+    paddingHorizontal: getResponsiveWidth(8),
     backgroundColor: '#f3f3f3'
   },
   input_comment: {
-    minHeight: getResponsiveWidth(24),
+    minHeight: getResponsiveWidth(30),
     maxHeight: getResponsiveWidth(80),
-    paddingTop: getResponsiveWidth(6),
-    paddingBottom: getResponsiveWidth(6),
-    paddingLeft: getResponsiveWidth(12),
-    paddingRight: getResponsiveWidth(12),
+    paddingVertical: getResponsiveWidth(8),
+    paddingHorizontal: getResponsiveWidth(12),
+    textAlignVertical: 'center',
     color: '#444',
     fontSize: 14,
     borderRadius: 8,
     backgroundColor: '#fff'
   },
-  comment_container: {
-    marginTop: getResponsiveWidth(24),
-    paddingLeft: getResponsiveWidth(24),
-    paddingRight: getResponsiveWidth(24),
-  },
-  text_comment_top: {
-    color: '#444',
-    fontSize: 14,
-    fontWeight: 'bold'
-  },
-  input_mask: {
-    position: 'absolute',
-    bottom: 0,
-    height: 0
-  }
 })
