@@ -16,3 +16,5 @@ export const MONTH_LABELS = {
   10: '11月',
   11: '12月',
 }
+
+export const DAY_LABELS = ['', '周一', '', '周三', '', '周五', '']

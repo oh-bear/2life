@@ -9,7 +9,7 @@ import Svg, {
 } from 'react-native-svg'
 import _ from 'lodash'
 
-import { DAYS_IN_WEEK, MILLISECONDS_IN_ONE_DAY, MONTH_LABELS } from './constants'
+import { DAYS_IN_WEEK, MILLISECONDS_IN_ONE_DAY, MONTH_LABELS, DAY_LABELS } from './constants'
 import { shiftDate, getBeginningTimeForDate, convertToDate } from './dateHelpers'
 
 const SQUARE_SIZE = 12
@@ -243,6 +243,31 @@ export default class CalendarHeatmap extends Component {
     })
   }
 
+  getWeekdayLabelCoordinates(dayIndex) {
+    if (this.props.horizontal) {
+      // FIX: 这里位置计算有问题（x）
+      return [0, (dayIndex + 1) * SQUARE_SIZE + dayIndex * this.props.gutterSize + SQUARE_SIZE + MONTH_LABEL_GUTTER_SIZE]
+    }
+    return [dayIndex * SQUARE_SIZE + dayIndex * this.props.gutterSize, SQUARE_SIZE]
+  }
+
+  renderWeekdayLabels() {
+    if (!this.props.showWeekdayLabels) {
+      return null
+    }
+    return DAY_LABELS.map((weekdayLabel, dayIndex) => {
+      const [x, y] = this.getWeekdayLabelCoordinates(dayIndex)
+      return (dayIndex & 1) ? (
+        <Text 
+          key={`${x}${y}`} 
+          x={x} 
+          y={y}>
+          {weekdayLabel}
+        </Text>
+      ) : null
+    })
+  }
+
   render() {
     return (
       <ScrollView
@@ -259,6 +284,9 @@ export default class CalendarHeatmap extends Component {
           </G>
           <G >
             {this.renderAllWeeks()}
+          </G>
+          <G>
+            {this.renderWeekdayLabels()}
           </G>
         </Svg>
       </ScrollView>
@@ -277,6 +305,7 @@ CalendarHeatmap.ViewPropTypes = {
   gutterSize: PropTypes.number,          // size of space between squares
   horizontal: PropTypes.bool,            // whether to orient horizontally or vertically
   showMonthLabels: PropTypes.bool,       // whether to show month labels
+  showWeekdayLabels: PropTypes.bool,
   showOutOfRangeDays: PropTypes.bool,    // whether to render squares for extra days in week after endDate, and before start date
   tooltipDataAttrs: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),    // data attributes to add to square for setting 3rd party tooltips, e.g. { 'data-toggle': 'tooltip' } for bootstrap tooltips
   titleForValue: PropTypes.func,         // function which returns title text for value
@@ -291,9 +320,8 @@ CalendarHeatmap.defaultProps = {
   gutterSize: 1,
   horizontal: true,
   showMonthLabels: true,
+  showWeekdayLabels: false,
   showOutOfRangeDays: false,
   classForValue: value => (value ? 'black' : '#8cc665'),
   onPress: () => console.log('change onPress prop')
 }
-
-

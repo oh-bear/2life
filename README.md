@@ -13,6 +13,7 @@
 双生日记2.0 鼓励用户书写和记录自己的心情，通过自研的 NLP 多维情感分析算法结合自研大五人格量表分析出用户的情绪状态，并配合专业的心理学知识，生成可视化情绪周期图表，为用户生成定制化的、科学的情绪管理方案。
 
 * 宣传视频：[https://www.bilibili.com/video/av26702790](https://www.bilibili.com/video/av26702790)
+* 文章报导：[走近「双生小日记」，跨国团队，中文探索，让纯粹的日记更治愈](https://mp.weixin.qq.com/s?__biz=MzU2OTUwNDQ5NA==&mid=2247484106&idx=1&sn=01c8f49423e4cf756952ad87f4af2734&chksm=fcfce54bcb8b6c5dae6b27186f4e34a66ba48bf030be680371afc7230385575de6785e76ce97&mpshare=1&scene=1&srcid=091353sMF9mesvG0R0e8DL8n%23rd)
 * App Store 下载地址：[https://itunes.apple.com/cn/app/id1245100877](https://itunes.apple.com/cn/app/id1245100877)
 * Android 版下载地址：
     * [Google Play](https://play.google.com/store/apps/details?id=me.ursb.twolife)
