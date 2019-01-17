@@ -30,7 +30,7 @@ import {
   WIDTH,
   getResponsiveWidth,
 } from '../../common/styles'
-import { getMonth, updateFile, syncFile, getPath } from '../../common/util'
+import { formatDate, updateFile, syncFile, getPath } from '../../common/util'
 import { SCENE_UPDATE_DIARY } from '../../constants/scene'
 
 import HttpUtils from '../../network/HttpUtils'
@@ -390,10 +390,7 @@ export default class DiaryDetail extends Component {
           />
 
           <View style={styles.date_container}>
-            <TextPingFang
-              style={styles.text_date}>{getMonth(new Date(this.props.diary.date).getMonth())} </TextPingFang>
-            <TextPingFang style={styles.text_date}>{new Date(this.props.diary.date).getDate()}，</TextPingFang>
-            <TextPingFang style={styles.text_date}>{new Date(this.props.diary.date).getFullYear()}</TextPingFang>
+            <TextPingFang style={styles.text_date}>{formatDate(this.props.diary.date, 'Z月 dd, yyyy')}</TextPingFang>
           </View>
 
           <TextPingFang style={styles.text_title}>{this.props.diary.title}</TextPingFang>

@@ -19,6 +19,8 @@ import {
 } from '../../common/styles'
 import { SCENE_WEB } from '../../constants/scene'
 
+import { formatDate } from '../../common/util'
+
 import HttpUtils from '../../network/HttpUtils'
 import { USERS } from '../../network/Urls'
 
@@ -30,17 +32,6 @@ export default class NotificationItem extends Component {
 
   state = {
     closeSwiper: false
-  }
-
-  _convertTime = (ts) => {
-    const date = new Date(ts)
-    Y = date.getFullYear() + '-'
-    M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '-'
-    D = (date.getDate() < 10 ? '0' + date.getDate(): date.getDate()) + ' '
-    h = (date.getHours() < 10 ? '0' + date.getHours(): date.getHours()) + ':'
-    m = (date.getMinutes() < 10 ? '0' + date.getMinutes(): date.getMinutes())
-    s = ':' + (date.getSeconds() < 10 ? '0' + date.getSeconds(): date.getSeconds())
-    return Y + M + D + h + m
   }
 
   _jumpWeb() {
@@ -110,7 +101,7 @@ export default class NotificationItem extends Component {
             onPress={() => this._jumpWeb()}
           >
             <TextPingFang style={styles.title}>{this.props.data.title}</TextPingFang>
-            <TextPingFang style={styles.date}>{this._convertTime(this.props.data.date)}</TextPingFang>
+            <TextPingFang style={styles.date}>{formatDate(this.props.data.date, 'yyyy-mm-dd hh:ii')}</TextPingFang>
           </TouchableOpacity>
         </View>
       </Swipeout>

@@ -26,7 +26,7 @@ import {
   getResponsiveWidth,
 } from '../../common/styles'
 import {
-  getMonth,
+  formatDate,
   downloadImg,
   updateFile,
   syncFile
@@ -222,9 +222,7 @@ export default class UpdateDiary extends Component {
           {
             Platform.OS == 'ios' ?
               <View style={styles.date_container}>
-                <TextPingFang style={styles.text_date}>{getMonth(this.state.date.getMonth())} </TextPingFang>
-                <TextPingFang style={styles.text_date}>{this.state.date.getDate()}，</TextPingFang>
-                <TextPingFang style={styles.text_date}>{this.state.date.getFullYear()}</TextPingFang>
+                <TextPingFang style={styles.text_date}>{formatDate(this.state.date, 'Z月 dd, yyyy')}</TextPingFang>
                 <TouchableOpacity
                   style={styles.small_calendar}
                   onPress={this._selectDate.bind(this)}

@@ -33,7 +33,7 @@ import {
   getResponsiveHeight,
   WIDTH
 } from '../../common/styles'
-import { readFile, getFormDay } from '../../common/util'
+import { formatDate, readFile } from '../../common/util'
 import { SCENE_PROFILE_TEST } from '../../constants/scene'
 import HttpUtils from '../../network/HttpUtils'
 import { UTILS } from '../../network/Urls'
@@ -175,10 +175,7 @@ export default class ProfileMode extends Component {
       const mode = Object.values(data)[0]
       const ts = Object.keys(data)[0]
       const date = new Date(parseInt(ts))
-      const y = date.getFullYear()
-      const m = date.getMonth() + 1
-      const d = date.getDate()
-      const dayStr = `${y}.${m}.${d}`
+      const dayStr = formatDate(date, 'yyyy.mm.dd')
 
       if (!sameDayStr) {
         sameDayStr = dayStr
@@ -217,19 +214,15 @@ export default class ProfileMode extends Component {
       const date = new Date(parseInt(ts))
 
       if (type === 'week') {
-        const m = date.getMonth() + 1
-        const d = date.getDate()
-        timeRange.push(`${m}.${d}`)
+        timeRange.push(formatDate(date, 'm.dd'))
       }
 
       if (type === 'month' && (index === 0 || index === Math.floor((modeData.length - 1) / 2) || index === modeData.length - 1)) {
-        const m = date.getMonth() + 1
-        const d = date.getDate()
-        timeRange.push(`${m}.${d}`)
+        timeRange.push(formatDate(date, 'm.dd'))
       }
 
       if (type === 'year') {
-        const m = date.getMonth() + 1 + '月'
+        const m = formatDate(date, 'm月')
 
         if (timeRange.length === 0) timeRange.push(m)
 
@@ -240,10 +233,7 @@ export default class ProfileMode extends Component {
       }
 
       if (type === 'total' && (index === 0 || index === modeData.length - 1)) {
-        const y = date.getFullYear()
-        const m = date.getMonth() + 1
-        const d = date.getDate()
-        timeRange.push(`${y}.${m}.${d}`)
+        timeRange.push(formatDate(date, 'yyyy.mm.dd'))
       }
     })
 
@@ -362,7 +352,7 @@ export default class ProfileMode extends Component {
     ctx.closePath()
 
 
-    const day = getFormDay(Date.now())
+    const day = formatDate(Date.now(), 'yyyy-mm-dd')
 
     ctx.beginPath()
     ctx.font = '10px PingFang'

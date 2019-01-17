@@ -13,9 +13,7 @@ import TextPingFang from '../../components/TextPingFang'
 
 import { getResponsiveWidth } from '../../common/styles'
 import {
-  getDay,
-  getTime,
-  getMonthDay,
+  formatDate,
   getPath
 } from '../../common/util'
 
@@ -66,7 +64,7 @@ class SingleDiary extends Component {
           }
         </View>
         <View style={styles.diary_bottom}>
-          <TextPingFang style={styles.time}>{getTime(diary.date)}</TextPingFang>
+          <TextPingFang style={styles.time}>{formatDate(diary.date, 'hh:ii')}</TextPingFang>
           <View style={styles.location_container}>
             <Image style={styles.location_icon} source={require('../../../res/images/home/icon_location.png')}/>
             <TextPingFang style={styles.text_location}>{diary.location}</TextPingFang>
@@ -85,9 +83,7 @@ export default class Diary extends Component {
   render() {
     let date = ''
     if (this.props.data.length !== 0) {
-      date = this.props.isProfileNote ?
-             getMonthDay(this.props.data[0].date) :
-             getDay(this.props.data[0].date)
+      date = this.props.isProfileNote ? formatDate(this.props.data[0].date, 'dd\nZ月') : formatDate(this.props.data[0].date, 'dd\n周W')
     }
 
     return (

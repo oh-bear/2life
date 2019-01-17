@@ -22,7 +22,7 @@ import Toast from 'antd-mobile/lib/toast'
 import {
   getResponsiveWidth, WIDTH,
 } from '../../common/styles'
-import { updateReduxUser } from '../../common/util'
+import { formatDate, updateReduxUser } from '../../common/util'
 import HttpUtils from '../../network/HttpUtils'
 import { USERS } from '../../network/Urls'
 import { Actions } from 'react-native-router-flux';
@@ -53,10 +53,10 @@ export default class ProfileVip extends Component {
 
   async componentWillMount() {
     const isVip = await Storage.get('isVip', false)
-    //const isVip = true;
+    // const isVip = true;
     if (isVip) {
       const date = new Date(this.props.user.vip_expires)
-      const expiresDate = `${date.getFullYear()} 年 ${date.getMonth() + 1} 月 ${date.getDate()} 日`
+      const expiresDate = formatDate(date, 'yyyy年mm月dd日')
       this.setState({ isVip, expiresDate })
     }
 
@@ -82,7 +82,7 @@ export default class ProfileVip extends Component {
           this.setState({ isVip: true, showVipPopup: true })
           await updateReduxUser(this.props.user.id)
           const date = new Date(expires)
-          const expiresDate = `${date.getFullYear()} 年 ${date.getMonth() + 1} 月 ${date.getDate()} 日`
+          const expiresDate = formatDate(date, 'yyyy年mm月dd日')
           this.setState({ expiresDate })
         }
       })

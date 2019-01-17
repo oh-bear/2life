@@ -27,8 +27,7 @@ import {
 } from '../../common/styles'
 
 import {
-  getMonth,
-  getFormDay,
+  formatDate,
   getLocation,
   getWeather,
   diaryClassify,
@@ -62,7 +61,7 @@ export default class Home extends Component {
 
   state = {
     year: new Date().getFullYear(),
-    month: getMonth(new Date().getMonth()),
+    month: formatDate(new Date(), 'Z月'),
     day: new Date().getDate(),
     showCalendar: false,
     weather_text: '你在的地方一定是晴天吧',
@@ -246,7 +245,7 @@ export default class Home extends Component {
     const otherGirl = { key: 'otherGirl', color: '#F83AC1' }
 
     diaryList.forEach(dayDiary => {
-      markedDates[getFormDay(dayDiary[0].date)] = { dots: [] }
+      markedDates[formatDate(dayDiary[0].date, 'yyyy-mm-dd')] = { dots: [] }
       let hasBoyDiary = false
       let hasGirlDiary = false
       let hasOtherBoyDiary = false
@@ -267,10 +266,10 @@ export default class Home extends Component {
         }
       })
 
-      if (hasBoyDiary) markedDates[getFormDay(dayDiary[0].date)].dots.push(boy)
-      if (hasGirlDiary) markedDates[getFormDay(dayDiary[0].date)].dots.push(girl)
-      if (hasOtherBoyDiary) markedDates[getFormDay(dayDiary[0].date)].dots.push(otherBoy)
-      if (hasOtherGirlDiary) markedDates[getFormDay(dayDiary[0].date)].dots.push(otherGirl)
+      if (hasBoyDiary) markedDates[formatDate(dayDiary[0].date, 'yyyy-mm-dd')].dots.push(boy)
+      if (hasGirlDiary) markedDates[formatDate(dayDiary[0].date, 'yyyy-mm-dd')].dots.push(girl)
+      if (hasOtherBoyDiary) markedDates[formatDate(dayDiary[0].date, 'yyyy-mm-dd')].dots.push(otherBoy)
+      if (hasOtherGirlDiary) markedDates[formatDate(dayDiary[0].date, 'yyyy-mm-dd')].dots.push(otherGirl)
     })
 
     this.setState({
@@ -346,11 +345,11 @@ export default class Home extends Component {
     this.setState({ filterDiaryList })
   }
 
-  async setDate(months) {
+  async setDate(dates) {
     await 0
     this.setState({
-      month: getMonth(months[0].month - 1),
-      year: months[0].year
+      month: formatDate(dates[0].timestamp, 'Z月'),
+      year: dates[0].year
     })
   }
 
@@ -576,7 +575,7 @@ export default class Home extends Component {
             }}
             maxDate={new Date()}
             onDayPress={day => this.onDayPress(day)}
-            onVisibleMonthsChange={months => this.setDate(months)}
+            onVisibleMonthsChange={dates => this.setDate(dates)}
             markedDates={this.state.markedDates}
             markingType={'multi-dot'}
           />

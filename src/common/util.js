@@ -44,12 +44,15 @@ export function formatDate(date, formatStr) {
   }
 
   //格式化时间
-  var arrWeek = ['日', '一', '二', '三', '四', '五', '六'],
-    str = formatStr
+  const WEEK_ZH = ['日', '一', '二', '三', '四', '五', '六']
+  const MONTH_ZH = ['一', '二', '三', '四', '五', '六', '七', '八', '九', '十', '十一', '十二']
+
+  let str = formatStr
       .replace(/yyyy|YYYY/, date.getFullYear())
       .replace(/yy|YY/, $addZero(date.getFullYear() % 100, 2))
       .replace(/mm|MM/, $addZero(date.getMonth() + 1, 2))
       .replace(/m|M/g, date.getMonth() + 1)
+      .replace(/Z/g, MONTH_ZH[date.getMonth()])
       .replace(/dd|DD/, $addZero(date.getDate(), 2))
       .replace(/d|D/g, date.getDate())
       .replace(/hh|HH/, $addZero(date.getHours(), 2))
@@ -59,119 +62,8 @@ export function formatDate(date, formatStr) {
       .replace(/ss|SS/, $addZero(date.getSeconds(), 2))
       .replace(/s|S/g, date.getSeconds())
       .replace(/w/g, date.getDay())
-      .replace(/W/g, arrWeek[date.getDay()]);
+      .replace(/W/g, WEEK_ZH[date.getDay()])
   return str;
-}
-
-/**
- * 返回 yyyy-mm-dd
- * @param {Number} timestamp 时间戳
- */
-export function getFormDay(timestamp) {
-  return formatDate(timestamp, 'yyyy-mm-dd')
-}
-
-/**
- * 获取中文月份
- * @param {Number} month
- * @returns {String}
- */
-export function getMonth(month) {
-  let chinese_month = ''
-  switch (month) {
-    case 0:
-      chinese_month = '一月'
-      break
-    case 1:
-      chinese_month = '二月'
-      break
-    case 2:
-      chinese_month = '三月'
-      break
-    case 3:
-      chinese_month = '四月'
-      break
-    case 4:
-      chinese_month = '五月'
-      break
-    case 5:
-      chinese_month = '六月'
-      break
-    case 6:
-      chinese_month = '七月'
-      break
-    case 7:
-      chinese_month = '八月'
-      break
-    case 8:
-      chinese_month = '九月'
-      break
-    case 9:
-      chinese_month = '十月'
-      break
-    case 10:
-      chinese_month = '十一月'
-      break
-    case 11:
-      chinese_month = '十二月'
-      break
-  }
-  return chinese_month
-}
-
-/**
- * 获取几号,周几
- * @param {Number} timestamp
- */
-export function getDay(timestamp) {
-  const date = new Date(timestamp)
-  const day = date.getDate() < 10 ? `0${date.getDate()}` : date.getDate()
-  const weekDay = date.getDay()
-  let EngWeekDay = ''
-  switch (weekDay) {
-    case 0:
-      EngWeekDay = '周日'
-      break
-    case 1:
-      EngWeekDay = '周一'
-      break
-    case 2:
-      EngWeekDay = '周二'
-      break
-    case 3:
-      EngWeekDay = '周三'
-      break
-    case 4:
-      EngWeekDay = '周四'
-      break
-    case 5:
-      EngWeekDay = '周五'
-      break
-    case 6:
-      EngWeekDay = '周六'
-      break
-  }
-  return `${day}\n${EngWeekDay}`
-}
-
-/**
- * 获取几号,几月
- * @param {Number} timestamp
- */
-export function getMonthDay(timestamp) {
-  const date = new Date(timestamp)
-  const day = date.getDate() < 10 ? `0${date.getDate()}` : date.getDate()
-  const chinese_month = getMonth(date.getMonth())
-  return `${day}\n${chinese_month}`
-}
-
-/**
- * 获取 hh:ii
- * @param {Number} timestamp
- * @returns {String} // hh:ii
- */
-export function getTime(timestamp) {
-  return formatDate(timestamp, 'hh:ii')
 }
 
 /**
@@ -181,7 +73,7 @@ export function getTime(timestamp) {
  */
 export function diaryClassify(arr) {
   let oldArr = arr.map(dairy => {
-    dairy.formDate = getFormDay(dairy.date)
+    dairy.formDate = formatDate(dairy.date, 'yyyy-mm-dd')
     return dairy
   })
 
