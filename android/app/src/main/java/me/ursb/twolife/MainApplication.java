@@ -4,6 +4,22 @@ import android.app.Application;
 
 
 import com.facebook.react.ReactApplication;
+import com.RNFetchBlob.RNFetchBlobPackage;
+import com.theweflex.react.WeChatPackage;
+import fr.greweb.reactnativeviewshot.RNViewShotPackage;
+import com.oblador.vectoricons.VectorIconsPackage;
+import com.tradle.react.UdpSocketsModule;
+import com.rnfingerprint.FingerprintAuthPackage;
+import com.peel.react.TcpSocketsModule;
+import com.horcrux.svg.SvgPackage;
+import org.devio.rn.splashscreen.SplashScreenReactPackage;
+import com.bitgo.randombytes.RandomBytesPackage;
+import com.peel.react.rnos.RNOSModule;
+import com.BV.LinearGradient.LinearGradientPackage;
+import com.imagepicker.ImagePickerPackage;
+import com.dooboolab.RNIap.RNIapPackage;
+import com.rnfs.RNFSPackage;
+import cn.jpush.reactnativejpush.JPushPackage;
 import com.horcrux.svg.SvgPackage;
 import com.rnfs.RNFSPackage;
 import fr.greweb.reactnativeviewshot.RNViewShotPackage;
@@ -42,6 +58,22 @@ public class MainApplication extends Application implements ReactApplication {
         @Override
         protected List<ReactPackage> getPackages() {
             return Arrays.<ReactPackage>asList(new MainReactPackage(),
+            new RNFetchBlobPackage(),
+            new WeChatPackage(),
+            new RNViewShotPackage(),
+            new VectorIconsPackage(),
+            new UdpSocketsModule(),
+            new FingerprintAuthPackage(),
+            new TcpSocketsModule(),
+            new SvgPackage(),
+            new SplashScreenReactPackage(),
+            new RandomBytesPackage(),
+            new RNOSModule(),
+            new LinearGradientPackage(),
+            new ImagePickerPackage(),
+            new RNIapPackage(),
+            new RNFSPackage(),
+            new JPushPackage(!BuildConfig.DEBUG, !BuildConfig.DEBUG),
             new SvgPackage(),
             new RNFSPackage(),
             new RNViewShotPackage(),
