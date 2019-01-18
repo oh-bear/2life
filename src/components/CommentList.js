@@ -58,7 +58,7 @@ export default class CommentList extends Component {
   renderHeader = () => {
     return (
       <View style={styles.header_container}>
-        <TextPingFang style={styles.text_header}>日记评论</TextPingFang>
+        <TextPingFang style={styles.text_header}>日记留言</TextPingFang>
       </View>
     )
   }
@@ -66,7 +66,7 @@ export default class CommentList extends Component {
   renderEmpty = () => {
     return (
       <View style={styles.empty_container}>
-        <TextPingFang style={styles.text_empty}>还没有人评论~</TextPingFang>
+        <TextPingFang style={styles.text_empty}>还没有人留言~</TextPingFang>
       </View>
     )
   }
