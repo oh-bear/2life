@@ -8,6 +8,7 @@ import {
   AppState
 } from 'react-native'
 import Home from './home/Home'
+import Hole from './hole/Hole'
 import ProfileMode from './profile/ProfileMode'
 import Profile from './profile/Profile'
 import TabNavigator from 'react-native-tab-navigator'
@@ -163,6 +164,12 @@ export default class Index extends Component {
       ),
       selected: <Image source={require('../../res/images/tab/icon_home_active.png')}/>
     },
+    hole: {
+      default: (
+        <Image source={require('../../res/images/tab/icon_hole_inactive.png')}/>
+      ),
+      selected: <Image source={require('../../res/images/tab/icon_hole_active.png')}/>
+    },
     mode: {
       default: (
         <Image source={require('../../res/images/tab/icon_tab_bar_mood_analysisinactive.png')}/>
@@ -193,6 +200,17 @@ export default class Index extends Component {
             onPress={() => this.setState({ selectedTab: 'home' })}
           >
             <Home />
+          </TabNavigator.Item>
+          <TabNavigator.Item
+            selected={this.state.selectedTab === 'hole'}
+            title='树洞'
+            titleStyle={styles.text_title}
+            selectedTitleStyle={styles.text_title_selected}
+            renderIcon={() => this.icons.hole.default}
+            renderSelectedIcon={() => this.icons.hole.selected}
+            onPress={() => this.setState({ selectedTab: 'hole' })}
+          >
+            <Hole />
           </TabNavigator.Item>
           <TabNavigator.Item
             selected={this.state.selectedTab === 'mode'}

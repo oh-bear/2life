@@ -24,13 +24,29 @@ export function getResponsiveHeight(height) {
 
 /**
  * 获取响应式宽度
- *
  * @export
  * @param {number} width
  * @returns
  */
 export function getResponsiveWidth(width) {
   return width / iPhone6Width * WIDTH
+}
+
+/**
+ * 获取字体设置
+ * @param {String} color 颜色
+ * @param {Number} size 字体大小
+ * @param {String} family 字体
+ * @param {String} weight 字重
+ * @returns {Object}
+ */
+export function font(color, size, weight, family) {
+  return {
+    color: color || '#fff',
+    fontSize: size || 16,
+    fontWeight: weight || '400',
+    fontFamily: family || 'PingFang SC',
+  }
 }
 
 export const Colors = {
