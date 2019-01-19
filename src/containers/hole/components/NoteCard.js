@@ -2,10 +2,14 @@ import React, { Component } from 'react'
 import {
   StyleSheet,
   Image,
-  Text
+  Text,
+  TouchableOpacity
 } from 'react-native'
 import { View } from 'react-native-animatable'
 import PropTypes from 'prop-types'
+import { Actions } from 'react-native-router-flux'
+
+import { SCENE_DIARY_DETAIL } from '../../../constants/scene'
 
 import {
   WIDTH,
@@ -29,18 +33,22 @@ export default class NoteCard extends Component {
 
   render() {
     const { diary } = this.props
+    const name = diary.user.emotions_type && diary.user.emotions_type || '匿名'
     return (
-      <View style={styles.ctn}>
+      <TouchableOpacity
+        style={styles.ctn}
+        onPress={() => Actions.jump(SCENE_DIARY_DETAIL, { diary, from: 'hole' })}
+      >
         <Text style={styles.text_title}>{diary.title}</Text>
         <Text style={styles.text_content} numberOfLines={2}>{diary.content}</Text>
         <View style={styles.bottom_ctn}>
           <View style={styles.bottm_left_ctn}>
-            <Image style={styles.img_face} source={{uri: diary.user.face}} />
-            <Text style={styles.text_name}>{diary.user.name}</Text>
+            <Image style={styles.img_face} source={{uri: !diary.user.sex && 'https://airing.ursb.me/image/twolife/male.png' || 'https://airing.ursb.me/image/twolife/female.png' }} />
+            <Text style={styles.text_name}>{name + ' ' + diary.user.code.toString().substr(diary.user.code.toString().length - 4, 4)}</Text>
           </View>
           {this.getModeImg(diary.mode)}
         </View>
-      </View>
+      </TouchableOpacity>
     )
   }
 }

@@ -94,7 +94,7 @@ const styles = StyleSheet.create({
   text_header_title: {
     ...font('#fff', 34, '500'),
   },
-  rule_ctn:  {
+  rule_ctn: {
     justifyContent: 'center',
   },
   rule_inner_ctn: {

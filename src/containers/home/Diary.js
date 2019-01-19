@@ -46,7 +46,7 @@ class SingleDiary extends Component {
     return (
       <TouchableOpacity
         style={styles.diary_container}
-        onPress={() => Actions.jump(SCENE_DIARY_DETAIL, { diary: this.props.diary })}
+        onPress={() => Actions.jump(SCENE_DIARY_DETAIL, { diary: this.props.diary, from: 'home' })}
       >
         <View style={styles.diary_top}>
           <View style={styles.diary_top_text}>
@@ -122,7 +122,7 @@ const styles = StyleSheet.create({
     flex: 1
   },
   diary_container: {
-    display:'flex',
+    display: 'flex',
     paddingTop: getResponsiveWidth(16),
     paddingBottom: getResponsiveWidth(16),
     justifyContent: 'space-between',
