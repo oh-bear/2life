@@ -73,7 +73,8 @@ export default class NewDiary extends Component {
     leftButton: null,
     rightButton: null,
     datePickerY: new Animated.Value(-220),
-    showDatePicker: false
+    showDatePicker: false,
+    isPushToHole: false,
   }
 
   componentWillMount() {
@@ -169,6 +170,7 @@ export default class NewDiary extends Component {
           date: date.getTime(),
           user_id: this.props.user.id || 0,
           status: this.props.user.status || null,
+          hole_alive: this.state.isPushToHole ? Date.now() + 48 * 3600000 : -1,
           op: 1
         }
       })
@@ -329,12 +331,26 @@ export default class NewDiary extends Component {
           {
             Platform.OS == 'ios' ?
               <View style={styles.date_container}>
-                <TextPingFang style={styles.text_date}>{formatDate(this.state.date, 'Z月 dd, yyyy')}</TextPingFang>
+                <View style={styles.date_left_ctn}>
+                  <TextPingFang style={styles.text_date}>{formatDate(this.state.date, 'Z月 dd, yyyy')}</TextPingFang>
+                  <TouchableOpacity
+                    style={styles.small_calendar}
+                    onPress={this._selectDate.bind(this)}
+                  >
+                    <Image source={require('../../../res/images/home/diary/icon_calendar_small.png')}/>
+                  </TouchableOpacity>
+                </View>
                 <TouchableOpacity
-                  style={styles.small_calendar}
-                  onPress={this._selectDate.bind(this)}
+                  style={styles.date_right_ctn}
+                  onPress={() => this.setState({ isPushToHole: !this.state.isPushToHole })}
+                  activeOpacity={1}
                 >
-                  <Image source={require('../../../res/images/home/diary/icon_calendar_small.png')}/>
+                  <TextPingFang style={styles.text_date_right}>同时发布到树洞板块</TextPingFang>
+                  {
+                    this.state.isPushToHole ?
+                    <Image source={require('../../../res/images/home/diary/icon_active.png')}/> :
+                    <Image source={require('../../../res/images/home/diary/icon_inactive.png')}/>
+                  }
                 </TouchableOpacity>
               </View>
               : <View style={styles.date_container}>
@@ -425,10 +441,24 @@ const styles = StyleSheet.create({
   date_container: {
     width: WIDTH,
     flexDirection: 'row',
+    justifyContent: 'space-between',
     alignItems: 'center',
-    paddingLeft: getResponsiveWidth(24),
+    paddingHorizontal: getResponsiveWidth(24),
     marginTop: getResponsiveWidth(24),
     marginBottom: getResponsiveWidth(24),
+  },
+  date_left_ctn: {
+    flexDirection: 'row',
+    alignItems: 'center'
+  },
+  date_right_ctn: {
+    flexDirection: 'row',
+    alignItems: 'center'
+  },
+  text_date_right: {
+    color: '#aaa',
+    fontSize: 12,
+    marginRight: getResponsiveWidth(6)
   },
   scroll_style: {
     // height: HEIGHT,

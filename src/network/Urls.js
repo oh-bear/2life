@@ -36,6 +36,7 @@ export const NOTES = {
   add_comment: '/notes/add_comment', // post { note_id, user_id, content, owner_id }
   show_comment: '/notes/show_comment', // get { note_id, owner_id }
   delete_comment: '/notes/delete_comment', //
+  show_holes: '/notes/show_holes', // get
 }
 
 export const MODES = {
