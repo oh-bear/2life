@@ -484,7 +484,7 @@ export default class DiaryDetail extends Component {
           </View>
 
           <TouchableOpacity
-            style={[styles.mode_container, {display: this.props.diary.user_id === this.props.user.user_other_id ? 'flex' : 'none'}]}
+            style={[styles.mode_container, {display: this.props.diary.user_id === this.props.user.user_other_id || from === 'hole' ? 'flex' : 'none'}]}
             activeOpacity={1}
             onPress={this.keyboardWillShow}
           >
