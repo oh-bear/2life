@@ -18,6 +18,7 @@ import { Actions } from 'react-native-router-flux'
 import ImageViewer from 'react-native-image-zoom-viewer'
 import { ifIphoneX } from 'react-native-iphone-x-helper'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import Toast from 'antd-mobile/lib/toast'
 
 import Container from '../../components/Container'
 import TextPingFang from '../../components/TextPingFang'
@@ -67,20 +68,25 @@ export default class DiaryDetail extends Component {
   }
 
   async componentWillMount() {
-    const { diary } = this.props
+    const { diary, from } = this.props
 
-    if (diary.imgPathList.length) {
+    if (diary.imgPathList) {
       this.setState({
-        imgPathList: diary.imgPathList,
-        showBanner: true
+        imgPathList: diary.imgPathList.map(path => getPath(path)),
+        showBanner: !!diary.imgPathList.length
       }, () => {
         this._renderLeftButton()
         this._renderRightButton()
       })
-    } else {
-      this.setState({ showBanner: false }, () => {
+    } 
+
+    if (from === 'hole') {
+      this.setState({
+        imgPathList: diary.images.split(','),
+        showBanner: !!diary.images
+      }, () => {
         this._renderLeftButton()
-        this._renderRightButton()
+        this._renderHoleRightButton()
       })
     }
 
@@ -165,6 +171,19 @@ export default class DiaryDetail extends Component {
         )
       }
       if (index === 3) return
+    })
+  }
+
+  showHoleOptions() {
+    const options = {
+      options: ['举报该不适当内容', '取消'],
+      cancelButtonIndex: 1,
+    }
+    ActionSheetIOS.showActionSheetWithOptions(options, index => {
+      if (index === 0) {
+        HttpUtils.get(NOTES.report_hole, { note_id: this.props.diary.id })
+        Toast.info('将会对内容进行核查，感谢您的反馈', 1.5)
+      }
     })
   }
 
@@ -325,7 +344,7 @@ export default class DiaryDetail extends Component {
   }
 
   _renderLeftButton() {
-    let source = this.state.imgPathList.length ?
+    let source = this.props.diary.images ?
       require('../../../res/images/common/icon_back_white.png') :
       require('../../../res/images/common/icon_back_black.png')
 
@@ -344,7 +363,6 @@ export default class DiaryDetail extends Component {
       let source = this.state.imgPathList.length ?
         require('../../../res/images/common/icon_more_white.png') :
         require('../../../res/images/common/icon_more_black.png')
-
       const rightButton = (
         <TouchableOpacity
           style={styles.nav_right}
@@ -361,6 +379,29 @@ export default class DiaryDetail extends Component {
       )
       this.setState({ rightButton })
     }
+  }
+
+  
+  _renderHoleRightButton() {
+    const { diary } = this.props
+    let source = diary.images ?
+      require('../../../res/images/common/icon_more_white.png') :
+      require('../../../res/images/common/icon_more_black.png')
+    const rightButton = (
+      <TouchableOpacity
+        style={styles.nav_right}
+        onPress={() => {
+          if (Platform.OS === 'android') {
+            this.showActionSheet()
+          } else {
+            this.showHoleOptions()
+          }
+        }}
+      >
+        <Image source={source} />
+      </TouchableOpacity>
+    )
+    this.setState({ rightButton })
   }
 
   render() {
@@ -385,7 +426,7 @@ export default class DiaryDetail extends Component {
             showBanner={this.state.showBanner}
             imgPathList={this.state.imgPathList}
             leftButton={this.state.leftButton}
-            rightButton={from === 'home' ? this.state.rightButton : null}
+            rightButton={this.state.rightButton}
             onTouchStart={() => this.setState({ touchStartTs: Date.now() })}
             onTouchEnd={() => {
               if (Date.now() - this.state.touchStartTs < 80) {
@@ -484,7 +525,7 @@ export default class DiaryDetail extends Component {
           </View>
 
           <TouchableOpacity
-            style={[styles.mode_container, {display: this.props.diary.user_id === this.props.user.user_other_id || from === 'hole' ? 'flex' : 'none'}]}
+            style={[styles.mode_container]}
             activeOpacity={1}
             onPress={this.keyboardWillShow}
           >

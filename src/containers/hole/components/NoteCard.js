@@ -39,8 +39,13 @@ export default class NoteCard extends Component {
         style={styles.ctn}
         onPress={() => Actions.jump(SCENE_DIARY_DETAIL, { diary, from: 'hole' })}
       >
-        <Text style={styles.text_title}>{diary.title}</Text>
-        <Text style={styles.text_content} numberOfLines={2}>{diary.content}</Text>
+        <View style={styles.content_ctn}>
+          <View style={styles.content_left_ctn}>
+            <Text style={styles.text_title}>{diary.title}</Text>
+            <Text style={styles.text_content} numberOfLines={2}>{diary.content}</Text>
+          </View>
+          <Image style={styles.img_content_right} source={{uri: diary.images.split(',')[0] || ''}} />
+        </View>
         <View style={styles.bottom_ctn}>
           <View style={styles.bottm_left_ctn}>
             <Image style={styles.img_face} source={{uri: !diary.user.sex && 'https://airing.ursb.me/image/twolife/male.png' || 'https://airing.ursb.me/image/twolife/female.png' }} />
@@ -60,7 +65,20 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     paddingHorizontal: getWidth(24),
     paddingVertical: getWidth(24),
+    marginTop: getWidth(18),
     borderRadius: getWidth(8)
+  },
+  content_ctn: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  content_left_ctn: {
+    flex: 1,
+  },
+  img_content_right: {
+    width: getWidth(72),
+    height: getWidth(72),
+    borderRadius: getWidth(12)
   },
   text_title: {
     ...font('#333', 16)

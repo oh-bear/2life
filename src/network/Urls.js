@@ -37,6 +37,7 @@ export const NOTES = {
   show_comment: '/notes/show_comment', // get { note_id, owner_id }
   delete_comment: '/notes/delete_comment', //
   show_holes: '/notes/show_holes', // get
+  report_hole: '/notes/report_hole', // get { note_id }
 }
 
 export const MODES = {

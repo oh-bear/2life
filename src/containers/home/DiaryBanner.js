@@ -87,7 +87,7 @@ export default class DiaryBanner extends Component {
             style={styles.img_container}
             key={index}
           >
-            <Image style={styles.img} resizeMode='cover' source={{ uri: getPath(path) }}/>
+            <Image style={styles.img} resizeMode='cover' source={{ uri: path }}/>
             <View style={styles.mask}></View>
           </View>
         )
