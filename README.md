@@ -28,7 +28,7 @@
 
 ## Screenshots
 
-![](http://airing.ursb.me/image/2life/2life-max.jpg)
+![](http://airing.ursb.me/image/2life/2life221.jpg)
 
 
 ## Contributing
