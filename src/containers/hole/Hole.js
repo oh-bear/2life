@@ -53,7 +53,6 @@ export default class Hole extends Component {
       const params = {
         pageIndex,
         pageSize,
-        version: '2.2.2'
       }
       const res = await HttpUtils.get(NOTES.show_holes, params)
       if (res.code === 0) {
