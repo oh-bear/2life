@@ -137,5 +137,6 @@ const styles = StyleSheet.create({
   flatlist: {
     width: '100%',
     marginTop: getWidth(18),
+    marginBottom: getWidth(20),
   }
 })
