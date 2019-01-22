@@ -44,7 +44,11 @@ export default class NoteCard extends Component {
             <Text style={styles.text_title}>{diary.title}</Text>
             <Text style={styles.text_content} numberOfLines={2}>{diary.content}</Text>
           </View>
-          <Image style={styles.img_content_right} source={{uri: diary.images.split(',')[0] || ''}} />
+          {
+            diary.images ?
+            <Image style={styles.img_content_right} source={{uri: diary.images.split(',')[0]}} /> :
+            null
+          }
         </View>
         <View style={styles.bottom_ctn}>
           <View style={styles.bottm_left_ctn}>

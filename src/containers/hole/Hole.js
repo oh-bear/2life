@@ -27,17 +27,43 @@ export default class Hole extends Component {
 
   state = {
     holeList: [],
+    pageSize: 10,
+    pageIndex: 0,  // 下一次请求的页数
+    isLast: false, // 是否为最后一页
     showModalTip: false,
+    isHoleRefreshing: false
   }
 
-  async componentDidMount() {
-    this.getHoleList()
+  componentDidMount() {
+    this.refreshHoleList()
+  }
+
+  refreshHoleList = () => {
+    this.setState({
+      holeList: [],
+      pageIndex: 0,
+      isHoleRefreshing: true,
+      isLast: false
+    }, () => this.getHoleList())
   }
 
   getHoleList = async () => {
-    const res = await HttpUtils.get(NOTES.show_holes)
-    if (res.code === 0) {
-      this.setState({ holeList: res.data })
+    const { holeList, pageIndex, pageSize, isLast } = this.state
+    if (!isLast) {
+      const params = {
+        pageIndex,
+        pageSize,
+        version: '2.2.2'
+      }
+      const res = await HttpUtils.get(NOTES.show_holes, params)
+      if (res.code === 0) {
+        this.setState({
+          holeList: [...holeList, ...res.data],
+          pageIndex: pageIndex + 1,
+          isHoleRefreshing: false,
+          isLast: res.data.length !== pageSize
+        })
+      }
     }
   }
 
@@ -62,6 +88,9 @@ export default class Hole extends Component {
           data={this.state.holeList}
           renderItem={this.renderItem}
           keyExtractor={(item) => item.id.toString()}
+          refreshing={this.state.isHoleRefreshing}
+          onRefresh={this.refreshHoleList}
+          onEndReached={this.getHoleList}
         />
 
         <ModalTip
@@ -108,6 +137,6 @@ const styles = StyleSheet.create({
   },
   flatlist: {
     width: '100%',
-    marginTop: getWidth(18)
+    marginTop: getWidth(18),
   }
 })
