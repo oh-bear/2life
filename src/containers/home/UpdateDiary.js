@@ -45,7 +45,7 @@ export default class UpdateDiary extends Component {
   state = {
     date: new Date(),
     title: '',
-    title_2: '', //解决TextInput 无法输入中文
+    title_2: '', // 解决 TextInput 无法输入中文
     content: '',
     content_2: '',
     showPopup: false,
@@ -58,7 +58,7 @@ export default class UpdateDiary extends Component {
   }
 
   componentWillMount() {
-    BackHandler.addEventListener('hardwareBackPress', this.onBackAndroid);
+    BackHandler.addEventListener('hardwareBackPress', this.onBackAndroid)
     const diary = this.props.diary
     this.setState({
       date: new Date(diary.date),
@@ -72,13 +72,13 @@ export default class UpdateDiary extends Component {
   }
   onBackAndroid = () => {
     this.saveDiary()
-    return true;
+    return true
   };
 
 
   componentWillUnmount() {
     this.saveDiary()
-    BackHandler.removeEventListener('hardwareBackPress', this.onBackAndroid);
+    BackHandler.removeEventListener('hardwareBackPress', this.onBackAndroid)
   }
 
 

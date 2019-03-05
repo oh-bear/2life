@@ -36,34 +36,33 @@ export function formatDate(date, formatStr) {
   if (!date) return ''
   date = new Date(date)
   function $addZero(v, size) {
-    for (var i = 0, len = size - (v + "").length; i < len; i++) {
-      v = "0" + v;
+    for (let i = 0, len = size - (v + '').length; i < len; i++) {
+      v = '0' + v
     }
-    ;
-    return v + "";
+    return v + ''
   }
 
-  //格式化时间
+  // 格式化时间
   const WEEK_ZH = ['日', '一', '二', '三', '四', '五', '六']
   const MONTH_ZH = ['一', '二', '三', '四', '五', '六', '七', '八', '九', '十', '十一', '十二']
 
   let str = formatStr
-      .replace(/yyyy|YYYY/, date.getFullYear())
-      .replace(/yy|YY/, $addZero(date.getFullYear() % 100, 2))
-      .replace(/mm|MM/, $addZero(date.getMonth() + 1, 2))
-      .replace(/m|M/g, date.getMonth() + 1)
-      .replace(/Z/g, MONTH_ZH[date.getMonth()])
-      .replace(/dd|DD/, $addZero(date.getDate(), 2))
-      .replace(/d|D/g, date.getDate())
-      .replace(/hh|HH/, $addZero(date.getHours(), 2))
-      .replace(/h|H/g, date.getHours())
-      .replace(/ii|II/, $addZero(date.getMinutes(), 2))
-      .replace(/i|I/g, date.getMinutes())
-      .replace(/ss|SS/, $addZero(date.getSeconds(), 2))
-      .replace(/s|S/g, date.getSeconds())
-      .replace(/w/g, date.getDay())
-      .replace(/W/g, WEEK_ZH[date.getDay()])
-  return str;
+    .replace(/yyyy|YYYY/, date.getFullYear())
+    .replace(/yy|YY/, $addZero(date.getFullYear() % 100, 2))
+    .replace(/mm|MM/, $addZero(date.getMonth() + 1, 2))
+    .replace(/m|M/g, date.getMonth() + 1)
+    .replace(/Z/g, MONTH_ZH[date.getMonth()])
+    .replace(/dd|DD/, $addZero(date.getDate(), 2))
+    .replace(/d|D/g, date.getDate())
+    .replace(/hh|HH/, $addZero(date.getHours(), 2))
+    .replace(/h|H/g, date.getHours())
+    .replace(/ii|II/, $addZero(date.getMinutes(), 2))
+    .replace(/i|I/g, date.getMinutes())
+    .replace(/ss|SS/, $addZero(date.getSeconds(), 2))
+    .replace(/s|S/g, date.getSeconds())
+    .replace(/w/g, date.getDay())
+    .replace(/W/g, WEEK_ZH[date.getDay()])
+  return str
 }
 
 /**
@@ -252,10 +251,8 @@ export async function postImgToQiniu(uriList, obj, shouldUseGetPath = true) {
   let imgUrls = []
   for (let i = 0; i < qiniuPromises.length; i++) {
     const res = await qiniuPromises[i]
-    //alert(JSON.stringify(res))
     if (res.status === 200) {
       const body = JSON.parse(res._bodyText)
-      //alert(body.key)
       imgUrls.push(BASE_IMG_URL + body.key)
     }
   }
@@ -535,7 +532,7 @@ export async function syncFile(user_id) {
       return diary.user_id === user_id && (diary.op === 1 || diary.op === 2)
     })
 
-    // 上传图片
+    // FIXME: 上传图片，此配置仅适用于 v2.3.0 之前的版本
     for (let diary of diaryListAddUpdate) {
       const images = await postImgToQiniu(diary.imgPathList, {
         user_id: user_id,

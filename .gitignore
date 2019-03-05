@@ -75,3 +75,4 @@ android/app/app.iml
 .idea/
 .DS_Store
 package-lock.json
+src/.DS_Store

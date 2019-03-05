@@ -13,7 +13,9 @@ import ResetPsw from './containers/login/ResetPsw'
 
 // home
 import NewDiary from './containers/home/NewDiary'
+import NewRichDiary from './containers/home/NewRichDiary'
 import DiaryDetail from './containers/home/DiaryDetail'
+import RichDiaryDetail from './containers/home/RichDiaryDetail'
 import UpdateDiary from './containers/home/UpdateDiary'
 
 import Web from './containers/notification/Web'
@@ -127,7 +129,7 @@ export default class AppRouter extends Component {
             />
             <Scene
               key={scenes.SCENE_NEW_DIARY}
-              component={NewDiary}
+              component={NewRichDiary}
               title='新建日记'
               hideNavBar
               duration={0}
@@ -135,6 +137,13 @@ export default class AppRouter extends Component {
             <Scene
               key={scenes.SCENE_DIARY_DETAIL}
               component={DiaryDetail}
+              title='日记详情'
+              hideNavBar
+              duration={0}
+            />
+            <Scene
+              key={scenes.SCENE_RICH_DIARY_DETAIL}
+              component={RichDiaryDetail}
               title='日记详情'
               hideNavBar
               duration={0}

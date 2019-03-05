@@ -1,3 +1,4 @@
+
 import React, { Component } from 'react'
 import {
   View,
@@ -53,7 +54,7 @@ function mapStateToProps(state) {
 }
 
 @connect(mapStateToProps)
-export default class NewDiary extends Component {
+export default class NewDiary1 extends Component {
 
   state = {
     date: new Date(),
@@ -348,8 +349,8 @@ export default class NewDiary extends Component {
                   <TextPingFang style={styles.text_date_right}>同时发布到树洞板块</TextPingFang>
                   {
                     this.state.isPushToHole ?
-                    <Image source={require('../../../res/images/home/diary/icon_active.png')}/> :
-                    <Image source={require('../../../res/images/home/diary/icon_inactive.png')}/>
+                      <Image source={require('../../../res/images/home/diary/icon_active.png')}/> :
+                      <Image source={require('../../../res/images/home/diary/icon_inactive.png')}/>
                   }
                 </TouchableOpacity>
               </View>

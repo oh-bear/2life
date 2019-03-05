@@ -17,7 +17,7 @@ import {
   getPath
 } from '../../common/util'
 
-import { SCENE_DIARY_DETAIL } from '../../constants/scene'
+import { SCENE_DIARY_DETAIL, SCENE_RICH_DIARY_DETAIL } from '../../constants/scene'
 
 function mapStateToProps(state) {
   return {
@@ -46,7 +46,13 @@ class SingleDiary extends Component {
     return (
       <TouchableOpacity
         style={styles.diary_container}
-        onPress={() => Actions.jump(SCENE_DIARY_DETAIL, { diary: this.props.diary, from: 'home' })}
+        onPress={() => {
+          if (diary.v && diary.v >= 230) {
+            Actions.jump(SCENE_RICH_DIARY_DETAIL, { diary: this.props.diary, from: 'home' })
+          } else {
+            Actions.jump(SCENE_DIARY_DETAIL, { diary: this.props.diary, from: 'home' })
+          }
+        }}
       >
         <View style={styles.diary_top}>
           <View style={styles.diary_top_text}>
@@ -55,7 +61,7 @@ class SingleDiary extends Component {
           </View>
           {
             (() => {
-              if (diary.imgPathList.length) {
+              if (diary.imgPathList && diary.imgPathList.length) {
                 return (
                   <Image style={styles.img_diary} source={{uri: getPath(diary.imgPathList[0])}} />
                 )
@@ -67,7 +73,7 @@ class SingleDiary extends Component {
           <TextPingFang style={styles.time}>{formatDate(diary.date, 'hh:ii')}</TextPingFang>
           <View style={styles.location_container}>
             <Image style={styles.location_icon} source={require('../../../res/images/home/icon_location.png')}/>
-            <TextPingFang style={styles.text_location}>{diary.location}</TextPingFang>
+            <TextPingFang style={styles.text_location}>{diary.location && diary.location}</TextPingFang>
           </View>
         </View>
       </TouchableOpacity>

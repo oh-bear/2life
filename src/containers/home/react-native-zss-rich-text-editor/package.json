@@ -1,0 +1,48 @@
+{
+  "_from": "react-native-zss-rich-text-editor",
+  "_id": "react-native-zss-rich-text-editor@1.1.0",
+  "_inBundle": false,
+  "_integrity": "sha1-wZfXl6jKZeRuLMvjbnP6JiTQfBw=",
+  "_location": "/react-native-zss-rich-text-editor",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "tag",
+    "registry": true,
+    "raw": "react-native-zss-rich-text-editor",
+    "name": "react-native-zss-rich-text-editor",
+    "escapedName": "react-native-zss-rich-text-editor",
+    "rawSpec": "",
+    "saveSpec": null,
+    "fetchSpec": "latest"
+  },
+  "_requiredBy": [
+    "#USER",
+    "/"
+  ],
+  "_resolved": "http://registry.npm.taobao.org/react-native-zss-rich-text-editor/download/react-native-zss-rich-text-editor-1.1.0.tgz",
+  "_shasum": "c197d797a8ca65e46e2ccbe36e73fa2624d07c1c",
+  "_spec": "react-native-zss-rich-text-editor",
+  "_where": "/Users/retroastro/Documents/2life",
+  "bugs": {
+    "url": "https://github.com/wix/react-native-zss-rich-text-editor/issues"
+  },
+  "bundleDependencies": false,
+  "dependencies": {
+    "react-native-webview-bridge-updated": "^1.0.0"
+  },
+  "deprecated": false,
+  "description": "React Native Wrapper for ZSSRichTextEditor",
+  "homepage": "https://github.com/wix/react-native-zss-rich-text-editor#readme",
+  "license": "SEE LICENSE IN LICENSE",
+  "main": "index.js",
+  "name": "react-native-zss-rich-text-editor",
+  "peerDependencies": {
+    "react": "*",
+    "react-native": ">=0.31.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wix/react-native-zss-rich-text-editor.git"
+  },
+  "version": "1.1.0"
+}
