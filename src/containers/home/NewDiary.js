@@ -47,6 +47,8 @@ import Storage from '../../common/storage'
 import HttpUtils from '../../network/HttpUtils'
 import { UTILS, USERS } from '../../network/Urls'
 
+import { VERSION_NUMBER } from '../../constants/config'
+
 function mapStateToProps(state) {
   return {
     user: state.user,
@@ -172,7 +174,8 @@ export default class NewDiary1 extends Component {
           user_id: this.props.user.id || 0,
           status: this.props.user.status || null,
           hole_alive: this.state.isPushToHole ? Date.now() + 48 * 3600000 : -1,
-          op: 1
+          op: 1,
+          v: VERSION_NUMBER
         }
       })
 

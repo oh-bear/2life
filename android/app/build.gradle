@@ -162,6 +162,7 @@ android {
 }
 
 dependencies {
+    compile project(':react-native-device-info')
     compile project(':rn-fetch-blob')
     compile project(':react-native-wechat')
     compile project(':react-native-view-shot')

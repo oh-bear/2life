@@ -4,6 +4,7 @@ import android.app.Application;
 
 
 import com.facebook.react.ReactApplication;
+import com.learnium.RNDeviceInfo.RNDeviceInfo;
 import com.RNFetchBlob.RNFetchBlobPackage;
 import com.theweflex.react.WeChatPackage;
 import fr.greweb.reactnativeviewshot.RNViewShotPackage;
@@ -58,6 +59,7 @@ public class MainApplication extends Application implements ReactApplication {
         @Override
         protected List<ReactPackage> getPackages() {
             return Arrays.<ReactPackage>asList(new MainReactPackage(),
+            new RNDeviceInfo(),
             new RNFetchBlobPackage(),
             new WeChatPackage(),
             new RNViewShotPackage(),

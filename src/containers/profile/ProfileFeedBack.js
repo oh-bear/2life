@@ -8,6 +8,7 @@ import {
   TextInput
 } from 'react-native'
 import Toast from 'antd-mobile/lib/toast'
+import DeviceInfo from 'react-native-device-info'
 
 import TextPingFang from '../../components/TextPingFang'
 import Container from '../../components/Container'
@@ -50,10 +51,15 @@ export default class ProfileFeedBack extends Component {
 
     this.setState({ isSubmitted: true})
 
+    const brand = DeviceInfo.getBrand() // 设备型号
+    const systemVersion = DeviceInfo.getSystemVersion() // 系统版本
+
     const data = {
       title: this.state.content.slice(0, 15),
       content: this.state.content,
-      type: this.state.type
+      type: this.state.type,
+      brand,
+      systemVersion
     }
     HttpUtils.post(USERS.feedback, data)
     Toast.success('反馈提交成功', 1.5)
