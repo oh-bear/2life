@@ -51,14 +51,15 @@ export default class ProfileFeedBack extends Component {
 
     this.setState({ isSubmitted: true})
 
-    const brand = DeviceInfo.getBrand() // 设备型号
+    const brand = DeviceInfo.getBrand() // 设备品牌
+    const deviceId = DeviceInfo.getDeviceId() // 设备型号
     const systemVersion = DeviceInfo.getSystemVersion() // 系统版本
 
     const data = {
       title: this.state.content.slice(0, 15),
       content: this.state.content,
       type: this.state.type,
-      brand,
+      brand: brand + ' ' + deviceId,
       systemVersion
     }
     HttpUtils.post(USERS.feedback, data)

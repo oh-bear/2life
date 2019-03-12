@@ -129,7 +129,7 @@ export default class AppRouter extends Component {
             />
             <Scene
               key={scenes.SCENE_NEW_DIARY}
-              component={NewRichDiary}
+              component={NewDiary}
               title='新建日记'
               hideNavBar
               duration={0}
