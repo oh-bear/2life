@@ -551,7 +551,7 @@ export default class DiaryDetail extends Component {
         >
           <ImageViewer
             imageUrls={this.state.imgPathList.map(path => {
-              return { url: getPath(path) }
+              return this.props.from === 'hole' ? { url: path } : { url: getPath(path) }
             })}
             enableSwipeDown={true}
             onSwipeDown={() => this.setState({ showImgPreview: false })}
