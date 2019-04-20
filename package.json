@@ -46,7 +46,7 @@
     "react-native-image-picker": "^0.26.7",
     "react-native-image-progress": "^1.0.1",
     "react-native-image-zoom-viewer": "^2.2.12",
-    "react-native-iphone-x-helper": "^1.0.2",
+    "react-native-iphone-x-helper": "^1.2.0",
     "react-native-keyboard-aware-scroll-view": "^0.5.0",
     "react-native-keyboard-spacer": "^0.4.1",
     "react-native-level-fs": "^3.0.1",

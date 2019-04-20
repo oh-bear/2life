@@ -55,12 +55,12 @@ export default class Signup extends Component {
 
   componentDidMount() {
     DeviceEventEmitter.addListener('select_area', area => {
-      this.setState({accountArea: area})
+      this.setState({ accountArea: area })
     })
   }
 
   async getCode() {
-    
+
     let region = 'china'
     let phoneReg = /^[1][3-8]\d{9}$|^([6|9])\d{7}$|^[0][9]\d{8}$|^[6]([8|6])\d{5}$/
     switch (this.setState.accountArea) {
@@ -76,7 +76,7 @@ export default class Signup extends Component {
     if (!phoneReg.test(this.state.account))
       return Toast.fail('手机号码格式错误', 1)
 
-    const res = await HttpUtils.post(`${URL_code}?region=${region}`, { account: this.state.accountArea + this.state.account })
+    const res = await HttpUtils.post(`${URL_code}`, { account: this.state.accountArea + this.state.account, region })
     if (res.code === 0) {
       this.setState({
         timestamp: res.data.timestamp,
@@ -131,7 +131,7 @@ export default class Signup extends Component {
     return (
       <TouchableWithoutFeedback onPress={dismissKeyboard}>
         <View style={styles.container} animation='fadeIn'>
-          <NetStatus showNetStatus={true}/>
+          <NetStatus showNetStatus={true} />
           <Banner
             bg={require('../../../res/images/login/bg_signup.png')}
             title={['Wow', '欢迎成为新成员']}
@@ -145,7 +145,7 @@ export default class Signup extends Component {
               <View style={styles.account_container}>
                 <TouchableOpacity
                   style={styles.account_area}
-                  onPress={() => Actions.jump(SCENE_LOGIN_AREA, {area: this.state.accountArea})}
+                  onPress={() => Actions.jump(SCENE_LOGIN_AREA, { area: this.state.accountArea })}
                 >
                   <TextPingFang style={styles.text_area}>{this.state.accountArea}</TextPingFang>
                 </TouchableOpacity>
@@ -178,7 +178,7 @@ export default class Signup extends Component {
                   style={styles.text_code_container}
                   onPress={() => { this.getCode() }}
                 >
-                  <TextPingFang style={[styles.text_code, {color: this.state.hadSendCode ? '#aaa' : '#2DC3A6'}]}>{this.state.text_code}</TextPingFang>
+                  <TextPingFang style={[styles.text_code, { color: this.state.hadSendCode ? '#aaa' : '#2DC3A6' }]}>{this.state.text_code}</TextPingFang>
                 </TouchableOpacity>
               </View>
               <TextPingFang style={[styles.text_tip, { color: this.state.showCodeTip ? '#F43C56' : 'transparent' }]}>验证码错误</TextPingFang>
